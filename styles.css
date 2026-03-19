@@ -585,9 +585,10 @@ img { max-width: 100%; display: block; }
 /* ===== Hero ===== */
 .hero {
   position: relative;
-  min-height: 85vh;
+  height: 100vh;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
   padding: 0;
   background: url('header.jpg') center center / cover no-repeat;
   overflow: hidden;
@@ -2046,9 +2047,6 @@ img { max-width: 100%; display: block; }
 
 @media (max-width: 768px) {
   .nav-toggle { display: flex; }
-  .top-bar-phone { font-size: 0.8rem; }
-  .top-bar { padding: 6px 0; }
-  .top-bar .container { flex-wrap: wrap; justify-content: center; gap: 6px; }
   .nav-container { height: 60px; }
   .nav-links {
     display: none;
@@ -2057,19 +2055,26 @@ img { max-width: 100%; display: block; }
     left: 0;
     right: 0;
     flex-direction: column;
-    background: var(--bg);
-    backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     padding: 16px 24px;
     gap: 4px;
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow-md);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: var(--shadow-lg);
     max-height: 70vh;
     overflow-y: auto;
   }
+  [data-theme="light"] .nav-links {
+    background: rgba(255,255,255,0.95);
+    border-bottom-color: rgba(0,0,0,0.08);
+  }
+  [data-theme="light"] .nav-links a { color: var(--text) !important; }
   .nav-links.active { display: flex; }
   .nav-links a { padding: 12px 16px; font-size: 0.95rem; }
   .nav-buttons { flex-direction: column; margin-left: 0; gap: 8px; margin-top: 8px; }
   .nav-btn-book, .nav-btn-contact { text-align: center; padding: 14px; }
+  .logo-name { font-size: 1rem; }
 
   /* Mobile mega menu */
   .mega-menu {
@@ -2118,7 +2123,7 @@ img { max-width: 100%; display: block; }
   .reviews-stats { grid-template-columns: 1fr; }
 
   /* Hero mobile */
-  .hero { min-height: 70vh; }
+  .hero { height: 100vh; }
   .hero-content { padding: 0 0 70px; gap: 24px; }
   .hero-text h1 { font-size: 1.5rem; margin-bottom: 20px; }
   .btn-hero { padding: 12px 28px; font-size: 0.9rem; }
@@ -2197,6 +2202,5 @@ img { max-width: 100%; display: block; }
   .highlight-card { padding: 18px; }
   .specialty-card { padding: 20px; }
   .contact-content { gap: 24px; }
-  .top-bar-social { display: none; }
   .footer-columns { grid-template-columns: 1fr; gap: 20px; }
 }

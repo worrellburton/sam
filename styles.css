@@ -6,10 +6,10 @@
 }
 
 :root {
-  --primary: #3ab4a0;
-  --primary-dark: #2a9484;
-  --primary-light: rgba(58,180,160,0.1);
-  --accent: #f5d547;
+  --primary: #1a3a5c;
+  --primary-dark: #0f2744;
+  --primary-light: rgba(26,58,92,0.15);
+  --accent: #e8792b;
   --text: #e8e8e8;
   --text-light: #b0b0b0;
   --text-muted: #777;
@@ -268,6 +268,17 @@ img { max-width: 100%; display: block; }
 .nav-mega-wrap {
   position: static;
 }
+.nav-mega-wrap > a {
+  position: relative;
+}
+.nav-mega-wrap > a::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: -10px;
+  right: -10px;
+  height: 20px;
+}
 
 .nav-mega-toggle {
   display: inline-flex;
@@ -291,6 +302,15 @@ img { max-width: 100%; display: block; }
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
   z-index: 1001;
+  padding-top: 0;
+}
+.mega-menu::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
 }
 
 .mega-menu-inner {
@@ -799,6 +819,18 @@ img { max-width: 100%; display: block; }
   grid-template-columns: 1.2fr 1fr;
   gap: 60px;
   align-items: start;
+}
+.about-grid-3col {
+  grid-template-columns: auto 1.2fr 1fr;
+}
+.about-photo {
+  width: 280px;
+}
+.about-portrait {
+  width: 100%;
+  border-radius: var(--radius);
+  object-fit: cover;
+  border: 3px solid var(--primary);
 }
 
 .about-lead {
@@ -1622,7 +1654,7 @@ img { max-width: 100%; display: block; }
 }
 
 .sidebar-cta {
-  background: rgba(58,180,160,0.15);
+  background: var(--primary-light);
   border-color: var(--primary);
 }
 
@@ -1634,7 +1666,8 @@ img { max-width: 100%; display: block; }
 @media (max-width: 1024px) {
   .hero-content { flex-direction: column; align-items: flex-start; }
   .hero-rating-card { min-width: auto; }
-  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-grid, .about-grid-3col { grid-template-columns: 1fr; gap: 40px; }
+  .about-photo { width: 200px; margin: 0 auto; }
   .specialties-grid { grid-template-columns: repeat(2, 1fr); }
   .testimonials-grid { grid-template-columns: 1fr; }
   .locations-grid { grid-template-columns: repeat(2, 1fr); }

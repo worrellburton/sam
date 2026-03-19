@@ -567,7 +567,7 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: flex-end;
   padding: 0;
-  background: url('https://images.unsplash.com/photo-1551190822-a9ce113ac100?auto=format&fit=crop&w=1920&q=80') center center / cover no-repeat;
+  background: url('header.jpg') center center / cover no-repeat;
   overflow: hidden;
 }
 

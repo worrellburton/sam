@@ -254,12 +254,22 @@ img { max-width: 100%; display: block; }
   color: #fff !important;
 }
 
-/* Nav Dropdown */
-.nav-dropdown {
-  position: relative;
+/* Nav link icons */
+.nav-links > li > a svg {
+  vertical-align: -2px;
+  opacity: 0.6;
+  margin-right: 2px;
+}
+.nav-links > li > a:hover svg {
+  opacity: 1;
 }
 
-.nav-dropdown-toggle {
+/* Mega Menu */
+.nav-mega-wrap {
+  position: static;
+}
+
+.nav-mega-toggle {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -270,42 +280,125 @@ img { max-width: 100%; display: block; }
   flex-shrink: 0;
 }
 
-.nav-dropdown-menu {
+.mega-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 240px;
+  right: 0;
   background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
-  padding: 8px 0;
-  list-style: none;
   z-index: 1001;
-  margin-top: 8px;
 }
 
-.nav-dropdown-menu li a {
-  display: block;
-  padding: 10px 20px !important;
-  font-size: 0.88rem;
-  color: var(--text-light);
-  border-radius: 0 !important;
+.mega-menu-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 280px;
+  gap: 0;
+  padding: 32px 24px;
+}
+
+.mega-col {
+  padding: 0 24px;
+  border-right: 1px solid var(--border);
+}
+.mega-col:last-child {
+  border-right: none;
+}
+
+.mega-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+.mega-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 8px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
   transition: all var(--transition);
 }
-
-.nav-dropdown-menu li a:hover {
-  background: var(--primary-light);
-  color: var(--primary);
-  padding-left: 24px !important;
+.mega-link:hover {
+  background: rgba(58,180,160,0.08);
 }
 
-.nav-dropdown:hover .nav-dropdown-menu {
+.mega-link svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.mega-link span {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.mega-link small {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.mega-link:hover span {
+  color: var(--primary);
+}
+
+.mega-cta-col {
+  padding: 0 0 0 24px;
+}
+
+.mega-cta-card {
+  background: rgba(58,180,160,0.08);
+  border: 1px solid rgba(58,180,160,0.2);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.mega-cta-card h4 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.mega-cta-card p {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.mega-phone {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--primary) !important;
+}
+
+.nav-mega-wrap:hover .mega-menu {
   display: block;
 }
 
-.nav-dropdown:hover .dropdown-chevron {
+.nav-mega-wrap:hover .dropdown-chevron {
   transform: rotate(180deg);
 }
 
@@ -1073,6 +1166,73 @@ img { max-width: 100%; display: block; }
   line-height: 1.8;
 }
 
+/* ===== Move Easier Banner ===== */
+.move-easier-section {
+  position: relative;
+  padding: 80px 0;
+  margin: 0 24px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: url('https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&w=1920&q=80') center center / cover no-repeat;
+  text-align: center;
+}
+
+.move-easier-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1;
+}
+
+.move-easier-marquee {
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.move-easier-marquee .marquee-track {
+  display: flex;
+  gap: 48px;
+  width: max-content;
+  will-change: transform;
+  transition: transform 0.05s linear;
+}
+
+.move-easier-marquee span {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  color: rgba(255,255,255,0.12);
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-transform: lowercase;
+  letter-spacing: -1px;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+}
+
+.move-easier-content {
+  position: relative;
+  z-index: 2;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.move-easier-content h2 {
+  color: #fff;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  margin-bottom: 16px;
+}
+
+.move-easier-content p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
 /* ===== Testimonials ===== */
 .testimonials-grid {
   display: grid;
@@ -1505,34 +1665,36 @@ img { max-width: 100%; display: block; }
   .nav-buttons { flex-direction: column; margin-left: 0; gap: 8px; margin-top: 8px; }
   .nav-btn-book, .nav-btn-contact { text-align: center; }
 
-  /* Mobile dropdown */
-  .nav-dropdown-menu {
+  /* Mobile mega menu */
+  .mega-menu {
     display: none;
     position: static;
-    min-width: auto;
-    background: transparent;
-    backdrop-filter: none;
     border: none;
-    border-radius: 0;
     box-shadow: none;
-    padding: 0 0 0 16px;
-    margin-top: 0;
+    background: transparent;
   }
-  .nav-dropdown.open .nav-dropdown-menu {
+  .mega-menu-inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 8px 0 8px 16px;
+  }
+  .mega-col {
+    padding: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+  .mega-col:last-child { border-bottom: none; }
+  .mega-cta-col { padding: 0; }
+  .mega-link { padding: 8px 4px; }
+  .nav-mega-wrap.open .mega-menu {
     display: block;
   }
-  .nav-dropdown:hover .nav-dropdown-menu {
+  .nav-mega-wrap:hover .mega-menu {
     display: none;
   }
-  .nav-dropdown.open:hover .nav-dropdown-menu {
+  .nav-mega-wrap.open:hover .mega-menu {
     display: block;
-  }
-  .nav-dropdown-menu li a {
-    padding: 8px 16px !important;
-    font-size: 0.85rem;
-  }
-  .nav-dropdown-menu li a:hover {
-    padding-left: 20px !important;
   }
   .pro-sports-grid { gap: 32px; }
   .pro-sports-divider { width: 80px; height: 1px; }

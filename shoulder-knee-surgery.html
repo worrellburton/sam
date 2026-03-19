@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,6 +49,10 @@
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html#about">About</a></li>
         <li class="nav-dropdown">
@@ -62,9 +66,10 @@
             <li><a href="shoulder-knee-surgery.html">Shoulder & Knee Surgery</a></li>
           </ul>
         </li>
-        <li><a href="index.html#credentials">Credentials</a></li>
         <li><a href="index.html#locations">Locations</a></li>
         <li><a href="index.html#reviews">Reviews</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="blog.html">Blog</a></li>
         <li><a href="index.html#contact" class="nav-cta">Book Appointment</a></li>
       </ul>
     </div>
@@ -81,7 +86,7 @@
   </header>
 
   <!-- Service Content -->
-  <section class="section service-content">
+  <section class="section service-content reveal">
     <div class="container">
       <div class="service-grid">
         <div class="service-main">
@@ -145,38 +150,117 @@
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
+    <canvas class="footer-canvas" id="footerCanvas"></canvas>
     <div class="container">
-      <div class="footer-content">
-        <div class="footer-info">
+      <div class="footer-top">
+        <div class="footer-brand">
           <p class="footer-name">Sameh Elguizaoui, M.D.</p>
-          <p>Board-Certified Orthopedic Surgeon &bull; Sports Medicine Specialist</p>
+          <p class="footer-tagline">Board-Certified Orthopedic Surgeon &amp; Sports Medicine Specialist</p>
           <p class="footer-affiliations">Lenox Hill Hospital &bull; Mount Sinai Hospital &bull; NYP Brooklyn Methodist</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sportsdocsam/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/sam-elguizaoui-md/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+          </div>
         </div>
-        <div class="footer-links">
-          <a href="index.html#about">About</a>
-          <a href="index.html#specialties">Specialties</a>
+      </div>
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="sports-medicine.html">Sports Medicine</a>
+          <a href="arthroscopic-surgery.html">Arthroscopic Surgery</a>
+          <a href="joint-preservation.html">Joint Preservation</a>
+          <a href="cartilage-repair.html">Cartilage Repair</a>
+          <a href="regenerative-medicine.html">Regenerative Medicine</a>
+          <a href="shoulder-knee-surgery.html">Shoulder &amp; Knee Surgery</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="index.html#about">About Dr. Elguizaoui</a>
+          <a href="index.html#credentials">Credentials</a>
+          <a href="index.html#reviews">Reviews</a>
           <a href="index.html#locations">Locations</a>
           <a href="index.html#contact">Contact</a>
         </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="faq.html">FAQ</a>
+          <a href="blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="tel:+19179059370">+1-917-905-9370</a>
+          <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Book on Zocdoc</a>
+          <a href="https://www.sportsorthomd.com/" target="_blank" rel="noopener">SportsOrthoMD.com</a>
+        </div>
       </div>
       <div class="footer-bottom">
-        <p>The information on this website is for general informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare provider for diagnosis and treatment.</p>
+        <p>&copy; 2026 Sameh Elguizaoui, M.D. &mdash; The information on this website is for general informational purposes only and does not constitute medical advice.</p>
       </div>
     </div>
   </footer>
 
   <script>
     const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 50); });
+    let lastScrollY = 0, ticking = false;
+    function updateNav() {
+      const sy = window.scrollY;
+      nav.classList.toggle('scrolled', sy > 50);
+      if (sy > lastScrollY && sy > 200) nav.classList.add('nav-hidden');
+      else nav.classList.remove('nav-hidden');
+      lastScrollY = sy;
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(updateNav); ticking = true; } }, { passive: true });
     const toggle = document.getElementById('navToggle');
     const links = document.getElementById('navLinks');
     toggle.addEventListener('click', () => { links.classList.toggle('active'); toggle.classList.toggle('active'); });
-    const dropdown = document.querySelector('.nav-dropdown');
-    const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
-    dropdownToggle.addEventListener('click', (e) => { if (window.innerWidth <= 768) { e.preventDefault(); dropdown.classList.toggle('open'); } });
-    links.querySelectorAll('a').forEach(link => { link.addEventListener('click', (e) => { if (link === dropdownToggle && window.innerWidth <= 768) return; links.classList.remove('active'); toggle.classList.remove('active'); dropdown.classList.remove('open'); }); });
+    const dd = document.querySelector('.nav-dropdown-toggle');
+    if (dd) dd.addEventListener('click', (e) => { if (window.innerWidth <= 1024) { e.preventDefault(); dd.parentElement.classList.toggle('open'); } });
+    links.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { if (link === dd && window.innerWidth <= 1024) return; links.classList.remove('active'); toggle.classList.remove('active'); }); });
+    // Scroll Reveal
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-stagger');
+    if (revealEls.length) {
+      const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.12 });
+      revealEls.forEach(el => obs.observe(el));
+    }
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+      themeToggle.addEventListener('click', () => {
+        const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    }
+    // WebGL Footer
+    (function() {
+      const canvas = document.getElementById('footerCanvas');
+      if (!canvas) return;
+      const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
+      if (!gl) return;
+      function resize() { canvas.width = canvas.clientWidth * devicePixelRatio; canvas.height = canvas.clientHeight * devicePixelRatio; gl.viewport(0, 0, canvas.width, canvas.height); }
+      resize(); window.addEventListener('resize', resize);
+      const N = 80, pos = new Float32Array(N*2), vel = new Float32Array(N*2), sz = new Float32Array(N);
+      for (let i = 0; i < N; i++) { pos[i*2]=Math.random()*2-1; pos[i*2+1]=Math.random()*2-1; vel[i*2]=(Math.random()-0.5)*0.0008; vel[i*2+1]=(Math.random()-0.5)*0.0008; sz[i]=1.5+Math.random()*3; }
+      const vs=`attribute vec2 aP;attribute float aS;void main(){gl_Position=vec4(aP,0,1);gl_PointSize=aS*${devicePixelRatio.toFixed(1)};}`;
+      const fs=`precision mediump float;void main(){float d=length(gl_PointCoord-0.5)*2.0;if(d>1.0)discard;gl_FragColor=vec4(1,1,1,0.15*(1.0-d*d));}`;
+      function cs(t,s){const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;}
+      const p=gl.createProgram();gl.attachShader(p,cs(gl.VERTEX_SHADER,vs));gl.attachShader(p,cs(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);gl.useProgram(p);
+      const aP=gl.getAttribLocation(p,'aP'),aS=gl.getAttribLocation(p,'aS'),pb=gl.createBuffer(),sb=gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER,sb);gl.bufferData(gl.ARRAY_BUFFER,sz,gl.STATIC_DRAW);
+      gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
+      function frame(){for(let i=0;i<N;i++){pos[i*2]+=vel[i*2];pos[i*2+1]+=vel[i*2+1];if(pos[i*2]<-1||pos[i*2]>1)vel[i*2]*=-1;if(pos[i*2+1]<-1||pos[i*2+1]>1)vel[i*2+1]*=-1;}
+      gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.bindBuffer(gl.ARRAY_BUFFER,pb);gl.bufferData(gl.ARRAY_BUFFER,pos,gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,2,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER,sb);gl.enableVertexAttribArray(aS);gl.vertexAttribPointer(aS,1,gl.FLOAT,false,0,0);gl.drawArrays(gl.POINTS,0,N);requestAnimationFrame(frame);}
+      frame();
+    })();
   </script>
 
 </body>

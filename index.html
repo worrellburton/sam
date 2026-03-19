@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -158,6 +158,10 @@
         <a href="https://www.linkedin.com/in/sam-elguizaoui-md/" target="_blank" rel="noopener" aria-label="LinkedIn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
         </a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -223,10 +227,10 @@
             </div>
           </div>
         </li>
-        <li><a href="#credentials">Credentials</a></li>
         <li><a href="#locations">Locations</a></li>
         <li><a href="#reviews">Reviews</a></li>
-        <li><a href="#faq">FAQ</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="blog.html">Blog</a></li>
         <li class="nav-buttons">
           <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="nav-btn-book">Book Now</a>
           <a href="#contact" class="nav-btn-contact">Contact Us</a>
@@ -352,7 +356,7 @@
   <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="floating-book-btn" id="floatingBook">Book Online</a>
 
   <!-- 1. About Section -->
-  <section class="section about" id="about">
+  <section class="section about reveal" id="about">
     <div class="container">
       <div class="section-header">
         <p class="section-label">About Dr. Elguizaoui</p>
@@ -360,7 +364,7 @@
       </div>
       <div class="about-grid about-grid-3col">
         <div class="about-photo">
-          <img src="https://placehold.co/400x500/1a3a5c/ffffff?text=Dr.+Sam" alt="Dr. Sam Elguizaoui" class="about-portrait">
+          <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&h=500&q=80" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" class="about-portrait">
         </div>
         <div class="about-content">
           <p class="about-lead">Board-certified orthopedic surgeon and fellowship-trained sports medicine specialist in New York City, combining world-class surgical training with conservative, patient-centered care.</p>
@@ -402,7 +406,7 @@
   </section>
 
   <!-- 2. Areas of Expertise -->
-  <section class="section specialties" id="specialties">
+  <section class="section specialties reveal" id="specialties">
     <div class="container">
       <div class="section-header">
         <p class="section-label">Areas of Expertise</p>
@@ -411,52 +415,52 @@
       </div>
       <div class="specialties-grid">
         <a href="sports-medicine.html" class="specialty-card specialty-link">
-          <div class="specialty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          <img class="specialty-img" src="https://images.unsplash.com/photo-1461896836934-bd45ba5386e5?auto=format&fit=crop&w=600&h=300&q=80" alt="Sports Medicine">
+          <div class="specialty-body">
+            <h3>Sports Medicine</h3>
+            <p>Comprehensive treatment of athletic injuries with a focus on getting you back in the game. Experience caring for NFL and NHL athletes.</p>
+            <span class="specialty-arrow">Learn more &rarr;</span>
           </div>
-          <h3>Sports Medicine</h3>
-          <p>Comprehensive treatment of athletic injuries with a focus on getting you back in the game. Experience caring for NFL and NHL athletes.</p>
-          <span class="specialty-arrow">Learn more &rarr;</span>
         </a>
         <a href="arthroscopic-surgery.html" class="specialty-card specialty-link">
-          <div class="specialty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          <img class="specialty-img" src="https://images.unsplash.com/photo-1551190822-a9ce113ac100?auto=format&fit=crop&w=600&h=300&q=80" alt="Arthroscopic Surgery">
+          <div class="specialty-body">
+            <h3>Arthroscopic Surgery</h3>
+            <p>Minimally invasive surgical techniques that mean smaller incisions, less pain, and faster recovery for shoulder and knee conditions.</p>
+            <span class="specialty-arrow">Learn more &rarr;</span>
           </div>
-          <h3>Arthroscopic Surgery</h3>
-          <p>Minimally invasive surgical techniques that mean smaller incisions, less pain, and faster recovery for shoulder and knee conditions.</p>
-          <span class="specialty-arrow">Learn more &rarr;</span>
         </a>
         <a href="joint-preservation.html" class="specialty-card specialty-link">
-          <div class="specialty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <img class="specialty-img" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&h=300&q=80" alt="Joint Preservation">
+          <div class="specialty-body">
+            <h3>Joint Preservation</h3>
+            <p>Advanced techniques to protect and restore your natural joints, delaying or avoiding the need for joint replacement surgery.</p>
+            <span class="specialty-arrow">Learn more &rarr;</span>
           </div>
-          <h3>Joint Preservation</h3>
-          <p>Advanced techniques to protect and restore your natural joints, delaying or avoiding the need for joint replacement surgery.</p>
-          <span class="specialty-arrow">Learn more &rarr;</span>
         </a>
         <a href="cartilage-repair.html" class="specialty-card specialty-link">
-          <div class="specialty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <img class="specialty-img" src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=600&h=300&q=80" alt="Cartilage Repair">
+          <div class="specialty-body">
+            <h3>Cartilage Repair</h3>
+            <p>Cutting-edge cartilage repair and transplant techniques learned through international fellowship training across Europe.</p>
+            <span class="specialty-arrow">Learn more &rarr;</span>
           </div>
-          <h3>Cartilage Repair</h3>
-          <p>Cutting-edge cartilage repair and transplant techniques learned through international fellowship training across Europe.</p>
-          <span class="specialty-arrow">Learn more &rarr;</span>
         </a>
         <a href="regenerative-medicine.html" class="specialty-card specialty-link">
-          <div class="specialty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+          <img class="specialty-img" src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&h=300&q=80" alt="Regenerative Medicine">
+          <div class="specialty-body">
+            <h3>Regenerative Medicine</h3>
+            <p>Biologic alternatives to surgery including PRP therapy and other regenerative treatments for arthritis and soft tissue injuries.</p>
+            <span class="specialty-arrow">Learn more &rarr;</span>
           </div>
-          <h3>Regenerative Medicine</h3>
-          <p>Biologic alternatives to surgery including PRP therapy and other regenerative treatments for arthritis and soft tissue injuries.</p>
-          <span class="specialty-arrow">Learn more &rarr;</span>
         </a>
         <a href="shoulder-knee-surgery.html" class="specialty-card specialty-link">
-          <div class="specialty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>
+          <img class="specialty-img" src="https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=600&h=300&q=80" alt="Shoulder and Knee Surgery">
+          <div class="specialty-body">
+            <h3>Shoulder & Knee Surgery</h3>
+            <p>Expert surgical care for rotator cuff tears, ACL reconstruction, meniscus repair, labral tears, and complex shoulder and knee conditions.</p>
+            <span class="specialty-arrow">Learn more &rarr;</span>
           </div>
-          <h3>Shoulder & Knee Surgery</h3>
-          <p>Expert surgical care for rotator cuff tears, ACL reconstruction, meniscus repair, labral tears, and complex shoulder and knee conditions.</p>
-          <span class="specialty-arrow">Learn more &rarr;</span>
         </a>
       </div>
     </div>
@@ -477,7 +481,7 @@
   </section>
 
   <!-- 3. Training & Credentials -->
-  <section class="section credentials" id="credentials">
+  <section class="section credentials reveal" id="credentials">
     <div class="container">
       <div class="section-header">
         <p class="section-label">Training & Credentials</p>
@@ -533,7 +537,7 @@
   </section>
 
   <!-- 4. Testimonials -->
-  <section class="section testimonials" id="testimonials">
+  <section class="section testimonials reveal" id="testimonials">
     <div class="container">
       <div class="section-header">
         <p class="section-label">Patient Testimonials</p>
@@ -578,7 +582,7 @@
   </section>
 
   <!-- 5. Google Reviews / Ratings -->
-  <section class="section reviews" id="reviews">
+  <section class="section reviews reveal" id="reviews">
     <div class="container">
       <div class="section-header">
         <p class="section-label">Patient Reviews</p>
@@ -613,7 +617,7 @@
   </section>
 
   <!-- 6. FAQ -->
-  <section class="section faq" id="faq">
+  <section class="section faq reveal" id="faq">
     <div class="container">
       <div class="section-header">
         <p class="section-label">Common Questions</p>
@@ -649,7 +653,7 @@
   </section>
 
   <!-- 7. Get Started -->
-  <section class="section contact" id="contact">
+  <section class="section contact reveal" id="contact">
     <div class="container">
       <div class="contact-content">
         <div class="contact-text">
@@ -684,7 +688,7 @@
   </section>
 
   <!-- 8. Locations -->
-  <section class="section locations" id="locations">
+  <section class="section locations reveal" id="locations">
     <div class="container">
       <div class="locations-header">
         <div>
@@ -723,34 +727,80 @@
 
   <!-- Footer -->
   <footer class="footer">
+    <canvas class="footer-canvas" id="footerCanvas"></canvas>
     <div class="container">
-      <div class="footer-content">
-        <div class="footer-info">
+      <div class="footer-top">
+        <div class="footer-brand">
           <p class="footer-name">Sameh Elguizaoui, M.D.</p>
-          <p>Board-Certified Orthopedic Surgeon &bull; Sports Medicine Specialist</p>
+          <p class="footer-tagline">Board-Certified Orthopedic Surgeon &amp; Sports Medicine Specialist</p>
           <p class="footer-affiliations">Lenox Hill Hospital &bull; Mount Sinai Hospital &bull; NYP Brooklyn Methodist</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/sportsdocsam/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/sam-elguizaoui-md/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+          </div>
         </div>
-        <div class="footer-links">
-          <a href="#about">About</a>
-          <a href="#specialties">Specialties</a>
-          <a href="#locations">Locations</a>
-          <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a href="sports-medicine.html">Sports Medicine</a>
+          <a href="arthroscopic-surgery.html">Arthroscopic Surgery</a>
+          <a href="joint-preservation.html">Joint Preservation</a>
+          <a href="cartilage-repair.html">Cartilage Repair</a>
+          <a href="regenerative-medicine.html">Regenerative Medicine</a>
+          <a href="shoulder-knee-surgery.html">Shoulder &amp; Knee Surgery</a>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="index.html#about">About Dr. Elguizaoui</a>
+          <a href="index.html#credentials">Credentials</a>
+          <a href="index.html#reviews">Reviews</a>
+          <a href="index.html#locations">Locations</a>
+          <a href="index.html#contact">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="faq.html">FAQ</a>
+          <a href="blog.html">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="tel:+19179059370">+1-917-905-9370</a>
+          <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Book on Zocdoc</a>
+          <a href="https://www.sportsorthomd.com/" target="_blank" rel="noopener">SportsOrthoMD.com</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>The information on this website is for general informational purposes only and does not constitute medical advice. Always consult with a qualified healthcare provider for diagnosis and treatment.</p>
+        <p>&copy; 2026 Sameh Elguizaoui, M.D. &mdash; The information on this website is for general informational purposes only and does not constitute medical advice.</p>
       </div>
     </div>
   </footer>
 
   <script>
-    // Sticky nav
+    // --- Sticky nav with hide on scroll down, show on scroll up ---
     const nav = document.getElementById('nav');
+    let lastScrollY = 0;
+    let ticking = false;
+    function updateNav() {
+      const sy = window.scrollY;
+      nav.classList.toggle('scrolled', sy > 50);
+      if (sy > lastScrollY && sy > 200) {
+        nav.classList.add('nav-hidden');
+      } else {
+        nav.classList.remove('nav-hidden');
+      }
+      lastScrollY = sy;
+      ticking = false;
+    }
     window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 50);
-    });
+      if (!ticking) { requestAnimationFrame(updateNav); ticking = true; }
+    }, { passive: true });
 
-    // Mobile menu toggle
+    // --- Mobile menu toggle ---
     const toggle = document.getElementById('navToggle');
     const links = document.getElementById('navLinks');
     toggle.addEventListener('click', () => {
@@ -758,7 +808,7 @@
       toggle.classList.toggle('active');
     });
 
-    // Mega menu toggle
+    // --- Mega menu toggle ---
     const megaWrap = document.querySelector('.nav-mega-wrap');
     const megaToggle = document.querySelector('.nav-mega-toggle');
     if (megaToggle) {
@@ -772,7 +822,7 @@
 
     // Close mobile menu on link click
     links.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', (e) => {
+      link.addEventListener('click', () => {
         if (link === megaToggle && window.innerWidth <= 1024) return;
         links.classList.remove('active');
         toggle.classList.remove('active');
@@ -780,17 +830,14 @@
       });
     });
 
-    // Floating Book Online button - show after scrolling past hero
+    // --- Floating Book Online button ---
     const floatingBook = document.getElementById('floatingBook');
     const hero = document.getElementById('hero');
     window.addEventListener('scroll', () => {
-      if (hero) {
-        const heroBottom = hero.getBoundingClientRect().bottom;
-        floatingBook.classList.toggle('visible', heroBottom < 0);
-      }
-    });
+      if (hero) floatingBook.classList.toggle('visible', hero.getBoundingClientRect().bottom < 0);
+    }, { passive: true });
 
-    // Move Easier marquee - parallax scroll effect
+    // --- Move Easier marquee parallax ---
     const moveMarquee = document.getElementById('moveMarquee');
     if (moveMarquee) {
       window.addEventListener('scroll', () => {
@@ -798,24 +845,137 @@
         const viewH = window.innerHeight;
         if (rect.top < viewH && rect.bottom > 0) {
           const progress = (viewH - rect.top) / (viewH + rect.height);
-          const offset = (progress - 0.5) * 600;
-          moveMarquee.querySelector('.marquee-track').style.transform = `translateX(${offset}px)`;
+          moveMarquee.querySelector('.marquee-track').style.transform = `translateX(${(progress - 0.5) * 600}px)`;
         }
       }, { passive: true });
     }
 
-    // Smooth scroll
+    // --- Smooth scroll ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-          const offset = nav.offsetHeight + 16;
-          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          const top = target.getBoundingClientRect().top + window.scrollY - nav.offsetHeight - 16;
           window.scrollTo({ top, behavior: 'smooth' });
         }
       });
     });
+
+    // --- Scroll Reveal (IntersectionObserver) ---
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-stagger');
+    if (revealEls.length) {
+      const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealEls.forEach(el => revealObs.observe(el));
+    }
+
+    // --- Theme toggle ---
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+      themeToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    }
+
+    // --- WebGL Footer Animation (subtle floating particles) ---
+    (function() {
+      const canvas = document.getElementById('footerCanvas');
+      if (!canvas) return;
+      const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
+      if (!gl) return;
+
+      function resize() {
+        canvas.width = canvas.clientWidth * devicePixelRatio;
+        canvas.height = canvas.clientHeight * devicePixelRatio;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const NUM = 80;
+      const positions = new Float32Array(NUM * 2);
+      const velocities = new Float32Array(NUM * 2);
+      const sizes = new Float32Array(NUM);
+      for (let i = 0; i < NUM; i++) {
+        positions[i*2]   = Math.random() * 2 - 1;
+        positions[i*2+1] = Math.random() * 2 - 1;
+        velocities[i*2]   = (Math.random() - 0.5) * 0.0008;
+        velocities[i*2+1] = (Math.random() - 0.5) * 0.0008;
+        sizes[i] = 1.5 + Math.random() * 3;
+      }
+
+      const vsrc = `
+        attribute vec2 aPos;
+        attribute float aSize;
+        void main() {
+          gl_Position = vec4(aPos, 0.0, 1.0);
+          gl_PointSize = aSize * ${devicePixelRatio.toFixed(1)};
+        }`;
+      const fsrc = `
+        precision mediump float;
+        void main() {
+          float d = length(gl_PointCoord - 0.5) * 2.0;
+          if (d > 1.0) discard;
+          float a = 0.15 * (1.0 - d * d);
+          gl_FragColor = vec4(1.0, 1.0, 1.0, a);
+        }`;
+
+      function compile(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      }
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, vsrc));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fsrc));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+
+      const aPos = gl.getAttribLocation(prog, 'aPos');
+      const aSize = gl.getAttribLocation(prog, 'aSize');
+      const posBuf = gl.createBuffer();
+      const sizeBuf = gl.createBuffer();
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, sizes, gl.STATIC_DRAW);
+
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+
+      function frame() {
+        for (let i = 0; i < NUM; i++) {
+          positions[i*2]   += velocities[i*2];
+          positions[i*2+1] += velocities[i*2+1];
+          if (positions[i*2] < -1 || positions[i*2] > 1) velocities[i*2] *= -1;
+          if (positions[i*2+1] < -1 || positions[i*2+1] > 1) velocities[i*2+1] *= -1;
+        }
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.DYNAMIC_DRAW);
+        gl.enableVertexAttribArray(aPos);
+        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuf);
+        gl.enableVertexAttribArray(aSize);
+        gl.vertexAttribPointer(aSize, 1, gl.FLOAT, false, 0, 0);
+        gl.drawArrays(gl.POINTS, 0, NUM);
+        requestAnimationFrame(frame);
+      }
+      frame();
+    })();
   </script>
 
 </body>

@@ -48,7 +48,17 @@
       </button>
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html#about">About</a></li>
-        <li><a href="index.html#specialties">Specialties</a></li>
+        <li class="nav-dropdown">
+          <a href="index.html#specialties" class="nav-dropdown-toggle">Specialties <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="sports-medicine.html">Sports Medicine</a></li>
+            <li><a href="arthroscopic-surgery.html">Arthroscopic Surgery</a></li>
+            <li><a href="joint-preservation.html">Joint Preservation</a></li>
+            <li><a href="cartilage-repair.html">Cartilage Repair</a></li>
+            <li><a href="regenerative-medicine.html">Regenerative Medicine</a></li>
+            <li><a href="shoulder-knee-surgery.html">Shoulder & Knee Surgery</a></li>
+          </ul>
+        </li>
         <li><a href="index.html#credentials">Credentials</a></li>
         <li><a href="index.html#locations">Locations</a></li>
         <li><a href="index.html#reviews">Reviews</a></li>
@@ -157,7 +167,10 @@
     const toggle = document.getElementById('navToggle');
     const links = document.getElementById('navLinks');
     toggle.addEventListener('click', () => { links.classList.toggle('active'); toggle.classList.toggle('active'); });
-    links.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { links.classList.remove('active'); toggle.classList.remove('active'); }); });
+    const dropdown = document.querySelector('.nav-dropdown');
+    const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+    dropdownToggle.addEventListener('click', (e) => { if (window.innerWidth <= 768) { e.preventDefault(); dropdown.classList.toggle('open'); } });
+    links.querySelectorAll('a').forEach(link => { link.addEventListener('click', (e) => { if (link === dropdownToggle && window.innerWidth <= 768) return; links.classList.remove('active'); toggle.classList.remove('active'); dropdown.classList.remove('open'); }); });
   </script>
 
 </body>

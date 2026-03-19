@@ -156,7 +156,17 @@
       </button>
       <ul class="nav-links" id="navLinks">
         <li><a href="#about">About</a></li>
-        <li><a href="#specialties">Specialties</a></li>
+        <li class="nav-dropdown">
+          <a href="#specialties" class="nav-dropdown-toggle">Specialties <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="sports-medicine.html">Sports Medicine</a></li>
+            <li><a href="arthroscopic-surgery.html">Arthroscopic Surgery</a></li>
+            <li><a href="joint-preservation.html">Joint Preservation</a></li>
+            <li><a href="cartilage-repair.html">Cartilage Repair</a></li>
+            <li><a href="regenerative-medicine.html">Regenerative Medicine</a></li>
+            <li><a href="shoulder-knee-surgery.html">Shoulder & Knee Surgery</a></li>
+          </ul>
+        </li>
         <li><a href="#credentials">Credentials</a></li>
         <li><a href="#locations">Locations</a></li>
         <li><a href="#reviews">Reviews</a></li>
@@ -204,6 +214,47 @@
       </div>
     </div>
   </header>
+
+  <!-- Pro Sports Credibility Banner -->
+  <section class="pro-sports-banner">
+    <div class="container">
+      <p class="pro-sports-label">Team Physician Experience</p>
+      <div class="pro-sports-grid">
+        <div class="pro-sports-team">
+          <div class="team-logo jets-logo">
+            <svg viewBox="0 0 120 80" width="120" height="80" xmlns="http://www.w3.org/2000/svg">
+              <rect width="120" height="80" rx="8" fill="#125740"/>
+              <text x="60" y="36" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="800" font-size="22" fill="#FFFFFF" letter-spacing="2">JETS</text>
+              <text x="60" y="54" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="600" font-size="10" fill="#FFFFFF" opacity="0.8">NEW YORK</text>
+              <rect x="20" y="62" width="80" height="2" rx="1" fill="#FFFFFF" opacity="0.3"/>
+              <text x="60" y="74" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="600" font-size="8" fill="#FFFFFF" opacity="0.6">NFL</text>
+            </svg>
+          </div>
+          <div class="team-info">
+            <h3>New York Jets</h3>
+            <p>National Football League</p>
+          </div>
+        </div>
+        <div class="pro-sports-divider"></div>
+        <div class="pro-sports-team">
+          <div class="team-logo islanders-logo">
+            <svg viewBox="0 0 120 80" width="120" height="80" xmlns="http://www.w3.org/2000/svg">
+              <rect width="120" height="80" rx="8" fill="#00468B"/>
+              <text x="60" y="32" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="800" font-size="14" fill="#F47D30" letter-spacing="1">ISLANDERS</text>
+              <text x="60" y="50" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="600" font-size="10" fill="#FFFFFF" opacity="0.8">NEW YORK</text>
+              <rect x="20" y="58" width="80" height="2" rx="1" fill="#FFFFFF" opacity="0.3"/>
+              <text x="60" y="72" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="600" font-size="8" fill="#FFFFFF" opacity="0.6">NHL</text>
+            </svg>
+          </div>
+          <div class="team-info">
+            <h3>New York Islanders</h3>
+            <p>National Hockey League</p>
+          </div>
+        </div>
+      </div>
+      <p class="pro-sports-desc">During his sports medicine fellowship at Lenox Hill Hospital, Dr. Elguizaoui provided team physician coverage for professional athletes, bringing elite-level injury care and recovery protocols to every patient.</p>
+    </div>
+  </section>
 
   <!-- About Section -->
   <section class="section about" id="about">
@@ -542,11 +593,23 @@
       toggle.classList.toggle('active');
     });
 
+    // Mobile dropdown toggle
+    const dropdown = document.querySelector('.nav-dropdown');
+    const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+    dropdownToggle.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        dropdown.classList.toggle('open');
+      }
+    });
+
     // Close mobile menu on link click
     links.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
+      link.addEventListener('click', (e) => {
+        if (link === dropdownToggle && window.innerWidth <= 768) return;
         links.classList.remove('active');
         toggle.classList.remove('active');
+        dropdown.classList.remove('open');
       });
     });
 

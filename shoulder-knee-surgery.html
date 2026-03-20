@@ -49,28 +49,70 @@
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html#about">About</a></li>
-        <li class="nav-dropdown">
-          <a href="index.html#specialties" class="nav-dropdown-toggle">Specialties <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          <ul class="nav-dropdown-menu">
-            <li><a href="sports-medicine.html">Sports Medicine</a></li>
-            <li><a href="arthroscopic-surgery.html">Arthroscopic Surgery</a></li>
-            <li><a href="joint-preservation.html">Joint Preservation</a></li>
-            <li><a href="cartilage-repair.html">Cartilage Repair</a></li>
-            <li><a href="regenerative-medicine.html">Regenerative Medicine</a></li>
-            <li><a href="shoulder-knee-surgery.html">Shoulder & Knee Surgery</a></li>
-          </ul>
+        <li class="nav-mega-wrap">
+          <a href="index.html#specialties" class="nav-mega-toggle">
+            Services <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <div class="mega-menu" id="megaMenu">
+            <button class="mega-back-btn" id="megaBackBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Back
+            </button>
+            <div class="mega-menu-inner">
+              <div class="mega-col">
+                <h4 class="mega-heading">Treatments</h4>
+                <a href="sports-medicine.html" class="mega-link">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                  <div><span>Sports Medicine</span><small>Athletic injury care &bull; Return to sport</small></div>
+                </a>
+                <a href="arthroscopic-surgery.html" class="mega-link">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                  <div><span>Arthroscopic Surgery</span><small>Minimally invasive &bull; Faster recovery</small></div>
+                </a>
+                <a href="regenerative-medicine.html" class="mega-link">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+                  <div><span>Regenerative Medicine</span><small>PRP therapy &bull; Biologic treatments</small></div>
+                </a>
+              </div>
+              <div class="mega-col">
+                <h4 class="mega-heading">Specialties</h4>
+                <a href="joint-preservation.html" class="mega-link">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  <div><span>Joint Preservation</span><small>Save your natural joints</small></div>
+                </a>
+                <a href="cartilage-repair.html" class="mega-link">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <div><span>Cartilage Repair</span><small>Repair &bull; Transplant &bull; Restoration</small></div>
+                </a>
+                <a href="shoulder-knee-surgery.html" class="mega-link">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>
+                  <div><span>Shoulder &amp; Knee Surgery</span><small>ACL &bull; Rotator cuff &bull; Meniscus</small></div>
+                </a>
+              </div>
+              <div class="mega-col mega-cta-col">
+                <div class="mega-cta-card">
+                  <h4>Ready to get started?</h4>
+                  <p>Book a consultation with Dr. Elguizaoui today.</p>
+                  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-primary btn-block">Book on Zocdoc</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </li>
         <li><a href="index.html#locations">Locations</a></li>
         <li><a href="index.html#reviews">Reviews</a></li>
         <li><a href="faq.html">FAQ</a></li>
         <li><a href="blog.html">Blog</a></li>
-        <li><a href="index.html#contact" class="nav-cta">Book Appointment</a></li>
+        <li class="nav-buttons">
+          <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="nav-btn-book">Book Now</a>
+          <a href="index.html#contact" class="nav-btn-contact">Contact Us</a>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+        </li>
       </ul>
     </div>
   </nav>
@@ -216,12 +258,59 @@
       ticking = false;
     }
     window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(updateNav); ticking = true; } }, { passive: true });
+    // --- Mobile menu toggle ---
     const toggle = document.getElementById('navToggle');
     const links = document.getElementById('navLinks');
-    toggle.addEventListener('click', () => { links.classList.toggle('active'); toggle.classList.toggle('active'); });
-    const dd = document.querySelector('.nav-dropdown-toggle');
-    if (dd) dd.addEventListener('click', (e) => { if (window.innerWidth <= 1024) { e.preventDefault(); dd.parentElement.classList.toggle('open'); } });
-    links.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => { if (link === dd && window.innerWidth <= 1024) return; links.classList.remove('active'); toggle.classList.remove('active'); }); });
+    toggle.addEventListener('click', () => {
+      const isOpen = links.classList.toggle('active');
+      toggle.classList.toggle('active');
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    // --- Mega menu toggle ---
+    const megaWrap = document.querySelector('.nav-mega-wrap');
+    const megaToggle = document.querySelector('.nav-mega-toggle');
+    const megaBackBtn = document.getElementById('megaBackBtn');
+    if (megaToggle) {
+      megaToggle.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          megaWrap.classList.add('open');
+          const menu = document.getElementById('megaMenu');
+          menu.style.display = 'block';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => { menu.style.transform = 'translateX(0)'; });
+          });
+        } else if (window.innerWidth <= 1024) {
+          e.preventDefault();
+          megaWrap.classList.toggle('open');
+        }
+      });
+    }
+    if (megaBackBtn) {
+      megaBackBtn.addEventListener('click', () => {
+        const menu = document.getElementById('megaMenu');
+        menu.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+          megaWrap.classList.remove('open');
+          menu.style.transform = '';
+          menu.style.display = '';
+        }, 350);
+      });
+    }
+
+    // Close mobile menu on link click
+    links.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (link === megaToggle && window.innerWidth <= 768) return;
+        links.classList.remove('active');
+        toggle.classList.remove('active');
+        document.body.style.overflow = '';
+        if (megaWrap) megaWrap.classList.remove('open');
+        const menu = document.getElementById('megaMenu');
+        if (menu) { menu.style.transform = ''; menu.style.display = ''; }
+      });
+    });
     // Scroll Reveal
     const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-stagger');
     if (revealEls.length) {

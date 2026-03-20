@@ -168,6 +168,9 @@
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
+        <button class="nav-close" id="navClose" aria-label="Close navigation">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
         <li><a href="#about">About</a></li>
         <li class="nav-mega-wrap">
           <a href="#specialties" class="nav-mega-toggle">
@@ -221,6 +224,17 @@
                 </div>
               </div>
             </div>
+          </div>
+        </li>
+        <!-- Mobile-only inline service links (replaces mega menu on mobile) -->
+        <li class="mobile-services-wrap">
+          <div class="mobile-services">
+            <a href="sports-medicine.html">Sports Medicine</a>
+            <a href="arthroscopic-surgery.html">Arthroscopic Surgery</a>
+            <a href="regenerative-medicine.html">Regenerative Medicine</a>
+            <a href="joint-preservation.html">Joint Preservation</a>
+            <a href="cartilage-repair.html">Cartilage Repair</a>
+            <a href="shoulder-knee-surgery.html">Shoulder &amp; Knee Surgery</a>
           </div>
         </li>
         <li><a href="#locations">Locations</a></li>
@@ -730,11 +744,20 @@
     // --- Mobile menu toggle ---
     const toggle = document.getElementById('navToggle');
     const links = document.getElementById('navLinks');
+    const navClose = document.getElementById('navClose');
+    function closeMobileNav() {
+      links.classList.remove('active');
+      toggle.classList.remove('active');
+      document.body.style.overflow = '';
+    }
     toggle.addEventListener('click', () => {
       const isOpen = links.classList.toggle('active');
       toggle.classList.toggle('active');
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
+    if (navClose) {
+      navClose.addEventListener('click', closeMobileNav);
+    }
 
     // --- Mega menu toggle ---
     const megaWrap = document.querySelector('.nav-mega-wrap');
@@ -743,10 +766,8 @@
     if (megaToggle) {
       megaToggle.addEventListener('click', (e) => {
         if (window.innerWidth <= 768) {
-          // On mobile, just follow the link normally (scroll to section & close nav)
-          links.classList.remove('active');
-          toggle.classList.remove('active');
-          document.body.style.overflow = '';
+          // On mobile, close nav and follow the link
+          closeMobileNav();
         } else if (window.innerWidth <= 1024) {
           e.preventDefault();
           megaWrap.classList.toggle('open');

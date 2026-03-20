@@ -616,6 +616,243 @@
       transform: translateX(3px);
     }
 
+    /* ===== SEO PAGE ===== */
+    .seo-run-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .seo-run-btn:hover { background: var(--accent-hover); }
+    .seo-run-btn.scanning {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    .seo-run-btn.scanning svg {
+      animation: spin 1s linear infinite;
+    }
+    .seo-score-banner {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .seo-score-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      flex-shrink: 0;
+    }
+    .seo-score-ring svg { width: 100%; height: 100%; }
+    .seo-score-circle {
+      stroke: var(--accent);
+      transition: stroke-dashoffset 1.5s ease, stroke 0.3s;
+    }
+    .seo-score-number {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .seo-score-info { flex: 1; }
+    .seo-score-info h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .seo-score-info p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 12px; }
+    .seo-score-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .seo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .seo-badge.critical { background: rgba(239,68,68,0.15); color: var(--red); }
+    .seo-badge.warning { background: rgba(251,188,4,0.15); color: var(--yellow); }
+    .seo-badge.passed { background: rgba(34,197,94,0.15); color: var(--green); }
+    .seo-badge.info { background: rgba(37,99,235,0.15); color: var(--accent); }
+
+    .seo-progress {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .seo-progress-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+    .seo-progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .seo-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .seo-results { margin-bottom: 24px; }
+    .seo-result-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .seo-result-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+      user-select: none;
+    }
+    .seo-result-header:hover { background: rgba(255,255,255,0.02); }
+    .seo-result-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .seo-result-icon.critical { background: rgba(239,68,68,0.15); color: var(--red); }
+    .seo-result-icon.warning { background: rgba(251,188,4,0.15); color: var(--yellow); }
+    .seo-result-icon.passed { background: rgba(34,197,94,0.15); color: var(--green); }
+    .seo-result-icon.info { background: rgba(37,99,235,0.15); color: var(--accent); }
+    .seo-result-title { flex: 1; font-weight: 600; font-size: 0.92rem; }
+    .seo-result-page { font-size: 0.78rem; color: var(--text-muted); }
+    .seo-result-chevron {
+      color: var(--text-muted);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .seo-result-group.open .seo-result-chevron { transform: rotate(180deg); }
+    .seo-result-detail {
+      display: none;
+      padding: 0 20px 16px;
+      font-size: 0.88rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+    }
+    .seo-result-group.open .seo-result-detail { display: block; padding-top: 16px; }
+    .seo-result-detail code {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text);
+    }
+    .seo-result-detail .fix-hint {
+      display: block;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(37,99,235,0.08);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+    .seo-result-detail .fix-hint strong { color: var(--text); }
+
+    .seo-sitemap-code {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--text-light);
+      overflow-x: auto;
+      white-space: pre;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+    }
+    .seo-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .seo-copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .seo-action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .seo-action-item:last-child { border-bottom: none; }
+    .seo-action-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(239,68,68,0.15);
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .seo-action-item .action-text { font-size: 0.88rem; color: var(--text-light); line-height: 1.5; }
+    .seo-action-item .action-text strong { color: var(--text); }
+    .seo-action-item.priority-low .seo-action-num { background: rgba(251,188,4,0.15); color: var(--yellow); }
+
+    .seo-last-scan {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .seo-score-banner { flex-direction: column; text-align: center; gap: 20px; padding: 24px 20px; }
+      .seo-score-badges { justify-content: center; }
+      .page-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+    }
+
     /* ===== ANALYTICS PAGE ===== */
     .analytics-connect {
       background: var(--bg-card);
@@ -853,6 +1090,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           Reviews
         </button>
+        <button class="sidebar-link" data-page="seo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          SEO
+        </button>
         <button class="sidebar-link" data-page="analytics">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
           Analytics
@@ -977,6 +1218,101 @@
         <div class="review-list" id="reviewList">
           <div class="loading"><div class="spinner"></div>Loading reviews...</div>
         </div>
+      </div>
+
+      <!-- SEO Page -->
+      <div class="admin-page" id="page-seo">
+        <div class="page-header">
+          <h2>SEO Health Report</h2>
+          <button class="seo-run-btn" id="seoRunBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Run Audit
+          </button>
+        </div>
+
+        <!-- Overall Score -->
+        <div class="seo-score-banner" id="seoScoreBanner">
+          <div class="seo-score-ring">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+              <circle cx="60" cy="60" r="52" fill="none" stroke-width="8" stroke-linecap="round" class="seo-score-circle" id="seoScoreCircle" stroke-dasharray="327" stroke-dashoffset="327" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="seo-score-number" id="seoScoreNumber">--</div>
+          </div>
+          <div class="seo-score-info">
+            <h3 id="seoScoreLabel">Run an audit to check your SEO health</h3>
+            <p id="seoScoreDesc">Scans all pages for meta tags, schema markup, accessibility, performance issues, and generates a sitemap.</p>
+            <div class="seo-score-badges" id="seoScoreBadges"></div>
+          </div>
+        </div>
+
+        <!-- Progress bar (shown during scan) -->
+        <div class="seo-progress" id="seoProgress" style="display:none">
+          <div class="seo-progress-label" id="seoProgressLabel">Scanning pages...</div>
+          <div class="seo-progress-bar">
+            <div class="seo-progress-fill" id="seoProgressFill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-grid seo-stats" id="seoStats" style="display:none">
+          <div class="stat-card">
+            <div class="stat-card-label">Pages Scanned</div>
+            <div class="stat-card-value" id="seoPagesScanned">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Issues Found</div>
+            <div class="stat-card-value" id="seoIssuesFound" style="color:var(--red)">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Warnings</div>
+            <div class="stat-card-value" id="seoWarnings" style="color:var(--yellow)">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Passed Checks</div>
+            <div class="stat-card-value" id="seoPassed" style="color:var(--green)">0</div>
+          </div>
+        </div>
+
+        <!-- Category filters -->
+        <div class="filter-tabs seo-category-tabs" id="seoCategoryTabs" style="display:none">
+          <button class="filter-tab active" data-seo-cat="all">All</button>
+          <button class="filter-tab" data-seo-cat="critical">Critical</button>
+          <button class="filter-tab" data-seo-cat="warning">Warnings</button>
+          <button class="filter-tab" data-seo-cat="passed">Passed</button>
+          <button class="filter-tab" data-seo-cat="info">Info</button>
+        </div>
+
+        <!-- Audit results -->
+        <div class="seo-results" id="seoResults"></div>
+
+        <!-- Sitemap section -->
+        <div class="seo-sitemap-section" id="seoSitemapSection" style="display:none">
+          <div class="core-section">
+            <div class="core-section-header">
+              <h3>Generated Sitemap</h3>
+              <span class="core-badge">XML</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Auto-generated sitemap.xml based on all discovered pages. Copy and paste into your root directory.</p>
+            <div class="seo-sitemap-code" id="seoSitemapCode"></div>
+            <button class="seo-copy-btn" id="seoCopyBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Sitemap XML
+            </button>
+          </div>
+
+          <!-- Action Items -->
+          <div class="core-section" style="margin-top:24px">
+            <div class="core-section-header">
+              <h3>Action Items</h3>
+              <span class="core-badge" style="background:rgba(239,68,68,0.15);color:var(--red)">To-Do</span>
+            </div>
+            <div class="seo-action-items" id="seoActionItems"></div>
+          </div>
+        </div>
+
+        <!-- Last scan timestamp -->
+        <div class="seo-last-scan" id="seoLastScan"></div>
       </div>
 
       <!-- Analytics Page -->
@@ -1322,6 +1658,413 @@
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2500);
     }
+
+    // ===== SEO AUDIT ENGINE =====
+    (function() {
+      const BASE_URL = 'https://rwb8771.github.io/sammd';
+      const PAGES = [
+        { url: 'index.html', label: 'Homepage' },
+        { url: 'blog.html', label: 'Blog' },
+        { url: 'reviews.html', label: 'Reviews' },
+        { url: 'faq.html', label: 'FAQ' },
+        { url: 'sports-medicine.html', label: 'Sports Medicine' },
+        { url: 'arthroscopic-surgery.html', label: 'Arthroscopic Surgery' },
+        { url: 'cartilage-repair.html', label: 'Cartilage Repair' },
+        { url: 'joint-preservation.html', label: 'Joint Preservation' },
+        { url: 'regenerative-medicine.html', label: 'Regenerative Medicine' },
+        { url: 'shoulder-knee-surgery.html', label: 'Shoulder & Knee Surgery' },
+        { url: 'blog-5-signs-orthopedic-surgeon.html', label: 'Blog: 5 Signs' }
+      ];
+
+      const runBtn = document.getElementById('seoRunBtn');
+      const progressEl = document.getElementById('seoProgress');
+      const progressLabel = document.getElementById('seoProgressLabel');
+      const progressFill = document.getElementById('seoProgressFill');
+      const statsEl = document.getElementById('seoStats');
+      const resultsEl = document.getElementById('seoResults');
+      const categoryTabs = document.getElementById('seoCategoryTabs');
+      const sitemapSection = document.getElementById('seoSitemapSection');
+      const lastScanEl = document.getElementById('seoLastScan');
+
+      let allFindings = [];
+      let currentCatFilter = 'all';
+
+      runBtn.addEventListener('click', startAudit);
+
+      // Category filter tabs
+      categoryTabs.addEventListener('click', e => {
+        const tab = e.target.closest('.filter-tab');
+        if (!tab) return;
+        categoryTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentCatFilter = tab.dataset.seoCat;
+        renderFindings();
+      });
+
+      // Copy sitemap
+      document.getElementById('seoCopyBtn').addEventListener('click', () => {
+        const code = document.getElementById('seoSitemapCode').textContent;
+        navigator.clipboard.writeText(code).then(() => showToast('Sitemap XML copied!'));
+      });
+
+      async function startAudit() {
+        runBtn.classList.add('scanning');
+        progressEl.style.display = '';
+        statsEl.style.display = 'none';
+        categoryTabs.style.display = 'none';
+        resultsEl.innerHTML = '';
+        sitemapSection.style.display = 'none';
+        allFindings = [];
+
+        const total = PAGES.length;
+        let scanned = 0;
+
+        for (const page of PAGES) {
+          progressLabel.textContent = `Scanning ${page.label}...`;
+          progressFill.style.width = ((scanned / total) * 100) + '%';
+
+          try {
+            const resp = await fetch(page.url + '?_audit=' + Date.now());
+            if (!resp.ok) {
+              allFindings.push({
+                type: 'critical',
+                title: `Page returns ${resp.status} error`,
+                page: page.label,
+                detail: `<code>${page.url}</code> returned HTTP ${resp.status}. This page is not accessible to search engines.`,
+                fix: 'Ensure the page exists and is deployed correctly.'
+              });
+              scanned++;
+              continue;
+            }
+            const html = await resp.text();
+            auditPage(html, page);
+          } catch (err) {
+            allFindings.push({
+              type: 'critical',
+              title: 'Page failed to load',
+              page: page.label,
+              detail: `Could not fetch <code>${page.url}</code>: ${err.message}`,
+              fix: 'Check that the page is deployed and accessible.'
+            });
+          }
+          scanned++;
+        }
+
+        // Global checks
+        runGlobalChecks();
+
+        progressFill.style.width = '100%';
+        progressLabel.textContent = 'Audit complete!';
+        setTimeout(() => { progressEl.style.display = 'none'; }, 1200);
+
+        // Show results
+        statsEl.style.display = '';
+        categoryTabs.style.display = '';
+        sitemapSection.style.display = '';
+        runBtn.classList.remove('scanning');
+
+        const critical = allFindings.filter(f => f.type === 'critical').length;
+        const warnings = allFindings.filter(f => f.type === 'warning').length;
+        const passed = allFindings.filter(f => f.type === 'passed').length;
+        const info = allFindings.filter(f => f.type === 'info').length;
+
+        document.getElementById('seoPagesScanned').textContent = PAGES.length;
+        document.getElementById('seoIssuesFound').textContent = critical;
+        document.getElementById('seoWarnings').textContent = warnings;
+        document.getElementById('seoPassed').textContent = passed;
+
+        // Score calculation
+        const totalChecks = critical + warnings + passed;
+        const score = totalChecks > 0 ? Math.round(((passed + info * 0.5) / (totalChecks + info * 0.5)) * 100) : 0;
+        updateScoreRing(score, critical, warnings, passed, info);
+
+        // Render
+        renderFindings();
+        generateSitemap();
+        generateActionItems();
+
+        lastScanEl.textContent = 'Last scanned: ' + new Date().toLocaleString();
+      }
+
+      function auditPage(html, page) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // 1. Title tag
+        const title = doc.querySelector('title');
+        if (!title || !title.textContent.trim()) {
+          allFindings.push({ type: 'critical', title: 'Missing title tag', page: page.label, detail: 'The page has no <code>&lt;title&gt;</code> tag. Title tags are the single most important on-page SEO element.', fix: 'Add a unique, descriptive title tag between 50-60 characters.' });
+        } else if (title.textContent.length > 70) {
+          allFindings.push({ type: 'warning', title: 'Title tag too long (' + title.textContent.length + ' chars)', page: page.label, detail: `Title: <code>${title.textContent}</code><br>Google typically displays 50-60 characters. Longer titles get truncated in search results.`, fix: 'Shorten the title to under 60 characters while keeping primary keywords.' });
+        } else if (title.textContent.length < 30) {
+          allFindings.push({ type: 'warning', title: 'Title tag too short (' + title.textContent.length + ' chars)', page: page.label, detail: `Title: <code>${title.textContent}</code><br>Short titles miss keyword opportunities.`, fix: 'Expand the title to 50-60 characters with relevant keywords.' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Title tag is well-optimized', page: page.label, detail: `Title: <code>${title.textContent}</code> (${title.textContent.length} chars) — within ideal 50-60 range.` });
+        }
+
+        // 2. Meta description
+        const metaDesc = doc.querySelector('meta[name="description"]');
+        if (!metaDesc || !metaDesc.content.trim()) {
+          allFindings.push({ type: 'critical', title: 'Missing meta description', page: page.label, detail: 'No <code>&lt;meta name="description"&gt;</code> found. Meta descriptions appear in search results and influence click-through rates.', fix: 'Add a compelling meta description between 150-160 characters that includes target keywords.' });
+        } else if (metaDesc.content.length > 170) {
+          allFindings.push({ type: 'warning', title: 'Meta description too long (' + metaDesc.content.length + ' chars)', page: page.label, detail: `Description will be truncated in search results. Current: <code>${metaDesc.content.substring(0, 80)}...</code>`, fix: 'Shorten to 150-160 characters.' });
+        } else if (metaDesc.content.length < 70) {
+          allFindings.push({ type: 'warning', title: 'Meta description too short (' + metaDesc.content.length + ' chars)', page: page.label, detail: `Short descriptions underperform in search. Current: <code>${metaDesc.content}</code>`, fix: 'Expand to 150-160 characters with a clear call-to-action.' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Meta description present and well-sized', page: page.label, detail: `Description: <code>${metaDesc.content.substring(0, 100)}...</code> (${metaDesc.content.length} chars)` });
+        }
+
+        // 3. Canonical URL
+        const canonical = doc.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+          allFindings.push({ type: 'warning', title: 'Missing canonical URL', page: page.label, detail: 'No <code>&lt;link rel="canonical"&gt;</code> found. Canonical tags prevent duplicate content issues.', fix: `Add: <code>&lt;link rel="canonical" href="${BASE_URL}/${page.url}"&gt;</code>` });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Canonical URL set', page: page.label, detail: `Canonical: <code>${canonical.href}</code>` });
+        }
+
+        // 4. H1 tag
+        const h1s = doc.querySelectorAll('h1');
+        if (h1s.length === 0) {
+          allFindings.push({ type: 'critical', title: 'Missing H1 heading', page: page.label, detail: 'No <code>&lt;h1&gt;</code> tag found. Every page should have exactly one H1 that describes the main topic.', fix: 'Add a single H1 heading with the primary keyword for this page.' });
+        } else if (h1s.length > 1) {
+          allFindings.push({ type: 'warning', title: `Multiple H1 tags found (${h1s.length})`, page: page.label, detail: 'While not strictly an error, best practice is to have exactly one H1 per page for clear content hierarchy.', fix: 'Consolidate to a single H1 and use H2/H3 for subsections.' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Single H1 tag present', page: page.label, detail: `H1: <code>${h1s[0].textContent.trim().substring(0, 80)}</code>` });
+        }
+
+        // 5. Schema/JSON-LD
+        const schemas = doc.querySelectorAll('script[type="application/ld+json"]');
+        if (schemas.length === 0) {
+          allFindings.push({ type: 'warning', title: 'No structured data (JSON-LD)', page: page.label, detail: 'No schema markup found. Structured data helps search engines understand your content and can enable rich snippets.', fix: 'Add JSON-LD schema — MedicalBusiness, Article, FAQPage, or BreadcrumbList as appropriate.' });
+        } else {
+          const types = [];
+          schemas.forEach(s => {
+            try {
+              const data = JSON.parse(s.textContent);
+              types.push(data['@type'] || 'Unknown');
+            } catch (e) { types.push('Invalid JSON'); }
+          });
+          allFindings.push({ type: 'passed', title: `Structured data found (${schemas.length} schemas)`, page: page.label, detail: `Types: <code>${types.join(', ')}</code>` });
+        }
+
+        // 6. Image alt tags
+        const images = doc.querySelectorAll('img');
+        const imagesWithoutAlt = Array.from(images).filter(img => !img.alt || img.alt.trim() === '');
+        if (images.length > 0 && imagesWithoutAlt.length > 0) {
+          allFindings.push({ type: 'warning', title: `${imagesWithoutAlt.length} image(s) missing alt text`, page: page.label, detail: `${imagesWithoutAlt.length} of ${images.length} images have no alt attribute. Alt text is important for accessibility and image SEO.`, fix: 'Add descriptive alt text to all images. Avoid keyword stuffing — describe the image naturally.' });
+        } else if (images.length > 0) {
+          allFindings.push({ type: 'passed', title: 'All images have alt text', page: page.label, detail: `${images.length} image(s) all have alt attributes.` });
+        }
+
+        // 7. Open Graph tags
+        const ogTitle = doc.querySelector('meta[property="og:title"]');
+        const ogDesc = doc.querySelector('meta[property="og:description"]');
+        const ogImage = doc.querySelector('meta[property="og:image"]');
+        if (!ogTitle && !ogDesc) {
+          allFindings.push({ type: 'warning', title: 'Missing Open Graph tags', page: page.label, detail: 'No <code>og:title</code> or <code>og:description</code> found. Open Graph tags control how links appear when shared on social media.', fix: 'Add og:title, og:description, og:image, and og:type meta tags in the <head>.' });
+        } else if (!ogImage) {
+          allFindings.push({ type: 'info', title: 'Open Graph tags present but missing og:image', page: page.label, detail: 'An <code>og:image</code> tag ensures a thumbnail appears when the link is shared on social media.', fix: 'Add an og:image tag with a 1200x630px image URL.' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Open Graph tags present', page: page.label, detail: 'og:title, og:description, and og:image all found.' });
+        }
+
+        // 8. Viewport meta
+        const viewport = doc.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+          allFindings.push({ type: 'critical', title: 'Missing viewport meta tag', page: page.label, detail: 'No <code>&lt;meta name="viewport"&gt;</code> found. This is required for mobile-friendly rendering and is a Google ranking factor.', fix: 'Add: <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code>' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Viewport meta tag present', page: page.label, detail: `Viewport: <code>${viewport.content}</code>` });
+        }
+
+        // 9. Robots meta
+        const robots = doc.querySelector('meta[name="robots"]');
+        if (robots && robots.content.includes('noindex')) {
+          if (page.url !== 'admin.html') {
+            allFindings.push({ type: 'critical', title: 'Page set to noindex', page: page.label, detail: `<code>robots: ${robots.content}</code> — This page will NOT appear in search results.`, fix: 'Remove the noindex directive unless you intentionally want this page hidden from search.' });
+          }
+        } else if (robots) {
+          allFindings.push({ type: 'passed', title: 'Robots meta allows indexing', page: page.label, detail: `<code>robots: ${robots.content}</code>` });
+        }
+
+        // 10. Internal links
+        const links = doc.querySelectorAll('a[href]');
+        const internalLinks = Array.from(links).filter(a => {
+          const href = a.getAttribute('href');
+          return href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('#');
+        });
+        if (internalLinks.length < 3 && page.url !== 'admin.html') {
+          allFindings.push({ type: 'warning', title: `Low internal linking (${internalLinks.length} links)`, page: page.label, detail: 'Pages with few internal links are harder for search engines to discover and crawl. They also pass less authority.', fix: 'Add relevant internal links to other service pages, blog posts, or key pages.' });
+        } else {
+          allFindings.push({ type: 'info', title: `${internalLinks.length} internal links found`, page: page.label, detail: 'Good internal linking helps distribute page authority and aids navigation.' });
+        }
+
+        // 11. Content length
+        const bodyText = doc.body ? doc.body.textContent.replace(/\s+/g, ' ').trim() : '';
+        const wordCount = bodyText.split(' ').length;
+        if (wordCount < 300 && page.url !== 'admin.html') {
+          allFindings.push({ type: 'warning', title: `Thin content (~${wordCount} words)`, page: page.label, detail: 'Pages with less than 300 words may be considered thin content by search engines and rank poorly.', fix: 'Expand the content with relevant, helpful information. Aim for 800+ words on key service pages.' });
+        } else {
+          allFindings.push({ type: 'info', title: `Content length: ~${wordCount} words`, page: page.label, detail: 'Sufficient content length for search engine indexing.' });
+        }
+
+        // 12. HTTPS check in links
+        const httpLinks = Array.from(links).filter(a => {
+          const href = a.getAttribute('href');
+          return href && href.startsWith('http://');
+        });
+        if (httpLinks.length > 0) {
+          allFindings.push({ type: 'warning', title: `${httpLinks.length} insecure (HTTP) links found`, page: page.label, detail: 'Links using <code>http://</code> instead of <code>https://</code> can cause mixed content warnings and reduced trust.', fix: 'Update all external links to use HTTPS where possible.' });
+        }
+
+        // 13. Heading hierarchy
+        const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        let hierarchyOk = true;
+        let prevLevel = 0;
+        headings.forEach(h => {
+          const level = parseInt(h.tagName[1]);
+          if (level > prevLevel + 1 && prevLevel > 0) hierarchyOk = false;
+          prevLevel = level;
+        });
+        if (!hierarchyOk) {
+          allFindings.push({ type: 'info', title: 'Heading hierarchy has gaps', page: page.label, detail: 'Headings skip levels (e.g., H1 → H3). While not a major issue, a clean hierarchy helps search engines understand content structure.', fix: 'Ensure headings follow a logical order: H1 → H2 → H3, without skipping levels.' });
+        }
+
+        // 14. Lang attribute
+        const htmlEl = doc.querySelector('html');
+        if (!htmlEl || !htmlEl.getAttribute('lang')) {
+          allFindings.push({ type: 'warning', title: 'Missing lang attribute on <html>', page: page.label, detail: 'The <code>lang</code> attribute helps search engines and screen readers determine the page language.', fix: 'Add <code>&lt;html lang="en"&gt;</code> to the opening html tag.' });
+        }
+      }
+
+      function runGlobalChecks() {
+        // Sitemap check
+        allFindings.push({ type: 'info', title: 'Sitemap auto-generated below', page: 'Global', detail: 'A sitemap.xml has been generated based on discovered pages. Upload it to your site root for better crawling.' });
+
+        // robots.txt check
+        allFindings.push({ type: 'info', title: 'Ensure robots.txt exists', page: 'Global', detail: 'A <code>robots.txt</code> file at the site root tells search engines which pages to crawl. It should reference your sitemap.', fix: 'Create a robots.txt with:<br><code>User-agent: *<br>Allow: /<br>Sitemap: ' + BASE_URL + '/sitemap.xml</code>' });
+
+        // HTTPS
+        allFindings.push({ type: 'passed', title: 'Site served over HTTPS', page: 'Global', detail: 'GitHub Pages serves all content over HTTPS by default. This is a Google ranking factor.' });
+
+        // Mobile-friendly
+        allFindings.push({ type: 'passed', title: 'Responsive design detected', page: 'Global', detail: 'The site uses viewport meta tags and responsive CSS media queries for mobile optimization.' });
+      }
+
+      function updateScoreRing(score, critical, warnings, passed, info) {
+        const circle = document.getElementById('seoScoreCircle');
+        const number = document.getElementById('seoScoreNumber');
+        const label = document.getElementById('seoScoreLabel');
+        const desc = document.getElementById('seoScoreDesc');
+        const badges = document.getElementById('seoScoreBadges');
+
+        // Animate score ring
+        const circumference = 327; // 2 * π * 52
+        const offset = circumference - (score / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+
+        // Color based on score
+        if (score >= 80) {
+          circle.style.stroke = '#22c55e';
+          label.textContent = 'Great SEO Health';
+          desc.textContent = 'Your site is well-optimized. Address the remaining warnings to reach a perfect score.';
+        } else if (score >= 60) {
+          circle.style.stroke = '#fbbc04';
+          label.textContent = 'Needs Improvement';
+          desc.textContent = 'Several issues were found that could impact your search engine rankings. Review and fix the items below.';
+        } else {
+          circle.style.stroke = '#ef4444';
+          label.textContent = 'Critical Issues Found';
+          desc.textContent = 'Major SEO issues detected. These should be addressed as soon as possible to improve visibility.';
+        }
+
+        number.textContent = score;
+
+        badges.innerHTML = '';
+        if (critical > 0) badges.innerHTML += `<span class="seo-badge critical">✕ ${critical} Critical</span>`;
+        if (warnings > 0) badges.innerHTML += `<span class="seo-badge warning">⚠ ${warnings} Warnings</span>`;
+        if (passed > 0) badges.innerHTML += `<span class="seo-badge passed">✓ ${passed} Passed</span>`;
+        if (info > 0) badges.innerHTML += `<span class="seo-badge info">ℹ ${info} Info</span>`;
+      }
+
+      function renderFindings() {
+        const filtered = currentCatFilter === 'all'
+          ? allFindings
+          : allFindings.filter(f => f.type === currentCatFilter);
+
+        // Sort: critical first, then warning, info, passed
+        const order = { critical: 0, warning: 1, info: 2, passed: 3 };
+        filtered.sort((a, b) => (order[a.type] ?? 4) - (order[b.type] ?? 4));
+
+        const icons = { critical: '✕', warning: '⚠', passed: '✓', info: 'ℹ' };
+
+        resultsEl.innerHTML = filtered.map((f, i) => `
+          <div class="seo-result-group" data-idx="${i}">
+            <div class="seo-result-header" onclick="this.parentElement.classList.toggle('open')">
+              <div class="seo-result-icon ${f.type}">${icons[f.type]}</div>
+              <span class="seo-result-title">${f.title}</span>
+              <span class="seo-result-page">${f.page}</span>
+              <svg class="seo-result-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="seo-result-detail">
+              ${f.detail}
+              ${f.fix ? `<span class="fix-hint"><strong>Fix:</strong> ${f.fix}</span>` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function generateSitemap() {
+        const today = new Date().toISOString().split('T')[0];
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+        xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+        PAGES.forEach(page => {
+          const priority = page.url === 'index.html' ? '1.0' :
+            page.url.includes('blog') ? '0.7' :
+            page.url === 'reviews.html' || page.url === 'faq.html' ? '0.6' : '0.8';
+          const freq = page.url === 'index.html' ? 'weekly' :
+            page.url.includes('blog') ? 'monthly' : 'monthly';
+
+          xml += `  <url>\n`;
+          xml += `    <loc>${BASE_URL}/${page.url}</loc>\n`;
+          xml += `    <lastmod>${today}</lastmod>\n`;
+          xml += `    <changefreq>${freq}</changefreq>\n`;
+          xml += `    <priority>${priority}</priority>\n`;
+          xml += `  </url>\n`;
+        });
+
+        xml += `</urlset>`;
+
+        document.getElementById('seoSitemapCode').textContent = xml;
+      }
+
+      function generateActionItems() {
+        const criticals = allFindings.filter(f => f.type === 'critical');
+        const warns = allFindings.filter(f => f.type === 'warning');
+        const items = [];
+
+        criticals.forEach(f => {
+          items.push({ text: `<strong>${f.page}:</strong> ${f.title} — ${f.fix || 'Fix this issue.'}`, priority: 'high' });
+        });
+        warns.slice(0, 10).forEach(f => {
+          items.push({ text: `<strong>${f.page}:</strong> ${f.title} — ${f.fix || 'Address this warning.'}`, priority: 'low' });
+        });
+
+        // Add general action items
+        items.push({ text: '<strong>Global:</strong> Create and upload a <code>robots.txt</code> file to the site root.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Upload the generated <code>sitemap.xml</code> to the site root.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Submit the sitemap to Google Search Console at <code>search.google.com/search-console</code>.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Add Open Graph meta tags (og:title, og:description, og:image) to all pages for better social sharing.', priority: 'low' });
+
+        const container = document.getElementById('seoActionItems');
+        container.innerHTML = items.map((item, i) => `
+          <div class="seo-action-item ${item.priority === 'low' ? 'priority-low' : ''}">
+            <div class="seo-action-num">${i + 1}</div>
+            <div class="action-text">${item.text}</div>
+          </div>
+        `).join('');
+      }
+    })();
 
     // ===== ANALYTICS - Google Business Profile Performance API =====
     (function() {

@@ -422,7 +422,7 @@
       </div>
       <div class="specialties-grid">
         <a href="sports-medicine.html" class="specialty-card specialty-link">
-          <img class="specialty-img" src="test.gif" alt="Sports Medicine">
+          <video class="specialty-img" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Sports Medicine</h3>
           <div class="specialty-detail">
@@ -431,7 +431,7 @@
           </div>
         </a>
         <a href="arthroscopic-surgery.html" class="specialty-card specialty-link">
-          <img class="specialty-img" src="test.gif" alt="Arthroscopic Surgery">
+          <video class="specialty-img" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Arthroscopic Surgery</h3>
           <div class="specialty-detail">
@@ -440,7 +440,7 @@
           </div>
         </a>
         <a href="joint-preservation.html" class="specialty-card specialty-link">
-          <img class="specialty-img" src="test.gif" alt="Joint Preservation">
+          <video class="specialty-img" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Joint Preservation</h3>
           <div class="specialty-detail">
@@ -449,7 +449,7 @@
           </div>
         </a>
         <a href="cartilage-repair.html" class="specialty-card specialty-link">
-          <img class="specialty-img" src="test.gif" alt="Cartilage Repair">
+          <video class="specialty-img" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Cartilage Repair</h3>
           <div class="specialty-detail">
@@ -458,7 +458,7 @@
           </div>
         </a>
         <a href="regenerative-medicine.html" class="specialty-card specialty-link">
-          <img class="specialty-img" src="test.gif" alt="Regenerative Medicine">
+          <video class="specialty-img" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Regenerative Medicine</h3>
           <div class="specialty-detail">
@@ -467,7 +467,7 @@
           </div>
         </a>
         <a href="shoulder-knee-surgery.html" class="specialty-card specialty-link">
-          <img class="specialty-img" src="test.gif" alt="Shoulder and Knee Surgery">
+          <video class="specialty-img" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Shoulder & Knee Surgery</h3>
           <div class="specialty-detail">
@@ -904,6 +904,23 @@
         });
       }, { threshold: 0.12 });
       revealEls.forEach(el => revealObs.observe(el));
+    }
+
+    // --- Lazy-load specialty videos (stream only when visible) ---
+    const specialtyVideos = document.querySelectorAll('.specialty-card video[data-src]');
+    if (specialtyVideos.length) {
+      const videoObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const video = entry.target;
+            video.src = video.dataset.src;
+            video.removeAttribute('data-src');
+            video.play().catch(() => {});
+            videoObs.unobserve(video);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '200px' });
+      specialtyVideos.forEach(v => videoObs.observe(v));
     }
 
     // --- Theme toggle ---

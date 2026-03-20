@@ -1481,27 +1481,37 @@
           'BUSINESS_BOOKINGS'
         ];
 
-        // Fetch all metrics in parallel
+        // Fetch all metrics in a single API call using fetchMultiDailyMetricsTimeSeries
         try {
-          const results = await Promise.all(metrics.map(async metric => {
-            const url = `${PERF_API}/${locPath}:getDailyMetricsTimeSeries?dailyMetric=${metric}&${dateParams}`;
-            const resp = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
-            if (!resp.ok) return { metric, timeSeries: null };
-            const data = await resp.json();
-            return { metric, timeSeries: data.timeSeries };
-          }));
+          const metricsParams = metrics.map(m => 'dailyMetrics=' + m).join('&');
+          const multiUrl = `${PERF_API}/${locPath}:fetchMultiDailyMetricsTimeSeries?${metricsParams}&${dateParams}`;
+          const multiResp = await fetch(multiUrl, { headers: { Authorization: 'Bearer ' + accessToken } });
+
+          let results;
+          if (multiResp.ok) {
+            const multiData = await multiResp.json();
+            results = (multiData.multiDailyMetricTimeSeries || []).map(entry => ({
+              metric: entry.dailyMetric,
+              timeSeries: entry.timeSeries
+            }));
+          } else {
+            // Fallback: fetch individually if multi endpoint fails
+            results = await Promise.all(metrics.map(async metric => {
+              const url = `${PERF_API}/${locPath}:getDailyMetricsTimeSeries?dailyMetric=${metric}&${dateParams}`;
+              const resp = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
+              if (!resp.ok) return { metric, timeSeries: null };
+              const data = await resp.json();
+              return { metric, timeSeries: data.timeSeries?.dailyMetricTimeSeries?.[0]?.timeSeries };
+            }));
+          }
 
           // Aggregate totals
           const totals = {};
           const dailyData = {};
           results.forEach(({ metric, timeSeries }) => {
-            if (!timeSeries?.dailyMetricTimeSeries?.[0]?.timeSeries?.datedValues) {
-              totals[metric] = 0;
-              return;
-            }
-            const values = timeSeries.dailyMetricTimeSeries[0].timeSeries.datedValues;
+            const datedValues = timeSeries?.datedValues || [];
             let sum = 0;
-            values.forEach(v => {
+            datedValues.forEach(v => {
               const val = parseInt(v.value || 0);
               sum += val;
               const dateKey = `${v.date.year}-${String(v.date.month).padStart(2, '0')}-${String(v.date.day).padStart(2, '0')}`;

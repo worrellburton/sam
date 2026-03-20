@@ -263,13 +263,10 @@
     if (megaToggle) {
       megaToggle.addEventListener('click', (e) => {
         if (window.innerWidth <= 768) {
-          e.preventDefault();
-          megaWrap.classList.add('open');
-          const menu = document.getElementById('megaMenu');
-          menu.style.display = 'block';
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => { menu.style.transform = 'translateX(0)'; });
-          });
+          // On mobile, just follow the link normally (scroll to section & close nav)
+          links.classList.remove('active');
+          toggle.classList.remove('active');
+          document.body.style.overflow = '';
         } else if (window.innerWidth <= 1024) {
           e.preventDefault();
           megaWrap.classList.toggle('open');

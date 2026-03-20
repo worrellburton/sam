@@ -38,7 +38,8 @@
     [data-theme="light"] .blog-post-content h2,[data-theme="light"] .blog-post-content h3{color:var(--text)}
     .blog-hero-post{position:relative;padding:160px 0 60px;background-size:cover;background-position:center}
     .blog-hero-post::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,10,30,0.88) 0%,rgba(20,20,50,0.78) 100%)}
-    [data-theme="light"] .blog-hero-post::before{background:linear-gradient(135deg,rgba(255,255,255,0.92) 0%,rgba(240,243,255,0.88) 100%)}
+    [data-theme="light"] .blog-hero-post::before{background:linear-gradient(135deg,rgba(20,20,50,0.65) 0%,rgba(10,10,30,0.5) 100%)}
+    [data-theme="light"] .blog-hero-post h1,[data-theme="light"] .blog-hero-post .blog-meta,[data-theme="light"] .blog-hero-post .blog-breadcrumb,[data-theme="light"] .blog-hero-post .blog-breadcrumb a,[data-theme="light"] .blog-hero-post .hero-label{color:#fff}
     .blog-hero-post .container{position:relative;z-index:1}
     .blog-breadcrumb{font-size:0.85rem;color:var(--text-muted);margin-bottom:16px}
     .blog-breadcrumb a{color:var(--text-light);text-decoration:none}
@@ -234,6 +235,8 @@
     </div>
   </article>
 
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="floating-book-btn" id="floatingBook">Book on Zocdoc</a>
+
   <!-- Footer -->
   <footer class="footer">
     <canvas class="footer-canvas" id="footerCanvas"></canvas>
@@ -294,6 +297,7 @@
     const nav = document.getElementById('nav');
     let lastScrollY = 0;
     let ticking = false;
+    const floatingBook = document.getElementById('floatingBook');
     function updateNav() {
       const sy = window.scrollY;
       nav.classList.toggle('scrolled', sy > 50);
@@ -302,6 +306,7 @@
       } else {
         nav.classList.remove('nav-hidden');
       }
+      if (floatingBook) floatingBook.classList.toggle('visible', sy > 300);
       lastScrollY = sy;
       ticking = false;
     }

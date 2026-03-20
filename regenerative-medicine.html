@@ -189,6 +189,8 @@
     </div>
   </section>
 
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="floating-book-btn" id="floatingBook">Book on Zocdoc</a>
+
   <footer class="footer">
     <canvas class="footer-canvas" id="footerCanvas"></canvas>
     <div class="container">
@@ -246,11 +248,13 @@
   <script>
     const nav = document.getElementById('nav');
     let lastScrollY = 0, ticking = false;
+    const floatingBook = document.getElementById('floatingBook');
     function updateNav() {
       const sy = window.scrollY;
       nav.classList.toggle('scrolled', sy > 50);
       if (sy > lastScrollY && sy > 200) nav.classList.add('nav-hidden');
       else nav.classList.remove('nav-hidden');
+      if (floatingBook) floatingBook.classList.toggle('visible', sy > 300);
       lastScrollY = sy;
       ticking = false;
     }

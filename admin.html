@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal | Dr. Elguizaoui</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0f1a;
+      --bg-alt: #111827;
+      --bg-card: #1a2236;
+      --border: rgba(255,255,255,0.08);
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --green: #22c55e;
+      --yellow: #fbbc04;
+      --red: #ef4444;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== SPLASH / LOGIN ===== */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+    .splash-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .splash-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .splash-logo span { color: var(--accent); }
+    .splash-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+    }
+    .login-box {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .login-box h2 {
+      font-size: 1.2rem;
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+    .login-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-input:focus { border-color: var(--accent); }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: var(--accent-hover); }
+    .login-error {
+      color: var(--red);
+      font-size: 0.85rem;
+      margin-top: 12px;
+      display: none;
+    }
+    .login-error.show { display: block; }
+
+    /* ===== ADMIN LAYOUT ===== */
+    .admin-app { display: none; }
+    .admin-app.active { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 240px;
+      background: var(--bg-alt);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-brand {
+      padding: 0 24px;
+      margin-bottom: 32px;
+    }
+    .sidebar-brand h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .sidebar-brand h1 span { color: var(--accent); }
+    .sidebar-brand p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .sidebar-nav { flex: 1; }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: var(--text-light);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      font-family: inherit;
+    }
+    .sidebar-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .sidebar-link.active {
+      color: var(--accent);
+      background: rgba(37,99,235,0.08);
+      border-right: 3px solid var(--accent);
+    }
+    .sidebar-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .sidebar-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-logout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+    .sidebar-logout:hover { color: var(--red); }
+
+    /* Main content */
+    .admin-main {
+      flex: 1;
+      margin-left: 240px;
+      padding: 32px;
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .page-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    /* Stats cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .stat-card-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .stat-card-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .stat-card-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Location filter tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .filter-tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-tab:hover { border-color: var(--accent); color: var(--text); }
+    .filter-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Bulk actions bar */
+    .bulk-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+    .bulk-actions .count {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+    .bulk-actions .count strong { color: var(--text); }
+    .bulk-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bulk-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .bulk-btn.featured { background: var(--green); border-color: var(--green); color: #fff; }
+    .bulk-btn.unfeatured { background: var(--bg); border-color: var(--border); }
+
+    /* Review cards */
+    .review-list { display: flex; flex-direction: column; gap: 12px; }
+    .review-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+    .review-item:hover { border-color: rgba(255,255,255,0.15); }
+    .review-item.featured { border-left: 3px solid var(--green); }
+    .review-checkbox {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .review-body { flex: 1; min-width: 0; }
+    .review-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .review-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--border);
+    }
+    .review-author { font-weight: 600; font-size: 0.92rem; }
+    .review-date { font-size: 0.78rem; color: var(--text-muted); }
+    .review-stars {
+      color: var(--yellow);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .review-text-content {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-light);
+    }
+    .review-location-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(37,99,235,0.15);
+      color: var(--accent);
+      margin-top: 10px;
+    }
+    .review-featured-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(34,197,94,0.15);
+      color: var(--green);
+      margin-left: 8px;
+    }
+
+    /* Admin page sections */
+    .admin-page { display: none; }
+    .admin-page.active { display: block; }
+
+    /* Dashboard overview cards */
+    .overview-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .overview-section h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-light);
+    }
+    .location-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .location-row:last-child { border-bottom: none; }
+    .location-name { font-weight: 600; font-size: 0.92rem; }
+    .location-address { font-size: 0.82rem; color: var(--text-muted); }
+    .location-rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .location-rating .stars { color: var(--yellow); font-size: 0.9rem; }
+    .location-rating .num { font-weight: 700; font-size: 1.1rem; }
+    .location-rating .count { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* Save notification */
+    .save-toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: var(--green);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.9rem;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+    .save-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Loading spinner */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .admin-sidebar {
+        position: fixed;
+        left: -260px;
+        transition: left 0.3s;
+        z-index: 200;
+      }
+      .admin-sidebar.open { left: 0; }
+      .admin-main { margin-left: 0; padding: 20px; }
+      .mobile-menu-btn {
+        display: flex !important;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 150;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+        color: var(--text);
+        cursor: pointer;
+      }
+      .mobile-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 150;
+        display: none;
+      }
+      .mobile-overlay.show { display: block; }
+      .review-item { flex-direction: column; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .mobile-menu-btn { display: none; }
+    .mobile-overlay { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- SPLASH / LOGIN -->
+  <div class="splash-overlay" id="splashOverlay">
+    <div class="splash-logo">Sam<span>MD</span></div>
+    <div class="splash-subtitle">Admin Portal</div>
+    <div class="login-box">
+      <h2>Sign In</h2>
+      <input type="password" class="login-input" id="loginPassword" placeholder="Enter password" autofocus>
+      <button class="login-btn" id="loginBtn">Sign In</button>
+      <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
+    </div>
+  </div>
+
+  <!-- ADMIN APP -->
+  <div class="admin-app" id="adminApp">
+
+    <!-- Mobile menu button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-brand">
+        <h1>Sam<span>MD</span></h1>
+        <p>Admin Portal</p>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="sidebar-link active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Dashboard
+        </button>
+        <button class="sidebar-link" data-page="reviews">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Reviews
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="sidebar-logout" id="logoutBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+
+      <!-- Dashboard Page -->
+      <div class="admin-page active" id="page-dashboard">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+        </div>
+        <div class="stats-grid" id="dashStats">
+          <div class="stat-card">
+            <div class="stat-card-label">Total Google Reviews</div>
+            <div class="stat-card-value" id="statTotalReviews">--</div>
+            <div class="stat-card-sub">Across 3 locations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Average Rating</div>
+            <div class="stat-card-value" id="statAvgRating">--</div>
+            <div class="stat-card-sub">Weighted average</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Featured Reviews</div>
+            <div class="stat-card-value" id="statFeatured">0</div>
+            <div class="stat-card-sub">Shown on website</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">5-Star Reviews</div>
+            <div class="stat-card-value" id="statFiveStar">--</div>
+            <div class="stat-card-sub">Across all locations</div>
+          </div>
+        </div>
+
+        <div class="overview-section">
+          <h3>Locations Overview</h3>
+          <div id="locationsOverview">
+            <div class="loading"><div class="spinner"></div>Loading locations...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Page -->
+      <div class="admin-page" id="page-reviews">
+        <div class="page-header">
+          <h2>Google Reviews</h2>
+        </div>
+
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab active" data-filter="all">All Locations</button>
+          <button class="filter-tab" data-filter="Upper East Side">Upper East Side</button>
+          <button class="filter-tab" data-filter="West Village">West Village</button>
+          <button class="filter-tab" data-filter="Brooklyn">Brooklyn</button>
+          <button class="filter-tab" data-filter="featured">Featured Only</button>
+        </div>
+
+        <div class="bulk-actions" id="bulkActions" style="display:none;">
+          <span class="count"><strong id="selectedCount">0</strong> selected</span>
+          <button class="bulk-btn featured" id="bulkFeature">Feature Selected</button>
+          <button class="bulk-btn unfeatured" id="bulkUnfeature">Unfeature Selected</button>
+        </div>
+
+        <div class="review-list" id="reviewList">
+          <div class="loading"><div class="spinner"></div>Loading reviews...</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Save Toast -->
+  <div class="save-toast" id="saveToast">Changes saved!</div>
+
+  <script>
+    // --- Config ---
+    const PASSWORD = '123';
+    const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
+    const PLACE_IDS = [
+      { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side', address: '159 East 74th St, New York, NY 10021' },
+      { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village', address: '200 West 13th St, New York, NY 10011' },
+      { id: 'ChIJzeD6h0VawokRCfzPOz9Oi7E', label: 'Brooklyn', address: '161 Atlantic Ave, Brooklyn, NY 11201' }
+    ];
+    const FIELDS = 'id,rating,userRatingCount,reviews.rating,reviews.text,reviews.authorAttribution,reviews.relativePublishTimeDescription,reviews.publishTime';
+    const STORAGE_KEY = 'sammd_featured_reviews';
+
+    // --- State ---
+    let allReviews = [];
+    let locationData = [];
+    let featuredIds = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let currentFilter = 'all';
+    let selectedIds = new Set();
+
+    // --- Auth ---
+    const splash = document.getElementById('splashOverlay');
+    const app = document.getElementById('adminApp');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginPassword = document.getElementById('loginPassword');
+    const loginError = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (sessionStorage.getItem('sammd_authed') === '1') {
+      splash.classList.add('hidden');
+      app.classList.add('active');
+      init();
+    }
+
+    loginBtn.addEventListener('click', doLogin);
+    loginPassword.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+    function doLogin() {
+      if (loginPassword.value === PASSWORD) {
+        sessionStorage.setItem('sammd_authed', '1');
+        splash.classList.add('hidden');
+        app.classList.add('active');
+        init();
+      } else {
+        loginError.classList.add('show');
+        loginPassword.value = '';
+        loginPassword.focus();
+      }
+    }
+
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('sammd_authed');
+      location.reload();
+    });
+
+    // --- Mobile menu ---
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const sidebar = document.getElementById('adminSidebar');
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      mobileOverlay.classList.toggle('show');
+    });
+    mobileOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      mobileOverlay.classList.remove('show');
+    });
+
+    // --- Navigation ---
+    document.querySelectorAll('.sidebar-link[data-page]').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + link.dataset.page).classList.add('active');
+        sidebar.classList.remove('open');
+        mobileOverlay.classList.remove('show');
+      });
+    });
+
+    // --- Init ---
+    async function init() {
+      try {
+        const results = await Promise.all(PLACE_IDS.map(async (place) => {
+          const resp = await fetch(
+            `https://places.googleapis.com/v1/places/${place.id}?fields=${FIELDS}&key=${PLACES_API_KEY}`
+          );
+          if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+          const data = await resp.json();
+          return {
+            ...place,
+            rating: data.rating || 0,
+            count: data.userRatingCount || 0,
+            reviews: (data.reviews || []).map(r => ({
+              ...r,
+              locationLabel: place.label,
+              uid: r.name || (r.authorAttribution?.displayName + r.publishTime)
+            }))
+          };
+        }));
+
+        locationData = results;
+        allReviews = results.flatMap(r => r.reviews)
+          .sort((a, b) => new Date(b.publishTime || 0) - new Date(a.publishTime || 0));
+
+        renderDashboard();
+        renderReviews();
+      } catch (err) {
+        console.error('Failed to load data:', err);
+        document.getElementById('reviewList').innerHTML =
+          `<div class="loading" style="color:var(--red)">Failed to load reviews. Check API key and try again.</div>`;
+      }
+    }
+
+    // --- Dashboard ---
+    function renderDashboard() {
+      const totalCount = locationData.reduce((s, l) => s + l.count, 0);
+      const weightedRating = locationData.reduce((s, l) => s + l.rating * l.count, 0) / totalCount;
+      const fiveStarCount = allReviews.filter(r => r.rating === 5).length;
+
+      document.getElementById('statTotalReviews').textContent = totalCount.toLocaleString();
+      document.getElementById('statAvgRating').textContent = weightedRating.toFixed(1) + ' ★';
+      document.getElementById('statFeatured').textContent = featuredIds.length;
+      document.getElementById('statFiveStar').textContent = fiveStarCount + '/' + allReviews.length;
+
+      const starsHTML = (r) => '★'.repeat(Math.round(r)) + '☆'.repeat(5 - Math.round(r));
+      document.getElementById('locationsOverview').innerHTML = locationData.map(l => `
+        <div class="location-row">
+          <div>
+            <div class="location-name">${l.label}</div>
+            <div class="location-address">${l.address}</div>
+          </div>
+          <div class="location-rating">
+            <span class="stars">${starsHTML(l.rating)}</span>
+            <span class="num">${l.rating}</span>
+            <span class="count">(${l.count} reviews)</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- Reviews ---
+    function starsHTML(rating) {
+      return '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+    }
+
+    function getFilteredReviews() {
+      if (currentFilter === 'all') return allReviews;
+      if (currentFilter === 'featured') return allReviews.filter(r => featuredIds.includes(r.uid));
+      return allReviews.filter(r => r.locationLabel === currentFilter);
+    }
+
+    function renderReviews() {
+      const filtered = getFilteredReviews();
+      const list = document.getElementById('reviewList');
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<div class="loading">No reviews found for this filter.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(r => {
+        const isFeatured = featuredIds.includes(r.uid);
+        const isSelected = selectedIds.has(r.uid);
+        return `
+          <div class="review-item ${isFeatured ? 'featured' : ''}" data-uid="${r.uid}">
+            <input type="checkbox" class="review-checkbox" data-uid="${r.uid}" ${isSelected ? 'checked' : ''}>
+            <div class="review-body">
+              <div class="review-top">
+                <img class="review-avatar" src="${r.authorAttribution?.photoUri || ''}" alt="" onerror="this.style.display='none'" loading="lazy">
+                <div>
+                  <div class="review-author">${r.authorAttribution?.displayName || 'Anonymous'}</div>
+                  <div class="review-date">${r.relativePublishTimeDescription || ''}</div>
+                </div>
+              </div>
+              <div class="review-stars">${starsHTML(r.rating)}</div>
+              <div class="review-text-content">${r.text?.text || ''}</div>
+              <span class="review-location-badge">${r.locationLabel}</span>
+              ${isFeatured ? '<span class="review-featured-badge">★ Featured</span>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Checkbox handlers
+      list.querySelectorAll('.review-checkbox').forEach(cb => {
+        cb.addEventListener('change', () => {
+          if (cb.checked) selectedIds.add(cb.dataset.uid);
+          else selectedIds.delete(cb.dataset.uid);
+          updateBulkActions();
+        });
+      });
+
+      updateBulkActions();
+    }
+
+    function updateBulkActions() {
+      const bar = document.getElementById('bulkActions');
+      const countEl = document.getElementById('selectedCount');
+      if (selectedIds.size > 0) {
+        bar.style.display = 'flex';
+        countEl.textContent = selectedIds.size;
+      } else {
+        bar.style.display = 'none';
+      }
+    }
+
+    // --- Filter tabs ---
+    document.getElementById('filterTabs').addEventListener('click', e => {
+      const tab = e.target.closest('.filter-tab');
+      if (!tab) return;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentFilter = tab.dataset.filter;
+      selectedIds.clear();
+      renderReviews();
+    });
+
+    // --- Bulk actions ---
+    document.getElementById('bulkFeature').addEventListener('click', () => {
+      selectedIds.forEach(uid => {
+        if (!featuredIds.includes(uid)) featuredIds.push(uid);
+      });
+      saveFeatured();
+      selectedIds.clear();
+      renderReviews();
+      renderDashboard();
+      showToast('Reviews featured!');
+    });
+
+    document.getElementById('bulkUnfeature').addEventListener('click', () => {
+      featuredIds = featuredIds.filter(id => !selectedIds.has(id));
+      saveFeatured();
+      selectedIds.clear();
+      renderReviews();
+      renderDashboard();
+      showToast('Reviews unfeatured.');
+    });
+
+    function saveFeatured() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(featuredIds));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('saveToast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+  </script>
+</body>
+</html>

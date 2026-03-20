@@ -1167,6 +1167,7 @@ img { max-width: 100%; display: block; }
 }
 
 /* ===== Credentials ===== */
+/* -- Mobile-first: vertical timeline -- */
 .credentials-timeline {
   max-width: 700px;
   margin: 0 auto;
@@ -1239,6 +1240,58 @@ img { max-width: 100%; display: block; }
   font-size: 0.85rem !important;
   color: var(--text-muted) !important;
   margin-top: 6px;
+}
+
+/* -- Desktop: horizontal timeline -- */
+@media (min-width: 769px) {
+  .credentials-timeline {
+    max-width: 100%;
+    display: flex;
+    gap: 0;
+    padding-left: 0;
+    padding-top: 28px;
+  }
+
+  .credentials-timeline::before {
+    left: 0;
+    right: 0;
+    top: 34px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    background: linear-gradient(to right, var(--primary), var(--primary-light));
+  }
+
+  .timeline-item {
+    flex: 1;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 12px;
+    padding-top: 28px;
+  }
+  .timeline-item:last-child { padding-right: 0; }
+
+  .timeline-marker {
+    left: 16px;
+    top: -7px;
+  }
+
+  .timeline-content {
+    padding: 20px;
+    height: 100%;
+  }
+
+  .timeline-content h3 {
+    font-size: 0.95rem;
+  }
+
+  .timeline-content p {
+    font-size: 0.82rem;
+  }
+
+  .timeline-detail {
+    font-size: 0.78rem !important;
+  }
 }
 
 /* ===== Locations ===== */

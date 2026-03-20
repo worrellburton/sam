@@ -420,6 +420,45 @@
       transform: translateY(0);
     }
 
+    /* Mobile sticky bottom action bar */
+    .mobile-bulk-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 300;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
+      gap: 12px;
+      align-items: center;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    }
+    .mobile-bulk-bar .count {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+    .mobile-bulk-bar .count strong { color: var(--text); }
+    .mobile-bulk-bar .mobile-bulk-btns {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .mobile-bulk-bar .bulk-btn {
+      padding: 10px 18px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+    @media (max-width: 768px) {
+      .mobile-bulk-bar.visible { display: flex; }
+      .save-toast { bottom: 80px; right: 16px; left: 16px; text-align: center; }
+      .review-list { padding-bottom: 80px; }
+    }
+
     /* Loading spinner */
     .loading {
       text-align: center;
@@ -587,6 +626,15 @@
       </div>
 
     </main>
+  </div>
+
+  <!-- Mobile sticky bottom bar -->
+  <div class="mobile-bulk-bar" id="mobileBulkBar">
+    <span class="count"><strong id="mobileSelectedCount">0</strong> selected</span>
+    <div class="mobile-bulk-btns">
+      <button class="bulk-btn featured" id="mobileBulkFeature">Feature Selected</button>
+      <button class="bulk-btn unfeatured" id="mobileBulkUnfeature">Unfeature</button>
+    </div>
   </div>
 
   <!-- Save Toast -->
@@ -790,11 +838,16 @@
     function updateBulkActions() {
       const bar = document.getElementById('bulkActions');
       const countEl = document.getElementById('selectedCount');
+      const mobileBar = document.getElementById('mobileBulkBar');
+      const mobileCountEl = document.getElementById('mobileSelectedCount');
       if (selectedIds.size > 0) {
         bar.style.display = 'flex';
         countEl.textContent = selectedIds.size;
+        mobileBar.classList.add('visible');
+        mobileCountEl.textContent = selectedIds.size;
       } else {
         bar.style.display = 'none';
+        mobileBar.classList.remove('visible');
       }
     }
 
@@ -810,7 +863,7 @@
     });
 
     // --- Bulk actions ---
-    document.getElementById('bulkFeature').addEventListener('click', () => {
+    function doFeature() {
       selectedIds.forEach(uid => {
         if (!featuredIds.includes(uid)) featuredIds.push(uid);
       });
@@ -819,16 +872,21 @@
       renderReviews();
       renderDashboard();
       showToast('Reviews featured!');
-    });
+    }
 
-    document.getElementById('bulkUnfeature').addEventListener('click', () => {
+    function doUnfeature() {
       featuredIds = featuredIds.filter(id => !selectedIds.has(id));
       saveFeatured();
       selectedIds.clear();
       renderReviews();
       renderDashboard();
       showToast('Reviews unfeatured.');
-    });
+    }
+
+    document.getElementById('bulkFeature').addEventListener('click', doFeature);
+    document.getElementById('bulkUnfeature').addEventListener('click', doUnfeature);
+    document.getElementById('mobileBulkFeature').addEventListener('click', doFeature);
+    document.getElementById('mobileBulkUnfeature').addEventListener('click', doUnfeature);
 
     function saveFeatured() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(featuredIds));

@@ -614,21 +614,6 @@
         <h2>Trusted by <span class="text-accent" id="reviewsTotalHeading">Patients</span></h2>
         <p class="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
       </div>
-      <div class="reviews-stats reveal-stagger" id="reviewsStats">
-        <div class="review-stat">
-          <div class="stat-platform">Zocdoc</div>
-          <div class="stat-rating" data-target="4.78"><span class="count-up">0.0</span><span>/5</span></div>
-          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="stat-count">1,469 verified reviews</div>
-        </div>
-        <div class="review-stat">
-          <div class="stat-platform">Google</div>
-          <div class="stat-rating" id="googleRating" data-target="4.9"><span class="count-up">0.0</span><span>/5</span></div>
-          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="stat-count" id="googleReviewCount">298 reviews across 3 locations</div>
-        </div>
-      </div>
-
       <!-- Google Reviews Carousel -->
       <div class="google-reviews-carousel" id="googleReviewsCarousel">
         <div class="google-reviews-track" id="googleReviewsTrack">
@@ -1033,35 +1018,6 @@
       mobileThemeToggle.addEventListener('click', toggleTheme);
     }
 
-    // --- Count-up animation for review stats ---
-    (function() {
-      const statsSection = document.getElementById('reviewsStats');
-      if (!statsSection) return;
-      let animated = false;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !animated) {
-            animated = true;
-            const counters = statsSection.querySelectorAll('.count-up');
-            counters.forEach(counter => {
-              const target = parseFloat(counter.closest('.stat-rating').dataset.target);
-              const duration = 1500;
-              const start = performance.now();
-              function tick(now) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                counter.textContent = (target * eased).toFixed(1);
-                if (progress < 1) requestAnimationFrame(tick);
-                else counter.textContent = target.toFixed(target % 1 === 0 ? 1 : 2);
-              }
-              requestAnimationFrame(tick);
-            });
-          }
-        });
-      }, { threshold: 0.3 });
-      observer.observe(statsSection);
-    })();
 
     // --- Move Easier background slideshow ---
     (function() {
@@ -1203,14 +1159,23 @@
                 <div class="google-review-meta">${r.relativePublishTimeDescription || ''}</div>
               </div>
               <div class="google-review-google-icon">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
               </div>
             </div>
             <div class="google-review-stars">${starsHTML(r.rating)}</div>
             <div class="google-review-text">${r.text?.text || ''}</div>
+            <div class="google-review-read-more">Read more</div>
             <div class="google-review-location">${r.locationLabel}</div>
           </div>
         `).join('');
+
+        // Detect clamped text and show "Read more"
+        track.querySelectorAll('.google-review-card').forEach(card => {
+          const textEl = card.querySelector('.google-review-text');
+          if (textEl && textEl.scrollHeight > textEl.clientHeight + 2) {
+            card.classList.add('clamped');
+          }
+        });
 
         updateCarousel();
       }
@@ -1271,11 +1236,7 @@
           const totalCount = results.reduce((s, r) => s + r.count, 0);
           const weightedRating = results.reduce((s, r) => s + r.rating * r.count, 0) / totalCount;
 
-          // Update stats in the DOM
-          const ratingEl = document.getElementById('googleRating');
-          if (ratingEl) ratingEl.setAttribute('data-target', weightedRating.toFixed(1));
-          const countEl = document.getElementById('googleReviewCount');
-          if (countEl) countEl.textContent = `${totalCount.toLocaleString()} reviews across 3 locations`;
+          // Update heading with total patient count
           const headingEl = document.getElementById('reviewsTotalHeading');
           if (headingEl) headingEl.textContent = `${(1469 + totalCount).toLocaleString()}+ Patients`;
 

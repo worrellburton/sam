@@ -631,6 +631,7 @@ img { max-width: 100%; display: block; }
   justify-content: flex-end;
   padding: 0;
   background: url('header.jpg') center center / cover no-repeat;
+  background: image-set(url('header.webp') type('image/webp'), url('header.jpg') type('image/jpeg')) center center / cover no-repeat;
   overflow: hidden;
 }
 

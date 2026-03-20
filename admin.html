@@ -1283,6 +1283,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           SEO
         </button>
+        <button class="sidebar-link" data-page="geo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          GEO
+        </button>
         <button class="sidebar-link" data-page="analytics">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
           Analytics
@@ -1542,6 +1546,111 @@
 
         <!-- Last scan timestamp -->
         <div class="seo-last-scan" id="seoLastScan"></div>
+      </div>
+
+      <!-- GEO Page -->
+      <div class="admin-page" id="page-geo">
+        <div class="page-header">
+          <h2>GEO Health Report</h2>
+          <button class="seo-run-btn" id="geoRunBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Run GEO Audit
+          </button>
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;">
+          <p style="color:var(--text-light);font-size:0.88rem;line-height:1.6;margin:0;"><strong style="color:var(--text)">What is GEO?</strong> Generative Engine Optimization (GEO) is the practice of optimizing web content to be surfaced, cited, and recommended by AI search engines like ChatGPT, Google AI Overviews, Perplexity, and Claude. Unlike traditional SEO which focuses on rankings, GEO focuses on making content <em>citeable</em> by AI systems.</p>
+        </div>
+
+        <!-- Overall Score -->
+        <div class="seo-score-banner" id="geoScoreBanner">
+          <div class="seo-score-ring">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+              <circle cx="60" cy="60" r="52" fill="none" stroke-width="8" stroke-linecap="round" class="seo-score-circle" id="geoScoreCircle" stroke-dasharray="327" stroke-dashoffset="327" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="seo-score-number" id="geoScoreNumber">--</div>
+          </div>
+          <div class="seo-score-info">
+            <h3 id="geoScoreLabel">Run an audit to check your GEO health</h3>
+            <p id="geoScoreDesc">Scans all pages for AI-search readiness: structured data quality, FAQ schemas, citeable content, E-E-A-T signals, and conversational formatting.</p>
+            <div class="seo-score-badges" id="geoScoreBadges"></div>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="seo-progress" id="geoProgress" style="display:none">
+          <div class="seo-progress-label" id="geoProgressLabel">Scanning pages for AI readiness...</div>
+          <div class="seo-progress-bar">
+            <div class="seo-progress-fill" id="geoProgressFill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-grid" id="geoStats" style="display:none">
+          <div class="stat-card">
+            <div class="stat-card-label">Pages Scanned</div>
+            <div class="stat-card-value" id="geoPagesScanned">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Issues Found</div>
+            <div class="stat-card-value" id="geoIssuesFound" style="color:var(--red)">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Warnings</div>
+            <div class="stat-card-value" id="geoWarnings" style="color:var(--yellow)">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Passed Checks</div>
+            <div class="stat-card-value" id="geoPassed" style="color:var(--green)">0</div>
+          </div>
+        </div>
+
+        <!-- Category filters -->
+        <div class="filter-tabs" id="geoCategoryTabs" style="display:none">
+          <button class="filter-tab active" data-geo-cat="all">All</button>
+          <button class="filter-tab" data-geo-cat="critical">Critical</button>
+          <button class="filter-tab" data-geo-cat="warning">Warnings</button>
+          <button class="filter-tab" data-geo-cat="passed">Passed</button>
+          <button class="filter-tab" data-geo-cat="info">Info</button>
+        </div>
+
+        <!-- Audit results -->
+        <div class="seo-results" id="geoResults"></div>
+
+        <!-- GEO Suggestions -->
+        <div id="geoSuggestionsSection" style="display:none;margin-top:24px">
+          <div class="core-section">
+            <div class="core-section-header">
+              <h3>GEO Optimization Suggestions</h3>
+              <span class="core-badge" style="background:rgba(139,92,246,0.15);color:#8b5cf6">AI Ready</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Prioritized recommendations to improve your site's visibility in AI-generated answers.</p>
+            <div id="geoSuggestions"></div>
+          </div>
+        </div>
+
+        <!-- Claude Fix Prompt -->
+        <div id="geoClaudeSection" style="display:none;margin-top:24px">
+          <div class="core-section">
+            <div class="core-section-header">
+              <div class="seo-claude-header">
+                <div class="claude-icon">C</div>
+                <h3>Fix with Claude</h3>
+              </div>
+              <span class="core-badge" style="background:linear-gradient(135deg,rgba(217,119,6,0.2),rgba(245,158,11,0.2));color:#f59e0b">AI Prompt</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Copy the prompt below and paste it into Claude to automatically fix all detected GEO issues across your site files.</p>
+            <div class="seo-claude-prompt" id="geoClaudePrompt"></div>
+            <button class="seo-copy-btn" id="geoClaudePromptCopyBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Prompt
+            </button>
+          </div>
+        </div>
+
+        <!-- Last scan timestamp -->
+        <div class="seo-last-scan" id="geoLastScan"></div>
       </div>
 
       <!-- Analytics Page -->
@@ -2428,6 +2537,423 @@
           btn.style.borderColor = 'var(--green)';
           btn.style.color = 'var(--green)';
           setTimeout(() => { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);
+        });
+      });
+    })();
+
+    // ===== GEO AUDIT ENGINE =====
+    (function() {
+      const BASE_URL = 'https://rwb8771.github.io/sammd';
+      const PAGES = [
+        { url: 'index.html', label: 'Homepage' },
+        { url: 'blog.html', label: 'Blog Index' },
+        { url: 'reviews.html', label: 'Reviews' },
+        { url: 'faq.html', label: 'FAQ' },
+        { url: 'sports-medicine.html', label: 'Sports Medicine' },
+        { url: 'arthroscopic-surgery.html', label: 'Arthroscopic Surgery' },
+        { url: 'cartilage-repair.html', label: 'Cartilage Repair' },
+        { url: 'joint-preservation.html', label: 'Joint Preservation' },
+        { url: 'regenerative-medicine.html', label: 'Regenerative Medicine' },
+        { url: 'shoulder-knee-surgery.html', label: 'Shoulder & Knee Surgery' },
+        { url: 'blog/5-signs-orthopedic-surgeon.html', label: 'Blog: 5 Signs' },
+        { url: 'blog/acl-tear-recovery.html', label: 'Blog: ACL Recovery' },
+        { url: 'blog/arthroscopic-vs-open-surgery.html', label: 'Blog: Arthroscopic vs Open' },
+        { url: 'blog/prp-therapy-sports-medicine.html', label: 'Blog: PRP Therapy' },
+        { url: 'blog/protecting-joints-active-adults.html', label: 'Blog: Joint Protection' },
+        { url: 'blog/cartilage-damage-treatment.html', label: 'Blog: Cartilage Damage' }
+      ];
+
+      const runBtn = document.getElementById('geoRunBtn');
+      const progressEl = document.getElementById('geoProgress');
+      const progressLabel = document.getElementById('geoProgressLabel');
+      const progressFill = document.getElementById('geoProgressFill');
+      const statsEl = document.getElementById('geoStats');
+      const resultsEl = document.getElementById('geoResults');
+      const categoryTabs = document.getElementById('geoCategoryTabs');
+      const lastScanEl = document.getElementById('geoLastScan');
+
+      let geoFindings = [];
+      let geoCatFilter = 'all';
+
+      runBtn.addEventListener('click', startGeoAudit);
+
+      categoryTabs.addEventListener('click', e => {
+        const tab = e.target.closest('.filter-tab');
+        if (!tab) return;
+        categoryTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        geoCatFilter = tab.dataset.geoCat;
+        renderGeoFindings();
+      });
+
+      async function startGeoAudit() {
+        runBtn.classList.add('scanning');
+        progressEl.style.display = '';
+        statsEl.style.display = 'none';
+        categoryTabs.style.display = 'none';
+        resultsEl.innerHTML = '';
+        document.getElementById('geoSuggestionsSection').style.display = 'none';
+        document.getElementById('geoClaudeSection').style.display = 'none';
+        geoFindings = [];
+
+        const total = PAGES.length;
+        let scanned = 0;
+
+        for (const page of PAGES) {
+          progressLabel.textContent = 'Analyzing ' + page.label + ' for AI readiness...';
+          progressFill.style.width = ((scanned / total) * 100) + '%';
+
+          try {
+            const resp = await fetch(page.url + '?_geo=' + Date.now());
+            if (!resp.ok) {
+              geoFindings.push({ type: 'critical', title: 'Page returns ' + resp.status + ' error', page: page.label, detail: '<code>' + page.url + '</code> returned HTTP ' + resp.status + '. AI engines cannot index this page.', fix: 'Ensure the page exists and is deployed correctly.' });
+              scanned++;
+              continue;
+            }
+            const html = await resp.text();
+            auditGeoPage(html, page);
+          } catch (err) {
+            geoFindings.push({ type: 'critical', title: 'Page failed to load', page: page.label, detail: 'Could not fetch <code>' + page.url + '</code>: ' + err.message, fix: 'Check deployment.' });
+          }
+          scanned++;
+        }
+
+        runGlobalGeoChecks();
+
+        progressFill.style.width = '100%';
+        progressLabel.textContent = 'GEO audit complete!';
+        setTimeout(() => { progressEl.style.display = 'none'; }, 1200);
+
+        statsEl.style.display = '';
+        categoryTabs.style.display = '';
+        runBtn.classList.remove('scanning');
+
+        const critical = geoFindings.filter(f => f.type === 'critical').length;
+        const warnings = geoFindings.filter(f => f.type === 'warning').length;
+        const passed = geoFindings.filter(f => f.type === 'passed').length;
+        const info = geoFindings.filter(f => f.type === 'info').length;
+
+        document.getElementById('geoPagesScanned').textContent = PAGES.length;
+        document.getElementById('geoIssuesFound').textContent = critical;
+        document.getElementById('geoWarnings').textContent = warnings;
+        document.getElementById('geoPassed').textContent = passed;
+
+        const totalChecks = critical + warnings + passed;
+        const score = totalChecks > 0 ? Math.round(((passed + info * 0.5) / (totalChecks + info * 0.5)) * 100) : 0;
+        updateGeoScoreRing(score, critical, warnings, passed, info);
+
+        renderGeoFindings();
+        generateGeoSuggestions();
+        generateGeoClaudePrompt();
+
+        lastScanEl.textContent = 'Last scanned: ' + new Date().toLocaleString();
+      }
+
+      function auditGeoPage(html, page) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const bodyText = doc.body ? doc.body.textContent.replace(/\s+/g, ' ').trim() : '';
+        const wordCount = bodyText.split(' ').length;
+
+        // 1. Structured Data Quality (JSON-LD)
+        const schemas = doc.querySelectorAll('script[type="application/ld+json"]');
+        if (schemas.length === 0) {
+          geoFindings.push({ type: 'critical', title: 'No structured data (JSON-LD)', page: page.label, detail: 'AI engines rely heavily on structured data to understand entities, relationships, and facts. No JSON-LD schema was found.', fix: 'Add JSON-LD schema markup — FAQPage, Article/BlogPosting, MedicalBusiness, or Physician as appropriate for this page.' });
+        } else {
+          const types = [];
+          let hasFaq = false, hasArticle = false, hasMedical = false;
+          schemas.forEach(s => {
+            try {
+              const data = JSON.parse(s.textContent);
+              const t = data['@type'];
+              types.push(t || 'Unknown');
+              if (t === 'FAQPage') hasFaq = true;
+              if (t === 'BlogPosting' || t === 'Article') hasArticle = true;
+              if (t === 'Physician' || t === 'MedicalBusiness' || t === 'MedicalWebPage') hasMedical = true;
+            } catch (e) { types.push('Invalid JSON'); }
+          });
+
+          geoFindings.push({ type: 'passed', title: 'Structured data found (' + types.join(', ') + ')', page: page.label, detail: schemas.length + ' JSON-LD schema block(s) detected. Types: <code>' + types.join(', ') + '</code>' });
+
+          // Check for FAQPage schema (high GEO value)
+          if (!hasFaq && page.url !== 'blog.html' && page.url !== 'reviews.html') {
+            geoFindings.push({ type: 'warning', title: 'Missing FAQPage schema', page: page.label, detail: 'FAQPage schema is one of the highest-value GEO signals. AI engines use FAQ structured data to directly answer user questions.', fix: 'Add a FAQPage JSON-LD schema with 3-5 common questions and detailed answers about this topic.' });
+          } else if (hasFaq) {
+            geoFindings.push({ type: 'passed', title: 'FAQPage schema present', page: page.label, detail: 'FAQPage structured data helps AI engines extract Q&A pairs for direct answers.' });
+          }
+
+          // Check for BlogPosting/Article on blog pages
+          if (page.url.includes('blog/') && !hasArticle) {
+            geoFindings.push({ type: 'warning', title: 'Missing BlogPosting/Article schema', page: page.label, detail: 'Blog posts should have BlogPosting or Article schema with author, datePublished, and description for AI citation.', fix: 'Add BlogPosting JSON-LD with author name, credentials, datePublished, and a clear description.' });
+          }
+        }
+
+        // 2. Question-Based Headings (H2s)
+        const h2s = doc.querySelectorAll('h2');
+        const questionH2s = Array.from(h2s).filter(h => {
+          const t = h.textContent.trim();
+          return t.includes('?') || /^(what|how|why|when|who|where|can|does|is|are|should|do|will)\b/i.test(t);
+        });
+        if (h2s.length > 0 && questionH2s.length === 0) {
+          geoFindings.push({ type: 'warning', title: 'No question-based headings found', page: page.label, detail: 'AI search engines prioritize content that directly answers questions. ' + h2s.length + ' H2 headings found but none use question format.', fix: 'Rewrite H2 headings as questions users would ask (e.g., "What Is ACL Reconstruction?" instead of "ACL Reconstruction").' });
+        } else if (questionH2s.length > 0) {
+          geoFindings.push({ type: 'passed', title: questionH2s.length + ' question-based heading(s) found', page: page.label, detail: 'Question-format headings increase the chance of being cited in AI answers. Found: <code>' + questionH2s.map(h => h.textContent.trim().substring(0, 50)).join('</code>, <code>') + '</code>' });
+        }
+
+        // 3. Direct Answer Paragraphs (citeable content)
+        const paragraphs = doc.querySelectorAll('p');
+        let citeableCount = 0;
+        const citeablePatterns = [
+          /is a .{10,}/i, /refers to .{10,}/i, /are .{10,}/i,
+          /involves .{10,}/i, /typically .{10,}/i, /according to/i,
+          /studies show/i, /research indicates/i, /\d+%/,
+          /the most common/i, /is defined as/i, /treatment for/i,
+          /recovery .{5,} takes/i, /symptoms include/i
+        ];
+        paragraphs.forEach(p => {
+          const t = p.textContent.trim();
+          if (t.length >= 80 && t.length <= 500) {
+            if (citeablePatterns.some(pat => pat.test(t))) citeableCount++;
+          }
+        });
+        if (citeableCount === 0 && wordCount > 200) {
+          geoFindings.push({ type: 'warning', title: 'Low citeable content density', page: page.label, detail: 'AI engines prefer concise, factual statements they can directly quote. No clearly citeable paragraphs detected (80-500 chars with factual phrasing).', fix: 'Write clear, direct answer paragraphs after each heading. Start with a definitive statement (e.g., "ACL reconstruction is a surgical procedure that...").' });
+        } else if (citeableCount > 0) {
+          geoFindings.push({ type: 'passed', title: citeableCount + ' citeable paragraph(s) detected', page: page.label, detail: 'Found paragraphs with factual, direct-answer phrasing suitable for AI citation.' });
+        }
+
+        // 4. Author / Expert Attribution (E-E-A-T)
+        const authorSignals = bodyText.match(/Dr\.\s*\w+|M\.D\.|board.certified|fellowship|trained at|specialist|surgeon/gi) || [];
+        if (authorSignals.length === 0 && !page.url.includes('blog.html')) {
+          geoFindings.push({ type: 'warning', title: 'No author/expert attribution found', page: page.label, detail: 'AI engines weight content from recognized experts more highly (E-E-A-T). No doctor name, credentials, or expertise signals detected.', fix: 'Include author name with credentials (e.g., "Dr. Sameh Elguizaoui, M.D.") and mention training/expertise.' });
+        } else if (authorSignals.length > 0) {
+          geoFindings.push({ type: 'passed', title: 'Expert attribution signals found (' + authorSignals.length + ')', page: page.label, detail: 'E-E-A-T signals detected: <code>' + [...new Set(authorSignals.slice(0, 5))].join(', ') + '</code>' });
+        }
+
+        // 5. Statistics & Data Points
+        const statMatches = bodyText.match(/\d[\d,]*\s*(%|\+|million|thousand|billion|patients|reviews|years|stars|rating)/gi) || [];
+        if (statMatches.length === 0 && wordCount > 300) {
+          geoFindings.push({ type: 'info', title: 'No statistics or data points found', page: page.label, detail: 'Content with specific numbers and statistics is more likely to be cited by AI engines as authoritative.', fix: 'Add relevant statistics (e.g., "over 200,000 ACL injuries occur annually in the United States").' });
+        } else if (statMatches.length > 0) {
+          geoFindings.push({ type: 'passed', title: statMatches.length + ' statistic(s)/data point(s) found', page: page.label, detail: 'Numeric data enhances credibility for AI citation. Found: <code>' + statMatches.slice(0, 5).join(', ') + '</code>' });
+        }
+
+        // 6. Content Depth (word count for GEO)
+        if (wordCount < 500 && page.url !== 'blog.html' && page.url !== 'reviews.html') {
+          geoFindings.push({ type: 'warning', title: 'Thin content for GEO (~' + wordCount + ' words)', page: page.label, detail: 'AI engines prefer comprehensive, in-depth content (800+ words) to cite as authoritative sources.', fix: 'Expand content with detailed explanations, Q&A sections, and expert insights. Aim for 800-1500 words on key pages.' });
+        } else if (wordCount >= 800) {
+          geoFindings.push({ type: 'passed', title: 'Good content depth (~' + wordCount + ' words)', page: page.label, detail: 'Comprehensive content is more likely to be used as a source by AI search engines.' });
+        } else if (wordCount >= 500) {
+          geoFindings.push({ type: 'info', title: 'Moderate content depth (~' + wordCount + ' words)', page: page.label, detail: 'Content length is acceptable but expanding to 800+ words would improve AI citation potential.' });
+        }
+
+        // 7. Internal Linking Depth
+        const links = doc.querySelectorAll('a[href]');
+        const internalLinks = Array.from(links).filter(a => {
+          const href = a.getAttribute('href');
+          return href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('#');
+        });
+        const serviceLinks = internalLinks.filter(a => {
+          const h = a.getAttribute('href');
+          return h && (h.includes('sports-medicine') || h.includes('arthroscopic') || h.includes('cartilage') || h.includes('joint-preservation') || h.includes('regenerative') || h.includes('shoulder-knee') || h.includes('blog/'));
+        });
+        if (serviceLinks.length < 2 && page.url !== 'index.html') {
+          geoFindings.push({ type: 'warning', title: 'Low entity interlinking (' + serviceLinks.length + ' service/blog links)', page: page.label, detail: 'AI engines build entity graphs from internal links. Linking to related service pages and blog posts strengthens topical authority.', fix: 'Add contextual links to related service pages and blog posts throughout the content.' });
+        } else if (serviceLinks.length >= 2) {
+          geoFindings.push({ type: 'passed', title: 'Good entity interlinking (' + serviceLinks.length + ' service/blog links)', page: page.label, detail: 'Strong internal linking helps AI engines understand entity relationships across your site.' });
+        }
+
+        // 8. Meta Description Quality for AI
+        const metaDesc = doc.querySelector('meta[name="description"]');
+        if (metaDesc && metaDesc.content) {
+          const desc = metaDesc.content;
+          const hasEntity = /Dr\.|M\.D\.|NYC|New York|orthopedic|surgeon/i.test(desc);
+          const hasAction = /book|schedule|consult|call|visit|learn/i.test(desc);
+          if (!hasEntity) {
+            geoFindings.push({ type: 'info', title: 'Meta description lacks entity mentions', page: page.label, detail: 'Including the doctor\'s name, location (NYC), and specialty in the meta description helps AI engines associate the page with the correct entity.', fix: 'Include "Dr. Sameh Elguizaoui" or "orthopedic surgeon NYC" in the meta description.' });
+          }
+        }
+
+        // 9. Heading Hierarchy for Topic Mapping
+        const allHeadings = doc.querySelectorAll('h1, h2, h3');
+        const headingTexts = Array.from(allHeadings).map(h => h.textContent.trim());
+        const topicKeywords = ['orthopedic', 'surgery', 'knee', 'shoulder', 'acl', 'cartilage', 'sports medicine', 'recovery', 'treatment', 'prp', 'arthroscopic', 'joint'];
+        const relevantHeadings = headingTexts.filter(t => topicKeywords.some(kw => t.toLowerCase().includes(kw)));
+        if (relevantHeadings.length === 0 && wordCount > 200) {
+          geoFindings.push({ type: 'warning', title: 'Headings lack topical keywords', page: page.label, detail: 'AI engines use headings to determine page topics. No headings contain orthopedic/medical keywords.', fix: 'Include relevant medical terms in headings (e.g., "knee surgery", "ACL recovery", "orthopedic treatment").' });
+        }
+
+        // 10. Conversational / Natural Language
+        const questionMarks = (bodyText.match(/\?/g) || []).length;
+        if (questionMarks === 0 && wordCount > 300 && !page.url.includes('reviews')) {
+          geoFindings.push({ type: 'info', title: 'No conversational Q&A content', page: page.label, detail: 'AI search often responds to conversational queries. Pages without any question marks may miss conversational search traffic.', fix: 'Add a Q&A or FAQ section with natural language questions and answers.' });
+        }
+
+        // 11. Lists & Structured Content
+        const lists = doc.querySelectorAll('ul, ol');
+        if (lists.length === 0 && wordCount > 400) {
+          geoFindings.push({ type: 'info', title: 'No lists or structured content blocks', page: page.label, detail: 'AI engines often prefer to cite content from bulleted or numbered lists for clarity and scannability.', fix: 'Add bulleted or numbered lists for key takeaways, treatment options, or step-by-step processes.' });
+        }
+
+        // 12. Location Entity Signals
+        const locationSignals = bodyText.match(/(Manhattan|Brooklyn|NYC|New York|Upper East Side|West Village|Scarsdale|Lenox Hill)/gi) || [];
+        if (locationSignals.length === 0 && !page.url.includes('blog/')) {
+          geoFindings.push({ type: 'warning', title: 'No location entity signals', page: page.label, detail: 'AI engines use location signals for local queries. No NYC/Manhattan/Brooklyn mentions detected.', fix: 'Include specific location mentions naturally in the content (Manhattan, Brooklyn, NYC area).' });
+        } else if (locationSignals.length > 0) {
+          geoFindings.push({ type: 'passed', title: 'Location entities detected (' + [...new Set(locationSignals.map(l => l.toLowerCase()))].length + ' unique)', page: page.label, detail: 'Location signals found: <code>' + [...new Set(locationSignals)].slice(0, 5).join(', ') + '</code>' });
+        }
+      }
+
+      function runGlobalGeoChecks() {
+        geoFindings.push({ type: 'info', title: 'Consider adding speakable schema', page: 'Global', detail: '<code>speakable</code> schema markup tells voice assistants which sections of your page are most suitable for text-to-speech reading.', fix: 'Add speakable schema to key content sections, especially FAQ answers and article summaries.' });
+
+        geoFindings.push({ type: 'info', title: 'Consider adding BreadcrumbList schema', page: 'Global', detail: 'BreadcrumbList structured data helps AI engines understand your site hierarchy and navigate between related content.', fix: 'Add BreadcrumbList JSON-LD to all inner pages showing the navigation path.' });
+
+        geoFindings.push({ type: 'passed', title: 'Site uses HTTPS', page: 'Global', detail: 'HTTPS is a trust signal for both traditional and AI search engines.' });
+
+        geoFindings.push({ type: 'passed', title: 'Responsive design detected', page: 'Global', detail: 'Mobile-friendly content is important as many AI assistants serve mobile users.' });
+      }
+
+      function updateGeoScoreRing(score, critical, warnings, passed, info) {
+        const circle = document.getElementById('geoScoreCircle');
+        const number = document.getElementById('geoScoreNumber');
+        const label = document.getElementById('geoScoreLabel');
+        const desc = document.getElementById('geoScoreDesc');
+        const badges = document.getElementById('geoScoreBadges');
+
+        const circumference = 327;
+        const offset = circumference - (score / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+
+        if (score >= 80) {
+          circle.style.stroke = '#22c55e';
+          label.textContent = 'Excellent GEO Health';
+          desc.textContent = 'Your site is well-optimized for AI search engines. Address remaining items to maximize visibility.';
+        } else if (score >= 60) {
+          circle.style.stroke = '#fbbc04';
+          label.textContent = 'GEO Needs Improvement';
+          desc.textContent = 'Several opportunities found to improve AI search visibility. Focus on structured data and citeable content.';
+        } else {
+          circle.style.stroke = '#ef4444';
+          label.textContent = 'Low AI Search Readiness';
+          desc.textContent = 'Significant GEO gaps detected. AI engines may not cite or surface your content effectively.';
+        }
+
+        number.textContent = score;
+        badges.innerHTML = '';
+        if (critical > 0) badges.innerHTML += '<span class="seo-badge critical">\u2715 ' + critical + ' Critical</span>';
+        if (warnings > 0) badges.innerHTML += '<span class="seo-badge warning">\u26A0 ' + warnings + ' Warnings</span>';
+        if (passed > 0) badges.innerHTML += '<span class="seo-badge passed">\u2713 ' + passed + ' Passed</span>';
+        if (info > 0) badges.innerHTML += '<span class="seo-badge info">\u2139 ' + info + ' Info</span>';
+      }
+
+      function renderGeoFindings() {
+        const filtered = geoCatFilter === 'all' ? geoFindings : geoFindings.filter(f => f.type === geoCatFilter);
+        const order = { critical: 0, warning: 1, info: 2, passed: 3 };
+        filtered.sort((a, b) => (order[a.type] || 4) - (order[b.type] || 4));
+        const icons = { critical: '\u2715', warning: '\u26A0', passed: '\u2713', info: '\u2139' };
+
+        resultsEl.innerHTML = filtered.map((f, i) => '\
+          <div class="seo-result-group" data-idx="' + i + '">\
+            <div class="seo-result-header" onclick="this.parentElement.classList.toggle(\'open\')">\
+              <div class="seo-result-icon ' + f.type + '">' + icons[f.type] + '</div>\
+              <span class="seo-result-title">' + f.title + '</span>\
+              <span class="seo-result-page">' + f.page + '</span>\
+              <svg class="seo-result-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>\
+            </div>\
+            <div class="seo-result-detail">\
+              ' + f.detail + '\
+              ' + (f.fix ? '<span class="fix-hint"><strong>Fix:</strong> ' + f.fix + '</span>' : '') + '\
+            </div>\
+          </div>').join('');
+      }
+
+      function generateGeoSuggestions() {
+        const section = document.getElementById('geoSuggestionsSection');
+        const container = document.getElementById('geoSuggestions');
+        const criticals = geoFindings.filter(f => f.type === 'critical');
+        const warns = geoFindings.filter(f => f.type === 'warning');
+        const items = [];
+
+        criticals.forEach(f => {
+          items.push({ text: '<strong>' + f.page + ':</strong> ' + f.title + ' — ' + (f.fix || 'Fix this issue.'), priority: 'high' });
+        });
+        warns.forEach(f => {
+          items.push({ text: '<strong>' + f.page + ':</strong> ' + f.title + ' — ' + (f.fix || 'Address this warning.'), priority: 'low' });
+        });
+
+        items.push({ text: '<strong>Global:</strong> Add FAQPage schema to all service pages with 3-5 Q&As each.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Rewrite H2 headings as questions on service pages.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Add "About the Author" sections with credentials to blog posts.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Include specific statistics and research citations in all content.', priority: 'low' });
+
+        container.innerHTML = items.map((item, i) => '\
+          <div class="seo-action-item ' + (item.priority === 'low' ? 'priority-low' : '') + '">\
+            <div class="seo-action-num">' + (i + 1) + '</div>\
+            <div class="action-text">' + item.text + '</div>\
+          </div>').join('');
+
+        section.style.display = 'block';
+      }
+
+      function generateGeoClaudePrompt() {
+        const section = document.getElementById('geoClaudeSection');
+        const promptEl = document.getElementById('geoClaudePrompt');
+
+        if (geoFindings.length === 0) { section.style.display = 'none'; return; }
+
+        const criticals = geoFindings.filter(f => f.type === 'critical');
+        const warns = geoFindings.filter(f => f.type === 'warning');
+
+        var prompt = 'Fix all GEO (Generative Engine Optimization) issues on my website to improve AI search visibility. The site is a medical practice website for an orthopedic surgeon. Here are the issues found by a GEO audit:\n\n';
+
+        if (criticals.length > 0) {
+          prompt += 'CRITICAL ISSUES (fix these first):\n';
+          criticals.forEach(function(f, i) {
+            prompt += (i + 1) + '. [' + f.page + '] ' + f.title;
+            if (f.fix) prompt += ' — ' + f.fix;
+            prompt += '\n';
+          });
+          prompt += '\n';
+        }
+
+        if (warns.length > 0) {
+          prompt += 'WARNINGS:\n';
+          warns.forEach(function(f, i) {
+            prompt += (i + 1) + '. [' + f.page + '] ' + f.title;
+            if (f.fix) prompt += ' — ' + f.fix;
+            prompt += '\n';
+          });
+          prompt += '\n';
+        }
+
+        var pageFiles = PAGES.map(function(p) { return p.url; }).join(', ');
+        prompt += 'FILES TO UPDATE: ' + pageFiles + '\n\n';
+
+        prompt += 'GEO OPTIMIZATION TASKS:\n';
+        prompt += '- Add FAQPage schema (JSON-LD) to all pages that don\'t have it\n';
+        prompt += '- Rewrite H2 headings as natural-language questions where appropriate\n';
+        prompt += '- Add direct, citeable answer paragraphs (80-300 chars) after each heading\n';
+        prompt += '- Include author credentials (Dr. Sameh Elguizaoui, M.D., board-certified) throughout\n';
+        prompt += '- Add specific statistics with context in service and blog pages\n';
+        prompt += '- Ensure all blog posts have BlogPosting schema with author, date, and description\n';
+        prompt += '- Add location entity mentions (NYC, Manhattan, Brooklyn) to service pages\n';
+        prompt += '- Create Q&A sections on pages that lack conversational content\n\n';
+        prompt += 'Please make all changes directly to the HTML files. Keep existing content and styling intact — only add GEO improvements.';
+
+        promptEl.textContent = prompt;
+        section.style.display = 'block';
+      }
+
+      document.getElementById('geoClaudePromptCopyBtn').addEventListener('click', function() {
+        var text = document.getElementById('geoClaudePrompt').textContent;
+        navigator.clipboard.writeText(text).then(function() {
+          var btn = document.getElementById('geoClaudePromptCopyBtn');
+          var orig = btn.innerHTML;
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+          btn.style.borderColor = 'var(--green)';
+          btn.style.color = 'var(--green)';
+          setTimeout(function() { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);
         });
       });
     })();

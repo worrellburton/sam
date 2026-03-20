@@ -840,6 +840,41 @@
     .seo-action-item .action-text strong { color: var(--text); }
     .seo-action-item.priority-low .seo-action-num { background: rgba(251,188,4,0.15); color: var(--yellow); }
 
+    .seo-claude-prompt {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--text-light);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 500px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+    }
+    .seo-claude-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .seo-claude-header .claude-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
     .seo-last-scan {
       text-align: center;
       padding: 16px;
@@ -1308,6 +1343,25 @@
               <span class="core-badge" style="background:rgba(239,68,68,0.15);color:var(--red)">To-Do</span>
             </div>
             <div class="seo-action-items" id="seoActionItems"></div>
+          </div>
+        </div>
+
+        <!-- Claude Fix Prompt -->
+        <div class="seo-claude-section" id="seoClaudeSection" style="display:none;margin-top:24px">
+          <div class="core-section">
+            <div class="core-section-header">
+              <div class="seo-claude-header">
+                <div class="claude-icon">C</div>
+                <h3>Fix with Claude</h3>
+              </div>
+              <span class="core-badge" style="background:linear-gradient(135deg,rgba(217,119,6,0.2),rgba(245,158,11,0.2));color:#f59e0b">AI Prompt</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Copy the prompt below and paste it into Claude to automatically fix all detected SEO issues across your site files.</p>
+            <div class="seo-claude-prompt" id="seoClaudePrompt"></div>
+            <button class="seo-copy-btn" id="seoClaudePromptCopyBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Prompt
+            </button>
           </div>
         </div>
 
@@ -2063,7 +2117,70 @@
             <div class="action-text">${item.text}</div>
           </div>
         `).join('');
+
+        // Generate Claude fix prompt
+        generateClaudePrompt();
       }
+
+      function generateClaudePrompt() {
+        const section = document.getElementById('seoClaudeSection');
+        const promptEl = document.getElementById('seoClaudePrompt');
+
+        if (allFindings.length === 0) { section.style.display = 'none'; return; }
+
+        const criticals = allFindings.filter(f => f.type === 'critical');
+        const warns = allFindings.filter(f => f.type === 'warning');
+
+        let prompt = `Fix all SEO issues on my website. The site is a static HTML site for a medical/dental practice. Here are the issues found by an SEO audit:\n\n`;
+
+        if (criticals.length > 0) {
+          prompt += `CRITICAL ISSUES (fix these first):\n`;
+          criticals.forEach((f, i) => {
+            prompt += `${i + 1}. [${f.page}] ${f.title}`;
+            if (f.fix) prompt += ` — ${f.fix}`;
+            prompt += `\n`;
+          });
+          prompt += `\n`;
+        }
+
+        if (warns.length > 0) {
+          prompt += `WARNINGS:\n`;
+          warns.forEach((f, i) => {
+            prompt += `${i + 1}. [${f.page}] ${f.title}`;
+            if (f.fix) prompt += ` — ${f.fix}`;
+            prompt += `\n`;
+          });
+          prompt += `\n`;
+        }
+
+        // Add file list
+        const pageFiles = PAGES.map(p => p.url).join(', ');
+        prompt += `FILES TO UPDATE: ${pageFiles}\n\n`;
+
+        prompt += `ADDITIONAL TASKS:\n`;
+        prompt += `- Create a robots.txt file in the site root\n`;
+        prompt += `- Create a sitemap.xml file in the site root with all pages\n`;
+        prompt += `- Add Open Graph meta tags (og:title, og:description, og:image) to all pages\n`;
+        prompt += `- Ensure all pages have proper canonical URLs\n`;
+        prompt += `- Add structured data (JSON-LD schema) where appropriate\n\n`;
+        prompt += `Please make all the changes directly to the HTML files. Keep existing content and styling intact — only fix the SEO issues.`;
+
+        promptEl.textContent = prompt;
+        section.style.display = 'block';
+      }
+
+      // Copy Claude prompt button
+      document.getElementById('seoClaudePromptCopyBtn').addEventListener('click', () => {
+        const text = document.getElementById('seoClaudePrompt').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById('seoClaudePromptCopyBtn');
+          const orig = btn.innerHTML;
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+          btn.style.borderColor = 'var(--green)';
+          btn.style.color = 'var(--green)';
+          setTimeout(() => { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);
+        });
+      });
     })();
 
     // ===== ANALYTICS - Google Business Profile Performance API =====

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rwb8771.github.io/sammd/sitemap.xml

@@ -560,49 +560,13 @@
     </div>
   </section>
 
-  <!-- 4. Patient Reviews (merged testimonials + Google reviews) -->
+  <!-- 4. Patient Reviews (Google API only) -->
   <section class="section reviews reveal" id="reviews">
     <div class="container">
       <div class="section-header">
         <p class="section-label">Patient Reviews</p>
         <h2>Trusted by <span class="text-accent" id="reviewsTotalHeading">Patients</span></h2>
         <p class="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
-      </div>
-
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <blockquote>"Dr. Elguizaoui was a delight! Excellent bedside manner, very inquisitive and explained my options for treatment thoroughly."</blockquote>
-          <div class="testimonial-author">
-            <div class="author-avatar">Z</div>
-            <div>
-              <span class="author-name">Verified Patient</span>
-              <span class="author-source">Zocdoc</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <blockquote>"Doctor Elguizaoui is an amazing doctor. He repaired a partially torn meniscus, explained what was wrong, what needed to be done and made me feel comfortable through the entire process."</blockquote>
-          <div class="testimonial-author">
-            <div class="author-avatar">Z</div>
-            <div>
-              <span class="author-name">Verified Patient</span>
-              <span class="author-source">Zocdoc</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <blockquote>"Outstanding doctor. His expertise and manners were impeccable. He's very knowledgeable, friendly and aware of new research-backed technologies and treatments."</blockquote>
-          <div class="testimonial-author">
-            <div class="author-avatar">Z</div>
-            <div>
-              <span class="author-name">Verified Patient</span>
-              <span class="author-source">Zocdoc</span>
-            </div>
-          </div>
-        </div>
       </div>
       <!-- Google Reviews Carousel -->
       <div class="google-reviews-carousel" id="googleReviewsCarousel">
@@ -826,40 +790,105 @@
       }
     }, { passive: true });
 
-    // --- Initialize 3D Google Maps when locations section approaches ---
+    // --- Initialize Google Maps when locations section approaches ---
     (function() {
       const locSection = document.getElementById('locations');
       if (!locSection) return;
       let mapsLoaded = false;
 
+      const darkMapStyle = [
+        { elementType: 'geometry', stylers: [{ color: '#1a1a2e' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#1a1a2e' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#8888aa' }] },
+        { featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{ color: '#2a2a4a' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2a2a4a' }] },
+        { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#1e1e38' }] },
+        { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3a3a5c' }] },
+        { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#2a2a4a' }] },
+        { featureType: 'road.arterial', elementType: 'geometry', stylers: [{ color: '#2e2e4e' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0e0e1e' }] },
+        { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#4a4a6a' }] },
+        { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#1e1e38' }] },
+        { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#6a6a8a' }] },
+        { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#1a2a1a' }] },
+        { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#222244' }] },
+        { featureType: 'poi.business', stylers: [{ visibility: 'off' }] },
+        { featureType: 'transit', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] }
+      ];
+
+      const lightMapStyle = [
+        { featureType: 'poi.business', stylers: [{ visibility: 'off' }] },
+        { featureType: 'transit', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+        { elementType: 'geometry', stylers: [{ color: '#f5f5f5' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#616161' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#ffffff' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#c9e8fc' }] },
+        { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#d4edda' }] }
+      ];
+
+      function getMapStyle() {
+        return document.documentElement.getAttribute('data-theme') === 'light' ? lightMapStyle : darkMapStyle;
+      }
+
       window.initLocationMaps = function() {
         if (mapsLoaded) return;
         mapsLoaded = true;
         const cards = locSection.querySelectorAll('.location-card');
+        const maps = [];
 
         cards.forEach(card => {
           const lat = parseFloat(card.dataset.lat);
           const lng = parseFloat(card.dataset.lng);
+          const label = card.dataset.label;
+          const address = card.dataset.address;
           const mapDiv = card.querySelector('.location-map');
 
-          // Create 3D Map element
-          const map3d = document.createElement('gmp-map-3d');
-          map3d.setAttribute('center', `${lat},${lng},200`);
-          map3d.setAttribute('tilt', '55');
-          map3d.setAttribute('heading', '30');
-          map3d.setAttribute('range', '800');
-          map3d.setAttribute('mode', 'HYBRID');
-          map3d.style.width = '100%';
-          map3d.style.height = '100%';
-          mapDiv.appendChild(map3d);
+          const map = new google.maps.Map(mapDiv, {
+            center: { lat, lng },
+            zoom: 14,
+            styles: getMapStyle(),
+            disableDefaultUI: true,
+            zoomControl: true,
+            zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_BOTTOM },
+            gestureHandling: 'cooperative',
+            backgroundColor: '#1a1a2e'
+          });
+
+          const marker = new google.maps.Marker({
+            position: { lat, lng },
+            map: map,
+            title: label,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 10,
+              fillColor: '#4F6BFF',
+              fillOpacity: 1,
+              strokeColor: '#fff',
+              strokeWeight: 3
+            }
+          });
+
+          const infoWindow = new google.maps.InfoWindow({
+            content: '<div style="font-family:Inter,sans-serif;padding:4px 2px"><strong style="font-size:14px">' + label + '</strong><br><span style="color:#666;font-size:12px">' + address + '</span></div>'
+          });
+
+          marker.addListener('click', () => infoWindow.open(map, marker));
+          maps.push(map);
         });
+
+        // Update map styles when theme changes
+        const themeObserver = new MutationObserver(() => {
+          const style = getMapStyle();
+          maps.forEach(m => m.setOptions({ styles: style }));
+        });
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
       };
 
       const mapObs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const script = document.createElement('script');
-            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM&v=alpha&libraries=maps3d&callback=initLocationMaps';
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM&callback=initLocationMaps';
             script.async = true;
             script.defer = true;
             document.head.appendChild(script);

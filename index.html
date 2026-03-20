@@ -137,6 +137,8 @@
   }
   </script>
 
+  <link rel="preconnect" href="https://www.google.com">
+  <link rel="preconnect" href="https://maps.googleapis.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -670,7 +672,7 @@
       <div class="locations-grid">
         <a href="https://www.google.com/maps/search/?api=1&query=159+East+74th+Street+New+York+NY" target="_blank" rel="noopener" class="location-card">
           <div class="location-map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1510.5!2d-73.9615!3d40.7720!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c258ebcd2b6bc7%3A0x0!2s159+E+74th+St%2C+New+York%2C+NY!5e0!3m2!1sen!2sus!4v1" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Upper East Side Office Map"></iframe>
+            <iframe data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1510.5!2d-73.9615!3d40.7720!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c258ebcd2b6bc7%3A0x0!2s159+E+74th+St%2C+New+York%2C+NY!5e0!3m2!1sen!2sus!4v1" width="100%" height="100%" style="border:0;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="Upper East Side Office Map"></iframe>
           </div>
           <div class="location-label">
             <span>Upper East Side: 159 East 74th St</span>
@@ -678,7 +680,7 @@
         </a>
         <a href="https://www.google.com/maps/search/?api=1&query=200+West+13th+Street+New+York+NY" target="_blank" rel="noopener" class="location-card">
           <div class="location-map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1510.5!2d-73.9990!3d40.7375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a2d5e6c9c1%3A0x0!2s200+W+13th+St%2C+New+York%2C+NY!5e0!3m2!1sen!2sus!4v1" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Greenwich Village Office Map"></iframe>
+            <iframe data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1510.5!2d-73.9990!3d40.7375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a2d5e6c9c1%3A0x0!2s200+W+13th+St%2C+New+York%2C+NY!5e0!3m2!1sen!2sus!4v1" width="100%" height="100%" style="border:0;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="Greenwich Village Office Map"></iframe>
           </div>
           <div class="location-label">
             <span>Greenwich Village: 200 West 13th St</span>
@@ -686,7 +688,7 @@
         </a>
         <a href="https://www.google.com/maps/search/?api=1&query=161+Atlantic+Avenue+Brooklyn+NY" target="_blank" rel="noopener" class="location-card">
           <div class="location-map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1510.5!2d-73.9870!3d40.6860!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a4b3e3b0c7f%3A0x0!2s161+Atlantic+Ave%2C+Brooklyn%2C+NY!5e0!3m2!1sen!2sus!4v1" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Brooklyn Heights Office Map"></iframe>
+            <iframe data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1510.5!2d-73.9870!3d40.6860!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a4b3e3b0c7f%3A0x0!2s161+Atlantic+Ave%2C+Brooklyn%2C+NY!5e0!3m2!1sen!2sus!4v1" width="100%" height="100%" style="border:0;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="Brooklyn Heights Office Map"></iframe>
           </div>
           <div class="location-label">
             <span>Brooklyn Heights: 161 Atlantic Ave</span>
@@ -840,6 +842,24 @@
         if (mobileThemeToggle) mobileThemeToggle.classList.toggle('visible', pastHero);
       }
     }, { passive: true });
+
+    // --- Preload location map iframes early ---
+    (function() {
+      const locSection = document.getElementById('locations');
+      if (!locSection) return;
+      const mapObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            locSection.querySelectorAll('iframe[data-src]').forEach(iframe => {
+              iframe.src = iframe.dataset.src;
+              iframe.removeAttribute('data-src');
+            });
+            mapObs.unobserve(locSection);
+          }
+        });
+      }, { rootMargin: '500px' });
+      mapObs.observe(locSection);
+    })();
 
     // --- Move Easier marquee parallax ---
     const moveMarquee = document.getElementById('moveMarquee');

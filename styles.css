@@ -1215,7 +1215,7 @@ img { max-width: 100%; display: block; }
   height: 14px;
   border-radius: 50%;
   background: var(--primary);
-  border: 3px solid var(--bg);
+  border: 3px solid var(--bg-alt);
   box-shadow: 0 0 0 2px var(--primary);
 }
 
@@ -1263,33 +1263,42 @@ img { max-width: 100%; display: block; }
   .credentials-timeline {
     max-width: 100%;
     display: flex;
-    gap: 0;
+    gap: 16px;
     padding-left: 0;
-    padding-top: 28px;
+    padding-top: 40px;
   }
 
   .credentials-timeline::before {
     left: 0;
     right: 0;
-    top: 34px;
+    top: 46px;
     bottom: auto;
     width: auto;
     height: 2px;
-    background: linear-gradient(to right, var(--primary), var(--primary-light));
+    background: var(--primary);
   }
 
   .timeline-item {
     flex: 1;
     padding-bottom: 0;
     padding-left: 0;
-    padding-right: 12px;
-    padding-top: 28px;
+    padding-right: 0;
+    padding-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
   }
   .timeline-item:last-child { padding-right: 0; }
 
   .timeline-marker {
-    left: 16px;
-    top: -7px;
+    left: 50%;
+    top: -13px;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border: 3px solid var(--bg-alt);
+    box-shadow: 0 0 0 2px var(--primary);
+    z-index: 2;
   }
 
   .timeline-content {

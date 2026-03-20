@@ -610,7 +610,7 @@
     <div class="container">
       <div class="section-header">
         <p class="section-label">Patient Reviews</p>
-        <h2>Trusted by <span class="text-accent">1,400+ Patients</span></h2>
+        <h2>Trusted by <span class="text-accent" id="reviewsTotalHeading">Patients</span></h2>
         <p class="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
       </div>
       <div class="reviews-stats reveal-stagger" id="reviewsStats">
@@ -622,14 +622,27 @@
         </div>
         <div class="review-stat">
           <div class="stat-platform">Google</div>
-          <div class="stat-rating" data-target="4.8"><span class="count-up">0.0</span><span>/5</span></div>
+          <div class="stat-rating" id="googleRating" data-target="4.9"><span class="count-up">0.0</span><span>/5</span></div>
           <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="stat-count">Google reviews</div>
+          <div class="stat-count" id="googleReviewCount">298 reviews across 3 locations</div>
         </div>
       </div>
-      <!-- Elfsight Google Reviews | Sameh Elguizaoui, M.D. -->
-      <script src="https://elfsightcdn.com/platform.js" async></script>
-      <div class="elfsight-app-9f0dc1ed-0d4f-47f4-b07f-2b20c7d610f0" data-elfsight-app-lazy></div>
+
+      <!-- Google Reviews Carousel -->
+      <div class="google-reviews-carousel" id="googleReviewsCarousel">
+        <div class="google-reviews-track" id="googleReviewsTrack">
+          <!-- Reviews loaded dynamically via Google Places API -->
+        </div>
+      </div>
+      <div class="google-reviews-nav">
+        <button class="google-reviews-arrow" id="reviewsPrev" aria-label="Previous reviews">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div class="google-reviews-dots" id="reviewsDots"></div>
+        <button class="google-reviews-arrow" id="reviewsNext" aria-label="Next reviews">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
 
       <div class="reviews-cta">
         <p>See what patients are saying about Dr. Elguizaoui</p>
@@ -1059,6 +1072,137 @@
         requestAnimationFrame(frame);
       }
       frame();
+    })();
+
+    // --- Google Reviews Carousel ---
+    (function() {
+      const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
+      const PLACE_IDS = [
+        { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
+        { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
+        { id: 'ChIJzeD6h0VawokRCfzPOz9Oi7E', label: 'Brooklyn' }
+      ];
+      const FIELDS = 'id,rating,userRatingCount,reviews.rating,reviews.text,reviews.authorAttribution,reviews.relativePublishTimeDescription,reviews.publishTime';
+
+      const track = document.getElementById('googleReviewsTrack');
+      const dotsContainer = document.getElementById('reviewsDots');
+      const prevBtn = document.getElementById('reviewsPrev');
+      const nextBtn = document.getElementById('reviewsNext');
+      if (!track) return;
+
+      let currentPage = 0;
+      let totalPages = 1;
+      let allReviews = [];
+
+      function getCardsPerPage() {
+        if (window.innerWidth <= 768) return 1;
+        if (window.innerWidth <= 1024) return 2;
+        return 3;
+      }
+
+      function starsHTML(rating) {
+        return '&#9733;'.repeat(Math.round(rating)) + '&#9734;'.repeat(5 - Math.round(rating));
+      }
+
+      function renderReviews() {
+        track.innerHTML = allReviews.map(r => `
+          <div class="google-review-card">
+            <div class="google-review-header">
+              <img class="google-review-avatar" src="${r.authorAttribution?.photoUri || ''}" alt="${r.authorAttribution?.displayName || 'Patient'}" loading="lazy" onerror="this.style.display='none'">
+              <div>
+                <div class="google-review-author">${r.authorAttribution?.displayName || 'Patient'}</div>
+                <div class="google-review-meta">${r.relativePublishTimeDescription || ''}</div>
+              </div>
+              <div class="google-review-google-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+            <div class="google-review-stars">${starsHTML(r.rating)}</div>
+            <div class="google-review-text">${r.text?.text || ''}</div>
+            <div class="google-review-location">${r.locationLabel}</div>
+          </div>
+        `).join('');
+
+        updateCarousel();
+      }
+
+      function updateCarousel() {
+        const cardsPerPage = getCardsPerPage();
+        totalPages = Math.ceil(allReviews.length / cardsPerPage);
+        if (currentPage >= totalPages) currentPage = totalPages - 1;
+
+        const cardWidth = track.children[0]?.offsetWidth || 0;
+        const gap = 20;
+        const offset = currentPage * cardsPerPage * (cardWidth + gap);
+        track.style.transform = `translateX(-${offset}px)`;
+
+        // Update dots
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalPages; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'google-reviews-dot' + (i === currentPage ? ' active' : '');
+          dot.addEventListener('click', () => { currentPage = i; updateCarousel(); });
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      prevBtn.addEventListener('click', () => { if (currentPage > 0) { currentPage--; updateCarousel(); } });
+      nextBtn.addEventListener('click', () => { if (currentPage < totalPages - 1) { currentPage++; updateCarousel(); } });
+
+      // Touch/swipe support
+      let startX = 0, isDragging = false;
+      track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isDragging = true; }, { passive: true });
+      track.addEventListener('touchend', e => {
+        if (!isDragging) return;
+        isDragging = false;
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+          if (diff > 0 && currentPage < totalPages - 1) { currentPage++; updateCarousel(); }
+          else if (diff < 0 && currentPage > 0) { currentPage--; updateCarousel(); }
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', () => { updateCarousel(); });
+
+      // Fetch reviews from all 3 locations
+      async function fetchAllReviews() {
+        try {
+          const results = await Promise.all(PLACE_IDS.map(async (place) => {
+            const resp = await fetch(`https://places.googleapis.com/v1/places/${place.id}?fields=${FIELDS}&key=${PLACES_API_KEY}`);
+            if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+            const data = await resp.json();
+            return {
+              rating: data.rating || 0,
+              count: data.userRatingCount || 0,
+              reviews: (data.reviews || []).map(r => ({ ...r, locationLabel: place.label }))
+            };
+          }));
+
+          // Aggregate stats
+          const totalCount = results.reduce((s, r) => s + r.count, 0);
+          const weightedRating = results.reduce((s, r) => s + r.rating * r.count, 0) / totalCount;
+
+          // Update stats in the DOM
+          const ratingEl = document.getElementById('googleRating');
+          if (ratingEl) ratingEl.setAttribute('data-target', weightedRating.toFixed(1));
+          const countEl = document.getElementById('googleReviewCount');
+          if (countEl) countEl.textContent = `${totalCount.toLocaleString()} reviews across 3 locations`;
+          const headingEl = document.getElementById('reviewsTotalHeading');
+          if (headingEl) headingEl.textContent = `${(1469 + totalCount).toLocaleString()}+ Patients`;
+
+          // Combine & sort reviews by date (newest first), only 5-star
+          allReviews = results.flatMap(r => r.reviews)
+            .filter(r => r.rating >= 4)
+            .sort((a, b) => new Date(b.publishTime || 0) - new Date(a.publishTime || 0));
+
+          renderReviews();
+        } catch (err) {
+          console.warn('Google Reviews fetch failed:', err);
+          // Fallback: show nothing, stats stay as defaults
+        }
+      }
+
+      fetchAllReviews();
     })();
   </script>
 

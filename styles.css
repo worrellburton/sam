@@ -348,6 +348,7 @@ img { max-width: 100%; display: block; }
 /* Nav CTA Buttons */
 .nav-buttons {
   display: flex;
+  align-items: center;
   gap: 10px;
   margin-left: 12px;
 }

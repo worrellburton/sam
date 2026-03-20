@@ -171,6 +171,10 @@
             Services <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
           <div class="mega-menu" id="megaMenu">
+            <button class="mega-back-btn" id="megaBackBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Back
+            </button>
             <div class="mega-menu-inner">
               <div class="mega-col">
                 <h4 class="mega-heading">Treatments</h4>
@@ -771,29 +775,57 @@
     const toggle = document.getElementById('navToggle');
     const links = document.getElementById('navLinks');
     toggle.addEventListener('click', () => {
-      links.classList.toggle('active');
+      const isOpen = links.classList.toggle('active');
       toggle.classList.toggle('active');
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
     // --- Mega menu toggle ---
     const megaWrap = document.querySelector('.nav-mega-wrap');
     const megaToggle = document.querySelector('.nav-mega-toggle');
+    const megaBackBtn = document.getElementById('megaBackBtn');
     if (megaToggle) {
       megaToggle.addEventListener('click', (e) => {
-        if (window.innerWidth <= 1024) {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          // Show mega menu with slide-in
+          megaWrap.classList.add('open');
+          // Force reflow then animate
+          const menu = document.getElementById('megaMenu');
+          menu.style.display = 'block';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              menu.style.transform = 'translateX(0)';
+            });
+          });
+        } else if (window.innerWidth <= 1024) {
           e.preventDefault();
           megaWrap.classList.toggle('open');
         }
+      });
+    }
+    if (megaBackBtn) {
+      megaBackBtn.addEventListener('click', () => {
+        const menu = document.getElementById('megaMenu');
+        menu.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+          megaWrap.classList.remove('open');
+          menu.style.transform = '';
+          menu.style.display = '';
+        }, 350);
       });
     }
 
     // Close mobile menu on link click
     links.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        if (link === megaToggle && window.innerWidth <= 1024) return;
+        if (link === megaToggle && window.innerWidth <= 768) return;
         links.classList.remove('active');
         toggle.classList.remove('active');
+        document.body.style.overflow = '';
         if (megaWrap) megaWrap.classList.remove('open');
+        const menu = document.getElementById('megaMenu');
+        if (menu) { menu.style.transform = ''; menu.style.display = ''; }
       });
     });
 

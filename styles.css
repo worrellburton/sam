@@ -1327,7 +1327,7 @@ img { max-width: 100%; display: block; }
 }
 
 .stat-rating {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 3rem;
   font-weight: 700;
   color: var(--text);
@@ -1540,6 +1540,14 @@ img { max-width: 100%; display: block; }
   justify-content: center;
   font-weight: 700;
   font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.author-avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
   flex-shrink: 0;
 }
 

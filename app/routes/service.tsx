@@ -1,16 +1,6 @@
 import { Link, useParams } from "react-router";
 import { getServiceBySlug, services } from "~/data/services";
-import { GetStarted } from "~/components/GetStarted";
-import { Locations } from "~/components/Locations";
-
-const serviceHeroImages: Record<string, string> = {
-  "sports-medicine": "https://images.unsplash.com/photo-1461896836934-bd45ba55ae57?w=1600&h=600&fit=crop&q=80",
-  "arthroscopic-surgery": "https://images.unsplash.com/photo-1551190822-a9ce113ac100?w=1600&h=600&fit=crop&q=80",
-  "regenerative-medicine": "https://images.unsplash.com/photo-1579684453423-f84349ef60b0?w=1600&h=600&fit=crop&q=80",
-  "joint-preservation": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1600&h=600&fit=crop&q=80",
-  "cartilage-repair": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1600&h=600&fit=crop&q=80",
-  "shoulder-knee-surgery": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1600&h=600&fit=crop&q=80",
-};
+import { SpecialtyCanvas } from "~/components/SpecialtyCanvas";
 
 const serviceStats: Record<string, { stat: string; label: string }[]> = {
   "sports-medicine": [
@@ -67,146 +57,123 @@ export default function ServicePage() {
   }
 
   const stats = serviceStats[slug || ""] || [];
-  const otherServices = services.filter((s) => s.slug !== service.slug);
 
   return (
     <>
-      <section className="service-hero has-bg" style={{ backgroundImage: `url('${serviceHeroImages[slug || ""] || ""}')` }}>
-        <div className="container">
-          <Link to="/#specialties" className="service-back-link">
-            &larr; Back to Services
+      {/* Hero: Image Left + Content Right */}
+      <section className="svc-hero">
+        <div className="svc-hero-visual">
+          <SpecialtyCanvas slug={slug || ""} />
+          <div className="svc-hero-visual-overlay" />
+        </div>
+        <div className="svc-hero-content">
+          <Link to="/#specialties" className="svc-back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            All Services
           </Link>
           <h1>{service.title}</h1>
-          <p className="service-hero-desc">{service.subtitle}</p>
+          <p className="svc-hero-subtitle">{service.subtitle}</p>
+          <p className="svc-hero-desc">{service.description}</p>
+          <div className="svc-hero-stats">
+            {stats.map((s, i) => (
+              <div className="svc-hero-stat" key={i}>
+                <span className="svc-stat-value">{s.stat}</span>
+                <span className="svc-stat-label">{s.label}</span>
+              </div>
+            ))}
+          </div>
+          <div className="svc-hero-actions">
+            <Link to="/book" className="btn btn-primary">Book Consultation</Link>
+            <a href="tel:+19179059370" className="btn btn-outline">(917) 905-9370</a>
+          </div>
         </div>
       </section>
 
-      {/* Stats Bar */}
-      <section className="service-stats-bar">
+      {/* Conditions Treated */}
+      <section className="svc-conditions">
         <div className="container">
-          <div className="service-stats-grid">
-            {stats.map((s, i) => (
-              <div className="service-stat" key={i}>
-                <span className="service-stat-value">{s.stat}</span>
-                <span className="service-stat-label">{s.label}</span>
-              </div>
+          <div className="svc-section-header">
+            <p className="section-label">What We Treat</p>
+            <h2>Conditions Treated</h2>
+          </div>
+          <div className="svc-conditions-grid">
+            {service.conditions.map((c, i) => (
+              <Link
+                to={`/book?condition=${encodeURIComponent(c)}&service=${encodeURIComponent(service.title)}`}
+                className="svc-condition-item"
+                key={i}
+              >
+                <div className="svc-condition-number">{String(i + 1).padStart(2, "0")}</div>
+                <span className="svc-condition-name">{c}</span>
+                <svg className="svc-condition-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="section">
-        <div className="container">
-          <div className="service-content">
-            <div className="service-main">
-              {/* Overview */}
-              <div className="service-section">
-                <h2>Overview</h2>
-                <p className="service-lead">{service.description}</p>
-              </div>
-
-              {/* Conditions */}
-              <div className="service-section">
-                <h2>Conditions Treated</h2>
-                <p style={{ color: "var(--text-light)", marginBottom: "20px" }}>
-                  Click any condition below to book an appointment for that specific concern.
-                </p>
-                <div className="conditions-grid">
-                  {service.conditions.map((c, i) => (
-                    <Link
-                      to={`/book?condition=${encodeURIComponent(c)}&service=${encodeURIComponent(service.title)}`}
-                      className="condition-card"
-                      key={i}
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="9 11 12 14 22 4" />
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                      </svg>
-                      <span>{c}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Approach */}
-              {service.approach && (
-                <div className="service-section">
-                  <h2>Our Approach</h2>
-                  <div className="approach-steps">
-                    {service.approach.map((a, i) => (
-                      <div className="approach-step" key={i}>
-                        <div className="approach-number">{i + 1}</div>
-                        <p>{a}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Why Choose */}
-              <div className="service-section">
-                <h2>Why Choose Dr. Elguizaoui</h2>
-                <div className="benefits-grid">
-                  {service.benefits.map((b, i) => (
-                    <div className="benefit-card" key={i}>
-                      <div className="benefit-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                          <polyline points="22 4 12 14.01 9 11.01" />
-                        </svg>
-                      </div>
-                      <p>{b}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+      {/* Approach */}
+      {service.approach && (
+        <section className="svc-approach">
+          <div className="container">
+            <div className="svc-section-header">
+              <p className="section-label">How It Works</p>
+              <h2>Our Approach</h2>
             </div>
-
-            {/* Sidebar */}
-            <aside className="service-sidebar">
-              <div className="sidebar-card sidebar-cta">
-                <h4>Schedule a Consultation</h4>
-                <p>Discuss your condition with Dr. Elguizaoui and explore treatment options.</p>
-                <Link to="/book" className="btn btn-primary btn-block">
-                  Book Now
-                </Link>
-                <a href="tel:+19179059370" className="sidebar-phone">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                  </svg>
-                  +1-917-905-9370
-                </a>
-              </div>
-
-              <div className="sidebar-card">
-                <h4>Other Services</h4>
-                <div className="sidebar-services-list">
-                  {otherServices.map((s) => (
-                    <Link key={s.slug} to={`/services/${s.slug}`} className="sidebar-service-link">
-                      <span>{s.title}</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="9 18 15 12 9 6" />
-                      </svg>
-                    </Link>
-                  ))}
+            <div className="svc-approach-grid">
+              {service.approach.map((a, i) => (
+                <div className="svc-approach-card" key={i}>
+                  <div className="svc-approach-num">{i + 1}</div>
+                  <p>{a}</p>
                 </div>
-              </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-              <div className="sidebar-card sidebar-insurance">
-                <h4>Insurance Accepted</h4>
-                <p>We accept most major insurance plans including Aetna, BlueCross BlueShield, UnitedHealthcare, Cigna, and 200+ more.</p>
-                <Link to="/contact" className="btn btn-outline btn-block" style={{ marginTop: "12px" }}>
-                  Verify Coverage
-                </Link>
-              </div>
-            </aside>
+      {/* Why Choose */}
+      <section className="svc-why">
+        <div className="container">
+          <div className="svc-why-inner">
+            <div className="svc-why-left">
+              <p className="section-label">Why Choose Us</p>
+              <h2>Why Dr. Elguizaoui</h2>
+              <p className="svc-why-desc">World-class training combined with a patient-first philosophy. Every treatment plan is tailored to your specific goals.</p>
+              <Link to="/book" className="btn btn-primary" style={{ marginTop: "20px" }}>Schedule a Visit</Link>
+            </div>
+            <div className="svc-why-right">
+              {service.benefits.map((b, i) => (
+                <div className="svc-benefit-row" key={i}>
+                  <div className="svc-benefit-check">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <span>{b}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <GetStarted />
-      <Locations />
+      {/* CTA */}
+      <section className="svc-cta">
+        <div className="container" style={{ textAlign: "center" }}>
+          <h2>Ready to Get Started?</h2>
+          <p>Book a consultation to discuss your condition and explore treatment options with Dr. Elguizaoui.</p>
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "24px", flexWrap: "wrap" }}>
+            <Link to="/book" className="btn btn-primary">Book Appointment</Link>
+            <Link to="/contact" className="btn btn-outline" style={{ borderColor: "rgba(255,255,255,0.3)", color: "#fff" }}>Contact Us</Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

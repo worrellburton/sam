@@ -1,3 +1,8 @@
-# Large media test files
+node_modules/
+build/
+.react-router/
+static-backup/
 *.mp4
 *.gif
+.env
+.env.local

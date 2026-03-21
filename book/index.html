@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book an Appointment | Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon</title>
+  <meta name="description" content="Schedule your appointment with Dr. Sameh Elguizaoui, board-certified orthopedic surgeon in NYC. Same-week appointments available. Multiple Manhattan & Brooklyn locations.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rwb8771.github.io/sammd/book/">
+  <meta property="og:title" content="Book an Appointment | Dr. Sameh Elguizaoui, M.D.">
+  <meta property="og:description" content="Schedule your consultation with Dr. Elguizaoui. Board-certified orthopedic surgeon serving NYC.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .book-page { padding: 120px 0 60px; min-height: 100vh; }
+    .book-layout { display: grid; grid-template-columns: 380px 1fr; gap: 48px; align-items: start; }
+
+    /* Doctor profile card */
+    .doc-profile { position: sticky; top: 100px; }
+    .doc-card { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+    .doc-header { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
+    .doc-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #6366f1); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 1.5rem; flex-shrink: 0; overflow: hidden; }
+    .doc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .doc-badge { display: inline-flex; align-items: center; gap: 4px; background: #fef3c7; color: #92400e; font-size: 0.7rem; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin-bottom: 4px; }
+    .doc-name { font-size: 1.2rem; font-weight: 700; margin: 0; }
+    .doc-specialty { font-size: 0.85rem; color: var(--text-light); margin: 2px 0; }
+    .doc-location { font-size: 0.8rem; color: var(--text-muted); }
+
+    .doc-rating { display: flex; align-items: center; gap: 12px; padding: 20px 0; border-top: 1px solid var(--border); margin-top: 20px; }
+    .doc-rating-score { font-size: 2rem; font-weight: 700; line-height: 1; }
+    .doc-rating-stars { color: #f59e0b; font-size: 1rem; letter-spacing: 1px; }
+    .doc-review-text { font-size: 0.85rem; color: var(--text-light); line-height: 1.5; margin-top: 12px; padding: 12px; background: rgba(0,0,0,0.02); border-radius: 8px; }
+    [data-theme="dark"] .doc-review-text { background: rgba(255,255,255,0.03); }
+    .doc-review-author { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; }
+    .doc-review-link { font-size: 0.85rem; color: var(--primary); text-decoration: underline; margin-top: 8px; display: inline-block; }
+
+    .doc-highlights { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .doc-highlight { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; }
+    .doc-highlight-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; }
+    .doc-highlight h4 { font-size: 0.85rem; font-weight: 600; margin: 0; }
+    .doc-highlight p { font-size: 0.75rem; color: var(--text-muted); margin: 2px 0 0; }
+
+    .doc-insurance { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .doc-insurance h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .doc-insurance p { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+    .doc-insurance a { color: var(--primary); font-size: 0.8rem; }
+
+    /* Booking panel */
+    .book-panel { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 16px; padding: 36px; }
+    .book-panel h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 4px; }
+    .book-panel .book-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px; }
+
+    /* Scheduling details */
+    .book-section-label { font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; }
+    .book-select { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; cursor: pointer; margin-bottom: 12px; }
+    .book-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,107,255,0.1); }
+
+    .book-insurance-check { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 20px; cursor: pointer; font-size: 0.9rem; color: var(--text-light); }
+    .book-insurance-check input { accent-color: var(--primary); width: 18px; height: 18px; }
+
+    /* Patient type toggle */
+    .patient-toggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
+    .patient-toggle-btn { padding: 12px; text-align: center; font-size: 0.9rem; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-light); transition: all 0.2s; }
+    .patient-toggle-btn.active { background: var(--primary); color: #fff; }
+    .patient-toggle-btn:not(.active):hover { background: rgba(0,0,0,0.03); }
+
+    /* Location selector */
+    .book-location { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 24px; cursor: pointer; }
+    .book-location-name { font-weight: 600; font-size: 0.9rem; }
+    .book-location-addr { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    .book-location-more { font-size: 0.75rem; color: var(--primary); margin-top: 4px; }
+
+    /* Calendar */
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .cal-header h3 { font-size: 1rem; font-weight: 600; }
+    .cal-nav { display: flex; gap: 8px; }
+    .cal-nav-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); transition: all 0.2s; }
+    .cal-nav-btn:hover { background: var(--primary-light); color: var(--primary); }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .cal-day-header { padding: 10px 4px; text-align: center; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); background: var(--bg); border-bottom: 1px solid var(--border); }
+    .cal-day { min-height: 80px; padding: 8px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; position: relative; }
+    .cal-day:nth-child(7n) { border-right: none; }
+    .cal-day:hover { background: rgba(79,107,255,0.04); }
+    .cal-day.empty { background: var(--bg); cursor: default; }
+    .cal-day.empty:hover { background: var(--bg); }
+    .cal-day.today .cal-date { background: var(--primary); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+    .cal-date { font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
+    .cal-event { font-size: 0.65rem; padding: 3px 6px; border-radius: 4px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; font-weight: 500; }
+    .cal-event.green { background: #22c55e; }
+    .cal-event.yellow { background: #f59e0b; }
+    .cal-event.blue { background: var(--primary); }
+    .cal-event.purple { background: #a855f7; }
+    .cal-day.selected { background: rgba(79,107,255,0.08); box-shadow: inset 0 0 0 2px var(--primary); }
+
+    /* Time slots */
+    .time-slots { margin-top: 24px; }
+    .time-slots h3 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
+    .time-slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .time-slot { padding: 10px; text-align: center; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); }
+    .time-slot:hover { border-color: var(--primary); color: var(--primary); background: rgba(79,107,255,0.04); }
+    .time-slot.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .time-slot.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+    /* Confirm button */
+    .book-confirm { margin-top: 24px; }
+    .book-confirm .btn { width: 100%; padding: 14px; font-size: 1rem; }
+
+    .book-footer-note { text-align: center; margin-top: 16px; font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Zocdoc link */
+    .book-zocdoc-alt { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
+    .book-zocdoc-alt a { color: var(--primary); font-weight: 500; }
+
+    @media (max-width: 900px) {
+      .book-layout { grid-template-columns: 1fr; }
+      .doc-profile { position: static; }
+      .time-slots-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .book-panel { padding: 24px 16px; }
+      .cal-day { min-height: 60px; padding: 4px; }
+      .cal-event { font-size: 0.6rem; padding: 2px 4px; }
+      .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo"><span class="logo-name">Sam Elguizaoui, M.D.</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../about.html">About</a></li>
+        <li class="nav-mega-wrap">
+          <a href="javascript:void(0)" class="nav-mega-toggle">Services <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="mega-menu" id="megaMenu">
+            <button class="mega-back-btn" id="megaBackBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back</button>
+            <div class="mega-menu-inner">
+              <div class="mega-col"><h4 class="mega-heading">Treatments</h4>
+                <a href="../sports-medicine.html" class="mega-link"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><circle cx="14" cy="4" r="2"/><path d="M4 17l4-2 3-5 4 2 3-4"/><path d="M8 15l-2 6"/><path d="M15 10l2 6"/><path d="M11 10l-3 5"/></svg><div><span>Sports Medicine</span><small>Athletic injury care</small></div></a>
+                <a href="../arthroscopic-surgery.html" class="mega-link"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg><div><span>Arthroscopic Surgery</span><small>Minimally invasive</small></div></a>
+                <a href="../regenerative-medicine.html" class="mega-link"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg><div><span>Regenerative Medicine</span><small>PRP therapy</small></div></a>
+              </div>
+              <div class="mega-col"><h4 class="mega-heading">Specialties</h4>
+                <a href="../joint-preservation.html" class="mega-link"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div><span>Joint Preservation</span><small>Save your joints</small></div></a>
+                <a href="../cartilage-repair.html" class="mega-link"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div><span>Cartilage Repair</span><small>Restoration</small></div></a>
+                <a href="../shoulder-knee-surgery.html" class="mega-link"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg><div><span>Shoulder &amp; Knee</span><small>ACL &bull; Rotator cuff</small></div></a>
+              </div>
+              <div class="mega-col mega-cta-col"><div class="mega-cta-card"><h4>Ready to get started?</h4><p>Book a consultation today.</p><a href="index.html" class="btn btn-primary btn-block">Book Now</a></div></div>
+            </div>
+          </div>
+        </li>
+        <li><a href="../reviews.html">Reviews</a></li>
+        <li><a href="../faq.html">FAQ</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li class="nav-buttons">
+          <a href="../contact.html" class="nav-btn-contact">Contact Us</a>
+          <a href="index.html" class="nav-btn-book">Book Now</a>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="book-page">
+    <div class="container">
+      <div class="book-layout">
+
+        <!-- Left: Doctor Profile -->
+        <div class="doc-profile">
+          <div class="doc-card">
+            <div class="doc-header">
+              <div class="doc-avatar">
+                <img src="../header.jpg" alt="Dr. Sam Elguizaoui">
+              </div>
+              <div>
+                <span class="doc-badge">&#9733; Patient Choice</span>
+                <h1 class="doc-name">Dr. Sam Elguizaoui, MD</h1>
+                <p class="doc-specialty">Orthopedic Surgeon</p>
+                <p class="doc-location">200 W 13th St, 6th Fl, New York, NY</p>
+              </div>
+            </div>
+
+            <div class="doc-rating">
+              <div>
+                <div class="doc-rating-score">4.78</div>
+                <div class="doc-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              </div>
+              <div style="flex:1;">
+                <div class="doc-review-text">"Honestly, highly recommend. This is the 2nd time I broke a bone and came straight back to Dr. Elguizaoui. Not sure how many times an Ortho gets a repeat client..."</div>
+                <div class="doc-review-author">Carlos G. &middot; March 16, 2026</div>
+                <a href="../reviews.html" class="doc-review-link">See all 1,470 reviews</a>
+              </div>
+            </div>
+
+            <div class="doc-highlights">
+              <div class="doc-highlight">
+                <div class="doc-highlight-icon">&#128257;</div>
+                <div><h4>Patients often return</h4><p>More patients return than other providers in the area</p></div>
+              </div>
+              <div class="doc-highlight">
+                <div class="doc-highlight-icon">&#9201;</div>
+                <div><h4>Excellent wait time</h4><p>91% of patients waited less than 30 minutes</p></div>
+              </div>
+              <div class="doc-highlight">
+                <div class="doc-highlight-icon">&#10133;</div>
+                <div><h4>New patient appointments</h4><p>Appointments available for new patients</p></div>
+              </div>
+            </div>
+
+            <div class="doc-insurance">
+              <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> In-network insurances</h4>
+              <p>Aetna, BlueCross BlueShield, UnitedHealthcare, UnitedHealthcare Oxford</p>
+              <a href="../index.html#insurance">(200+) more in-network plans</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Booking Panel -->
+        <div class="book-panel">
+          <h2>Book an appointment for free</h2>
+          <p class="book-sub">Schedule directly with Dr. Elguizaoui's office</p>
+
+          <p class="book-section-label">Scheduling details</p>
+          <select class="book-select" id="visitType">
+            <option>Orthopedic Consultation</option>
+            <option>Sports Injury Evaluation</option>
+            <option>Follow-up Visit</option>
+            <option>Second Opinion</option>
+            <option>Joint Pain Assessment</option>
+          </select>
+
+          <label class="book-insurance-check">
+            <input type="checkbox" checked> Insurance carrier and plan
+          </label>
+
+          <div class="patient-toggle">
+            <button class="patient-toggle-btn" id="btnNew">New patient</button>
+            <button class="patient-toggle-btn active" id="btnExisting">&#10003; Existing patient</button>
+          </div>
+
+          <p class="book-section-label">Available appointments</p>
+          <div class="book-location" id="locationSelect">
+            <div class="book-location-name">NY Orthopedics &ndash; Lenox Hill Greenwich Village</div>
+            <div class="book-location-addr">200 W 13th St, 6th Fl, New York, NY 10011</div>
+            <div class="book-location-more">2 more locations with availability</div>
+          </div>
+
+          <!-- Calendar -->
+          <div class="cal-header">
+            <h3 id="calTitle"></h3>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" id="calPrev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+              <button class="cal-nav-btn" id="calNext"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+            </div>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+
+          <!-- Time Slots -->
+          <div class="time-slots" id="timeSlots" style="display:none;">
+            <h3 id="timeSlotsTitle">Select a time</h3>
+            <div class="time-slots-grid" id="timeSlotsGrid"></div>
+          </div>
+
+          <!-- Confirm -->
+          <div class="book-confirm" id="bookConfirm" style="display:none;">
+            <button class="btn btn-primary btn-lg" id="confirmBtn" style="width:100%;padding:14px;font-size:1rem;">Confirm Appointment</button>
+          </div>
+
+          <p class="book-footer-note">By booking, you agree to our terms and privacy policy.</p>
+
+          <div class="book-zocdoc-alt">
+            You can also book through <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Zocdoc</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // --- Nav ---
+    var nav = document.getElementById('nav');
+    var lastScrollY = 0, ticking = false;
+    function updateNav() { var sy = window.scrollY; nav.classList.toggle('scrolled', sy > 50); if (sy > lastScrollY && sy > 200) nav.classList.add('nav-hidden'); else nav.classList.remove('nav-hidden'); lastScrollY = sy; ticking = false; }
+    window.addEventListener('scroll', function() { if (!ticking) { requestAnimationFrame(updateNav); ticking = true; } }, { passive: true });
+    var toggle = document.getElementById('navToggle');
+    var navLinks = document.getElementById('navLinks');
+    if (toggle) toggle.addEventListener('click', function() { navLinks.classList.toggle('active'); toggle.classList.toggle('active'); });
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', function() { var c = document.documentElement.getAttribute('data-theme'); var n = c === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); });
+
+    // --- Patient toggle ---
+    var btnNew = document.getElementById('btnNew');
+    var btnExisting = document.getElementById('btnExisting');
+    btnNew.addEventListener('click', function() { btnNew.classList.add('active'); btnExisting.classList.remove('active'); btnExisting.textContent = 'Existing patient'; btnNew.textContent = '\u2713 New patient'; });
+    btnExisting.addEventListener('click', function() { btnExisting.classList.add('active'); btnNew.classList.remove('active'); btnNew.textContent = 'New patient'; btnExisting.textContent = '\u2713 Existing patient'; });
+
+    // --- Calendar ---
+    var today = new Date();
+    var currentMonth = today.getMonth();
+    var currentYear = today.getFullYear();
+    var selectedDate = null;
+    var selectedSlot = null;
+
+    // Simulated availability (Mon, Wed, Thu have appointments)
+    function getAvailability(year, month) {
+      var avail = {};
+      var daysInMonth = new Date(year, month + 1, 0).getDate();
+      for (var d = 1; d <= daysInMonth; d++) {
+        var date = new Date(year, month, d);
+        var dow = date.getDay();
+        if (dow === 1 || dow === 3 || dow === 4) { // Mon, Wed, Thu
+          if (date >= today || date.toDateString() === today.toDateString()) {
+            var slots = Math.floor(Math.random() * 20) + 10;
+            avail[d] = slots;
+          }
+        }
+      }
+      return avail;
+    }
+
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function renderCalendar() {
+      var grid = document.getElementById('calGrid');
+      var title = document.getElementById('calTitle');
+      title.textContent = MONTHS[currentMonth] + ' ' + currentYear;
+
+      var firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      var avail = getAvailability(currentYear, currentMonth);
+
+      var html = '';
+      var days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+      days.forEach(function(d) { html += '<div class="cal-day-header">' + d + '</div>'; });
+
+      for (var i = 0; i < firstDay; i++) {
+        html += '<div class="cal-day empty"></div>';
+      }
+
+      for (var d = 1; d <= daysInMonth; d++) {
+        var isToday = (d === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear());
+        var isSelected = selectedDate && selectedDate.getDate() === d && selectedDate.getMonth() === currentMonth && selectedDate.getFullYear() === currentYear;
+        var cls = 'cal-day';
+        if (isToday) cls += ' today';
+        if (isSelected) cls += ' selected';
+
+        html += '<div class="' + cls + '" data-day="' + d + '">';
+        html += '<div class="cal-date">' + d + '</div>';
+
+        if (avail[d]) {
+          html += '<div class="cal-event green">' + avail[d] + ' appts</div>';
+        }
+
+        html += '</div>';
+      }
+
+      grid.innerHTML = html;
+
+      // Add click handlers
+      grid.querySelectorAll('.cal-day:not(.empty)').forEach(function(cell) {
+        cell.addEventListener('click', function() {
+          var day = parseInt(this.dataset.day);
+          selectedDate = new Date(currentYear, currentMonth, day);
+          selectedSlot = null;
+          renderCalendar();
+          showTimeSlots(day, avail[day] || 0);
+        });
+      });
+    }
+
+    function showTimeSlots(day, count) {
+      var container = document.getElementById('timeSlots');
+      var grid = document.getElementById('timeSlotsGrid');
+      var title = document.getElementById('timeSlotsTitle');
+      var confirm = document.getElementById('bookConfirm');
+
+      if (!count) {
+        container.style.display = 'block';
+        title.textContent = MONTHS[currentMonth] + ' ' + day + ' — No availability';
+        grid.innerHTML = '<p style="grid-column:1/-1;color:var(--text-muted);font-size:0.9rem;">No appointments available on this date. Please select another day.</p>';
+        confirm.style.display = 'none';
+        return;
+      }
+
+      container.style.display = 'block';
+      title.textContent = 'Select a time — ' + MONTHS[currentMonth] + ' ' + day;
+
+      var times = ['8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM'];
+      var html = '';
+      times.forEach(function(t, i) {
+        var available = i < count && Math.random() > 0.3;
+        html += '<button class="time-slot' + (available ? '' : ' unavailable') + '" data-time="' + t + '">' + t + '</button>';
+      });
+      grid.innerHTML = html;
+
+      grid.querySelectorAll('.time-slot:not(.unavailable)').forEach(function(slot) {
+        slot.addEventListener('click', function() {
+          grid.querySelectorAll('.time-slot').forEach(function(s) { s.classList.remove('selected'); });
+          this.classList.add('selected');
+          selectedSlot = this.dataset.time;
+          confirm.style.display = 'block';
+        });
+      });
+    }
+
+    document.getElementById('calPrev').addEventListener('click', function() {
+      currentMonth--;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      renderCalendar();
+      document.getElementById('timeSlots').style.display = 'none';
+      document.getElementById('bookConfirm').style.display = 'none';
+    });
+    document.getElementById('calNext').addEventListener('click', function() {
+      currentMonth++;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      renderCalendar();
+      document.getElementById('timeSlots').style.display = 'none';
+      document.getElementById('bookConfirm').style.display = 'none';
+    });
+
+    document.getElementById('confirmBtn').addEventListener('click', function() {
+      if (selectedDate && selectedSlot) {
+        var dateStr = MONTHS[selectedDate.getMonth()] + ' ' + selectedDate.getDate() + ', ' + selectedDate.getFullYear();
+        alert('Appointment requested!\n\n' + dateStr + ' at ' + selectedSlot + '\n\nDr. Elguizaoui\'s office will confirm your appointment via email.');
+      }
+    });
+
+    renderCalendar();
+  </script>
+</body>
+</html>

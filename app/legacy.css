@@ -391,7 +391,34 @@ img { max-width: 100%; display: block; }
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.85);
+  padding: 8px 14px;
+  text-decoration: none;
+  transition: color var(--transition);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
+.nav-mega-toggle:hover {
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255,255,255,0.5), 0 0 30px rgba(79,107,255,0.3);
+}
+.nav.scrolled .nav-mega-toggle {
+  color: rgba(255,255,255,0.85);
+}
+.nav.scrolled .nav-mega-toggle:hover {
+  color: #fff;
+}
+[data-theme="light"] .nav:not(.scrolled) .nav-mega-toggle { color: rgba(255,255,255,0.85); }
+[data-theme="light"] .nav:not(.scrolled) .nav-mega-toggle:hover { color: #fff; }
+[data-theme="light"] .nav.scrolled .nav-mega-toggle { color: rgba(0,0,0,0.8); }
+[data-theme="light"] .nav.scrolled .nav-mega-toggle:hover { color: var(--primary); }
+[data-theme="light"] .nav:has(.nav-mega-wrap:hover) .nav-mega-toggle { color: rgba(0,0,0,0.8); }
 
 .dropdown-chevron {
   transition: transform var(--transition);
@@ -715,6 +742,77 @@ img { max-width: 100%; display: block; }
   transform: scale(1.05);
   box-shadow: 0 8px 30px rgba(0,0,0,0.3);
   color: #fff !important;
+}
+.btn-hero--outline {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+.btn-hero--outline:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Hero Centered Layout */
+.hero-content--centered {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.hero-text--centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+}
+.hero-subtitle {
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero-desc {
+  color: rgba(255,255,255,0.75);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.hero-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 980px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+}
+.hero-trust-badge:hover {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+}
+.hero-trust-stars {
+  color: #f59e0b;
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+.hero-trust-text {
+  color: rgba(255,255,255,0.9);
+}
+.hero-trust-text strong {
+  color: #fff;
+  font-weight: 700;
 }
 
 /* Zocdoc Rating Card */

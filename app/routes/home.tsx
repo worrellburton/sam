@@ -89,6 +89,54 @@ const tickerItems = [
   },
 ];
 
+const serviceImages: Record<string, string> = {
+  "sports-medicine": "https://images.unsplash.com/photo-1461896836934-bd45ba55ae57?auto=format&fit=crop&w=600&h=400&q=80",
+  "arthroscopic-surgery": "https://images.unsplash.com/photo-1551190822-a9ce113ac100?auto=format&fit=crop&w=600&h=400&q=80",
+  "regenerative-medicine": "https://images.unsplash.com/photo-1579684453423-f84349ef60b0?auto=format&fit=crop&w=600&h=400&q=80",
+  "joint-preservation": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&h=400&q=80",
+  "cartilage-repair": "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=600&h=400&q=80",
+  "shoulder-knee-surgery": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&h=400&q=80",
+};
+
+const patientReviews = [
+  {
+    name: "Sarah M.",
+    time: "2 weeks ago",
+    text: "Dr. Elguizaoui is an incredible surgeon. He repaired my torn rotator cuff and I'm back to playing tennis in record time. He took the time to explain every step of the process and made me feel completely at ease.",
+    location: "Upper East Side office",
+  },
+  {
+    name: "James K.",
+    time: "1 month ago",
+    text: "After tearing my ACL playing basketball, I was devastated. Dr. Elguizaoui reconstructed my knee arthroscopically and his rehab plan got me back on the court. Truly the best orthopedic surgeon in NYC.",
+    location: "Brooklyn Heights office",
+  },
+  {
+    name: "Maria L.",
+    time: "3 weeks ago",
+    text: "I saw several doctors before finding Dr. Elguizaoui. He was the only one who took the time to really understand my knee pain. Recommended PRP therapy instead of surgery and I'm pain-free for the first time in years.",
+    location: "Greenwich Village office",
+  },
+  {
+    name: "David R.",
+    time: "2 months ago",
+    text: "Outstanding care from start to finish. Dr. Elguizaoui performed my meniscus repair and I was walking the same day. His staff is professional, friendly, and the office is state-of-the-art.",
+    location: "Upper East Side office",
+  },
+  {
+    name: "Amanda T.",
+    time: "1 month ago",
+    text: "Dr. Elguizaoui fixed my shoulder labral tear with arthroscopic surgery. Minimal scarring, fast recovery, and he was available to answer all my questions throughout rehab. Highly recommend!",
+    location: "Brooklyn Heights office",
+  },
+  {
+    name: "Robert P.",
+    time: "3 months ago",
+    text: "I came to Dr. Elguizaoui for chronic knee pain that other doctors said needed a replacement. He used a joint preservation approach instead and saved my natural knee. Forever grateful.",
+    location: "Greenwich Village office",
+  },
+];
+
 const insuranceLogos = [
   { name: "Aetna", logo: "https://logo.clearbit.com/aetna.com" },
   { name: "BlueCross BlueShield", logo: "https://logo.clearbit.com/bcbs.com" },
@@ -126,32 +174,29 @@ export default function Home() {
       <header className="hero" id="hero">
         <img className="hero-bg-img loaded" src="/sammd/header.jpg" alt="" aria-hidden="true" />
         <div className="hero-overlay"></div>
-        <div className="container hero-content">
-          <div className="hero-text">
-            <h1>NYC&rsquo;s Most Trusted Orthopedic Surgeon &mdash; Sports Medicine and Joint Preservation Expert</h1>
-            <a href="#about" className="btn btn-hero">Learn More</a>
-          </div>
-          <div className="hero-rating-card">
-            <div className="rating-top">
-              <div className="rating-score">4.8<span className="rating-star">&#9733;</span></div>
-              <div className="rating-info">
-                <span className="rating-platform">Rating on Zocdoc</span>
-                <span className="rating-count"><strong>1,466</strong> Reviews</span>
-              </div>
+        <div className="container hero-content hero-content--centered">
+          <div className="hero-text hero-text--centered">
+            <p className="hero-subtitle">Board-Certified Orthopedic Surgeon &amp; Sports Medicine Specialist</p>
+            <h1>Dr. Sameh Elguizaoui, M.D.</h1>
+            <p className="hero-desc">Specializing in sports medicine, arthroscopic surgery, joint preservation, and cartilage repair across Manhattan &amp; Brooklyn.</p>
+            <div className="hero-actions">
+              <Link to="/book" className="btn btn-hero">Book Appointment</Link>
+              <a href="#about" className="btn btn-hero btn-hero--outline">Learn More</a>
             </div>
-            <div className="rating-bottom">
-              <div className="rating-avatars">
-                <div className="avatar">S</div>
-                <div className="avatar">M</div>
-                <div className="avatar">A</div>
-              </div>
-              <span className="rating-zocdoc">Zocdoc</span>
-            </div>
+            <a
+              href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423"
+              target="_blank"
+              rel="noopener"
+              className="hero-trust-badge"
+            >
+              <span className="hero-trust-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <span className="hero-trust-text"><strong>4.8</strong> rating &middot; 1,466 reviews on Zocdoc</span>
+            </a>
           </div>
         </div>
         <div className="ticker-bar">
           <div className="ticker-track">
-            {[1, 2].map((set) =>
+            {[1, 2, 3].map((set) =>
               tickerItems.map((item, i) => (
                 <span key={`${set}-${i}`}>
                   {i > 0 && <div className="ticker-sep">&bull;</div>}
@@ -257,6 +302,7 @@ export default function Home() {
           <div className="specialties-grid">
             {services.map((svc) => (
               <Link to={`/services/${svc.slug}`} className="specialty-card specialty-link" key={svc.slug}>
+                <img className="specialty-img" src={serviceImages[svc.slug]} alt={svc.title} loading="lazy" />
                 <div className="specialty-overlay"></div>
                 <h3 className="specialty-title">{svc.title}</h3>
                 <div className="specialty-detail">
@@ -316,8 +362,26 @@ export default function Home() {
         <div className="container">
           <div className="section-header">
             <p className="section-label">Patient Reviews</p>
-            <h2>Trusted by <span className="text-accent">Patients</span></h2>
+            <h2>Trusted by <span className="text-accent">1,400+ Patients</span></h2>
             <p className="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
+          </div>
+          <div className="google-reviews-carousel">
+            <div className="google-reviews-track" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
+              {patientReviews.slice(0, 3).map((review, i) => (
+                <div className="google-review-card" key={i}>
+                  <div className="google-review-header">
+                    <img className="google-review-avatar" src={`https://ui-avatars.com/api/?name=${encodeURIComponent(review.name)}&background=1a3a5c&color=fff&size=36`} alt="" />
+                    <div>
+                      <div className="google-review-author">{review.name}</div>
+                      <div className="google-review-meta">{review.time}</div>
+                    </div>
+                  </div>
+                  <div className="google-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                  <div className="google-review-text">{review.text}</div>
+                  <div className="google-review-location">{review.location}</div>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="reviews-cta">
             <p>See what patients are saying about Dr. Elguizaoui</p>

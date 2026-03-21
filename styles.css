@@ -498,9 +498,12 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: var(--text-muted);
+  color: #60a5fa;
   margin-bottom: 16px;
   padding-left: 4px;
+}
+[data-theme="light"] .mega-heading {
+  color: var(--primary);
 }
 
 .mega-link {
@@ -519,6 +522,35 @@ img { max-width: 100%; display: block; }
 .mega-link svg {
   flex-shrink: 0;
   margin-top: 2px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: rgba(37,99,235,0.12);
+  border-radius: 10px;
+  stroke: var(--primary) !important;
+  transition: all var(--transition);
+}
+.mega-link:hover svg {
+  background: rgba(37,99,235,0.2);
+  stroke: #2563eb !important;
+}
+[data-theme="dark"] .mega-link svg,
+.mega-link svg {
+  stroke: #60a5fa !important;
+}
+[data-theme="dark"] .mega-link svg {
+  background: rgba(96,165,250,0.1);
+}
+[data-theme="dark"] .mega-link:hover svg {
+  background: rgba(96,165,250,0.18);
+  stroke: #93bbfc !important;
+}
+[data-theme="light"] .mega-link svg {
+  stroke: #2563eb !important;
+  background: rgba(37,99,235,0.08);
+}
+[data-theme="light"] .mega-link:hover svg {
+  background: rgba(37,99,235,0.15);
 }
 
 .mega-link span {

@@ -29,6 +29,21 @@
     <!-- Filters -->
     <div class="dev-filters" id="filters"></div>
 
+    <!-- View toggle bar -->
+    <div class="dev-view-bar">
+      <span class="dev-result-count" id="resultCount"></span>
+      <div class="dev-view-toggle">
+        <button class="dev-view-btn active" id="viewGrid" title="Grid view">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Grid
+        </button>
+        <button class="dev-view-btn" id="viewList" title="List view">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          List
+        </button>
+      </div>
+    </div>
+
     <!-- Component grid -->
     <div class="dev-comp-grid" id="compGrid"></div>
   </main>
@@ -145,6 +160,7 @@
 
     var activeCategory = 'All';
     var searchQuery = '';
+    var viewMode = 'grid'; // 'grid' or 'list'
 
     function renderStats() {
       var total = COMPONENTS.length;
@@ -182,12 +198,20 @@
         return catMatch && searchMatch;
       });
 
+      var grid = document.getElementById('compGrid');
+      grid.classList.toggle('list-view', viewMode === 'list');
+
+      document.getElementById('resultCount').textContent = filtered.length + ' component' + (filtered.length !== 1 ? 's' : '');
+
       var html = '';
       filtered.forEach(function(c, i) {
         html += '<div class="dev-comp-card">';
         html += '<div class="dev-comp-card-header">';
         html += '<div><div class="dev-comp-name">' + c.name + '</div>';
         html += '<div class="dev-comp-path" onclick="navigator.clipboard.writeText(\'' + c.file + '\');this.textContent=\'Copied!\';var el=this;setTimeout(function(){el.textContent=\'' + c.file + '\'},1500)">' + c.file + '</div></div>';
+        if (viewMode === 'list') {
+          html += '<div class="dev-comp-desc-inline">' + c.description + '</div>';
+        }
         html += '<div class="dev-comp-badges">';
         html += '<span class="dev-comp-badge usage">' + c.usageCount + 'x</span>';
         html += '<span class="dev-comp-badge category">' + c.category + '</span>';
@@ -238,6 +262,20 @@
     // Search
     document.getElementById('searchInput').addEventListener('input', function() {
       searchQuery = this.value.toLowerCase();
+      renderGrid();
+    });
+
+    // View toggle
+    document.getElementById('viewGrid').addEventListener('click', function() {
+      viewMode = 'grid';
+      this.classList.add('active');
+      document.getElementById('viewList').classList.remove('active');
+      renderGrid();
+    });
+    document.getElementById('viewList').addEventListener('click', function() {
+      viewMode = 'list';
+      this.classList.add('active');
+      document.getElementById('viewGrid').classList.remove('active');
       renderGrid();
     });
 

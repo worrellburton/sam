@@ -226,6 +226,41 @@ a { color: var(--dev-primary); text-decoration: none; }
 .dev-coming-soon p { color: var(--dev-text-muted); font-size: 0.9rem; }
 .dev-coming-soon .dev-icon-large { width: 64px; height: 64px; border-radius: 16px; background: var(--dev-primary-light); display: flex; align-items: center; justify-content: center; color: var(--dev-primary); margin-bottom: 20px; }
 
+/* View toggle */
+.dev-view-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.dev-view-bar .dev-result-count { font-size: 0.8rem; color: var(--dev-text-dim); }
+.dev-view-toggle { display: flex; border: 1px solid var(--dev-border); border-radius: 6px; overflow: hidden; }
+.dev-view-btn {
+  background: none; border: none; color: var(--dev-text-dim); cursor: pointer;
+  padding: 6px 10px; display: flex; align-items: center; gap: 4px;
+  font-size: 0.75rem; font-family: inherit; transition: all var(--dev-transition);
+}
+.dev-view-btn:first-child { border-right: 1px solid var(--dev-border); }
+.dev-view-btn:hover { color: var(--dev-text); background: rgba(255,255,255,0.04); }
+.dev-view-btn.active { color: var(--dev-primary); background: var(--dev-primary-light); }
+
+/* List view */
+.dev-comp-grid.list-view { grid-template-columns: 1fr; gap: 8px; }
+.dev-comp-grid.list-view .dev-comp-card { display: grid; grid-template-columns: 1fr; }
+.dev-comp-grid.list-view .dev-comp-card-header {
+  display: grid; grid-template-columns: 200px 1fr auto;
+  align-items: center; gap: 16px;
+  border-bottom: none; padding: 14px 20px;
+}
+.dev-comp-grid.list-view .dev-comp-preview { display: none; }
+.dev-comp-grid.list-view .dev-comp-details {
+  display: none;
+}
+.dev-comp-grid.list-view .dev-comp-card:hover .dev-comp-details {
+  display: block;
+  border-top: 1px solid var(--dev-border);
+}
+.dev-comp-grid.list-view .dev-comp-path { margin-top: 0; }
+.dev-comp-grid.list-view .dev-comp-desc-inline {
+  font-size: 0.8rem; color: var(--dev-text-muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .dev-sidebar { transform: translateX(-100%); width: var(--dev-sidebar-w); }

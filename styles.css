@@ -2984,6 +2984,7 @@ img { max-width: 100%; display: block; }
   text-align: center;
   margin: 48px 0;
 }
+.blog-cta h2,
 .blog-cta h3 {
   color: #fff;
   font-size: 1.5rem;
@@ -2996,6 +2997,17 @@ img { max-width: 100%; display: block; }
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
+}
+.blog-cta-phone {
+  display: inline-block;
+  margin-left: 16px;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+.blog-cta-phone:hover {
+  color: #fff;
 }
 
 /* Related Posts Grid */

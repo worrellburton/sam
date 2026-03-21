@@ -180,7 +180,7 @@
               <div class="mega-col">
                 <h4 class="mega-heading">Treatments</h4>
                 <a href="sports-medicine.html" class="mega-link">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="4" r="2"/><path d="M4 17l4-2 3-5 4 2 3-4"/><path d="M8 15l-2 6"/><path d="M15 10l2 6"/><path d="M11 10l-3 5"/></svg>
                   <div><span>Sports Medicine</span><small>Athletic injury care &bull; Return to sport</small></div>
                 </a>
                 <a href="arthroscopic-surgery.html" class="mega-link">
@@ -221,7 +221,6 @@
             </div>
           </div>
         </li>
-        <li><a href="#locations">Locations</a></li>
         <li><a href="reviews.html">Reviews</a></li>
         <li><a href="faq.html">FAQ</a></li>
         <li><a href="blog.html">Blog</a></li>
@@ -250,7 +249,6 @@
             <a href="cartilage-repair.html">Cartilage Repair</a>
             <a href="shoulder-knee-surgery.html">Shoulder &amp; Knee Surgery</a>
           </div>
-          <a href="#locations" class="mobile-nav-link">Locations</a>
           <a href="reviews.html" class="mobile-nav-link">Reviews</a>
           <a href="faq.html" class="mobile-nav-link">FAQ</a>
           <a href="blog.html" class="mobile-nav-link">Blog</a>
@@ -456,6 +454,7 @@
       <div class="specialties-grid">
         <a href="sports-medicine.html" class="specialty-card specialty-link">
           <canvas class="specialty-canvas" data-shader="sports"></canvas>
+          <video class="specialty-video" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Sports Medicine</h3>
           <div class="specialty-detail">
@@ -465,6 +464,7 @@
         </a>
         <a href="arthroscopic-surgery.html" class="specialty-card specialty-link">
           <canvas class="specialty-canvas" data-shader="arthroscopic"></canvas>
+          <video class="specialty-video" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Arthroscopic Surgery</h3>
           <div class="specialty-detail">
@@ -474,6 +474,7 @@
         </a>
         <a href="joint-preservation.html" class="specialty-card specialty-link">
           <canvas class="specialty-canvas" data-shader="joint"></canvas>
+          <video class="specialty-video" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Joint Preservation</h3>
           <div class="specialty-detail">
@@ -483,6 +484,7 @@
         </a>
         <a href="cartilage-repair.html" class="specialty-card specialty-link">
           <canvas class="specialty-canvas" data-shader="cartilage"></canvas>
+          <video class="specialty-video" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Cartilage Repair</h3>
           <div class="specialty-detail">
@@ -492,6 +494,7 @@
         </a>
         <a href="regenerative-medicine.html" class="specialty-card specialty-link">
           <canvas class="specialty-canvas" data-shader="regenerative"></canvas>
+          <video class="specialty-video" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Regenerative Medicine</h3>
           <div class="specialty-detail">
@@ -501,6 +504,7 @@
         </a>
         <a href="shoulder-knee-surgery.html" class="specialty-card specialty-link">
           <canvas class="specialty-canvas" data-shader="shoulder"></canvas>
+          <video class="specialty-video" data-src="test.mp4" muted loop playsinline preload="none"></video>
           <div class="specialty-overlay"></div>
           <h3 class="specialty-title">Shoulder &amp; Knee Surgery</h3>
           <div class="specialty-detail">
@@ -1317,6 +1321,28 @@
       }
 
       canvases.forEach(initCanvas);
+    })();
+
+    // --- Lazy-load specialty videos (fade in over WebGL canvas) ---
+    (function() {
+      const videos = document.querySelectorAll('.specialty-video[data-src]');
+      if (!videos.length) return;
+      const vidObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const video = entry.target;
+            video.src = video.dataset.src;
+            video.removeAttribute('data-src');
+            video.addEventListener('canplaythrough', function() {
+              video.play().catch(() => {});
+              video.classList.add('loaded');
+            }, { once: true });
+            video.load();
+            vidObs.unobserve(video);
+          }
+        });
+      }, { threshold: 0.05, rootMargin: '200px' });
+      videos.forEach(v => vidObs.observe(v));
     })();
 
     // --- Theme toggle ---

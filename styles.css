@@ -1544,8 +1544,12 @@ img { max-width: 100%; display: block; }
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .google-review-card:hover {
+  border-color: rgba(26,58,92,0.2);
+  box-shadow: 0 4px 24px rgba(26,58,92,0.12), 0 0 16px rgba(26,58,92,0.06);
+}
+[data-theme="dark"] .google-review-card:hover {
   border-color: rgba(255,255,255,0.15);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2), 0 0 16px rgba(100,160,255,0.08);
 }
 .google-review-header {
   display: flex;
@@ -1804,7 +1808,7 @@ img { max-width: 100%; display: block; }
 /* ===== Move Easier Banner ===== */
 .move-easier-section {
   position: relative;
-  padding: 80px 0;
+  padding: 56px 0;
   margin: 0 24px;
   border-radius: var(--radius);
   overflow: hidden;
@@ -1836,7 +1840,7 @@ img { max-width: 100%; display: block; }
   position: relative;
   z-index: 2;
   overflow: hidden;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .move-easier-marquee .marquee-track {
@@ -1844,11 +1848,16 @@ img { max-width: 100%; display: block; }
   gap: 48px;
   width: max-content;
   will-change: transform;
-  transition: transform 0.05s linear;
+  animation: marqueeScroll 14s linear infinite;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .move-easier-marquee span {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 700;
   color: rgba(255,255,255,0.85);
@@ -2487,7 +2496,7 @@ img { max-width: 100%; display: block; }
 }
 [data-theme="light"] .blog-card-tag { color: var(--primary); }
 .blog-card-body h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.15rem;
   color: var(--text);
   margin-bottom: 8px;
@@ -2508,6 +2517,128 @@ img { max-width: 100%; display: block; }
   color: var(--primary);
   font-weight: 600;
   font-size: 0.88rem;
+}
+
+/* Blog card entrance animations */
+.blog-grid .blog-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.blog-grid .blog-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.blog-grid .blog-card:nth-child(1) { transition-delay: 0s; }
+.blog-grid .blog-card:nth-child(2) { transition-delay: 0.08s; }
+.blog-grid .blog-card:nth-child(3) { transition-delay: 0.16s; }
+.blog-grid .blog-card:nth-child(4) { transition-delay: 0.24s; }
+.blog-grid .blog-card:nth-child(5) { transition-delay: 0.32s; }
+.blog-grid .blog-card:nth-child(6) { transition-delay: 0.4s; }
+.blog-card-img {
+  transition: transform 0.4s ease;
+}
+.blog-card:hover .blog-card-img {
+  transform: scale(1.04);
+}
+.blog-card:hover .blog-card-arrow {
+  transform: translateX(4px);
+  transition: transform 0.2s ease;
+}
+
+/* ===== Insurance ===== */
+.insurance-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.insurance-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all var(--transition);
+}
+.insurance-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.insurance-card img {
+  border-radius: 8px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.insurance-card span {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.insurance-more {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--primary-light);
+}
+.insurance-more a {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: underline;
+}
+@media (max-width: 1024px) {
+  .insurance-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .insurance-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Expandable Service List Items ===== */
+.service-list li.expandable {
+  cursor: pointer;
+  padding-right: 32px;
+  transition: background 0.2s ease, padding 0.2s ease;
+  border-radius: 8px;
+  margin: 0 -8px;
+  padding-left: 36px;
+}
+.service-list li.expandable:hover {
+  background: var(--primary-light);
+}
+.service-list li.expandable::after {
+  content: '+';
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary);
+  transition: transform 0.3s ease;
+}
+.service-list li.expandable.open::after {
+  content: '−';
+}
+.service-list li .expand-detail {
+  display: none;
+  margin-top: 8px;
+  padding: 12px 16px;
+  background: var(--bg-alt);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-light);
+  animation: expandIn 0.3s ease;
+}
+.service-list li.open .expand-detail {
+  display: block;
+}
+@keyframes expandIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== Responsive ===== */
@@ -2560,10 +2691,10 @@ img { max-width: 100%; display: block; }
     top: 16px;
     right: 20px;
     z-index: 1002;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     width: 44px;
     height: 44px;
@@ -2573,11 +2704,19 @@ img { max-width: 100%; display: block; }
     color: #fff;
     cursor: pointer;
     transition: all 0.2s ease;
+    box-shadow: none;
   }
   [data-theme="light"] .mobile-nav-close {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.12);
     color: var(--text);
+    box-shadow: none;
+  }
+  /* Hide the hamburger X when mobile nav is open — prevent double icon */
+  .mobile-nav.active ~ .nav-toggle,
+  .nav-toggle.active {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .mobile-nav-content {

@@ -18,7 +18,7 @@ const platforms = [
 export default function ReviewsPage() {
   return (
     <>
-      <section className="service-hero">
+      <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1579684453423-f84349ef60b0?w=1600&h=600&fit=crop&q=80')" }}>
         <div className="container">
           <h1>Reviews &amp; Ratings</h1>
           <p>See why patients trust Dr. Elguizaoui with their orthopedic care</p>

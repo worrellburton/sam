@@ -53,7 +53,7 @@ const faqs = [
 export default function FAQPage() {
   return (
     <>
-      <section className="service-hero">
+      <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=1600&h=600&fit=crop&q=80')" }}>
         <div className="container">
           <p className="hero-label">Resources</p>
           <h1>Frequently Asked Questions</h1>

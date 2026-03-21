@@ -19,7 +19,7 @@ const timeline = [
 export default function AboutPage() {
   return (
     <>
-      <section className="service-hero">
+      <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&h=600&fit=crop&q=80')" }}>
         <div className="container">
           <p className="hero-label">About</p>
           <h1>About Dr. Elguizaoui</h1>

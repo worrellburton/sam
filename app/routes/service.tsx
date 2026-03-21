@@ -3,6 +3,15 @@ import { getServiceBySlug, services } from "~/data/services";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
 
+const serviceHeroImages: Record<string, string> = {
+  "sports-medicine": "https://images.unsplash.com/photo-1461896836934-bd45ba55ae57?w=1600&h=600&fit=crop&q=80",
+  "arthroscopic-surgery": "https://images.unsplash.com/photo-1551190822-a9ce113ac100?w=1600&h=600&fit=crop&q=80",
+  "regenerative-medicine": "https://images.unsplash.com/photo-1579684453423-f84349ef60b0?w=1600&h=600&fit=crop&q=80",
+  "joint-preservation": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1600&h=600&fit=crop&q=80",
+  "cartilage-repair": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1600&h=600&fit=crop&q=80",
+  "shoulder-knee-surgery": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1600&h=600&fit=crop&q=80",
+};
+
 export function meta({ params }: { params: { slug: string } }) {
   const service = getServiceBySlug(params.slug);
   return [
@@ -26,7 +35,7 @@ export default function ServicePage() {
 
   return (
     <>
-      <section className="service-hero">
+      <section className="service-hero has-bg" style={{ backgroundImage: `url('${serviceHeroImages[slug || ""] || ""}')` }}>
         <div className="container">
           <Link to="/#specialties" className="service-back-link">
             &larr; Back to Services

@@ -3,6 +3,7 @@ build/
 .react-router/
 static-backup/
 *.mp4
+!public/test.mp4
 *.gif
 .env
 .env.local

@@ -18,7 +18,7 @@ const offices = [
 export default function ContactPage() {
   return (
     <>
-      <section className="service-hero">
+      <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&h=600&fit=crop&q=80')" }}>
         <div className="container">
           <p className="hero-label">Get in Touch</p>
           <h1>Contact Us</h1>

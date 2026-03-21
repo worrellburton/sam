@@ -236,6 +236,19 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  // Reviews carousel
+  const allReviews = googleReviews.length > 0 ? googleReviews : patientReviews.map(r => ({ ...r, rating: 5, isLocal: true as const }));
+  const [reviewIndex, setReviewIndex] = useState(0);
+  const reviewsPerPage = 3;
+  const totalReviewPages = Math.ceil(allReviews.length / reviewsPerPage);
+  useEffect(() => {
+    if (allReviews.length <= reviewsPerPage) return;
+    const interval = setInterval(() => {
+      setReviewIndex(prev => (prev + 1) % totalReviewPages);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [allReviews.length, totalReviewPages]);
+
   return (
     <>
       {/* Hero */}
@@ -371,6 +384,15 @@ export default function Home() {
             {services.map((svc) => (
               <Link to={`/services/${svc.slug}`} className="specialty-card specialty-link" key={svc.slug}>
                 <img className="specialty-img" src={serviceImages[svc.slug]} alt={svc.title} loading="lazy" />
+                <video
+                  className="specialty-video"
+                  muted
+                  loop
+                  playsInline
+                  preload="none"
+                  onMouseEnter={(e) => { const v = e.currentTarget; v.src = "/sammd/test.mp4"; v.play().then(() => v.classList.add("loaded")).catch(() => {}); }}
+                  onMouseLeave={(e) => { const v = e.currentTarget; v.classList.remove("loaded"); v.pause(); }}
+                />
                 <div className="specialty-overlay"></div>
                 <h3 className="specialty-title">{svc.title}</h3>
                 <div className="specialty-detail">
@@ -433,16 +455,17 @@ export default function Home() {
             <h2>Trusted by <span className="text-accent">{googleTotal ? `${(1469 + googleTotal).toLocaleString()}+` : '1,400+'} Patients</span></h2>
             <p className="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
           </div>
-          <div className="google-reviews-carousel">
-            <div className="google-reviews-track" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px" }}>
-              {(googleReviews.length > 0 ? googleReviews.slice(0, 6) : patientReviews.slice(0, 3)).map((review, i) => {
-                const isGoogle = googleReviews.length > 0;
+          <div className="reviews-carousel-wrapper">
+            <div className="reviews-carousel-track" style={{ transform: `translateX(-${reviewIndex * 100}%)` }}>
+              {allReviews.map((review, i) => {
+                const isGoogle = 'authorAttribution' in review;
                 const r = review as GoogleReview;
-                const name = isGoogle ? (r.authorAttribution?.displayName || 'Patient') : (review as typeof patientReviews[0]).name;
+                const local = review as typeof patientReviews[0] & { rating: number };
+                const name = isGoogle ? (r.authorAttribution?.displayName || 'Patient') : local.name;
                 const avatar = isGoogle ? r.authorAttribution?.photoUri : undefined;
-                const time = isGoogle ? (r.relativePublishTimeDescription || '') : (review as typeof patientReviews[0]).time;
-                const text = isGoogle ? (r.text?.text || '') : (review as typeof patientReviews[0]).text;
-                const location = isGoogle ? r.locationLabel : (review as typeof patientReviews[0]).location;
+                const time = isGoogle ? (r.relativePublishTimeDescription || '') : local.time;
+                const text = isGoogle ? (r.text?.text || '') : local.text;
+                const location = isGoogle ? r.locationLabel : local.location;
                 const rating = isGoogle ? r.rating : 5;
                 return (
                   <div className="google-review-card" key={i}>
@@ -471,6 +494,13 @@ export default function Home() {
                 );
               })}
             </div>
+            {totalReviewPages > 1 && (
+              <div className="reviews-carousel-dots">
+                {Array.from({ length: totalReviewPages }).map((_, i) => (
+                  <button key={i} className={`reviews-dot${i === reviewIndex ? " active" : ""}`} onClick={() => setReviewIndex(i)} aria-label={`Page ${i + 1}`} />
+                ))}
+              </div>
+            )}
           </div>
           <div className="reviews-cta">
             <p>See what patients are saying about Dr. Elguizaoui</p>

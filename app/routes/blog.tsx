@@ -11,7 +11,7 @@ export function meta() {
 export default function BlogPage() {
   return (
     <>
-      <section className="service-hero">
+      <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1600&h=600&fit=crop&q=80')" }}>
         <div className="container">
           <h1>Blog</h1>
           <p>Orthopedic insights from Dr. Elguizaoui</p>

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useScrollPosition } from "~/hooks/useScrollPosition";
 import { useTheme } from "~/hooks/useTheme";
 
@@ -9,6 +9,22 @@ export function Navigation() {
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const megaCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openMega = useCallback(() => {
+    if (megaCloseTimer.current) {
+      clearTimeout(megaCloseTimer.current);
+      megaCloseTimer.current = null;
+    }
+    setMegaOpen(true);
+  }, []);
+
+  const closeMega = useCallback(() => {
+    megaCloseTimer.current = setTimeout(() => {
+      setMegaOpen(false);
+      megaCloseTimer.current = null;
+    }, 150);
+  }, []);
 
   const isScrolled = scrollY > 50;
   const isHidden = direction === "down" && scrollY > 200;
@@ -54,8 +70,8 @@ export function Navigation() {
           </li>
           <li
             className={`nav-mega-wrap${megaOpen ? " open" : ""}`}
-            onMouseEnter={() => setMegaOpen(true)}
-            onMouseLeave={() => setMegaOpen(false)}
+            onMouseEnter={openMega}
+            onMouseLeave={closeMega}
           >
             <button
               className="nav-mega-toggle"

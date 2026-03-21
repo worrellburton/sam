@@ -2334,6 +2334,13 @@ img { max-width: 100%; display: block; }
 [data-theme="light"] .highlight-card h3 { color: var(--text); }
 [data-theme="light"] .specialty-card .specialty-title { color: #fff; }
 
+/* ===== Blog Home Section ===== */
+.blog-home-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
 /* ===== Blog Styles ===== */
 .blog-grid {
   display: grid;
@@ -2414,6 +2421,7 @@ img { max-width: 100%; display: block; }
   .contact-content { grid-template-columns: 1fr; gap: 40px; }
   .service-grid { grid-template-columns: 1fr; gap: 40px; }
   .blog-grid { grid-template-columns: repeat(2, 1fr); }
+  .blog-home-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-columns { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -2653,6 +2661,7 @@ img { max-width: 100%; display: block; }
   .footer-bottom { flex-direction: column; text-align: center; }
 
   .blog-grid { grid-template-columns: 1fr; }
+  .blog-home-grid { grid-template-columns: 1fr; }
 
   .service-hero { padding: 90px 0 32px; }
   .service-hero h1 { font-size: 1.5rem; }

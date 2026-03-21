@@ -113,108 +113,25 @@
     </div>
   </nav>
 
-  <!-- Service Hero -->
-  <header class="service-hero has-bg" style="background-image:url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&h=600&fit=crop&q=80')">
+  <!-- Reviews Header -->
+  <section class="section" style="padding: 140px 0 40px;">
     <div class="container">
-      <p class="hero-label">Patient Feedback</p>
-      <h1>Patient <span class="text-accent">Reviews</span></h1>
-      <p class="service-hero-desc">Over 1,400 verified reviews from real patients. See why Dr. Elguizaoui is one of the highest-rated orthopedic surgeons in New York City.</p>
-    </div>
-  </header>
-
-  <!-- Rating Stats -->
-  <section class="section reviews reveal" id="reviews-stats">
-    <div class="container">
-      <div class="reviews-stats reveal-stagger" id="reviewsStats">
-        <div class="review-stat">
-          <div class="stat-platform">Zocdoc</div>
-          <div class="stat-rating" data-target="4.78"><span class="count-up">0.0</span><span>/5</span></div>
-          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="stat-count">1,469 verified reviews</div>
-        </div>
-        <div class="review-stat">
-          <div class="stat-platform">Google</div>
-          <div class="stat-rating" data-target="4.8"><span class="count-up">0.0</span><span>/5</span></div>
-          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="stat-count">Google reviews</div>
-        </div>
+      <div class="section-header" style="margin-bottom: 0;">
+        <p class="section-label">Patient Feedback</p>
+        <h1 style="margin-bottom: 12px;">Patient <span class="text-accent">Reviews</span></h1>
+        <p style="color: var(--text-light); max-width: 600px; margin: 0 auto; font-size: 1.05rem; line-height: 1.7;">Real reviews from verified patients across all three NYC locations.</p>
+      </div>
+      <div class="reviews-filter-bar" id="filterBar">
+        <button class="review-filter active" data-filter="all">All Locations</button>
       </div>
     </div>
   </section>
 
-  <!-- Patient Testimonials -->
-  <section class="section testimonials reveal" id="testimonials">
+  <!-- Reviews Grid -->
+  <section class="section reveal" style="padding-top: 0;">
     <div class="container">
-      <div class="section-header">
-        <p class="section-label">Patient Testimonials</p>
-        <h2>What Patients Are <span class="text-accent">Saying</span></h2>
-      </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <blockquote>"Dr. Elguizaoui was a delight! Excellent bedside manner, very inquisitive and explained my options for treatment thoroughly."</blockquote>
-          <div class="testimonial-author">
-            <div class="author-avatar">Z</div>
-            <div>
-              <span class="author-name">Verified Patient</span>
-              <span class="author-source">Zocdoc Review</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <blockquote>"Doctor Elguizaoui is an amazing doctor. He repaired a partially torn meniscus, explained what was wrong, what needed to be done and made me feel comfortable through the entire process."</blockquote>
-          <div class="testimonial-author">
-            <div class="author-avatar">Z</div>
-            <div>
-              <span class="author-name">Verified Patient</span>
-              <span class="author-source">Zocdoc Review</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <blockquote>"Outstanding doctor. His expertise and manners were impeccable. He's very knowledgeable, friendly and aware of new research-backed technologies and treatments."</blockquote>
-          <div class="testimonial-author">
-            <div class="author-avatar">Z</div>
-            <div>
-              <span class="author-name">Verified Patient</span>
-              <span class="author-source">Zocdoc Review</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Google Reviews -->
-  <section class="section reveal" id="google-reviews">
-    <div class="container">
-      <div class="section-header">
-        <p class="section-label">Google Reviews</p>
-        <h2>Reviews from <span class="text-accent">Google</span></h2>
-      </div>
-      <div class="google-reviews-carousel" id="googleReviewsCarousel">
-        <div class="google-reviews-track" id="googleReviewsTrack"></div>
-      </div>
-      <div class="google-reviews-nav">
-        <button class="google-reviews-arrow" id="reviewsPrev" aria-label="Previous reviews">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        </button>
-        <div class="google-reviews-dots" id="reviewsDots"></div>
-        <button class="google-reviews-arrow" id="reviewsNext" aria-label="Next reviews">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="section reveal">
-    <div class="container" style="text-align:center;">
-      <div class="reviews-cta">
-        <p>See what patients are saying about Dr. Elguizaoui</p>
-        <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-outline">Read Reviews on Zocdoc</a>
+      <div class="reviews-grid" id="reviewsGrid">
+        <div class="reviews-loading" id="reviewsLoading">Loading reviews...</div>
       </div>
     </div>
   </section>
@@ -376,28 +293,89 @@
       });
     }
 
-    // --- Count-up animation for review stats ---
+    // --- Google Reviews Grid ---
     (function() {
-      const statsSection = document.getElementById('reviewsStats');
-      if (!statsSection) return;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            statsSection.querySelectorAll('.count-up').forEach(counter => {
-              const target = parseFloat(counter.closest('.stat-rating').dataset.target);
-              let current = 0;
-              const step = target / 60;
-              const interval = setInterval(() => {
-                current += step;
-                if (current >= target) { current = target; clearInterval(interval); }
-                counter.textContent = current.toFixed(1);
-              }, 16);
-            });
-            observer.unobserve(entry);
-          }
-        });
-      }, { threshold: 0.3 });
-      observer.observe(statsSection);
+      const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
+      const PLACE_IDS = [
+        { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
+        { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
+        { id: 'ChIJzeD6h0VawokRCfzPOz9Oi7E', label: 'Brooklyn' }
+      ];
+      const FIELDS = 'id,rating,userRatingCount,reviews.rating,reviews.text,reviews.authorAttribution,reviews.relativePublishTimeDescription,reviews.publishTime';
+
+      const grid = document.getElementById('reviewsGrid');
+      const loading = document.getElementById('reviewsLoading');
+      const filterBar = document.getElementById('filterBar');
+      let allReviews = [];
+      let activeFilter = 'all';
+
+      function starsHTML(rating) {
+        return '&#9733;'.repeat(Math.round(rating)) + '&#9734;'.repeat(5 - Math.round(rating));
+      }
+
+      function renderReviews() {
+        const filtered = activeFilter === 'all'
+          ? allReviews
+          : allReviews.filter(r => r.locationLabel === activeFilter);
+        grid.innerHTML = filtered.map(r => `
+          <div class="google-review-card">
+            <div class="google-review-header">
+              <img class="google-review-avatar" src="${r.authorAttribution?.photoUri || ''}" alt="${r.authorAttribution?.displayName || 'Patient'}" loading="lazy" onerror="this.style.display='none'">
+              <div>
+                <div class="google-review-author">${r.authorAttribution?.displayName || 'Patient'}</div>
+                <div class="google-review-meta">${r.relativePublishTimeDescription || ''}</div>
+              </div>
+              <div class="google-review-google-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+            <div class="google-review-stars">${starsHTML(r.rating)}</div>
+            <div class="google-review-text">${r.text?.text || ''}</div>
+            <div class="google-review-location">${r.locationLabel}</div>
+          </div>
+        `).join('');
+        if (!filtered.length) {
+          grid.innerHTML = '<div class="reviews-loading">No reviews found.</div>';
+        }
+      }
+
+      filterBar.addEventListener('click', (e) => {
+        const btn = e.target.closest('.review-filter');
+        if (!btn) return;
+        filterBar.querySelectorAll('.review-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderReviews();
+      });
+
+      async function fetchAllReviews() {
+        try {
+          const results = await Promise.all(PLACE_IDS.map(async (place) => {
+            const resp = await fetch(`https://places.googleapis.com/v1/places/${place.id}?fields=${FIELDS}&key=${PLACES_API_KEY}`);
+            if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+            const data = await resp.json();
+            return (data.reviews || []).map(r => ({ ...r, locationLabel: place.label }));
+          }));
+          allReviews = results.flatMap(r => r)
+            .filter(r => r.rating >= 4)
+            .sort((a, b) => new Date(b.publishTime || 0) - new Date(a.publishTime || 0));
+
+          // Build location filter buttons
+          PLACE_IDS.forEach(place => {
+            const btn = document.createElement('button');
+            btn.className = 'review-filter';
+            btn.dataset.filter = place.label;
+            btn.textContent = place.label;
+            filterBar.appendChild(btn);
+          });
+
+          renderReviews();
+        } catch (err) {
+          console.warn('Google Reviews fetch failed:', err);
+          grid.innerHTML = '<div class="reviews-loading">Unable to load reviews. Please try again later.</div>';
+        }
+      }
+      fetchAllReviews();
     })();
 
     // --- WebGL Footer Animation (subtle floating particles) ---
@@ -488,111 +466,6 @@
       frame();
     })();
 
-    // --- Google Reviews Carousel ---
-    (function() {
-      const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
-      const PLACE_IDS = [
-        { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
-        { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
-        { id: 'ChIJzeD6h0VawokRCfzPOz9Oi7E', label: 'Brooklyn' }
-      ];
-      const FIELDS = 'id,rating,userRatingCount,reviews.rating,reviews.text,reviews.authorAttribution,reviews.relativePublishTimeDescription,reviews.publishTime';
-
-      const track = document.getElementById('googleReviewsTrack');
-      const dotsContainer = document.getElementById('reviewsDots');
-      const prevBtn = document.getElementById('reviewsPrev');
-      const nextBtn = document.getElementById('reviewsNext');
-      if (!track) return;
-
-      let currentPage = 0;
-      let totalPages = 1;
-      let allReviews = [];
-
-      function getCardsPerPage() {
-        if (window.innerWidth <= 768) return 1;
-        if (window.innerWidth <= 1024) return 2;
-        return 3;
-      }
-
-      function starsHTML(rating) {
-        return '&#9733;'.repeat(Math.round(rating)) + '&#9734;'.repeat(5 - Math.round(rating));
-      }
-
-      function renderReviews() {
-        track.innerHTML = allReviews.map(r => `
-          <div class="google-review-card">
-            <div class="google-review-header">
-              <img class="google-review-avatar" src="${r.authorAttribution?.photoUri || ''}" alt="${r.authorAttribution?.displayName || 'Patient'}" loading="lazy" onerror="this.style.display='none'">
-              <div>
-                <div class="google-review-author">${r.authorAttribution?.displayName || 'Patient'}</div>
-                <div class="google-review-meta">${r.relativePublishTimeDescription || ''}</div>
-              </div>
-              <div class="google-review-google-icon">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              </div>
-            </div>
-            <div class="google-review-stars">${starsHTML(r.rating)}</div>
-            <div class="google-review-text">${r.text?.text || ''}</div>
-            <div class="google-review-location">${r.locationLabel}</div>
-          </div>
-        `).join('');
-        updateCarousel();
-      }
-
-      function updateCarousel() {
-        const cardsPerPage = getCardsPerPage();
-        totalPages = Math.ceil(allReviews.length / cardsPerPage);
-        if (currentPage >= totalPages) currentPage = totalPages - 1;
-        const cardWidth = track.children[0]?.offsetWidth || 0;
-        const gap = 20;
-        const offset = currentPage * cardsPerPage * (cardWidth + gap);
-        track.style.transform = `translateX(-${offset}px)`;
-        dotsContainer.innerHTML = '';
-        for (let i = 0; i < totalPages; i++) {
-          const dot = document.createElement('div');
-          dot.className = 'google-reviews-dot' + (i === currentPage ? ' active' : '');
-          dot.addEventListener('click', () => { currentPage = i; updateCarousel(); });
-          dotsContainer.appendChild(dot);
-        }
-      }
-
-      prevBtn.addEventListener('click', () => { if (currentPage > 0) { currentPage--; updateCarousel(); } });
-      nextBtn.addEventListener('click', () => { if (currentPage < totalPages - 1) { currentPage++; updateCarousel(); } });
-
-      let startX = 0, isDragging = false;
-      track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isDragging = true; }, { passive: true });
-      track.addEventListener('touchend', e => {
-        if (!isDragging) return;
-        isDragging = false;
-        const diff = startX - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 50) {
-          if (diff > 0 && currentPage < totalPages - 1) { currentPage++; updateCarousel(); }
-          else if (diff < 0 && currentPage > 0) { currentPage--; updateCarousel(); }
-        }
-      }, { passive: true });
-
-      window.addEventListener('resize', () => { updateCarousel(); });
-
-      async function fetchAllReviews() {
-        try {
-          const results = await Promise.all(PLACE_IDS.map(async (place) => {
-            const resp = await fetch(`https://places.googleapis.com/v1/places/${place.id}?fields=${FIELDS}&key=${PLACES_API_KEY}`);
-            if (!resp.ok) throw new Error(`API error: ${resp.status}`);
-            const data = await resp.json();
-            return {
-              reviews: (data.reviews || []).map(r => ({ ...r, locationLabel: place.label }))
-            };
-          }));
-          allReviews = results.flatMap(r => r.reviews)
-            .filter(r => r.rating >= 4)
-            .sort((a, b) => new Date(b.publishTime || 0) - new Date(a.publishTime || 0));
-          renderReviews();
-        } catch (err) {
-          console.warn('Google Reviews fetch failed:', err);
-        }
-      }
-      fetchAllReviews();
-    })();
   </script>
 
 </body>

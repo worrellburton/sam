@@ -3530,3 +3530,111 @@ img { max-width: 100%; display: block; }
   .blog-post-meta { gap: 12px; }
   .blog-post-meta span { font-size: 0.8rem; }
 }
+
+/* ===== Booking Page ===== */
+body { overflow-x: hidden; }
+.book-topbar { padding: 14px 0; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; background: var(--bg); }
+.book-topbar-inner { display: flex; align-items: center; justify-content: space-between; }
+.book-topbar a { font-family: 'Inter', sans-serif; text-decoration: none; }
+.book-back { font-weight: 600; font-size: 1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.book-phone { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.book-stage { min-height: calc(100vh - 52px); display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; }
+.book-panel { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 720px; width: 100%; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.book-panel h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 4px; }
+.book-panel .book-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px; }
+.book-section-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
+.book-select { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; cursor: pointer; margin-bottom: 14px; }
+.book-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,107,255,0.1); }
+.book-insurance-check { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 20px; cursor: pointer; font-size: 0.9rem; color: var(--text-light); }
+.book-insurance-check input { accent-color: var(--primary); width: 18px; height: 18px; }
+.patient-toggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
+.patient-toggle-btn { padding: 12px; text-align: center; font-size: 0.9rem; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-light); transition: all 0.2s; }
+.patient-toggle-btn.active { background: var(--primary); color: #fff; }
+.cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.cal-header h3 { font-size: 1.1rem; font-weight: 600; }
+.cal-nav { display: flex; gap: 8px; }
+.cal-nav-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); transition: all 0.2s; }
+.cal-nav-btn:hover { background: var(--primary-light); color: var(--primary); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.cal-day-header { padding: 10px 4px; text-align: center; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); background: var(--bg); border-bottom: 1px solid var(--border); }
+.cal-day { min-height: 80px; padding: 8px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+.cal-day:nth-child(7n+7) { border-right: none; }
+.cal-day:hover { background: rgba(79,107,255,0.04); }
+.cal-day.empty { background: var(--bg); cursor: default; opacity: 0.4; }
+.cal-day.empty:hover { background: var(--bg); }
+.cal-day.today .cal-date { background: var(--primary); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+.cal-date { font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
+.cal-event { font-size: 0.65rem; padding: 3px 6px; border-radius: 4px; color: #fff; font-weight: 500; }
+.cal-event.green { background: #22c55e; }
+.cal-day.selected { background: rgba(79,107,255,0.08); box-shadow: inset 0 0 0 2px var(--primary); }
+.time-slots { margin-top: 24px; }
+.time-slots h3 { font-size: 1rem; font-weight: 600; margin-bottom: 14px; }
+.time-slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.time-slot { padding: 10px; text-align: center; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); }
+.time-slot:hover { border-color: var(--primary); color: var(--primary); background: rgba(79,107,255,0.04); }
+.time-slot.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
+.time-slot.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+.book-confirm { margin-top: 24px; }
+.book-confirm .btn { width: 100%; padding: 14px; font-size: 1rem; }
+.book-footer-note { text-align: center; margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); }
+.book-zocdoc-alt { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
+.book-zocdoc-alt a { color: var(--primary); font-weight: 500; }
+.cal-back-btn { display: none; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; font-family: 'Inter', sans-serif; color: var(--text-muted); cursor: pointer; margin-bottom: 20px; transition: all 0.2s; }
+.cal-back-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+/* Stage 2: Expanded sidebar + calendar */
+.book-stage.expanded { padding: 0; align-items: stretch; }
+.book-stage.expanded .book-panel { max-width: none; border-radius: 0; border: none; border-right: 1px solid var(--border); display: grid; grid-template-columns: 300px 1fr; grid-template-rows: 1fr; gap: 0; padding: 0; width: 100%; }
+.book-sidebar-content { transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; }
+.book-stage.expanded .book-sidebar-content { background: var(--bg-alt); border-right: 1px solid var(--border); padding: 28px 24px; overflow-y: auto; max-height: calc(100vh - 52px); position: sticky; top: 52px; }
+.book-cal-content { transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+.book-stage.expanded .book-cal-content { padding: 32px 48px; flex: 1; }
+.book-stage.expanded .cal-back-btn { display: inline-flex; }
+.book-stage.expanded .cal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+.book-stage.expanded .cal-day { min-height: 100px; padding: 10px; }
+.book-stage.expanded .cal-date { font-size: 0.95rem; }
+.book-stage.expanded .cal-event { font-size: 0.72rem; padding: 4px 8px; }
+.book-stage.expanded .time-slots-grid { grid-template-columns: repeat(6, 1fr); }
+.book-stage.expanded .book-zocdoc-alt { display: none; }
+
+/* Doctor sidebar card */
+.sidebar-doc { display: none; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px; }
+.book-stage.expanded .sidebar-doc { display: block; }
+.sidebar-doc-header { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+.sidebar-doc-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+.sidebar-doc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.sidebar-doc-name { font-weight: 700; font-size: 0.85rem; }
+.sidebar-doc-spec { font-size: 0.72rem; color: var(--text-muted); }
+.sidebar-doc-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+.sidebar-doc-rating .score { font-weight: 700; font-size: 0.85rem; }
+.sidebar-doc-rating .stars { color: #f59e0b; font-size: 0.75rem; }
+.sidebar-doc-rating .count { font-size: 0.7rem; color: var(--text-muted); text-decoration: none; }
+.sidebar-highlight { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 0.75rem; color: var(--text-light); }
+.sidebar-highlight-icon { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--primary); }
+.sidebar-insurance { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.sidebar-insurance p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
+.sidebar-insurance a { font-size: 0.72rem; color: var(--primary); }
+.sidebar-zocdoc { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); text-align: center; font-size: 0.75rem; color: var(--text-muted); }
+.sidebar-zocdoc a { color: var(--primary); }
+.book-stage.expanded .book-panel h2 { font-size: 1.15rem; margin-bottom: 2px; }
+.book-stage.expanded .book-panel .book-sub { font-size: 0.78rem; margin-bottom: 20px; }
+.book-stage.expanded .book-section-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+.book-stage.expanded .book-select { padding: 10px 14px; font-size: 0.82rem; margin-bottom: 12px; }
+.book-stage.expanded .book-insurance-check { padding: 10px 14px; font-size: 0.82rem; margin-bottom: 14px; }
+.book-stage.expanded .patient-toggle-btn { padding: 10px; font-size: 0.78rem; }
+.book-stage.expanded .patient-toggle { margin-bottom: 16px; }
+
+@media (max-width: 900px) {
+  .book-stage.expanded .book-panel { grid-template-columns: 1fr; }
+  .book-stage.expanded .book-sidebar-content { max-height: none; position: static; border-right: none; border-bottom: 1px solid var(--border); }
+  .book-stage.expanded .book-cal-content { padding: 20px 16px; }
+  .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(3, 1fr); }
+  .book-stage.expanded .cal-day { min-height: 70px; }
+}
+@media (max-width: 600px) {
+  .book-panel { padding: 24px 16px; }
+  .cal-day { min-height: 60px; padding: 4px; }
+  .cal-event { font-size: 0.6rem; padding: 2px 4px; }
+  .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+  .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+}

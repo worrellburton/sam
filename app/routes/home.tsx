@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type { Route } from "./+types/home";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
@@ -165,8 +166,75 @@ const timeline = [
   { label: "Undergraduate", title: "Bachelor of Science, Biology", place: "The Ohio State University", detail: "Graduated magna cum laude, Psychology minor" },
 ];
 
+const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
+const PLACE_IDS = [
+  { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
+  { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
+  { id: 'ChIJzeD6h0VawokRCfzPOz9Oi7E', label: 'Brooklyn' },
+];
+const FIELDS = 'id,rating,userRatingCount,reviews.rating,reviews.text,reviews.authorAttribution,reviews.relativePublishTimeDescription,reviews.publishTime';
+
+interface GoogleReview {
+  rating: number;
+  text?: { text?: string };
+  authorAttribution?: { displayName?: string; photoUri?: string };
+  relativePublishTimeDescription?: string;
+  publishTime?: string;
+  locationLabel: string;
+}
+
+function useGoogleReviews() {
+  const [reviews, setReviews] = useState<GoogleReview[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+
+  useEffect(() => {
+    async function fetchAllReviews() {
+      try {
+        const results = await Promise.all(PLACE_IDS.map(async (place) => {
+          const resp = await fetch(`https://places.googleapis.com/v1/places/${place.id}?fields=${FIELDS}&key=${PLACES_API_KEY}`);
+          if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+          const data = await resp.json();
+          return {
+            rating: data.rating || 0,
+            count: data.userRatingCount || 0,
+            reviews: (data.reviews || []).map((r: GoogleReview) => ({ ...r, locationLabel: place.label })),
+          };
+        }));
+
+        const total = results.reduce((s, r) => s + r.count, 0);
+        setTotalCount(total);
+
+        const all = results.flatMap(r => r.reviews)
+          .filter((r: GoogleReview) => r.rating >= 4)
+          .sort((a: GoogleReview, b: GoogleReview) => new Date(b.publishTime || 0).getTime() - new Date(a.publishTime || 0).getTime());
+
+        setReviews(all);
+      } catch (err) {
+        console.warn('Google Reviews fetch failed:', err);
+      }
+    }
+    fetchAllReviews();
+  }, []);
+
+  return { reviews, totalCount };
+}
+
+function starsHTML(rating: number) {
+  return '\u2605'.repeat(Math.round(rating)) + '\u2606'.repeat(5 - Math.round(rating));
+}
+
 export default function Home() {
   const recentPosts = blogPosts.slice(0, 3);
+  const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
+
+  // Slideshow for Move Easier section
+  const [activeSlide, setActiveSlide] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % slideImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -318,7 +386,7 @@ export default function Home() {
       {/* Move Easier Banner */}
       <section className="move-easier-section" id="moveEasierSection">
         {slideImages.map((url, i) => (
-          <div key={i} className={`move-easier-bg${i === 0 ? " active" : ""}`} style={{ backgroundImage: `url('${url}')` }}></div>
+          <div key={i} className={`move-easier-bg${i === activeSlide ? " active" : ""}`} style={{ backgroundImage: `url('${url}')` }}></div>
         ))}
         <div className="move-easier-marquee">
           <div className="marquee-track">
@@ -362,25 +430,46 @@ export default function Home() {
         <div className="container">
           <div className="section-header">
             <p className="section-label">Patient Reviews</p>
-            <h2>Trusted by <span className="text-accent">1,400+ Patients</span></h2>
+            <h2>Trusted by <span className="text-accent">{googleTotal ? `${(1469 + googleTotal).toLocaleString()}+` : '1,400+'} Patients</span></h2>
             <p className="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
           </div>
           <div className="google-reviews-carousel">
-            <div className="google-reviews-track" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-              {patientReviews.slice(0, 3).map((review, i) => (
-                <div className="google-review-card" key={i}>
-                  <div className="google-review-header">
-                    <img className="google-review-avatar" src={`https://ui-avatars.com/api/?name=${encodeURIComponent(review.name)}&background=1a3a5c&color=fff&size=36`} alt="" />
-                    <div>
-                      <div className="google-review-author">{review.name}</div>
-                      <div className="google-review-meta">{review.time}</div>
+            <div className="google-reviews-track" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px" }}>
+              {(googleReviews.length > 0 ? googleReviews.slice(0, 6) : patientReviews.slice(0, 3)).map((review, i) => {
+                const isGoogle = googleReviews.length > 0;
+                const r = review as GoogleReview;
+                const name = isGoogle ? (r.authorAttribution?.displayName || 'Patient') : (review as typeof patientReviews[0]).name;
+                const avatar = isGoogle ? r.authorAttribution?.photoUri : undefined;
+                const time = isGoogle ? (r.relativePublishTimeDescription || '') : (review as typeof patientReviews[0]).time;
+                const text = isGoogle ? (r.text?.text || '') : (review as typeof patientReviews[0]).text;
+                const location = isGoogle ? r.locationLabel : (review as typeof patientReviews[0]).location;
+                const rating = isGoogle ? r.rating : 5;
+                return (
+                  <div className="google-review-card" key={i}>
+                    <div className="google-review-header">
+                      <img
+                        className="google-review-avatar"
+                        src={avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1a3a5c&color=fff&size=36`}
+                        alt={name}
+                        loading="lazy"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                      <div>
+                        <div className="google-review-author">{name}</div>
+                        <div className="google-review-meta">{time}</div>
+                      </div>
+                      {isGoogle && (
+                        <div className="google-review-google-icon">
+                          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                        </div>
+                      )}
                     </div>
+                    <div className="google-review-stars">{starsHTML(rating)}</div>
+                    <div className="google-review-text">{text}</div>
+                    <div className="google-review-location">{location}</div>
                   </div>
-                  <div className="google-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                  <div className="google-review-text">{review.text}</div>
-                  <div className="google-review-location">{review.location}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
           <div className="reviews-cta">

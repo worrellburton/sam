@@ -5,6 +5,7 @@ import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
 import { services } from "~/data/services";
 import { blogPosts } from "~/data/blog";
+import { SpecialtyCanvas } from "~/components/SpecialtyCanvas";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -383,7 +384,7 @@ export default function Home() {
           <div className="specialties-grid">
             {services.map((svc) => (
               <Link to={`/services/${svc.slug}`} className="specialty-card specialty-link" key={svc.slug}>
-                <img className="specialty-img" src={serviceImages[svc.slug]} alt={svc.title} loading="lazy" />
+                <SpecialtyCanvas slug={svc.slug} />
                 <video
                   className="specialty-video"
                   muted

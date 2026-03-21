@@ -14,73 +14,54 @@
   <link rel="stylesheet" href="../styles.css">
   <style>
     body { overflow-x: hidden; }
+
+    /* Top bar */
     .book-topbar { padding: 14px 0; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; background: var(--bg); }
     .book-topbar-inner { display: flex; align-items: center; justify-content: space-between; }
     .book-topbar a { font-family: 'Inter', sans-serif; text-decoration: none; }
     .book-back { font-weight: 600; font-size: 1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
     .book-phone { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
 
-    /* 3-column layout: sidebar | calendar | (time slots appear below cal) */
-    .book-wrapper { display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 52px); }
+    /* ===== STAGE 1: Centered booking form ===== */
+    .book-stage { min-height: calc(100vh - 52px); display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; }
+    .book-panel { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 720px; width: 100%; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .book-panel h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 4px; }
+    .book-panel .book-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px; }
 
-    /* Left Sidebar */
-    .book-sidebar { background: var(--bg-alt); border-right: 1px solid var(--border); padding: 28px 24px; overflow-y: auto; }
-    .book-sidebar h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 4px; }
-    .book-sidebar .book-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 24px; }
-    .book-section-label { font-size: 0.8rem; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
-    .book-select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; margin-bottom: 16px; }
+    .book-section-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
+    .book-select { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; cursor: pointer; margin-bottom: 14px; }
     .book-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,107,255,0.1); }
-    .book-insurance-check { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; cursor: pointer; font-size: 0.85rem; color: var(--text-light); }
-    .book-insurance-check input { accent-color: var(--primary); width: 16px; height: 16px; }
-    .patient-toggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 24px; }
-    .patient-toggle-btn { padding: 10px; text-align: center; font-size: 0.8rem; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-light); transition: all 0.2s; }
+    .book-insurance-check { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 20px; cursor: pointer; font-size: 0.9rem; color: var(--text-light); }
+    .book-insurance-check input { accent-color: var(--primary); width: 18px; height: 18px; }
+    .patient-toggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
+    .patient-toggle-btn { padding: 12px; text-align: center; font-size: 0.9rem; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-light); transition: all 0.2s; }
     .patient-toggle-btn.active { background: var(--primary); color: #fff; }
 
-    /* Doctor info in sidebar */
-    .sidebar-doc { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px; }
-    .sidebar-doc-header { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
-    .sidebar-doc-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
-    .sidebar-doc-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .sidebar-doc-name { font-weight: 700; font-size: 0.9rem; }
-    .sidebar-doc-spec { font-size: 0.75rem; color: var(--text-muted); }
-    .sidebar-doc-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
-    .sidebar-doc-rating .score { font-weight: 700; font-size: 0.9rem; }
-    .sidebar-doc-rating .stars { color: #f59e0b; font-size: 0.8rem; }
-    .sidebar-doc-rating .count { font-size: 0.75rem; color: var(--text-muted); }
-    .sidebar-highlight { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.78rem; color: var(--text-light); }
-    .sidebar-highlight-icon { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--primary); box-shadow: 0 0 12px rgba(79,107,255,0.15); }
-    .sidebar-insurance { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-    .sidebar-insurance p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
-    .sidebar-insurance a { font-size: 0.75rem; color: var(--primary); }
-    .sidebar-zocdoc { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; font-size: 0.78rem; color: var(--text-dim); }
-    .sidebar-zocdoc a { color: var(--primary); }
-
-    /* Center: Calendar area */
-    .book-center { padding: 28px 40px; overflow-y: auto; }
-    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .cal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; }
+    /* Calendar (shared styles for both stages) */
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .cal-header h3 { font-size: 1.1rem; font-weight: 600; }
     .cal-nav { display: flex; gap: 8px; }
-    .cal-nav-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); transition: all 0.2s; }
+    .cal-nav-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); transition: all 0.2s; }
     .cal-nav-btn:hover { background: var(--primary-light); color: var(--primary); }
 
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .cal-day-header { padding: 12px 4px; text-align: center; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); background: var(--bg-alt); border-bottom: 1px solid var(--border); }
-    .cal-day { min-height: 100px; padding: 10px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+    .cal-day-header { padding: 10px 4px; text-align: center; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); background: var(--bg); border-bottom: 1px solid var(--border); }
+    .cal-day { min-height: 80px; padding: 8px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
     .cal-day:nth-child(7n) { border-right: none; }
     .cal-day:hover { background: rgba(79,107,255,0.04); }
-    .cal-day.empty { background: var(--bg-alt); opacity: 0.5; cursor: default; }
-    .cal-day.empty:hover { background: var(--bg-alt); }
-    .cal-day.today .cal-date { background: var(--primary); color: #fff; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
-    .cal-date { font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; }
-    .cal-event { font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; color: #fff; font-weight: 500; }
+    .cal-day.empty { background: var(--bg); cursor: default; opacity: 0.4; }
+    .cal-day.empty:hover { background: var(--bg); }
+    .cal-day.today .cal-date { background: var(--primary); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+    .cal-date { font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
+    .cal-event { font-size: 0.65rem; padding: 3px 6px; border-radius: 4px; color: #fff; font-weight: 500; }
     .cal-event.green { background: #22c55e; }
     .cal-day.selected { background: rgba(79,107,255,0.08); box-shadow: inset 0 0 0 2px var(--primary); }
 
     /* Time slots */
-    .time-slots { margin-top: 28px; }
-    .time-slots h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
-    .time-slots-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-    .time-slot { padding: 12px; text-align: center; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); }
+    .time-slots { margin-top: 24px; }
+    .time-slots h3 { font-size: 1rem; font-weight: 600; margin-bottom: 14px; }
+    .time-slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .time-slot { padding: 10px; text-align: center; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); }
     .time-slot:hover { border-color: var(--primary); color: var(--primary); background: rgba(79,107,255,0.04); }
     .time-slot.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
     .time-slot.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
@@ -88,18 +69,106 @@
     .book-confirm { margin-top: 24px; }
     .book-confirm .btn { width: 100%; padding: 14px; font-size: 1rem; }
     .book-footer-note { text-align: center; margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); }
+    .book-zocdoc-alt { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
+    .book-zocdoc-alt a { color: var(--primary); font-weight: 500; }
+
+    /* Back button (hidden in stage 1) */
+    .cal-back-btn { display: none; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; font-family: 'Inter', sans-serif; color: var(--text-muted); cursor: pointer; margin-bottom: 20px; transition: all 0.2s; }
+    .cal-back-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ===== STAGE 2: Sidebar + Calendar layout (animated) ===== */
+    .book-stage.expanded {
+      padding: 0;
+      align-items: stretch;
+    }
+
+    .book-stage.expanded .book-panel {
+      max-width: none;
+      border-radius: 0;
+      border: none;
+      border-right: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      grid-template-rows: 1fr;
+      gap: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    /* Sidebar: booking info slides left */
+    .book-sidebar-content {
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .book-stage.expanded .book-sidebar-content {
+      background: var(--bg-alt);
+      border-right: 1px solid var(--border);
+      padding: 28px 24px;
+      overflow-y: auto;
+      max-height: calc(100vh - 52px);
+      position: sticky;
+      top: 52px;
+    }
+
+    /* Calendar: expands to fill center */
+    .book-cal-content {
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .book-stage.expanded .book-cal-content {
+      padding: 32px 48px;
+      flex: 1;
+    }
+
+    .book-stage.expanded .cal-back-btn { display: inline-flex; }
+    .book-stage.expanded .cal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+    .book-stage.expanded .cal-day { min-height: 100px; padding: 10px; }
+    .book-stage.expanded .cal-date { font-size: 0.95rem; }
+    .book-stage.expanded .cal-event { font-size: 0.72rem; padding: 4px 8px; }
+    .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(6, 1fr); }
+    .book-stage.expanded .book-zocdoc-alt { display: none; }
+
+    /* Doctor compact card (shown only in sidebar mode) */
+    .sidebar-doc { display: none; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px; }
+    .book-stage.expanded .sidebar-doc { display: block; }
+    .sidebar-doc-header { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+    .sidebar-doc-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .sidebar-doc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .sidebar-doc-name { font-weight: 700; font-size: 0.85rem; }
+    .sidebar-doc-spec { font-size: 0.72rem; color: var(--text-muted); }
+    .sidebar-doc-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .sidebar-doc-rating .score { font-weight: 700; font-size: 0.85rem; }
+    .sidebar-doc-rating .stars { color: #f59e0b; font-size: 0.75rem; }
+    .sidebar-doc-rating .count { font-size: 0.7rem; color: var(--text-muted); text-decoration: none; }
+    .sidebar-highlight { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 0.75rem; color: var(--text-light); }
+    .sidebar-highlight-icon { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--primary); }
+    .sidebar-insurance { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .sidebar-insurance p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
+    .sidebar-insurance a { font-size: 0.72rem; color: var(--primary); }
+    .sidebar-zocdoc { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); text-align: center; font-size: 0.75rem; color: var(--text-muted); }
+    .sidebar-zocdoc a { color: var(--primary); }
+
+    /* Hide titles/labels that shrink in sidebar mode */
+    .book-stage.expanded .book-panel h2 { font-size: 1.15rem; margin-bottom: 2px; }
+    .book-stage.expanded .book-panel .book-sub { font-size: 0.78rem; margin-bottom: 20px; }
+    .book-stage.expanded .book-section-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+    .book-stage.expanded .book-select { padding: 10px 14px; font-size: 0.82rem; margin-bottom: 12px; }
+    .book-stage.expanded .book-insurance-check { padding: 10px 14px; font-size: 0.82rem; margin-bottom: 14px; }
+    .book-stage.expanded .patient-toggle-btn { padding: 10px; font-size: 0.78rem; }
+    .book-stage.expanded .patient-toggle { margin-bottom: 16px; }
 
     @media (max-width: 900px) {
-      .book-wrapper { grid-template-columns: 1fr; }
-      .book-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
-      .book-center { padding: 20px 16px; }
-      .time-slots-grid { grid-template-columns: repeat(3, 1fr); }
-      .cal-day { min-height: 70px; padding: 6px; }
+      .book-stage.expanded .book-panel { grid-template-columns: 1fr; }
+      .book-stage.expanded .book-sidebar-content { max-height: none; position: static; border-right: none; border-bottom: 1px solid var(--border); }
+      .book-stage.expanded .book-cal-content { padding: 20px 16px; }
+      .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(3, 1fr); }
+      .book-stage.expanded .cal-day { min-height: 70px; }
     }
-    @media (max-width: 500px) {
+    @media (max-width: 600px) {
+      .book-panel { padding: 24px 16px; }
+      .cal-day { min-height: 60px; padding: 4px; }
+      .cal-event { font-size: 0.6rem; padding: 2px 4px; }
       .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
-      .cal-day { min-height: 56px; padding: 4px; }
-      .cal-event { font-size: 0.6rem; padding: 2px 5px; }
+      .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -119,104 +188,140 @@
     </div>
   </div>
 
-  <!-- Main layout: sidebar + calendar -->
-  <div class="book-wrapper">
+  <!-- Single stage container that transitions -->
+  <div class="book-stage" id="bookStage">
+    <div class="book-panel" id="bookPanel">
 
-    <!-- Left Sidebar: Booking details -->
-    <div class="book-sidebar">
-      <h2>Book an appointment</h2>
-      <p class="book-sub">Schedule directly with Dr. Elguizaoui's office</p>
+      <!-- Sidebar content (booking details) -->
+      <div class="book-sidebar-content">
+        <h2>Book an appointment for free</h2>
+        <p class="book-sub">Schedule directly with Dr. Elguizaoui's office</p>
 
-      <p class="book-section-label">Visit type</p>
-      <select class="book-select" id="visitType">
-        <option>Orthopedic Consultation</option>
-        <option>Sports Injury Evaluation</option>
-        <option>Follow-up Visit</option>
-        <option>Second Opinion</option>
-        <option>Joint Pain Assessment</option>
-      </select>
+        <p class="book-section-label">Scheduling details</p>
+        <select class="book-select" id="visitType">
+          <option>Orthopedic Consultation</option>
+          <option>Sports Injury Evaluation</option>
+          <option>Follow-up Visit</option>
+          <option>Second Opinion</option>
+          <option>Joint Pain Assessment</option>
+        </select>
 
-      <p class="book-section-label">Location</p>
-      <select class="book-select" id="locationSelect">
-        <option value="greenwich">Greenwich Village &ndash; 200 W 13th St</option>
-        <option value="ues">Upper East Side &ndash; 159 E 74th St</option>
-        <option value="brooklyn">Brooklyn Heights &ndash; 161 Atlantic Ave</option>
-      </select>
+        <label class="book-insurance-check">
+          <input type="checkbox" checked> Insurance carrier and plan
+        </label>
 
-      <label class="book-insurance-check">
-        <input type="checkbox" checked> Insurance carrier and plan
-      </label>
+        <div class="patient-toggle">
+          <button class="patient-toggle-btn" id="btnNew">New patient</button>
+          <button class="patient-toggle-btn active" id="btnExisting">&#10003; Existing patient</button>
+        </div>
 
-      <div class="patient-toggle">
-        <button class="patient-toggle-btn" id="btnNew">New patient</button>
-        <button class="patient-toggle-btn active" id="btnExisting">&#10003; Existing patient</button>
-      </div>
+        <p class="book-section-label">Available appointments</p>
+        <select class="book-select" id="locationSelect">
+          <option value="greenwich">NY Orthopedics &ndash; Greenwich Village (200 W 13th St, 6th Fl)</option>
+          <option value="ues">NY Orthopedics &ndash; Upper East Side (159 East 74th St)</option>
+          <option value="brooklyn">NY Orthopedics &ndash; Brooklyn Heights (161 Atlantic Ave)</option>
+        </select>
 
-      <!-- Doctor info -->
-      <div class="sidebar-doc">
-        <div class="sidebar-doc-header">
-          <div class="sidebar-doc-avatar"><img src="../header.jpg" alt="Dr. Sam Elguizaoui"></div>
-          <div>
-            <div class="sidebar-doc-name">Dr. Sam Elguizaoui, MD</div>
-            <div class="sidebar-doc-spec">Orthopedic Surgeon</div>
+        <!-- Doctor info (only visible in expanded/sidebar mode) -->
+        <div class="sidebar-doc">
+          <div class="sidebar-doc-header">
+            <div class="sidebar-doc-avatar"><img src="../header.jpg" alt="Dr. Sam Elguizaoui"></div>
+            <div>
+              <div class="sidebar-doc-name">Dr. Sam Elguizaoui, MD</div>
+              <div class="sidebar-doc-spec">Orthopedic Surgeon</div>
+            </div>
+          </div>
+          <div class="sidebar-doc-rating">
+            <span class="score">4.78</span>
+            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <a href="../reviews.html" class="count">1,470 reviews</a>
+          </div>
+          <div class="sidebar-highlight">
+            <div class="sidebar-highlight-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
+            Patients often return
+          </div>
+          <div class="sidebar-highlight">
+            <div class="sidebar-highlight-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            91% wait less than 30 min
+          </div>
+          <div class="sidebar-highlight">
+            <div class="sidebar-highlight-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+            Accepting new patients
+          </div>
+          <div class="sidebar-insurance">
+            <p>Aetna, BlueCross BlueShield, UnitedHealthcare, Oxford</p>
+            <a href="../index.html#insurance">(200+) more in-network plans</a>
+          </div>
+          <div class="sidebar-zocdoc">
+            Also on <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Zocdoc</a>
           </div>
         </div>
-        <div class="sidebar-doc-rating">
-          <span class="score">4.78</span>
-          <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <a href="../reviews.html" class="count">1,470 reviews</a>
-        </div>
-
-        <div class="sidebar-highlight">
-          <div class="sidebar-highlight-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
-          Patients often return
-        </div>
-        <div class="sidebar-highlight">
-          <div class="sidebar-highlight-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-          91% wait less than 30 min
-        </div>
-        <div class="sidebar-highlight">
-          <div class="sidebar-highlight-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
-          Accepting new patients
-        </div>
-
-        <div class="sidebar-insurance">
-          <p>Aetna, BlueCross BlueShield, UnitedHealthcare, Oxford</p>
-          <a href="../index.html#insurance">(200+) more in-network plans</a>
-        </div>
-
-        <div class="sidebar-zocdoc">
-          Also available on <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Zocdoc</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Center: Calendar -->
-    <div class="book-center">
-      <div class="cal-header">
-        <h3 id="calTitle"></h3>
-        <div class="cal-nav">
-          <button class="cal-nav-btn" id="calPrev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
-          <button class="cal-nav-btn" id="calNext"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
-        </div>
-      </div>
-      <div class="cal-grid" id="calGrid"></div>
-
-      <!-- Time Slots (appear below calendar on day click) -->
-      <div class="time-slots" id="timeSlots" style="display:none;">
-        <h3 id="timeSlotsTitle">Select a time</h3>
-        <div class="time-slots-grid" id="timeSlotsGrid"></div>
       </div>
 
-      <!-- Confirm -->
-      <div class="book-confirm" id="bookConfirm" style="display:none;">
-        <button class="btn btn-primary btn-lg" id="confirmBtn" style="width:100%;padding:14px;font-size:1rem;">Confirm Appointment</button>
+      <!-- Calendar content -->
+      <div class="book-cal-content">
+        <button class="cal-back-btn" id="calBackBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back to overview
+        </button>
+
+        <div class="cal-header">
+          <h3 id="calTitle"></h3>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" id="calPrev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <button class="cal-nav-btn" id="calNext"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+
+        <!-- Time Slots -->
+        <div class="time-slots" id="timeSlots" style="display:none;">
+          <h3 id="timeSlotsTitle">Select a time</h3>
+          <div class="time-slots-grid" id="timeSlotsGrid"></div>
+        </div>
+
+        <!-- Confirm -->
+        <div class="book-confirm" id="bookConfirm" style="display:none;">
+          <button class="btn btn-primary btn-lg" id="confirmBtn" style="width:100%;padding:14px;font-size:1rem;">Confirm Appointment</button>
+        </div>
+        <p class="book-footer-note" id="footerNote" style="display:none;">By booking, you agree to our terms and privacy policy.</p>
+
+        <div class="book-zocdoc-alt">
+          You can also book through <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Zocdoc</a>
+        </div>
       </div>
-      <p class="book-footer-note" id="footerNote" style="display:none;">By booking, you agree to our terms and privacy policy.</p>
+
     </div>
   </div>
 
   <script>
+    // --- Elements ---
+    var bookStage = document.getElementById('bookStage');
+    var calBackBtn = document.getElementById('calBackBtn');
+    var isExpanded = false;
+
+    function expandToCalendar() {
+      if (isExpanded) return;
+      isExpanded = true;
+      bookStage.classList.add('expanded');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function collapseToOverview() {
+      isExpanded = false;
+      bookStage.classList.remove('expanded');
+      // Reset time slots and selection
+      selectedDate = null;
+      selectedSlot = null;
+      document.getElementById('timeSlots').style.display = 'none';
+      document.getElementById('bookConfirm').style.display = 'none';
+      document.getElementById('footerNote').style.display = 'none';
+      renderCalendar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    calBackBtn.addEventListener('click', collapseToOverview);
+
     // --- Patient toggle ---
     var btnNew = document.getElementById('btnNew');
     var btnExisting = document.getElementById('btnExisting');
@@ -276,6 +381,10 @@
           var day = parseInt(this.dataset.day);
           selectedDate = new Date(currentYear, currentMonth, day);
           selectedSlot = null;
+
+          // Animate to expanded layout on first click
+          expandToCalendar();
+
           renderCalendar();
           showTimeSlots(day, avail[day] || 0);
         });

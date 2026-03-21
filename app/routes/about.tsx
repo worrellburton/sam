@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { GetStarted } from "~/components/GetStarted";
+import { Locations } from "~/components/Locations";
 
 export function meta() {
   return [
@@ -95,6 +96,7 @@ export default function AboutPage() {
       </section>
 
       <GetStarted />
+      <Locations />
     </>
   );
 }

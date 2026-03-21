@@ -1,4 +1,5 @@
 import { GetStarted } from "~/components/GetStarted";
+import { Locations } from "~/components/Locations";
 
 export function meta() {
   return [
@@ -77,6 +78,7 @@ export default function FAQPage() {
       </section>
 
       <GetStarted />
+      <Locations />
     </>
   );
 }

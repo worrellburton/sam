@@ -139,12 +139,12 @@ const patientReviews = [
 ];
 
 const insuranceLogos = [
-  { name: "Aetna", color: "#7B2D8E" },
-  { name: "BlueCross BlueShield", color: "#0072CE" },
-  { name: "UnitedHealthcare", color: "#002855" },
-  { name: "Oxford", color: "#003DA5" },
-  { name: "Cigna", color: "#E47B2E" },
-  { name: "Empire", color: "#0033A0" },
+  { name: "Aetna", logo: "https://1000logos.net/wp-content/uploads/2020/09/Aetna-Logo.png" },
+  { name: "BlueCross BlueShield", logo: "https://1000logos.net/wp-content/uploads/2021/04/Blue-Cross-Blue-Shield-logo.png" },
+  { name: "UnitedHealthcare", logo: "https://1000logos.net/wp-content/uploads/2021/05/UnitedHealthcare-logo.png" },
+  { name: "Oxford", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Oxford_Health_Plans_logo.svg/1200px-Oxford_Health_Plans_logo.svg.png" },
+  { name: "Cigna", logo: "https://1000logos.net/wp-content/uploads/2021/05/Cigna-logo.png" },
+  { name: "Empire BCBS", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Empire_BlueCross_BlueShield_logo.svg/1200px-Empire_BlueCross_BlueShield_logo.svg.png" },
 ];
 
 const slideImages = [
@@ -358,8 +358,8 @@ export default function Home() {
           <div className="insurance-grid">
             {insuranceLogos.map((ins) => (
               <div className="insurance-card" key={ins.name}>
-                <div className="insurance-logo" style={{ background: ins.color, width: "48px", height: "48px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ color: "#fff", fontWeight: 700, fontSize: "0.75rem", letterSpacing: "0.5px" }}>{ins.name.slice(0, 2).toUpperCase()}</span>
+                <div className="insurance-logo">
+                  <img src={ins.logo} alt={`${ins.name} logo`} width="56" height="56" loading="lazy" style={{ borderRadius: "8px", objectFit: "contain" }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                 </div>
                 <span>{ins.name}</span>
               </div>
@@ -457,42 +457,46 @@ export default function Home() {
           </div>
           <div className="reviews-carousel-wrapper">
             <div className="reviews-carousel-track" style={{ transform: `translateX(-${reviewIndex * 100}%)` }}>
-              {allReviews.map((review, i) => {
-                const isGoogle = 'authorAttribution' in review;
-                const r = review as GoogleReview;
-                const local = review as typeof patientReviews[0] & { rating: number };
-                const name = isGoogle ? (r.authorAttribution?.displayName || 'Patient') : local.name;
-                const avatar = isGoogle ? r.authorAttribution?.photoUri : undefined;
-                const time = isGoogle ? (r.relativePublishTimeDescription || '') : local.time;
-                const text = isGoogle ? (r.text?.text || '') : local.text;
-                const location = isGoogle ? r.locationLabel : local.location;
-                const rating = isGoogle ? r.rating : 5;
-                return (
-                  <div className="google-review-card" key={i}>
-                    <div className="google-review-header">
-                      <img
-                        className="google-review-avatar"
-                        src={avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1a3a5c&color=fff&size=36`}
-                        alt={name}
-                        loading="lazy"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                      />
-                      <div>
-                        <div className="google-review-author">{name}</div>
-                        <div className="google-review-meta">{time}</div>
-                      </div>
-                      {isGoogle && (
-                        <div className="google-review-google-icon">
-                          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              {Array.from({ length: totalReviewPages }).map((_, pageIdx) => (
+                <div className="reviews-carousel-page" key={pageIdx}>
+                  {allReviews.slice(pageIdx * reviewsPerPage, (pageIdx + 1) * reviewsPerPage).map((review, i) => {
+                    const isGoogle = 'authorAttribution' in review;
+                    const r = review as GoogleReview;
+                    const local = review as typeof patientReviews[0] & { rating: number };
+                    const name = isGoogle ? (r.authorAttribution?.displayName || 'Patient') : local.name;
+                    const avatar = isGoogle ? r.authorAttribution?.photoUri : undefined;
+                    const time = isGoogle ? (r.relativePublishTimeDescription || '') : local.time;
+                    const text = isGoogle ? (r.text?.text || '') : local.text;
+                    const location = isGoogle ? r.locationLabel : local.location;
+                    const rating = isGoogle ? r.rating : 5;
+                    return (
+                      <div className="google-review-card" key={i}>
+                        <div className="google-review-header">
+                          <img
+                            className="google-review-avatar"
+                            src={avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1a3a5c&color=fff&size=36`}
+                            alt={name}
+                            loading="lazy"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                          />
+                          <div>
+                            <div className="google-review-author">{name}</div>
+                            <div className="google-review-meta">{time}</div>
+                          </div>
+                          {isGoogle && (
+                            <div className="google-review-google-icon">
+                              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="google-review-stars">{starsHTML(rating)}</div>
-                    <div className="google-review-text">{text}</div>
-                    <div className="google-review-location">{location}</div>
-                  </div>
-                );
-              })}
+                        <div className="google-review-stars">{starsHTML(rating)}</div>
+                        <div className="google-review-text">{text}</div>
+                        <div className="google-review-location">{location}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
             {totalReviewPages > 1 && (
               <div className="reviews-carousel-dots">

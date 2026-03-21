@@ -666,6 +666,80 @@ img { max-width: 100%; display: block; }
 .nav-toggle.active span:nth-child(2) { opacity: 0; }
 .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
+/* ===== Reviews Page Platform Cards ===== */
+.platform-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.platform-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.platform-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.platform-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.platform-info { flex: 1; min-width: 0; }
+.platform-name { font-weight: 600; font-size: 0.9rem; }
+.platform-rating { display: flex; align-items: center; gap: 6px; }
+.platform-score { font-weight: 700; font-size: 1.2rem; color: var(--text); }
+.platform-stars { color: #f59e0b; font-size: 0.85rem; }
+.platform-count { font-size: 0.8rem; color: var(--text-muted); }
+
+.patient-choice-badge {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  border-radius: var(--radius);
+  border: 2px solid #f59e0b;
+  background: var(--bg-alt);
+}
+.patient-choice-badge strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+.patient-choice-badge p {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ===== Page Transition ===== */
+.page-transition {
+  animation: pageIn 0.4s ease-out;
+}
+@keyframes pageIn {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 /* ===== Hero ===== */
 .hero {
   position: relative;
@@ -715,7 +789,7 @@ img { max-width: 100%; display: block; }
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0 0 80px;
+  padding: 0 24px 100px;
   gap: 40px;
   width: 100%;
 }
@@ -1671,10 +1745,15 @@ img { max-width: 100%; display: block; }
   position: relative;
 }
 .reviews-carousel-track {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  display: flex;
   transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reviews-carousel-page {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  flex: 0 0 100%;
+  min-width: 100%;
 }
 .reviews-carousel-dots {
   display: flex;
@@ -2780,6 +2859,190 @@ img { max-width: 100%; display: block; }
   .insurance-grid { grid-template-columns: 1fr; }
 }
 
+/* ===== Service Page Stats Bar ===== */
+.service-stats-bar {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+}
+.service-stats-grid {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+}
+.service-stat {
+  text-align: center;
+}
+.service-stat-value {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--primary);
+}
+.service-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Service Section Spacing */
+.service-section {
+  margin-bottom: 48px;
+}
+.service-section:last-child {
+  margin-bottom: 0;
+}
+.service-lead {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: var(--text-light);
+}
+
+/* Conditions Grid */
+.conditions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.condition-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.92rem;
+  transition: all 0.2s ease;
+}
+.condition-card:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+.condition-card svg {
+  flex-shrink: 0;
+}
+
+/* Approach Steps */
+.approach-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.approach-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.approach-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.approach-step p {
+  margin: 0;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+/* Benefits Grid */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.benefit-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  background: var(--bg-alt);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.benefit-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--primary-light);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.benefit-card p {
+  margin: 0;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Sidebar Styles */
+.sidebar-cta {
+  background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+  color: #fff;
+}
+.sidebar-cta h4 { color: #fff; }
+.sidebar-cta p { color: rgba(255,255,255,0.85); }
+.sidebar-cta .btn-primary {
+  background: #fff;
+  color: var(--primary);
+}
+.sidebar-cta .btn-primary:hover {
+  background: rgba(255,255,255,0.9);
+}
+.sidebar-phone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.sidebar-phone:hover { color: #fff; }
+.sidebar-services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.sidebar-service-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.sidebar-service-link:last-child { border-bottom: none; }
+.sidebar-service-link:hover { color: var(--primary); }
+.sidebar-insurance p {
+  font-size: 0.85rem;
+}
+
 /* ===== Clickable Service List Items ===== */
 .service-list--clickable li {
   padding: 0;
@@ -3068,7 +3331,7 @@ img { max-width: 100%; display: block; }
 
   /* Hero mobile */
   .hero { height: 100vh; }
-  .hero-content { padding: 0 16px 70px; gap: 24px; }
+  .hero-content { padding: 0 20px 90px; gap: 24px; }
   .hero-text h1 { font-size: 1.5rem; margin-bottom: 20px; line-height: 1.35; }
   .section-desc { font-size: 0.95rem; padding: 0 8px; }
   .about-lead { padding: 0; }
@@ -3129,6 +3392,11 @@ img { max-width: 100%; display: block; }
   .service-hero { padding: 90px 0 32px; }
   .service-hero h1 { font-size: 1.5rem; }
   .service-columns { grid-template-columns: 1fr; gap: 16px; }
+  .service-content { grid-template-columns: 1fr !important; }
+  .service-stats-grid { flex-wrap: wrap; gap: 24px; }
+  .conditions-grid { grid-template-columns: 1fr; }
+  .benefits-grid { grid-template-columns: 1fr; }
+  .reviews-carousel-page { grid-template-columns: 1fr; }
 
   /* Sticky bottom bar mobile */
   .sticky-bottom-bar { height: 50px; }
@@ -3170,7 +3438,7 @@ img { max-width: 100%; display: block; }
   .location-map { height: 200px; }
   .container { padding: 0 14px; }
   .hero-text h1 { font-size: 1.3rem; }
-  .hero-content { padding: 0 0 64px; }
+  .hero-content { padding: 0 16px 90px; }
   .hero-rating-card { padding: 12px 14px; }
   .rating-score { font-size: 1.8rem; }
   .section { padding: 40px 0; }

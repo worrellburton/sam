@@ -1,5 +1,7 @@
 import { Link } from "react-router";
 import { blogPosts } from "~/data/blog";
+import { GetStarted } from "~/components/GetStarted";
+import { Locations } from "~/components/Locations";
 
 export function meta() {
   return [
@@ -35,6 +37,9 @@ export default function BlogPage() {
           </div>
         </div>
       </section>
+
+      <GetStarted />
+      <Locations />
     </>
   );
 }

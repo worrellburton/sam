@@ -41,6 +41,10 @@ export function Navigation() {
 
   useEffect(() => {
     closeMobile();
+    if (megaCloseTimer.current) {
+      clearTimeout(megaCloseTimer.current);
+      megaCloseTimer.current = null;
+    }
     setMegaOpen(false);
   }, [location.pathname, closeMobile]);
 

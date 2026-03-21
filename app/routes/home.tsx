@@ -91,14 +91,6 @@ const tickerItems = [
   },
 ];
 
-const serviceImages: Record<string, string> = {
-  "sports-medicine": "https://images.unsplash.com/photo-1461896836934-bd45ba55ae57?auto=format&fit=crop&w=600&h=400&q=80",
-  "arthroscopic-surgery": "https://images.unsplash.com/photo-1551190822-a9ce113ac100?auto=format&fit=crop&w=600&h=400&q=80",
-  "regenerative-medicine": "https://images.unsplash.com/photo-1579684453423-f84349ef60b0?auto=format&fit=crop&w=600&h=400&q=80",
-  "joint-preservation": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&h=400&q=80",
-  "cartilage-repair": "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=600&h=400&q=80",
-  "shoulder-knee-surgery": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&h=400&q=80",
-};
 
 const patientReviews = [
   {

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Components | Dev Tools</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dev-styles.css">
+</head>
+<body>
+  <main id="dev-content">
+    <div class="dev-page-header">
+      <h1>Components</h1>
+      <p>All reusable components in the SamMD codebase</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="dev-stats" id="stats"></div>
+
+    <!-- Search -->
+    <div class="dev-search" id="searchBox">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search components..." id="searchInput">
+    </div>
+
+    <!-- Filters -->
+    <div class="dev-filters" id="filters"></div>
+
+    <!-- Component grid -->
+    <div class="dev-comp-grid" id="compGrid"></div>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="dev-layout.js"></script>
+  <script>
+    // Component registry — auto-detected from codebase analysis
+    var COMPONENTS = [
+      {
+        name: 'Navigation',
+        file: 'components/nav.js',
+        category: 'Navigation',
+        description: 'Full site navigation with mega menu, theme toggle, mobile responsive. Auto-detects subdirectory paths.',
+        usedBy: ['index.html', 'about.html', 'blog.html', 'contact.html', 'reviews.html', 'faq.html', 'sports-medicine.html', 'arthroscopic-surgery.html', 'cartilage-repair.html', 'joint-preservation.html', 'regenerative-medicine.html', 'shoulder-knee-surgery.html'],
+        usageCount: 12,
+        props: [
+          { name: 'NAV_PREFIX', type: 'string', required: false, default: 'auto-detect', desc: 'Path prefix for subdirectory pages' }
+        ],
+        code: '<script src="components/nav.js"><\/script>\n\n// For subdirectory pages:\nwindow.NAV_PREFIX = "../";\n<script src="../components/nav.js"><\/script>',
+        preview: 'Renders full navigation bar with mega menu'
+      },
+      {
+        name: 'Sticky Bottom Bar',
+        file: 'components/sticky-bar.js',
+        category: 'Navigation',
+        description: 'Fixed bottom bar with Google rating (4.8/5), credentials marquee, and Book Now button. Shows on scroll.',
+        usedBy: ['index.html'],
+        usageCount: 1,
+        props: [
+          { name: 'NAV_PREFIX', type: 'string', required: false, default: 'auto-detect', desc: 'Path prefix for book link' }
+        ],
+        code: '<script src="components/sticky-bar.js"><\/script>',
+        preview: 'Fixed bar at bottom with rating + marquee'
+      },
+      {
+        name: 'Get Started CTA',
+        file: 'components/get-started.js',
+        category: 'CTA',
+        description: '"Ready to Move Without Pain?" call-to-action section with benefits list and Zocdoc booking card.',
+        usedBy: ['index.html', 'about.html', 'blog.html', 'contact.html', 'reviews.html', 'faq.html', 'sports-medicine.html', 'arthroscopic-surgery.html', 'cartilage-repair.html', 'joint-preservation.html', 'regenerative-medicine.html', 'shoulder-knee-surgery.html'],
+        usageCount: 12,
+        props: [],
+        code: '<div id="get-started-component"><\/div>\n<script src="components/get-started.js"><\/script>',
+        preview: 'CTA section with Book Online card'
+      },
+      {
+        name: 'Locations',
+        file: 'components/locations.js',
+        category: 'Data Display',
+        description: '3 office locations with interactive Google Maps (dark/light theme), lazy-loaded via IntersectionObserver.',
+        usedBy: ['index.html', 'about.html', 'blog.html', 'contact.html', 'reviews.html', 'faq.html', 'sports-medicine.html', 'arthroscopic-surgery.html', 'cartilage-repair.html', 'joint-preservation.html', 'regenerative-medicine.html', 'shoulder-knee-surgery.html'],
+        usageCount: 12,
+        props: [
+          { name: 'Google Maps API Key', type: 'string', required: true, default: 'embedded', desc: 'Loaded automatically via script injection' }
+        ],
+        code: '<div id="locations-component"><\/div>\n<script src="components/locations.js"><\/script>',
+        preview: '3 map cards with Google Maps integration'
+      },
+      {
+        name: 'Footer (inline)',
+        file: 'inline in each .html',
+        category: 'Layout',
+        description: 'Site footer with WebGL particle canvas, column layout, social links, and copyright. Currently inline in each page.',
+        usedBy: ['index.html', 'about.html', 'blog.html', 'contact.html', 'reviews.html', 'faq.html', 'sports-medicine.html', 'arthroscopic-surgery.html', 'cartilage-repair.html', 'joint-preservation.html', 'regenerative-medicine.html', 'shoulder-knee-surgery.html'],
+        usageCount: 18,
+        props: [],
+        code: '<!-- Footer is currently inline HTML in each page -->\n<!-- Consider extracting to components/footer.js -->',
+        orphaned: false,
+        preview: 'Footer with WebGL particles + column links'
+      },
+      {
+        name: 'Service Hero (inline)',
+        file: 'inline in service pages',
+        category: 'Layout',
+        description: 'Hero section with background image overlay, breadcrumb back link, and specialty label. Used on all service pages.',
+        usedBy: ['sports-medicine.html', 'arthroscopic-surgery.html', 'cartilage-repair.html', 'joint-preservation.html', 'regenerative-medicine.html', 'shoulder-knee-surgery.html'],
+        usageCount: 6,
+        props: [],
+        code: '<header class="service-hero has-bg" style="background-image:url(\'...\')">',
+        orphaned: false,
+        preview: 'Hero with image overlay + back link'
+      },
+      {
+        name: 'Google Reviews Carousel (inline)',
+        file: 'inline in index.html',
+        category: 'Data Display',
+        description: 'Fetches and displays Google reviews from Places API. Carousel with navigation dots and arrows.',
+        usedBy: ['index.html'],
+        usageCount: 1,
+        props: [],
+        code: '<!-- Google Reviews loaded via Places API -->\n<div class="google-reviews-carousel" id="googleReviewsCarousel">',
+        orphaned: false,
+        preview: 'Review cards carousel with Google API'
+      },
+      {
+        name: 'Insurance Grid (inline)',
+        file: 'inline in index.html',
+        category: 'Data Display',
+        description: 'Grid of insurance provider cards with real logos via Clearbit. Shows 6 providers + "200+ more" card.',
+        usedBy: ['index.html'],
+        usageCount: 1,
+        props: [],
+        code: '<div class="insurance-grid">...</div>',
+        orphaned: false,
+        preview: '6 insurance logos + "200+ more" card'
+      }
+    ];
+
+    var categories = ['All'];
+    COMPONENTS.forEach(function(c) {
+      if (categories.indexOf(c.category) === -1) categories.push(c.category);
+    });
+
+    var activeCategory = 'All';
+    var searchQuery = '';
+
+    function renderStats() {
+      var total = COMPONENTS.length;
+      var extracted = COMPONENTS.filter(function(c) { return c.file.startsWith('components/'); }).length;
+      var inline = total - extracted;
+      var totalUsage = COMPONENTS.reduce(function(sum, c) { return sum + c.usageCount; }, 0);
+
+      document.getElementById('stats').innerHTML =
+        '<div class="dev-stat"><div class="dev-stat-value">' + total + '</div><div class="dev-stat-label">Total Components</div></div>' +
+        '<div class="dev-stat"><div class="dev-stat-value">' + extracted + '</div><div class="dev-stat-label">Extracted (JS files)</div></div>' +
+        '<div class="dev-stat"><div class="dev-stat-value">' + inline + '</div><div class="dev-stat-label">Inline (not yet extracted)</div></div>' +
+        '<div class="dev-stat"><div class="dev-stat-value">' + totalUsage + '</div><div class="dev-stat-label">Total Usages</div></div>';
+    }
+
+    function renderFilters() {
+      var html = '';
+      categories.forEach(function(cat) {
+        html += '<button class="dev-chip' + (activeCategory === cat ? ' active' : '') + '" data-cat="' + cat + '">' + cat + '</button>';
+      });
+      document.getElementById('filters').innerHTML = html;
+
+      document.querySelectorAll('.dev-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+          activeCategory = this.dataset.cat;
+          renderFilters();
+          renderGrid();
+        });
+      });
+    }
+
+    function renderGrid() {
+      var filtered = COMPONENTS.filter(function(c) {
+        var catMatch = activeCategory === 'All' || c.category === activeCategory;
+        var searchMatch = !searchQuery || c.name.toLowerCase().indexOf(searchQuery) !== -1 || c.description.toLowerCase().indexOf(searchQuery) !== -1;
+        return catMatch && searchMatch;
+      });
+
+      var html = '';
+      filtered.forEach(function(c, i) {
+        html += '<div class="dev-comp-card">';
+        html += '<div class="dev-comp-card-header">';
+        html += '<div><div class="dev-comp-name">' + c.name + '</div>';
+        html += '<div class="dev-comp-path" onclick="navigator.clipboard.writeText(\'' + c.file + '\');this.textContent=\'Copied!\';var el=this;setTimeout(function(){el.textContent=\'' + c.file + '\'},1500)">' + c.file + '</div></div>';
+        html += '<div class="dev-comp-badges">';
+        html += '<span class="dev-comp-badge usage">' + c.usageCount + 'x</span>';
+        html += '<span class="dev-comp-badge category">' + c.category + '</span>';
+        if (c.orphaned) html += '<span class="dev-comp-badge orphaned">Orphaned</span>';
+        html += '</div></div>';
+
+        html += '<div class="dev-comp-preview">' + c.preview + '</div>';
+
+        html += '<div class="dev-comp-details">';
+        html += '<p style="font-size:0.8rem;color:var(--dev-text-muted);margin-bottom:12px;">' + c.description + '</p>';
+
+        // Props
+        if (c.props && c.props.length > 0) {
+          html += '<div class="dev-comp-section-label">Props</div>';
+          html += '<table style="width:100%;font-size:0.75rem;border-collapse:collapse;margin-bottom:12px;">';
+          html += '<tr style="color:var(--dev-text-dim);text-align:left;"><th style="padding:4px 8px;">Name</th><th style="padding:4px 8px;">Type</th><th style="padding:4px 8px;">Default</th></tr>';
+          c.props.forEach(function(p) {
+            html += '<tr style="border-top:1px solid var(--dev-border);"><td style="padding:4px 8px;"><code style="color:var(--dev-primary);">' + p.name + '</code></td><td style="padding:4px 8px;color:var(--dev-text-dim);">' + p.type + '</td><td style="padding:4px 8px;color:var(--dev-text-dim);">' + p.default + '</td></tr>';
+          });
+          html += '</table>';
+        }
+
+        // Used by
+        html += '<div class="dev-comp-section-label">Used By</div>';
+        html += '<div class="dev-comp-used-by">';
+        c.usedBy.slice(0, 6).forEach(function(f) {
+          html += '<code>' + f + '</code> ';
+        });
+        if (c.usedBy.length > 6) html += '<span style="color:var(--dev-text-dim);">+' + (c.usedBy.length - 6) + ' more</span>';
+        html += '</div>';
+
+        // Code toggle
+        html += '<div style="margin-top:12px;display:flex;gap:8px;">';
+        html += '<button class="dev-toggle-btn" onclick="var b=this.parentNode.nextElementSibling;b.classList.toggle(\'visible\');this.textContent=b.classList.contains(\'visible\')?\'Hide Code\':\'View Code\'">' + devIcon('code', 12) + ' View Code</button>';
+        html += '</div>';
+        html += '<div class="dev-code-block">' + (c.code || '') + '</div>';
+
+        html += '</div></div>';
+      });
+
+      if (!filtered.length) {
+        html = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--dev-text-dim);">No components match your search.</div>';
+      }
+
+      document.getElementById('compGrid').innerHTML = html;
+    }
+
+    // Search
+    document.getElementById('searchInput').addEventListener('input', function() {
+      searchQuery = this.value.toLowerCase();
+      renderGrid();
+    });
+
+    // Initial render
+    renderStats();
+    renderFilters();
+    renderGrid();
+  </script>
+</body>
+</html>

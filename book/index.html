@@ -41,7 +41,8 @@
 
     .doc-highlights { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
     .doc-highlight { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; }
-    .doc-highlight-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; }
+    .doc-highlight-icon { width: 42px; height: 42px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--primary); box-shadow: 0 0 16px rgba(79,107,255,0.2); transition: box-shadow 0.3s; }
+    .doc-highlight:hover .doc-highlight-icon { box-shadow: 0 0 24px rgba(79,107,255,0.4); }
     .doc-highlight h4 { font-size: 0.85rem; font-weight: 600; margin: 0; }
     .doc-highlight p { font-size: 0.75rem; color: var(--text-muted); margin: 2px 0 0; }
 
@@ -206,15 +207,15 @@
 
             <div class="doc-highlights">
               <div class="doc-highlight">
-                <div class="doc-highlight-icon">&#128257;</div>
+                <div class="doc-highlight-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
                 <div><h4>Patients often return</h4><p>More patients return than other providers in the area</p></div>
               </div>
               <div class="doc-highlight">
-                <div class="doc-highlight-icon">&#9201;</div>
+                <div class="doc-highlight-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                 <div><h4>Excellent wait time</h4><p>91% of patients waited less than 30 minutes</p></div>
               </div>
               <div class="doc-highlight">
-                <div class="doc-highlight-icon">&#10133;</div>
+                <div class="doc-highlight-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
                 <div><h4>New patient appointments</h4><p>Appointments available for new patients</p></div>
               </div>
             </div>

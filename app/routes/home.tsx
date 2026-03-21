@@ -242,24 +242,27 @@ export default function Home() {
       <header className="hero" id="hero">
         <img className="hero-bg-img loaded" src="/sammd/header.jpg" alt="" aria-hidden="true" />
         <div className="hero-overlay"></div>
-        <div className="container hero-content hero-content--centered">
-          <div className="hero-text hero-text--centered">
-            <p className="hero-subtitle">Board-Certified Orthopedic Surgeon &amp; Sports Medicine Specialist</p>
-            <h1>Dr. Sameh Elguizaoui, M.D.</h1>
-            <p className="hero-desc">Specializing in sports medicine, arthroscopic surgery, joint preservation, and cartilage repair across Manhattan &amp; Brooklyn.</p>
-            <div className="hero-actions">
-              <Link to="/book" className="btn btn-hero">Book Appointment</Link>
-              <a href="#about" className="btn btn-hero btn-hero--outline">Learn More</a>
+        <div className="container hero-content">
+          <div className="hero-text">
+            <h1>NYC&rsquo;s Most Trusted Orthopedic Surgeon &mdash; Sports Medicine and Joint Preservation Expert</h1>
+            <a href="#about" className="btn btn-hero">Learn More</a>
+          </div>
+          <div className="hero-rating-card">
+            <div className="rating-top">
+              <div className="rating-score">4.8<span className="rating-star">&#9733;</span></div>
+              <div className="rating-info">
+                <span className="rating-platform">Rating on Zocdoc</span>
+                <span className="rating-count"><strong>1,466</strong> Reviews</span>
+              </div>
             </div>
-            <a
-              href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423"
-              target="_blank"
-              rel="noopener"
-              className="hero-trust-badge"
-            >
-              <span className="hero-trust-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-              <span className="hero-trust-text"><strong>4.8</strong> rating &middot; 1,466 reviews on Zocdoc</span>
-            </a>
+            <div className="rating-bottom">
+              <div className="rating-avatars">
+                <div className="avatar">S</div>
+                <div className="avatar">M</div>
+                <div className="avatar">A</div>
+              </div>
+              <span className="rating-zocdoc">Zocdoc</span>
+            </div>
           </div>
         </div>
         <div className="ticker-bar">

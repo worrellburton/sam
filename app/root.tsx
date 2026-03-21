@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   isRouteErrorResponse,
   Links,
@@ -46,6 +47,60 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  useEffect(() => {
+    // IntersectionObserver for .reveal animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    function observeRevealElements() {
+      document
+        .querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-stagger")
+        .forEach((el) => {
+          if (!el.classList.contains("visible")) {
+            observer.observe(el);
+          }
+        });
+    }
+
+    observeRevealElements();
+
+    // Re-observe after route changes (MutationObserver on body)
+    const mutationObserver = new MutationObserver(() => {
+      observeRevealElements();
+    });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    // Move-easier slideshow
+    const bgElements = document.querySelectorAll(".move-easier-bg");
+    if (bgElements.length > 1) {
+      let currentSlide = 0;
+      const interval = setInterval(() => {
+        bgElements[currentSlide]?.classList.remove("active");
+        currentSlide = (currentSlide + 1) % bgElements.length;
+        bgElements[currentSlide]?.classList.add("active");
+      }, 4000);
+      return () => {
+        clearInterval(interval);
+        observer.disconnect();
+        mutationObserver.disconnect();
+      };
+    }
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, []);
+
   return (
     <>
       <Navigation />

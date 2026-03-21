@@ -118,16 +118,39 @@
     .book-zocdoc-alt { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
     .book-zocdoc-alt a { color: var(--primary); font-weight: 500; }
 
+    /* Calendar focused mode - left fades, right grows to center */
+    .book-layout { transition: grid-template-columns 0.5s cubic-bezier(0.16,1,0.3,1), gap 0.5s ease; }
+    .doc-profile { transition: opacity 0.4s ease, transform 0.4s ease, max-width 0.5s ease; overflow: hidden; }
+    .book-panel { transition: all 0.5s cubic-bezier(0.16,1,0.3,1); }
+
+    .book-layout.cal-focused { grid-template-columns: 0fr 1fr; gap: 0; max-width: 800px; margin: 0 auto; }
+    .book-layout.cal-focused .doc-profile { opacity: 0; transform: translateX(-40px); max-width: 0; padding: 0; pointer-events: none; }
+    .book-layout.cal-focused .book-panel { border-radius: 20px; }
+
+    /* Back button in focused mode */
+    .cal-back-btn { display: none; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; font-family: 'Inter', sans-serif; color: var(--text-muted); cursor: pointer; margin-bottom: 20px; transition: all 0.2s; }
+    .cal-back-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .book-layout.cal-focused .cal-back-btn { display: inline-flex; }
+
+    /* Bigger calendar cells in focused mode */
+    .book-layout.cal-focused .cal-day { min-height: 90px; }
+    .book-layout.cal-focused .cal-date { font-size: 0.95rem; }
+    .book-layout.cal-focused .cal-event { font-size: 0.75rem; padding: 4px 8px; }
+    .book-layout.cal-focused .time-slots-grid { grid-template-columns: repeat(5, 1fr); }
+
     @media (max-width: 900px) {
       .book-layout { grid-template-columns: 1fr; }
       .doc-profile { position: static; }
       .time-slots-grid { grid-template-columns: repeat(3, 1fr); }
+      .book-layout.cal-focused { grid-template-columns: 1fr; }
+      .book-layout.cal-focused .doc-profile { display: none; }
     }
     @media (max-width: 600px) {
       .book-panel { padding: 24px 16px; }
       .cal-day { min-height: 60px; padding: 4px; }
       .cal-event { font-size: 0.6rem; padding: 2px 4px; }
       .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+      .book-layout.cal-focused .time-slots-grid { grid-template-columns: repeat(3, 1fr); }
     }
   </style>
 </head>
@@ -232,6 +255,10 @@
           </select>
 
           <!-- Calendar -->
+          <button class="cal-back-btn" id="calBackBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to overview
+          </button>
           <div class="cal-header">
             <h3 id="calTitle"></h3>
             <div class="cal-nav">
@@ -263,6 +290,18 @@
   </main>
 
   <script>
+    // --- Calendar focus mode ---
+    var bookLayout = document.querySelector('.book-layout');
+    var calBackBtn = document.getElementById('calBackBtn');
+
+    function enterCalFocus() {
+      bookLayout.classList.add('cal-focused');
+    }
+    function exitCalFocus() {
+      bookLayout.classList.remove('cal-focused');
+    }
+    calBackBtn.addEventListener('click', exitCalFocus);
+
     // --- Patient toggle ---
     var btnNew = document.getElementById('btnNew');
     var btnExisting = document.getElementById('btnExisting');
@@ -337,6 +376,7 @@
           var day = parseInt(this.dataset.day);
           selectedDate = new Date(currentYear, currentMonth, day);
           selectedSlot = null;
+          enterCalFocus();
           renderCalendar();
           showTimeSlots(day, avail[day] || 0);
         });

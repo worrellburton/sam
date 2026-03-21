@@ -140,16 +140,6 @@ const insuranceLogos = [
   { name: "Empire BCBS", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Empire_BlueCross_BlueShield_logo.svg/1200px-Empire_BlueCross_BlueShield_logo.svg.png" },
 ];
 
-const slideImages = [
-  "https://images.unsplash.com/photo-1461896836934-bd45ba55ae57?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1544298621-35a764866120?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1920&q=80",
-  "https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=1920&q=80",
-];
 
 const timeline = [
   { label: "Fellowship", title: "Sports Medicine Fellowship", place: "Lenox Hill Hospital, New York City", detail: "Advanced training in minimally invasive and arthroscopic techniques. Care of NY Jets and NY Islanders athletes." },
@@ -219,15 +209,6 @@ function starsHTML(rating: number) {
 export default function Home() {
   const recentPosts = blogPosts.slice(0, 3);
   const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
-
-  // Slideshow for Move Easier section
-  const [activeSlide, setActiveSlide] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSlide(prev => (prev + 1) % slideImages.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Reviews carousel
   const allReviews = googleReviews.length > 0 ? googleReviews : patientReviews.map(r => ({ ...r, rating: 5, isLocal: true as const }));
@@ -398,25 +379,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Move Easier Banner */}
-      <section className="move-easier-section" id="moveEasierSection">
-        {slideImages.map((url, i) => (
-          <div key={i} className={`move-easier-bg${i === activeSlide ? " active" : ""}`} style={{ backgroundImage: `url('${url}')` }}></div>
-        ))}
-        <div className="move-easier-marquee">
-          <div className="marquee-track">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <span key={i}>Move easier</span>
-            ))}
-          </div>
-        </div>
-        <div className="move-easier-content">
-          <h2>Getting you back in the game!</h2>
-          <p>Whether you are a world class athlete or a weekend warrior, Dr. Elguizaoui understands the importance of getting you back to the sports and activities that you love.</p>
-          <Link to="/services/sports-medicine" className="btn btn-hero">View Sports Medicine &rarr;</Link>
-        </div>
-      </section>
-
       {/* Credentials */}
       <section className="section credentials reveal" id="credentials">
         <div className="container">
@@ -492,16 +454,16 @@ export default function Home() {
               ))}
             </div>
             {totalReviewPages > 1 && (
-              <div className="reviews-carousel-dots">
-                {Array.from({ length: totalReviewPages }).map((_, i) => (
-                  <button key={i} className={`reviews-dot${i === reviewIndex ? " active" : ""}`} onClick={() => setReviewIndex(i)} aria-label={`Page ${i + 1}`} />
-                ))}
+              <div className="reviews-carousel-nav">
+                <button className="reviews-nav-btn" onClick={() => setReviewIndex(prev => prev === 0 ? totalReviewPages - 1 : prev - 1)} aria-label="Previous reviews">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+                </button>
+                <span className="reviews-nav-count">{reviewIndex + 1} / {totalReviewPages}</span>
+                <button className="reviews-nav-btn" onClick={() => setReviewIndex(prev => (prev + 1) % totalReviewPages)} aria-label="Next reviews">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 6 15 12 9 18" /></svg>
+                </button>
               </div>
             )}
-          </div>
-          <div className="reviews-cta">
-            <p>See what patients are saying about Dr. Elguizaoui</p>
-            <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-outline">Read Reviews on Zocdoc</a>
           </div>
         </div>
       </section>

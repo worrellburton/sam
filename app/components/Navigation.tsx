@@ -26,6 +26,7 @@ export function Navigation() {
     }, 150);
   }, []);
 
+  const isHome = location.pathname === "/" || location.pathname === "/sammd/" || location.pathname === "/sammd";
   const isScrolled = scrollY > 50;
   const isHidden = direction === "down" && scrollY > 200;
 
@@ -50,7 +51,7 @@ export function Navigation() {
 
   return (
     <nav
-      className={`nav${isScrolled ? " scrolled" : ""}${isHidden ? " nav-hidden" : ""}`}
+      className={`nav${!isHome ? " nav-solid" : ""}${isScrolled ? " scrolled" : ""}${isHidden ? " nav-hidden" : ""}`}
       id="nav"
     >
       <div className="container nav-container">

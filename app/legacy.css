@@ -240,6 +240,23 @@ img { max-width: 100%; display: block; }
   transform: translateY(-100%);
 }
 
+.nav.nav-solid {
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+[data-theme="light"] .nav.nav-solid {
+  background: rgba(255,255,255,0.92);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+[data-theme="light"] .nav.nav-solid .logo-name { color: var(--text); }
+[data-theme="light"] .nav.nav-solid .nav-links > li > a,
+[data-theme="light"] .nav.nav-solid .nav-mega-toggle { color: rgba(0,0,0,0.8); }
+[data-theme="light"] .nav.nav-solid .nav-links > li > a:hover,
+[data-theme="light"] .nav.nav-solid .nav-mega-toggle:hover { color: var(--primary); }
+[data-theme="light"] .nav.nav-solid .nav-btn-contact { color: var(--text) !important; }
+
 .nav.scrolled {
   position: fixed;
   background: rgba(0,0,0,0.92);
@@ -1753,25 +1770,37 @@ img { max-width: 100%; display: block; }
   flex: 0 0 100%;
   min-width: 100%;
 }
-.reviews-carousel-dots {
+.reviews-carousel-nav {
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
+  gap: 16px;
+  margin-top: 24px;
 }
-.reviews-dot {
-  width: 10px;
-  height: 10px;
+.reviews-nav-btn {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: none;
-  background: var(--border);
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text);
   cursor: pointer;
-  transition: background 0.3s, transform 0.3s;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
-.reviews-dot.active {
-  background: var(--primary);
-  transform: scale(1.3);
+.reviews-nav-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+.reviews-nav-count {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  min-width: 40px;
+  text-align: center;
 }
 
 .google-review-card {
@@ -1988,15 +2017,6 @@ img { max-width: 100%; display: block; }
 }
 @media (max-width: 768px) {
   .reviews-grid { grid-template-columns: 1fr; }
-}
-
-.reviews-cta {
-  text-align: center;
-}
-.reviews-cta p {
-  color: var(--text-light);
-  margin-bottom: 16px;
-  font-size: 1.05rem;
 }
 
 /* ===== FAQ ===== */

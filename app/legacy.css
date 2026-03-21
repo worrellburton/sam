@@ -731,15 +731,6 @@ img { max-width: 100%; display: block; }
   line-height: 1.5;
 }
 
-/* ===== Page Transition ===== */
-.page-transition {
-  animation: pageIn 0.4s ease-out;
-}
-@keyframes pageIn {
-  0% { opacity: 0; transform: translateY(12px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
 /* ===== Hero ===== */
 .hero {
   position: relative;

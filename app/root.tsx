@@ -110,9 +110,7 @@ export default function App() {
     <>
       {!isDevPage && !isBookPage && <Navigation />}
       {!isDevPage && !isBookPage && <StickyBar />}
-      <div key={location.pathname} className="page-transition">
-        <Outlet />
-      </div>
+      <Outlet />
       {!isDevPage && !isBookPage && <Footer />}
     </>
   );

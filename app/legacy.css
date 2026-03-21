@@ -394,8 +394,6 @@ img { max-width: 100%; display: block; }
   background: none;
   border: none;
   position: relative;
-  padding-bottom: 20px;
-  margin-bottom: -20px;
   cursor: pointer;
   font-family: inherit;
   font-size: 0.85rem;
@@ -406,6 +404,14 @@ img { max-width: 100%; display: block; }
   transition: color var(--transition);
   letter-spacing: -0.01em;
   white-space: nowrap;
+}
+.nav-mega-toggle::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 20px;
 }
 .nav-mega-toggle:hover {
   color: #fff;

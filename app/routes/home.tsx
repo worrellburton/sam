@@ -139,12 +139,12 @@ const patientReviews = [
 ];
 
 const insuranceLogos = [
-  { name: "Aetna", logo: "https://logo.clearbit.com/aetna.com" },
-  { name: "BlueCross BlueShield", logo: "https://logo.clearbit.com/bcbs.com" },
-  { name: "UnitedHealthcare", logo: "https://logo.clearbit.com/uhc.com" },
-  { name: "UnitedHealthcare Oxford", logo: "https://logo.clearbit.com/oxfordhealth.com" },
-  { name: "Cigna", logo: "https://logo.clearbit.com/cigna.com" },
-  { name: "Empire BlueCross", logo: "https://logo.clearbit.com/empireblue.com" },
+  { name: "Aetna", color: "#7B2D8E" },
+  { name: "BlueCross BlueShield", color: "#0072CE" },
+  { name: "UnitedHealthcare", color: "#002855" },
+  { name: "Oxford", color: "#003DA5" },
+  { name: "Cigna", color: "#E47B2E" },
+  { name: "Empire", color: "#0033A0" },
 ];
 
 const slideImages = [
@@ -267,15 +267,12 @@ export default function Home() {
         </div>
         <div className="ticker-bar">
           <div className="ticker-track">
-            {[1, 2, 3].map((set) =>
+            {[1, 2].map((set) =>
               tickerItems.map((item, i) => (
-                <span key={`${set}-${i}`}>
-                  {i > 0 && <div className="ticker-sep">&bull;</div>}
-                  <div className="ticker-item">
-                    {item.icon}
-                    <span>{item.text} {item.em && <em>{item.em}</em>}</span>
-                  </div>
-                </span>
+                <div className="ticker-item" key={`${set}-${i}`}>
+                  {item.icon}
+                  <span>{item.text} {item.em && <em>{item.em}</em>}</span>
+                </div>
               ))
             )}
           </div>
@@ -348,8 +345,8 @@ export default function Home() {
           <div className="insurance-grid">
             {insuranceLogos.map((ins) => (
               <div className="insurance-card" key={ins.name}>
-                <div className="insurance-logo" style={{ background: "transparent" }}>
-                  <img src={ins.logo} alt={`${ins.name} logo`} width="56" height="56" loading="lazy" style={{ borderRadius: "8px", objectFit: "contain" }} />
+                <div className="insurance-logo" style={{ background: ins.color, width: "48px", height: "48px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ color: "#fff", fontWeight: 700, fontSize: "0.75rem", letterSpacing: "0.5px" }}>{ins.name.slice(0, 2).toUpperCase()}</span>
                 </div>
                 <span>{ins.name}</span>
               </div>

@@ -1,9 +1,23 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { useScrollPosition } from "~/hooks/useScrollPosition";
 
 export function StickyBar() {
   const { scrollY } = useScrollPosition();
-  const visible = scrollY > 300;
+  const [nearBottom, setNearBottom] = useState(false);
+
+  useEffect(() => {
+    function checkBottom() {
+      const scrollBottom = window.innerHeight + window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      setNearBottom(docHeight - scrollBottom < 300);
+    }
+    window.addEventListener("scroll", checkBottom, { passive: true });
+    checkBottom();
+    return () => window.removeEventListener("scroll", checkBottom);
+  }, []);
+
+  const visible = scrollY > 300 && !nearBottom;
 
   return (
     <div className={`sticky-bottom-bar${visible ? " visible" : ""}`}>

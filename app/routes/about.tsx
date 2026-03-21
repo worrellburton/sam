@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { GetStarted } from "~/components/GetStarted";
 
 export function meta() {
   return [
@@ -7,13 +8,22 @@ export function meta() {
   ];
 }
 
+const timeline = [
+  { label: "Fellowship", title: "Sports Medicine Fellowship", place: "Lenox Hill Hospital, New York City", detail: "Advanced training in minimally invasive and arthroscopic techniques. Care of NY Jets and NY Islanders athletes." },
+  { label: "International Fellowship", title: "Joint Preservation Traveling Fellowship", place: "Switzerland, Netherlands & Italy", detail: "Specialized training in cartilage repair and transplant techniques at leading European clinics." },
+  { label: "Residency", title: "Orthopedic Surgery Residency", place: "Cleveland Clinic Akron General Hospital" },
+  { label: "Medical School", title: "Doctor of Medicine (M.D.)", place: "The Ohio State University College of Medicine", detail: "Graduated cum laude." },
+  { label: "Undergraduate", title: "Bachelor of Science, Biology", place: "The Ohio State University", detail: "Graduated magna cum laude, Psychology minor." },
+];
+
 export default function AboutPage() {
   return (
     <>
       <section className="service-hero">
         <div className="container">
+          <p className="hero-label">About</p>
           <h1>About Dr. Elguizaoui</h1>
-          <p>Board-Certified Orthopedic Surgeon &amp; Sports Medicine Specialist</p>
+          <p>Board-certified orthopedic surgeon and fellowship-trained sports medicine specialist serving Manhattan, Brooklyn, and NYC.</p>
         </div>
       </section>
 
@@ -21,46 +31,59 @@ export default function AboutPage() {
         <div className="container">
           <div className="service-content">
             <div className="service-main">
-              <div className="about-content">
-                <p className="about-lead">
-                  Dr. Sameh &ldquo;Sam&rdquo; Elguizaoui is a board-certified orthopedic surgeon and fellowship-trained sports medicine specialist practicing in New York City. He is committed to providing patient-centered orthopedic care, combining world-class surgical expertise with a conservative, evidence-based approach.
-                </p>
-                <h2>Training &amp; Education</h2>
-                <p>
-                  Dr. Elguizaoui completed his <strong>Sports Medicine Fellowship at Lenox Hill Hospital</strong> in New York City, one of the premier sports medicine training programs in the country. During his fellowship, he served as a team physician for the <strong>New York Jets (NFL)</strong> and <strong>New York Islanders (NHL)</strong>.
-                </p>
-                <p>
-                  He further honed his skills through an <strong>international traveling fellowship</strong> across <strong>Switzerland, the Netherlands, and Italy</strong>, focusing on advanced cartilage repair and transplant techniques at leading European centers.
-                </p>
-                <p>
-                  Dr. Elguizaoui completed his <strong>orthopedic surgery residency at Cleveland Clinic Akron General Hospital</strong> and earned his <strong>Doctor of Medicine from The Ohio State University College of Medicine</strong>, graduating cum laude. He holds a Bachelor of Science in Biology from The Ohio State University, graduating magna cum laude with a minor in Psychology.
-                </p>
+              <h2>Orthopedic Excellence, <span className="text-accent">Patient-First Approach</span></h2>
+              <p className="about-lead">
+                Board-certified orthopedic surgeon and fellowship-trained sports medicine specialist in New York City, combining world-class surgical training with conservative, patient-centered care.
+              </p>
 
-                <h2>Philosophy</h2>
-                <p>
-                  Dr. Elguizaoui is a strong advocate for biologic alternatives to surgery and regenerative medicine. He believes in exhausting conservative treatment options before recommending surgical intervention, and when surgery is necessary, he favors minimally invasive arthroscopic techniques for faster recovery and better outcomes.
-                </p>
+              <p>
+                Trained at <strong>Cleveland Clinic</strong> and <strong>Lenox Hill Hospital</strong>, with an international fellowship across <strong>Switzerland, the Netherlands, and Italy</strong> in joint preservation and cartilage repair.
+              </p>
+              <p>
+                Former team physician for the <strong>New York Jets (NFL)</strong> and <strong>New York Islanders (NHL)</strong>.
+              </p>
 
-                <h2>Hospital Affiliations</h2>
-                <ul className="service-list">
-                  <li>Lenox Hill Hospital</li>
-                  <li>Mount Sinai Hospital</li>
-                  <li>NewYork-Presbyterian Brooklyn Methodist Hospital</li>
-                </ul>
-
-                <h2>Professional Memberships</h2>
-                <ul className="service-list">
-                  <li>American Academy of Orthopaedic Surgeons (AAOS)</li>
-                  <li>American Orthopaedic Society for Sports Medicine (AOSSM)</li>
-                  <li>Arthroscopy Association of North America (AANA)</li>
-                  <li>The New York Cartilage Repair Society</li>
-                </ul>
+              <h2>Training &amp; Credentials</h2>
+              <div className="credentials-timeline">
+                {timeline.map((item, i) => (
+                  <div className="timeline-item" key={i}>
+                    <div className="timeline-marker"></div>
+                    <div className="timeline-content">
+                      <span className="timeline-label">{item.label}</span>
+                      <h3>{item.title}</h3>
+                      <p>{item.place}</p>
+                      {item.detail && <p className="timeline-detail">{item.detail}</p>}
+                    </div>
+                  </div>
+                ))}
               </div>
+
+              <h2>Philosophy of Care</h2>
+              <p>
+                Dr. Elguizaoui believes in exhausting conservative and non-surgical options before recommending surgery. When surgery is necessary, he uses minimally invasive arthroscopic techniques to reduce pain, scarring, and recovery time. Every treatment plan begins with a thorough evaluation and honest discussion about all available options.
+              </p>
             </div>
+
             <aside className="service-sidebar">
               <div className="sidebar-card">
-                <h4>Book a Consultation</h4>
-                <p>See Dr. Elguizaoui at one of our NYC locations.</p>
+                <h4>Board Certified</h4>
+                <ul className="service-list">
+                  <li>American Board of Orthopaedic Surgery</li>
+                  <li>Fellowship-trained sports medicine specialist</li>
+                  <li>International joint preservation training</li>
+                </ul>
+              </div>
+              <div className="sidebar-card">
+                <h4>Hospital Affiliations</h4>
+                <ul className="service-list">
+                  <li>Lenox Hill Hospital</li>
+                  <li>Mount Sinai West</li>
+                  <li>NYP Brooklyn Methodist Hospital</li>
+                </ul>
+              </div>
+              <div className="sidebar-card">
+                <h4>Schedule a Consultation</h4>
+                <p>Book your appointment with Dr. Elguizaoui today.</p>
                 <Link to="/book" className="btn btn-primary btn-block">Book Now</Link>
                 <a href="tel:+19179059370" style={{ display: "block", textAlign: "center", marginTop: "12px", color: "var(--text-light)" }}>
                   +1-917-905-9370
@@ -70,6 +93,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <GetStarted />
     </>
   );
 }

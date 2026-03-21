@@ -1,3 +1,5 @@
+import { GetStarted } from "~/components/GetStarted";
+
 export function meta() {
   return [
     { title: "Patient Reviews | Dr. Sam Elguizaoui, M.D." },
@@ -6,10 +8,11 @@ export function meta() {
 }
 
 const platforms = [
-  { name: "Zocdoc", rating: "4.8", reviews: "1,466", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", color: "#FF7043" },
-  { name: "Google", rating: "4.9", reviews: "150+", url: "https://www.google.com/search?q=Dr+Sam+Elguizaoui+orthopedic+surgeon+NYC", color: "#4285F4" },
-  { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", color: "#00BFA5" },
+  { name: "Zocdoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", color: "#FF7043" },
+  { name: "Google Reviews", rating: "4.8", reviews: "150+", url: "https://www.google.com/search?q=Dr+Sam+Elguizaoui+orthopedic+surgeon+NYC", color: "#4285F4" },
   { name: "Healthgrades", rating: "5.0", reviews: "50+", url: "https://www.healthgrades.com/physician/dr-sam-elguizaoui", color: "#1976D2" },
+  { name: "U.S. News", rating: "—", reviews: "Doctor profile & rankings", url: "https://health.usnews.com/doctors", color: "#1B3A5C" },
+  { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", color: "#00BFA5" },
 ];
 
 export default function ReviewsPage() {
@@ -17,7 +20,7 @@ export default function ReviewsPage() {
     <>
       <section className="service-hero">
         <div className="container">
-          <h1>Patient Reviews</h1>
+          <h1>Reviews &amp; Ratings</h1>
           <p>See why patients trust Dr. Elguizaoui with their orthopedic care</p>
         </div>
       </section>
@@ -33,7 +36,7 @@ export default function ReviewsPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "24px", marginTop: "40px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "24px", marginTop: "40px" }}>
             {platforms.map((p) => (
               <a
                 key={p.name}
@@ -52,24 +55,60 @@ export default function ReviewsPage() {
                   transition: "transform var(--transition), box-shadow var(--transition)",
                 }}
               >
-                <div style={{ fontSize: "2.5rem", fontWeight: 700, color: p.color }}>{p.rating}</div>
-                <div style={{ fontSize: "1.2rem", color: "#f59e0b", marginBottom: "8px" }}>&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                {p.rating !== "—" && (
+                  <div style={{ fontSize: "2.5rem", fontWeight: 700, color: p.color }}>{p.rating}</div>
+                )}
+                {p.rating !== "—" && (
+                  <div style={{ fontSize: "1.2rem", color: "#f59e0b", marginBottom: "8px" }}>&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                )}
                 <div style={{ fontWeight: 600, fontSize: "1.1rem" }}>{p.name}</div>
-                <div style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>{p.reviews} reviews</div>
+                <div style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>{p.reviews}</div>
               </a>
             ))}
           </div>
 
-          <div style={{ textAlign: "center", marginTop: "60px" }}>
-            <p style={{ fontSize: "1.1rem", marginBottom: "20px", color: "var(--text-light)" }}>
-              Read the full reviews on Zocdoc
+          {/* Patient Choice Badge */}
+          <div style={{
+            marginTop: "48px",
+            padding: "24px 32px",
+            borderRadius: "var(--radius)",
+            border: "2px solid #f59e0b",
+            background: "var(--bg-alt)",
+            display: "flex",
+            alignItems: "center",
+            gap: "20px",
+            maxWidth: "600px",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="#f59e0b" stroke="none">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "1.1rem" }}>Zocdoc Patient Choice Award</div>
+              <p style={{ margin: "4px 0 0", color: "var(--text-light)", fontSize: "0.95rem" }}>
+                Providers with this badge are highly rated, reliable, and recommended by other patients.
+              </p>
+            </div>
+          </div>
+
+          {/* Reviews description */}
+          <div className="section-header" style={{ marginTop: "60px" }}>
+            <h2>What Do Patients Say About <span className="text-accent">Dr. Elguizaoui&rsquo;s Orthopedic Care?</span></h2>
+            <p className="section-desc">
+              Dr. Sameh Elguizaoui, M.D., a board-certified orthopedic surgeon in NYC, has earned 1,400+ five-star reviews across platforms for his expertise in knee surgery, shoulder repair, and sports medicine treatment at locations in Manhattan and Brooklyn.
             </p>
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: "40px" }}>
             <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-primary btn-lg">
               View All Reviews on Zocdoc
             </a>
           </div>
         </div>
       </section>
+
+      <GetStarted />
     </>
   );
 }

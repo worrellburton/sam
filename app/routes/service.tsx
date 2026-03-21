@@ -44,9 +44,13 @@ export default function ServicePage() {
               <p>{service.description}</p>
 
               <h3>Conditions Treated</h3>
-              <ul className="service-list">
+              <ul className="service-list service-list--clickable">
                 {service.conditions.map((c, i) => (
-                  <li key={i}>{c}</li>
+                  <li key={i}>
+                    <Link to={`/book?condition=${encodeURIComponent(c)}&service=${encodeURIComponent(service.title)}`}>
+                      {c}
+                    </Link>
+                  </li>
                 ))}
               </ul>
 

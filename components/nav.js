@@ -95,8 +95,6 @@
     // Theme toggle
     var themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
-      var saved = localStorage.getItem('theme');
-      if (saved) document.documentElement.setAttribute('data-theme', saved);
       themeToggle.addEventListener('click', function() {
         var current = document.documentElement.getAttribute('data-theme');
         var next = current === 'dark' ? 'light' : 'dark';

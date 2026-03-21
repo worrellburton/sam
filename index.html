@@ -1434,8 +1434,6 @@
       localStorage.setItem('theme', next);
     }
     if (themeToggle) {
-      const saved = localStorage.getItem('theme');
-      if (saved) document.documentElement.setAttribute('data-theme', saved);
       themeToggle.addEventListener('click', toggleTheme);
     }
     if (mobileThemeToggle) {

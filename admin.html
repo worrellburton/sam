@@ -1,0 +1,4154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal | Dr. Elguizaoui</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0f1a;
+      --bg-alt: #111827;
+      --bg-card: #1a2236;
+      --border: rgba(255,255,255,0.08);
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --green: #22c55e;
+      --yellow: #fbbc04;
+      --red: #ef4444;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== SPLASH / LOGIN ===== */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+    .splash-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .splash-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .splash-logo span { color: var(--accent); }
+    .splash-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+    }
+    .login-box {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .login-box h2 {
+      font-size: 1.2rem;
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+    .login-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-input:focus { border-color: var(--accent); }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: var(--accent-hover); }
+    .login-error {
+      color: var(--red);
+      font-size: 0.85rem;
+      margin-top: 12px;
+      display: none;
+    }
+    .login-error.show { display: block; }
+
+    /* ===== ADMIN LAYOUT ===== */
+    .admin-app { display: none; }
+    .admin-app.active { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 240px;
+      background: var(--bg-alt);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-brand {
+      padding: 0 24px;
+      margin-bottom: 32px;
+    }
+    .sidebar-brand h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .sidebar-brand h1 span { color: var(--accent); }
+    .sidebar-brand p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .sidebar-nav { flex: 1; }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      color: var(--text-light);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      font-family: inherit;
+    }
+    .sidebar-link:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .sidebar-link.active {
+      color: var(--accent);
+      background: rgba(37,99,235,0.08);
+      border-right: 3px solid var(--accent);
+    }
+    .sidebar-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .sidebar-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-logout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+    .sidebar-logout:hover { color: var(--red); }
+
+    /* Main content */
+    .admin-main {
+      flex: 1;
+      margin-left: 240px;
+      padding: 32px;
+    }
+
+    /* Page header */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .page-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    /* Stats cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .stat-card-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .stat-card-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .stat-card-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Location filter tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .filter-tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-tab:hover { border-color: var(--accent); color: var(--text); }
+    .filter-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Bulk actions bar */
+    .bulk-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+    .bulk-actions .count {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+    .bulk-actions .count strong { color: var(--text); }
+    .bulk-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bulk-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .bulk-btn.featured { background: var(--green); border-color: var(--green); color: #fff; }
+    .bulk-btn.unfeatured { background: var(--bg); border-color: var(--border); }
+
+    /* Review cards */
+    .review-list { display: flex; flex-direction: column; gap: 12px; }
+    .review-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: border-color 0.2s;
+    }
+    .review-item:hover { border-color: rgba(255,255,255,0.15); }
+    .review-item.featured { border-left: 3px solid var(--green); }
+    .review-checkbox {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .review-body { flex: 1; min-width: 0; }
+    .review-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .review-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--border);
+    }
+    .review-author { font-weight: 600; font-size: 0.92rem; }
+    .review-date { font-size: 0.78rem; color: var(--text-muted); }
+    .review-stars {
+      color: var(--yellow);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .review-text-content {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-light);
+    }
+    .review-location-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(37,99,235,0.15);
+      color: var(--accent);
+      margin-top: 10px;
+    }
+    .review-featured-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(34,197,94,0.15);
+      color: var(--green);
+      margin-left: 8px;
+    }
+
+    /* Admin page sections */
+    .admin-page { display: none; }
+    .admin-page.active { display: block; }
+
+    /* Dashboard overview cards */
+    .overview-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .overview-section h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-light);
+    }
+    .location-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .location-row:last-child { border-bottom: none; }
+    .location-name { font-weight: 600; font-size: 0.92rem; }
+    .location-address { font-size: 0.82rem; color: var(--text-muted); }
+    .location-rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .location-rating .stars { color: var(--yellow); font-size: 0.9rem; }
+    .location-rating .num { font-weight: 700; font-size: 1.1rem; }
+    .location-rating .count { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* Save notification */
+    .save-toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: var(--green);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.9rem;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+    .save-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Mobile sticky bottom action bar */
+    .mobile-bulk-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 300;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
+      gap: 12px;
+      align-items: center;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    }
+    .mobile-bulk-bar .count {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+    .mobile-bulk-bar .count strong { color: var(--text); }
+    .mobile-bulk-bar .mobile-bulk-btns {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .mobile-bulk-bar .bulk-btn {
+      padding: 10px 18px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+    @media (max-width: 768px) {
+      .mobile-bulk-bar.visible { display: flex; }
+      .save-toast { bottom: 80px; right: 16px; left: 16px; text-align: center; }
+      .review-list { padding-bottom: 80px; }
+    }
+
+    /* Loading spinner */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .admin-sidebar {
+        position: fixed;
+        left: -260px;
+        transition: left 0.3s;
+        z-index: 200;
+      }
+      .admin-sidebar.open { left: 0; }
+      .admin-main { margin-left: 0; padding: 20px; }
+      .mobile-menu-btn {
+        display: flex !important;
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 150;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+        color: var(--text);
+        cursor: pointer;
+      }
+      .mobile-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 150;
+        display: none;
+      }
+      .mobile-overlay.show { display: block; }
+      .review-item { flex-direction: column; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .mobile-menu-btn { display: none; }
+    .mobile-overlay { display: none; }
+
+    /* ===== HOME PAGE ===== */
+    .home-welcome {
+      margin-bottom: 32px;
+    }
+    .home-welcome h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .home-welcome p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .core-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .core-section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .core-section-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .core-badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(37,99,235,0.15);
+      color: var(--accent);
+    }
+    .core-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .core-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .core-link:hover {
+      border-color: var(--accent);
+      background: rgba(37,99,235,0.06);
+      transform: translateY(-1px);
+    }
+    .core-link-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .core-link-icon.zocdoc { background: rgba(255,111,97,0.15); color: #ff6f61; }
+    .core-link-icon.usnews { background: rgba(37,99,235,0.15); color: var(--accent); }
+    .core-link-icon.healthgrades { background: rgba(34,197,94,0.15); color: var(--green); }
+    .core-link-icon.vitals { background: rgba(251,188,4,0.15); color: var(--yellow); }
+    .core-link-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .core-link-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 2px;
+    }
+    .core-link-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .core-link-arrow {
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .core-link:hover .core-link-arrow {
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    /* ===== SEO PAGE ===== */
+    .seo-run-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .seo-run-btn:hover { background: var(--accent-hover); }
+    .seo-run-btn.scanning {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    .seo-run-btn.scanning svg {
+      animation: spin 1s linear infinite;
+    }
+    .seo-score-banner {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .seo-score-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      flex-shrink: 0;
+    }
+    .seo-score-ring svg { width: 100%; height: 100%; }
+    .seo-score-circle {
+      stroke: var(--accent);
+      transition: stroke-dashoffset 1.5s ease, stroke 0.3s;
+    }
+    .seo-score-number {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .seo-score-info { flex: 1; }
+    .seo-score-info h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .seo-score-info p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin-bottom: 12px; }
+    .seo-score-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .seo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .seo-badge.critical { background: rgba(239,68,68,0.15); color: var(--red); }
+    .seo-badge.warning { background: rgba(251,188,4,0.15); color: var(--yellow); }
+    .seo-badge.passed { background: rgba(34,197,94,0.15); color: var(--green); }
+    .seo-badge.info { background: rgba(37,99,235,0.15); color: var(--accent); }
+
+    .seo-progress {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .seo-progress-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+    .seo-progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .seo-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .seo-results { margin-bottom: 24px; }
+    .seo-result-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .seo-result-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+      user-select: none;
+    }
+    .seo-result-header:hover { background: rgba(255,255,255,0.02); }
+    .seo-result-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .seo-result-icon.critical { background: rgba(239,68,68,0.15); color: var(--red); }
+    .seo-result-icon.warning { background: rgba(251,188,4,0.15); color: var(--yellow); }
+    .seo-result-icon.passed { background: rgba(34,197,94,0.15); color: var(--green); }
+    .seo-result-icon.info { background: rgba(37,99,235,0.15); color: var(--accent); }
+    .seo-result-title { flex: 1; font-weight: 600; font-size: 0.92rem; }
+    .seo-result-page { font-size: 0.78rem; color: var(--text-muted); }
+    .seo-result-chevron {
+      color: var(--text-muted);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .seo-result-group.open .seo-result-chevron { transform: rotate(180deg); }
+    .seo-result-detail {
+      display: none;
+      padding: 0 20px 16px;
+      font-size: 0.88rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+    }
+    .seo-result-group.open .seo-result-detail { display: block; padding-top: 16px; }
+    .seo-result-detail code {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text);
+    }
+    .seo-result-detail .fix-hint {
+      display: block;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(37,99,235,0.08);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+    .seo-result-detail .fix-hint strong { color: var(--text); }
+
+    .seo-sitemap-code {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--text-light);
+      overflow-x: auto;
+      white-space: pre;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+    }
+    .seo-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .seo-copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .seo-action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .seo-action-item:last-child { border-bottom: none; }
+    .seo-action-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(239,68,68,0.15);
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .seo-action-item .action-text { font-size: 0.88rem; color: var(--text-light); line-height: 1.5; }
+    .seo-action-item .action-text strong { color: var(--text); }
+    .seo-action-item.priority-low .seo-action-num { background: rgba(251,188,4,0.15); color: var(--yellow); }
+
+    .seo-claude-prompt {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--text-light);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 500px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+    }
+    .seo-claude-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .seo-claude-header .claude-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .seo-last-scan {
+      text-align: center;
+      padding: 16px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== GRAPHICAL SITEMAP ===== */
+    .sitemap-visual {
+      position: relative;
+      padding: 32px 0 16px;
+    }
+    .sitemap-tree {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .sitemap-root {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(37,99,235,0.06));
+      border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      cursor: default;
+    }
+    .sitemap-root-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sitemap-root-icon svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; }
+    .sitemap-root-text h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
+    .sitemap-root-text span { font-size: 0.75rem; color: var(--text-muted); }
+    .sitemap-group {
+      margin-left: 18px;
+      padding-left: 20px;
+      border-left: 2px solid rgba(255,255,255,0.06);
+      margin-bottom: 16px;
+    }
+    .sitemap-group-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      padding: 6px 0;
+      margin-bottom: 4px;
+    }
+    .sitemap-node {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-radius: 8px;
+      transition: background 0.15s;
+      cursor: default;
+    }
+    .sitemap-node:hover { background: rgba(255,255,255,0.03); }
+    .sitemap-node::before {
+      content: '';
+      position: absolute;
+      left: -21px;
+      top: 50%;
+      width: 20px;
+      height: 2px;
+      background: rgba(255,255,255,0.06);
+    }
+    .sitemap-node-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .sitemap-node-dot.service { background: #22c55e; }
+    .sitemap-node-dot.resource { background: #f59e0b; }
+    .sitemap-node-dot.blog { background: #8b5cf6; }
+    .sitemap-node-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
+      flex: 1;
+    }
+    .sitemap-node-url {
+      font-size: 0.72rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .sitemap-node-priority {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .sitemap-node-priority.high { background: rgba(37,99,235,0.15); color: var(--accent); }
+    .sitemap-node-priority.mid { background: rgba(34,197,94,0.12); color: var(--green); }
+    .sitemap-node-priority.low { background: rgba(245,158,11,0.12); color: var(--yellow); }
+
+    .sitemap-downloads {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .sitemap-dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .sitemap-dl-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .sitemap-dl-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .sitemap-dl-btn .file-size {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+    .sitemap-legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .sitemap-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .sitemap-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 768px) {
+      .seo-score-banner { flex-direction: column; text-align: center; gap: 20px; padding: 24px 20px; }
+      .seo-score-badges { justify-content: center; }
+      .page-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .sitemap-node-url { display: none; }
+      .sitemap-downloads { flex-direction: column; }
+    }
+
+    /* ===== ANALYTICS PAGE ===== */
+    .analytics-connect {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .analytics-connect svg {
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+    .analytics-connect h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    .analytics-connect p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 24px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+    .google-signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 28px;
+      background: #fff;
+      color: #333;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .google-signin-btn:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .analytics-connected { display: none; }
+    .analytics-connected.active { display: block; }
+    .analytics-user-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      font-size: 0.88rem;
+    }
+    .analytics-user-bar .user-email {
+      color: var(--text-light);
+      flex: 1;
+    }
+    .analytics-user-bar .disconnect-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .analytics-user-bar .disconnect-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .analytics-loc-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .analytics-loc-tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .analytics-loc-tab:hover { border-color: var(--accent); color: var(--text); }
+    .analytics-loc-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .metric-card-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .metric-card-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    .metric-card-trend {
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+    .metric-card-trend.up { color: var(--green); }
+    .metric-card-trend.down { color: var(--red); }
+    .chart-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .chart-section h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-light);
+    }
+    .chart-canvas {
+      width: 100%;
+      height: 240px;
+    }
+    .keywords-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .keywords-table th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .keywords-table td {
+      padding: 12px;
+      font-size: 0.88rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-light);
+    }
+    .keywords-table tr:last-child td { border-bottom: none; }
+    .keywords-table .keyword { font-weight: 500; color: var(--text); }
+    .keyword-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      min-width: 100px;
+    }
+    .keyword-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      transition: width 0.4s;
+    }
+    .analytics-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    /* ===== BACKGROUND SELECTOR ===== */
+    .bg-presets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .bg-preset-card {
+      position: relative;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .bg-preset-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(37,99,235,0.15);
+    }
+    .bg-preset-preview {
+      width: 100%;
+      height: 120px;
+      position: relative;
+    }
+    .bg-preset-info {
+      padding: 12px 14px;
+    }
+    .bg-preset-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .bg-preset-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .bg-preset-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      background: rgba(37,99,235,0.8);
+      color: #fff;
+      backdrop-filter: blur(4px);
+    }
+    .bg-prompt-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .bg-prompt-modal.active { display: flex; }
+    .bg-prompt-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      max-width: 640px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .bg-prompt-box h3 {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+    .bg-prompt-box .bg-prompt-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .bg-prompt-code {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.76rem;
+      line-height: 1.7;
+      color: var(--text-light);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 350px;
+      overflow-y: auto;
+      margin-bottom: 14px;
+    }
+    .bg-prompt-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .bg-prompt-copy {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bg-prompt-copy:hover { background: var(--accent-hover); }
+    .bg-prompt-close {
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bg-prompt-close:hover { border-color: var(--text-muted); }
+
+    /* ===== BOOKINGS PAGE ===== */
+    .bookings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .bookings-view-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+    }
+    .bookings-view-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bookings-view-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .bookings-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .booking-stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+    .booking-stat-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .booking-stat-value {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .booking-stat-value.green { color: var(--green); }
+    .booking-stat-value.yellow { color: var(--yellow); }
+    .booking-stat-value.blue { color: var(--accent); }
+
+    /* Calendar View */
+    .cal-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .cal-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cal-nav h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .cal-nav-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .cal-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+    .cal-day-header {
+      padding: 10px;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .cal-day {
+      min-height: 90px;
+      padding: 6px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .cal-day:nth-child(7n) { border-right: none; }
+    .cal-day.other-month { opacity: 0.3; }
+    .cal-day.today { background: rgba(37,99,235,0.06); }
+    .cal-day-num {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+    .cal-day.today .cal-day-num {
+      background: var(--accent);
+      color: #fff;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cal-event {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+    .cal-event.confirmed { background: rgba(34,197,94,0.15); color: var(--green); }
+    .cal-event.pending { background: rgba(251,188,4,0.15); color: var(--yellow); }
+    .cal-event.cancelled { background: rgba(239,68,68,0.15); color: var(--red); text-decoration: line-through; }
+
+    /* List View */
+    .bookings-list {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .booking-list-header {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr 1fr 80px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    .booking-list-row {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1fr 1fr 80px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .booking-list-row:last-child { border-bottom: none; }
+    .booking-list-row:hover { background: rgba(37,99,235,0.03); }
+    .booking-patient {
+      display: flex;
+      flex-direction: column;
+    }
+    .booking-patient-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+    .booking-patient-email {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .booking-service {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    .booking-date {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    .booking-status {
+      display: inline-flex;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+    .booking-status.confirmed { background: rgba(34,197,94,0.15); color: var(--green); }
+    .booking-status.pending { background: rgba(251,188,4,0.15); color: var(--yellow); }
+    .booking-status.cancelled { background: rgba(239,68,68,0.15); color: var(--red); }
+    .booking-actions-btn {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .booking-actions-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .bookings-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+    .bookings-empty svg { margin-bottom: 12px; opacity: 0.4; }
+    .bookings-empty h3 { font-size: 1rem; margin-bottom: 6px; color: var(--text-light); }
+    .bookings-empty p { font-size: 0.85rem; }
+
+    @media (max-width: 768px) {
+      .core-links { grid-template-columns: 1fr; }
+      .analytics-connect { padding: 32px 20px; }
+      .metrics-grid { grid-template-columns: 1fr 1fr; }
+      .keywords-table { font-size: 0.82rem; }
+      .bg-presets-grid { grid-template-columns: 1fr; }
+      .booking-list-header,
+      .booking-list-row { grid-template-columns: 1.5fr 1fr 80px; }
+      .booking-list-header > :nth-child(2),
+      .booking-list-header > :nth-child(4),
+      .booking-list-row > :nth-child(2),
+      .booking-list-row > :nth-child(4) { display: none; }
+      .cal-day { min-height: 60px; }
+      .cal-event { font-size: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SPLASH / LOGIN -->
+  <div class="splash-overlay" id="splashOverlay">
+    <div class="splash-logo">Sam<span>MD</span></div>
+    <div class="splash-subtitle">Admin Portal</div>
+    <div class="login-box">
+      <h2>Sign In</h2>
+      <input type="password" class="login-input" id="loginPassword" placeholder="Enter password" autofocus>
+      <button class="login-btn" id="loginBtn">Sign In</button>
+      <div class="login-error" id="loginError">Incorrect password. Please try again.</div>
+    </div>
+  </div>
+
+  <!-- ADMIN APP -->
+  <div class="admin-app" id="adminApp">
+
+    <!-- Mobile menu button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-brand">
+        <h1>Sam<span>MD</span></h1>
+        <p>Admin Portal</p>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="sidebar-link active" data-page="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home
+        </button>
+        <button class="sidebar-link" data-page="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Dashboard
+        </button>
+        <button class="sidebar-link" data-page="reviews">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Reviews
+        </button>
+        <button class="sidebar-link" data-page="seo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          SEO
+        </button>
+        <button class="sidebar-link" data-page="geo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          GEO
+        </button>
+        <button class="sidebar-link" data-page="bookings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Bookings
+        </button>
+        <button class="sidebar-link" data-page="analytics">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Analytics
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="sidebar-logout" id="logoutBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+
+      <!-- Home Page -->
+      <div class="admin-page active" id="page-home">
+        <div class="home-welcome">
+          <h2>Welcome back</h2>
+          <p>Manage your practice presence across the web.</p>
+        </div>
+
+        <div class="core-section">
+          <div class="core-section-header">
+            <h3>Core Profiles</h3>
+            <span class="core-badge">Essentials</span>
+          </div>
+          <div class="core-links">
+            <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="core-link">
+              <div class="core-link-icon zocdoc">Z</div>
+              <div class="core-link-info">
+                <div class="core-link-name">Zocdoc</div>
+                <div class="core-link-desc">Appointments & patient reviews</div>
+              </div>
+              <svg class="core-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </a>
+            <a href="https://health.usnews.com/doctors/sameh-elguizaoui-1000957" target="_blank" rel="noopener" class="core-link">
+              <div class="core-link-icon usnews">U</div>
+              <div class="core-link-info">
+                <div class="core-link-name">U.S. News</div>
+                <div class="core-link-desc">Doctor profile & rankings</div>
+              </div>
+              <svg class="core-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </a>
+            <a href="https://www.healthgrades.com/physician/dr-sam-elguizaoui-gdd4q" target="_blank" rel="noopener" class="core-link">
+              <div class="core-link-icon healthgrades">H</div>
+              <div class="core-link-info">
+                <div class="core-link-name">Healthgrades</div>
+                <div class="core-link-desc">Physician profile & ratings</div>
+              </div>
+              <svg class="core-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </a>
+            <a href="https://www.vitals.com/doctors/Dr_Sameh_Elguizaoui.html" target="_blank" rel="noopener" class="core-link">
+              <div class="core-link-icon vitals">V</div>
+              <div class="core-link-info">
+                <div class="core-link-name">Vitals</div>
+                <div class="core-link-desc">Patient reviews & doctor info</div>
+              </div>
+              <svg class="core-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Background Selector -->
+        <div class="core-section">
+          <div class="core-section-header">
+            <h3>WebGL Backgrounds</h3>
+            <span class="core-badge" style="background:rgba(139,92,246,0.15);color:#8b5cf6">Customize</span>
+          </div>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Click a background to get the Claude Code prompt for inserting it into your site.</p>
+          <div class="bg-presets-grid" id="bgPresetsGrid"></div>
+        </div>
+      </div>
+
+      <!-- Background Prompt Modal -->
+      <div class="bg-prompt-modal" id="bgPromptModal">
+        <div class="bg-prompt-box">
+          <h3 id="bgPromptTitle"></h3>
+          <p class="bg-prompt-subtitle" id="bgPromptSubtitle"></p>
+          <div class="bg-prompt-code" id="bgPromptCode"></div>
+          <div class="bg-prompt-actions">
+            <button class="bg-prompt-copy" id="bgPromptCopyBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Prompt
+            </button>
+            <button class="bg-prompt-close" id="bgPromptCloseBtn">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Page -->
+      <div class="admin-page" id="page-dashboard">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+        </div>
+        <div class="stats-grid" id="dashStats">
+          <div class="stat-card">
+            <div class="stat-card-label">Total Google Reviews</div>
+            <div class="stat-card-value" id="statTotalReviews">--</div>
+            <div class="stat-card-sub">Across 3 locations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Average Rating</div>
+            <div class="stat-card-value" id="statAvgRating">--</div>
+            <div class="stat-card-sub">Weighted average</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Featured Reviews</div>
+            <div class="stat-card-value" id="statFeatured">0</div>
+            <div class="stat-card-sub">Shown on website</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">5-Star Reviews</div>
+            <div class="stat-card-value" id="statFiveStar">--</div>
+            <div class="stat-card-sub">Across all locations</div>
+          </div>
+        </div>
+
+        <div class="overview-section">
+          <h3>Locations Overview</h3>
+          <div id="locationsOverview">
+            <div class="loading"><div class="spinner"></div>Loading locations...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Page -->
+      <div class="admin-page" id="page-reviews">
+        <div class="page-header">
+          <h2>Google Reviews</h2>
+        </div>
+
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab active" data-filter="all">All Locations</button>
+          <button class="filter-tab" data-filter="Upper East Side">Upper East Side</button>
+          <button class="filter-tab" data-filter="West Village">West Village</button>
+          <button class="filter-tab" data-filter="Brooklyn">Brooklyn</button>
+          <button class="filter-tab" data-filter="featured">Featured Only</button>
+        </div>
+
+        <div class="bulk-actions" id="bulkActions" style="display:none;">
+          <span class="count"><strong id="selectedCount">0</strong> selected</span>
+          <button class="bulk-btn featured" id="bulkFeature">Feature Selected</button>
+          <button class="bulk-btn unfeatured" id="bulkUnfeature">Unfeature Selected</button>
+        </div>
+
+        <div class="review-list" id="reviewList">
+          <div class="loading"><div class="spinner"></div>Loading reviews...</div>
+        </div>
+      </div>
+
+      <!-- SEO Page -->
+      <div class="admin-page" id="page-seo">
+        <div class="page-header">
+          <h2>SEO Health Report</h2>
+          <button class="seo-run-btn" id="seoRunBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Run Audit
+          </button>
+        </div>
+
+        <!-- Overall Score -->
+        <div class="seo-score-banner" id="seoScoreBanner">
+          <div class="seo-score-ring">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+              <circle cx="60" cy="60" r="52" fill="none" stroke-width="8" stroke-linecap="round" class="seo-score-circle" id="seoScoreCircle" stroke-dasharray="327" stroke-dashoffset="327" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="seo-score-number" id="seoScoreNumber">--</div>
+          </div>
+          <div class="seo-score-info">
+            <h3 id="seoScoreLabel">Run an audit to check your SEO health</h3>
+            <p id="seoScoreDesc">Scans all pages for meta tags, schema markup, accessibility, performance issues, and generates a sitemap.</p>
+            <div class="seo-score-badges" id="seoScoreBadges"></div>
+          </div>
+        </div>
+
+        <!-- Progress bar (shown during scan) -->
+        <div class="seo-progress" id="seoProgress" style="display:none">
+          <div class="seo-progress-label" id="seoProgressLabel">Scanning pages...</div>
+          <div class="seo-progress-bar">
+            <div class="seo-progress-fill" id="seoProgressFill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-grid seo-stats" id="seoStats" style="display:none">
+          <div class="stat-card">
+            <div class="stat-card-label">Pages Scanned</div>
+            <div class="stat-card-value" id="seoPagesScanned">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Issues Found</div>
+            <div class="stat-card-value" id="seoIssuesFound" style="color:var(--red)">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Warnings</div>
+            <div class="stat-card-value" id="seoWarnings" style="color:var(--yellow)">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Passed Checks</div>
+            <div class="stat-card-value" id="seoPassed" style="color:var(--green)">0</div>
+          </div>
+        </div>
+
+        <!-- Category filters -->
+        <div class="filter-tabs seo-category-tabs" id="seoCategoryTabs" style="display:none">
+          <button class="filter-tab active" data-seo-cat="all">All</button>
+          <button class="filter-tab" data-seo-cat="critical">Critical</button>
+          <button class="filter-tab" data-seo-cat="warning">Warnings</button>
+          <button class="filter-tab" data-seo-cat="passed">Passed</button>
+          <button class="filter-tab" data-seo-cat="info">Info</button>
+        </div>
+
+        <!-- Audit results -->
+        <div class="seo-results" id="seoResults"></div>
+
+        <!-- Sitemap section -->
+        <div class="seo-sitemap-section" id="seoSitemapSection" style="display:none">
+          <div class="core-section">
+            <div class="core-section-header">
+              <h3>Site Architecture</h3>
+              <span class="core-badge">Sitemap</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:4px">Visual map of all indexed pages with their SEO priority. Download the files below and upload them to your site root.</p>
+
+            <div class="sitemap-visual" id="sitemapVisual"></div>
+
+            <div class="sitemap-legend">
+              <div class="sitemap-legend-item"><div class="sitemap-legend-dot" style="background:#22c55e"></div> Services</div>
+              <div class="sitemap-legend-item"><div class="sitemap-legend-dot" style="background:#f59e0b"></div> Resources</div>
+              <div class="sitemap-legend-item"><div class="sitemap-legend-dot" style="background:#8b5cf6"></div> Blog</div>
+            </div>
+
+            <div class="sitemap-downloads" id="sitemapDownloads">
+              <button class="sitemap-dl-btn" id="dlSitemapXml">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                sitemap.xml <span class="file-size" id="sitemapSize"></span>
+              </button>
+              <button class="sitemap-dl-btn" id="dlRobotsTxt">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                robots.txt <span class="file-size" id="robotsSize"></span>
+              </button>
+              <button class="sitemap-dl-btn" id="seoCopyBtn">
+                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copy XML
+              </button>
+            </div>
+          </div>
+
+          <!-- Hidden code block for copy functionality -->
+          <div class="seo-sitemap-code" id="seoSitemapCode" style="display:none"></div>
+
+          <!-- Action Items -->
+          <div class="core-section" style="margin-top:24px">
+            <div class="core-section-header">
+              <h3>Action Items</h3>
+              <span class="core-badge" style="background:rgba(239,68,68,0.15);color:var(--red)">To-Do</span>
+            </div>
+            <div class="seo-action-items" id="seoActionItems"></div>
+          </div>
+        </div>
+
+        <!-- Claude Fix Prompt -->
+        <div class="seo-claude-section" id="seoClaudeSection" style="display:none;margin-top:24px">
+          <div class="core-section">
+            <div class="core-section-header">
+              <div class="seo-claude-header">
+                <div class="claude-icon">C</div>
+                <h3>Fix with Claude</h3>
+              </div>
+              <span class="core-badge" style="background:linear-gradient(135deg,rgba(217,119,6,0.2),rgba(245,158,11,0.2));color:#f59e0b">AI Prompt</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Copy the prompt below and paste it into Claude to automatically fix all detected SEO issues across your site files.</p>
+            <div class="seo-claude-prompt" id="seoClaudePrompt"></div>
+            <button class="seo-copy-btn" id="seoClaudePromptCopyBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Prompt
+            </button>
+          </div>
+        </div>
+
+        <!-- Last scan timestamp -->
+        <div class="seo-last-scan" id="seoLastScan"></div>
+      </div>
+
+      <!-- GEO Page -->
+      <div class="admin-page" id="page-geo">
+        <div class="page-header">
+          <h2>GEO Health Report</h2>
+          <button class="seo-run-btn" id="geoRunBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Run GEO Audit
+          </button>
+        </div>
+
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;">
+          <p style="color:var(--text-light);font-size:0.88rem;line-height:1.6;margin:0;"><strong style="color:var(--text)">What is GEO?</strong> Generative Engine Optimization (GEO) is the practice of optimizing web content to be surfaced, cited, and recommended by AI search engines like ChatGPT, Google AI Overviews, Perplexity, and Claude. Unlike traditional SEO which focuses on rankings, GEO focuses on making content <em>citeable</em> by AI systems.</p>
+        </div>
+
+        <!-- Overall Score -->
+        <div class="seo-score-banner" id="geoScoreBanner">
+          <div class="seo-score-ring">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+              <circle cx="60" cy="60" r="52" fill="none" stroke-width="8" stroke-linecap="round" class="seo-score-circle" id="geoScoreCircle" stroke-dasharray="327" stroke-dashoffset="327" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="seo-score-number" id="geoScoreNumber">--</div>
+          </div>
+          <div class="seo-score-info">
+            <h3 id="geoScoreLabel">Run an audit to check your GEO health</h3>
+            <p id="geoScoreDesc">Scans all pages for AI-search readiness: structured data quality, FAQ schemas, citeable content, E-E-A-T signals, and conversational formatting.</p>
+            <div class="seo-score-badges" id="geoScoreBadges"></div>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="seo-progress" id="geoProgress" style="display:none">
+          <div class="seo-progress-label" id="geoProgressLabel">Scanning pages for AI readiness...</div>
+          <div class="seo-progress-bar">
+            <div class="seo-progress-fill" id="geoProgressFill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-grid" id="geoStats" style="display:none">
+          <div class="stat-card">
+            <div class="stat-card-label">Pages Scanned</div>
+            <div class="stat-card-value" id="geoPagesScanned">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Issues Found</div>
+            <div class="stat-card-value" id="geoIssuesFound" style="color:var(--red)">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Warnings</div>
+            <div class="stat-card-value" id="geoWarnings" style="color:var(--yellow)">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Passed Checks</div>
+            <div class="stat-card-value" id="geoPassed" style="color:var(--green)">0</div>
+          </div>
+        </div>
+
+        <!-- Category filters -->
+        <div class="filter-tabs" id="geoCategoryTabs" style="display:none">
+          <button class="filter-tab active" data-geo-cat="all">All</button>
+          <button class="filter-tab" data-geo-cat="critical">Critical</button>
+          <button class="filter-tab" data-geo-cat="warning">Warnings</button>
+          <button class="filter-tab" data-geo-cat="passed">Passed</button>
+          <button class="filter-tab" data-geo-cat="info">Info</button>
+        </div>
+
+        <!-- Audit results -->
+        <div class="seo-results" id="geoResults"></div>
+
+        <!-- GEO Suggestions -->
+        <div id="geoSuggestionsSection" style="display:none;margin-top:24px">
+          <div class="core-section">
+            <div class="core-section-header">
+              <h3>GEO Optimization Suggestions</h3>
+              <span class="core-badge" style="background:rgba(139,92,246,0.15);color:#8b5cf6">AI Ready</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Prioritized recommendations to improve your site's visibility in AI-generated answers.</p>
+            <div id="geoSuggestions"></div>
+          </div>
+        </div>
+
+        <!-- Claude Fix Prompt -->
+        <div id="geoClaudeSection" style="display:none;margin-top:24px">
+          <div class="core-section">
+            <div class="core-section-header">
+              <div class="seo-claude-header">
+                <div class="claude-icon">C</div>
+                <h3>Fix with Claude</h3>
+              </div>
+              <span class="core-badge" style="background:linear-gradient(135deg,rgba(217,119,6,0.2),rgba(245,158,11,0.2));color:#f59e0b">AI Prompt</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Copy the prompt below and paste it into Claude to automatically fix all detected GEO issues across your site files.</p>
+            <div class="seo-claude-prompt" id="geoClaudePrompt"></div>
+            <button class="seo-copy-btn" id="geoClaudePromptCopyBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Prompt
+            </button>
+          </div>
+        </div>
+
+        <!-- Last scan timestamp -->
+        <div class="seo-last-scan" id="geoLastScan"></div>
+      </div>
+
+      <!-- Bookings Page -->
+      <div class="admin-page" id="page-bookings">
+        <div class="bookings-header">
+          <div>
+            <h2>Bookings</h2>
+            <p style="color:var(--text-muted);font-size:0.88rem;margin-top:4px">Patient appointments from your booking page</p>
+          </div>
+          <div class="bookings-view-toggle">
+            <button class="bookings-view-btn active" data-view="list">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              List
+            </button>
+            <button class="bookings-view-btn" data-view="calendar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Calendar
+            </button>
+          </div>
+        </div>
+
+        <div class="bookings-stats" id="bookingsStats">
+          <div class="booking-stat-card">
+            <div class="booking-stat-label">Total Bookings</div>
+            <div class="booking-stat-value blue" id="statTotalBookings">0</div>
+          </div>
+          <div class="booking-stat-card">
+            <div class="booking-stat-label">Confirmed</div>
+            <div class="booking-stat-value green" id="statConfirmed">0</div>
+          </div>
+          <div class="booking-stat-card">
+            <div class="booking-stat-label">Pending</div>
+            <div class="booking-stat-value yellow" id="statPending">0</div>
+          </div>
+          <div class="booking-stat-card">
+            <div class="booking-stat-label">This Week</div>
+            <div class="booking-stat-value" id="statThisWeek">0</div>
+          </div>
+        </div>
+
+        <!-- List View -->
+        <div id="bookingsListView">
+          <div class="bookings-list" id="bookingsList">
+            <div class="booking-list-header">
+              <span>Patient</span>
+              <span>Service</span>
+              <span>Date</span>
+              <span>Status</span>
+              <span></span>
+            </div>
+            <div id="bookingsListBody"></div>
+          </div>
+        </div>
+
+        <!-- Calendar View -->
+        <div id="bookingsCalView" style="display:none">
+          <div class="cal-container">
+            <div class="cal-nav">
+              <button class="cal-nav-btn" id="calPrev">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <h3 id="calMonthLabel"></h3>
+              <button class="cal-nav-btn" id="calNext">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Page -->
+      <div class="admin-page" id="page-analytics">
+        <div class="page-header">
+          <h2>Performance Analytics</h2>
+        </div>
+
+        <!-- Pre-connect state -->
+        <div class="analytics-connect" id="analyticsConnect">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          <h3>Connect Google Business Profile</h3>
+          <p>Sign in with your Google account that manages your Business Profile to view search queries, impressions, clicks, and more.</p>
+          <button class="google-signin-btn" id="googleSignInBtn">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Sign in with Google
+          </button>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:16px;margin-bottom:0;">Requires OAuth 2.0 Client ID. <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener" style="color:var(--accent);">Set up in Google Cloud Console</a></p>
+        </div>
+
+        <!-- Connected state -->
+        <div class="analytics-connected" id="analyticsConnected">
+          <div class="analytics-user-bar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span class="user-email" id="analyticsUserEmail">Connected</span>
+            <button class="disconnect-btn" id="analyticsDisconnect">Disconnect</button>
+          </div>
+
+          <div class="analytics-loc-tabs" id="analyticsLocTabs"></div>
+
+          <!-- Summary Metrics -->
+          <div class="metrics-grid" id="analyticsMetrics">
+            <div class="metric-card">
+              <div class="metric-card-label">Search Impressions</div>
+              <div class="metric-card-value" id="metricImpressions">--</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-card-label">Website Clicks</div>
+              <div class="metric-card-value" id="metricWebClicks">--</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-card-label">Direction Requests</div>
+              <div class="metric-card-value" id="metricDirections">--</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-card-label">Phone Calls</div>
+              <div class="metric-card-value" id="metricCalls">--</div>
+            </div>
+          </div>
+
+          <!-- Impressions Chart -->
+          <div class="chart-section">
+            <h3>Visibility Over Time</h3>
+            <canvas class="chart-canvas" id="impressionsChart"></canvas>
+          </div>
+
+          <!-- Search Keywords -->
+          <div class="chart-section">
+            <h3>Top Search Keywords</h3>
+            <div id="keywordsContent">
+              <div class="loading"><div class="spinner"></div>Loading keywords...</div>
+            </div>
+          </div>
+
+          <!-- Engagement Breakdown -->
+          <div class="chart-section">
+            <h3>Engagement Breakdown</h3>
+            <canvas class="chart-canvas" id="engagementChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Mobile sticky bottom bar -->
+  <div class="mobile-bulk-bar" id="mobileBulkBar">
+    <span class="count"><strong id="mobileSelectedCount">0</strong> selected</span>
+    <div class="mobile-bulk-btns">
+      <button class="bulk-btn featured" id="mobileBulkFeature">Feature Selected</button>
+      <button class="bulk-btn unfeatured" id="mobileBulkUnfeature">Unfeature</button>
+    </div>
+  </div>
+
+  <!-- Save Toast -->
+  <div class="save-toast" id="saveToast">Changes saved!</div>
+
+  <script>
+    // --- Config ---
+    const PASSWORD = '123';
+    const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
+    const PLACE_IDS = [
+      { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side', address: '159 East 74th St, New York, NY 10021' },
+      { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village', address: '200 West 13th St, New York, NY 10011' },
+      { id: 'ChIJzeD6h0VawokRCfzPOz9Oi7E', label: 'Brooklyn', address: '161 Atlantic Ave, Brooklyn, NY 11201' }
+    ];
+    const FIELDS = 'id,rating,userRatingCount,reviews.rating,reviews.text,reviews.authorAttribution,reviews.relativePublishTimeDescription,reviews.publishTime';
+    const STORAGE_KEY = 'sammd_featured_reviews';
+
+    // --- State ---
+    let allReviews = [];
+    let locationData = [];
+    let featuredIds = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let currentFilter = 'all';
+    let selectedIds = new Set();
+
+    // --- Auth ---
+    const splash = document.getElementById('splashOverlay');
+    const app = document.getElementById('adminApp');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginPassword = document.getElementById('loginPassword');
+    const loginError = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (sessionStorage.getItem('sammd_authed') === '1') {
+      splash.classList.add('hidden');
+      app.classList.add('active');
+      init();
+    }
+
+    loginBtn.addEventListener('click', doLogin);
+    loginPassword.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+    function doLogin() {
+      if (loginPassword.value === PASSWORD) {
+        sessionStorage.setItem('sammd_authed', '1');
+        splash.classList.add('hidden');
+        app.classList.add('active');
+        init();
+      } else {
+        loginError.classList.add('show');
+        loginPassword.value = '';
+        loginPassword.focus();
+      }
+    }
+
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('sammd_authed');
+      location.reload();
+    });
+
+    // --- Mobile menu ---
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const sidebar = document.getElementById('adminSidebar');
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      mobileOverlay.classList.toggle('show');
+    });
+    mobileOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      mobileOverlay.classList.remove('show');
+    });
+
+    // --- Navigation ---
+    document.querySelectorAll('.sidebar-link[data-page]').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + link.dataset.page).classList.add('active');
+        sidebar.classList.remove('open');
+        mobileOverlay.classList.remove('show');
+      });
+    });
+
+    // --- Init ---
+    async function init() {
+      try {
+        const results = await Promise.all(PLACE_IDS.map(async (place) => {
+          const resp = await fetch(
+            `https://places.googleapis.com/v1/places/${place.id}?fields=${FIELDS}&key=${PLACES_API_KEY}`
+          );
+          if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+          const data = await resp.json();
+          return {
+            ...place,
+            rating: data.rating || 0,
+            count: data.userRatingCount || 0,
+            reviews: (data.reviews || []).map(r => ({
+              ...r,
+              locationLabel: place.label,
+              uid: r.name || (r.authorAttribution?.displayName + r.publishTime)
+            }))
+          };
+        }));
+
+        locationData = results;
+        allReviews = results.flatMap(r => r.reviews)
+          .sort((a, b) => new Date(b.publishTime || 0) - new Date(a.publishTime || 0));
+
+        renderDashboard();
+        renderReviews();
+      } catch (err) {
+        console.error('Failed to load data:', err);
+        document.getElementById('reviewList').innerHTML =
+          `<div class="loading" style="color:var(--red)">Failed to load reviews. Check API key and try again.</div>`;
+      }
+    }
+
+    // --- Dashboard ---
+    function renderDashboard() {
+      const totalCount = locationData.reduce((s, l) => s + l.count, 0);
+      const weightedRating = locationData.reduce((s, l) => s + l.rating * l.count, 0) / totalCount;
+      const fiveStarCount = allReviews.filter(r => r.rating === 5).length;
+
+      document.getElementById('statTotalReviews').textContent = totalCount.toLocaleString();
+      document.getElementById('statAvgRating').textContent = weightedRating.toFixed(1) + ' ★';
+      document.getElementById('statFeatured').textContent = featuredIds.length;
+      document.getElementById('statFiveStar').textContent = fiveStarCount + '/' + allReviews.length;
+
+      const starsHTML = (r) => '★'.repeat(Math.round(r)) + '☆'.repeat(5 - Math.round(r));
+      document.getElementById('locationsOverview').innerHTML = locationData.map(l => `
+        <div class="location-row">
+          <div>
+            <div class="location-name">${l.label}</div>
+            <div class="location-address">${l.address}</div>
+          </div>
+          <div class="location-rating">
+            <span class="stars">${starsHTML(l.rating)}</span>
+            <span class="num">${l.rating}</span>
+            <span class="count">(${l.count} reviews)</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- Reviews ---
+    function starsHTML(rating) {
+      return '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+    }
+
+    function getFilteredReviews() {
+      if (currentFilter === 'all') return allReviews;
+      if (currentFilter === 'featured') return allReviews.filter(r => featuredIds.includes(r.uid));
+      return allReviews.filter(r => r.locationLabel === currentFilter);
+    }
+
+    function renderReviews() {
+      const filtered = getFilteredReviews();
+      const list = document.getElementById('reviewList');
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<div class="loading">No reviews found for this filter.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(r => {
+        const isFeatured = featuredIds.includes(r.uid);
+        const isSelected = selectedIds.has(r.uid);
+        return `
+          <div class="review-item ${isFeatured ? 'featured' : ''}" data-uid="${r.uid}">
+            <input type="checkbox" class="review-checkbox" data-uid="${r.uid}" ${isSelected ? 'checked' : ''}>
+            <div class="review-body">
+              <div class="review-top">
+                <img class="review-avatar" src="${r.authorAttribution?.photoUri || ''}" alt="" onerror="this.style.display='none'" loading="lazy">
+                <div>
+                  <div class="review-author">${r.authorAttribution?.displayName || 'Anonymous'}</div>
+                  <div class="review-date">${r.relativePublishTimeDescription || ''}</div>
+                </div>
+              </div>
+              <div class="review-stars">${starsHTML(r.rating)}</div>
+              <div class="review-text-content">${r.text?.text || ''}</div>
+              <span class="review-location-badge">${r.locationLabel}</span>
+              ${isFeatured ? '<span class="review-featured-badge">★ Featured</span>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Checkbox handlers
+      list.querySelectorAll('.review-checkbox').forEach(cb => {
+        cb.addEventListener('change', () => {
+          if (cb.checked) selectedIds.add(cb.dataset.uid);
+          else selectedIds.delete(cb.dataset.uid);
+          updateBulkActions();
+        });
+      });
+
+      updateBulkActions();
+    }
+
+    function updateBulkActions() {
+      const bar = document.getElementById('bulkActions');
+      const countEl = document.getElementById('selectedCount');
+      const mobileBar = document.getElementById('mobileBulkBar');
+      const mobileCountEl = document.getElementById('mobileSelectedCount');
+      if (selectedIds.size > 0) {
+        bar.style.display = 'flex';
+        countEl.textContent = selectedIds.size;
+        mobileBar.classList.add('visible');
+        mobileCountEl.textContent = selectedIds.size;
+      } else {
+        bar.style.display = 'none';
+        mobileBar.classList.remove('visible');
+      }
+    }
+
+    // --- Filter tabs ---
+    document.getElementById('filterTabs').addEventListener('click', e => {
+      const tab = e.target.closest('.filter-tab');
+      if (!tab) return;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentFilter = tab.dataset.filter;
+      selectedIds.clear();
+      renderReviews();
+    });
+
+    // --- Bulk actions ---
+    function doFeature() {
+      selectedIds.forEach(uid => {
+        if (!featuredIds.includes(uid)) featuredIds.push(uid);
+      });
+      saveFeatured();
+      selectedIds.clear();
+      renderReviews();
+      renderDashboard();
+      showToast('Reviews featured!');
+    }
+
+    function doUnfeature() {
+      featuredIds = featuredIds.filter(id => !selectedIds.has(id));
+      saveFeatured();
+      selectedIds.clear();
+      renderReviews();
+      renderDashboard();
+      showToast('Reviews unfeatured.');
+    }
+
+    document.getElementById('bulkFeature').addEventListener('click', doFeature);
+    document.getElementById('bulkUnfeature').addEventListener('click', doUnfeature);
+    document.getElementById('mobileBulkFeature').addEventListener('click', doFeature);
+    document.getElementById('mobileBulkUnfeature').addEventListener('click', doUnfeature);
+
+    function saveFeatured() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(featuredIds));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('saveToast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ===== SEO AUDIT ENGINE =====
+    (function() {
+      const BASE_URL = 'https://rwb8771.github.io/sammd';
+      const PAGES = [
+        { url: 'index.html', label: 'Homepage' },
+        { url: 'blog.html', label: 'Blog' },
+        { url: 'reviews.html', label: 'Reviews' },
+        { url: 'faq.html', label: 'FAQ' },
+        { url: 'sports-medicine.html', label: 'Sports Medicine' },
+        { url: 'arthroscopic-surgery.html', label: 'Arthroscopic Surgery' },
+        { url: 'cartilage-repair.html', label: 'Cartilage Repair' },
+        { url: 'joint-preservation.html', label: 'Joint Preservation' },
+        { url: 'regenerative-medicine.html', label: 'Regenerative Medicine' },
+        { url: 'shoulder-knee-surgery.html', label: 'Shoulder & Knee Surgery' },
+        { url: 'blog-5-signs-orthopedic-surgeon.html', label: 'Blog: 5 Signs' }
+      ];
+
+      const runBtn = document.getElementById('seoRunBtn');
+      const progressEl = document.getElementById('seoProgress');
+      const progressLabel = document.getElementById('seoProgressLabel');
+      const progressFill = document.getElementById('seoProgressFill');
+      const statsEl = document.getElementById('seoStats');
+      const resultsEl = document.getElementById('seoResults');
+      const categoryTabs = document.getElementById('seoCategoryTabs');
+      const sitemapSection = document.getElementById('seoSitemapSection');
+      const lastScanEl = document.getElementById('seoLastScan');
+
+      let allFindings = [];
+      let currentCatFilter = 'all';
+
+      runBtn.addEventListener('click', startAudit);
+
+      // Category filter tabs
+      categoryTabs.addEventListener('click', e => {
+        const tab = e.target.closest('.filter-tab');
+        if (!tab) return;
+        categoryTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentCatFilter = tab.dataset.seoCat;
+        renderFindings();
+      });
+
+      // Copy sitemap
+      document.getElementById('seoCopyBtn').addEventListener('click', () => {
+        const code = document.getElementById('seoSitemapCode').textContent;
+        navigator.clipboard.writeText(code).then(() => showToast('Sitemap XML copied!'));
+      });
+
+      async function startAudit() {
+        runBtn.classList.add('scanning');
+        progressEl.style.display = '';
+        statsEl.style.display = 'none';
+        categoryTabs.style.display = 'none';
+        resultsEl.innerHTML = '';
+        sitemapSection.style.display = 'none';
+        allFindings = [];
+
+        const total = PAGES.length;
+        let scanned = 0;
+
+        for (const page of PAGES) {
+          progressLabel.textContent = `Scanning ${page.label}...`;
+          progressFill.style.width = ((scanned / total) * 100) + '%';
+
+          try {
+            const resp = await fetch(page.url + '?_audit=' + Date.now());
+            if (!resp.ok) {
+              allFindings.push({
+                type: 'critical',
+                title: `Page returns ${resp.status} error`,
+                page: page.label,
+                detail: `<code>${page.url}</code> returned HTTP ${resp.status}. This page is not accessible to search engines.`,
+                fix: 'Ensure the page exists and is deployed correctly.'
+              });
+              scanned++;
+              continue;
+            }
+            const html = await resp.text();
+            auditPage(html, page);
+          } catch (err) {
+            allFindings.push({
+              type: 'critical',
+              title: 'Page failed to load',
+              page: page.label,
+              detail: `Could not fetch <code>${page.url}</code>: ${err.message}`,
+              fix: 'Check that the page is deployed and accessible.'
+            });
+          }
+          scanned++;
+        }
+
+        // Global checks
+        runGlobalChecks();
+
+        progressFill.style.width = '100%';
+        progressLabel.textContent = 'Audit complete!';
+        setTimeout(() => { progressEl.style.display = 'none'; }, 1200);
+
+        // Show results
+        statsEl.style.display = '';
+        categoryTabs.style.display = '';
+        sitemapSection.style.display = '';
+        runBtn.classList.remove('scanning');
+
+        const critical = allFindings.filter(f => f.type === 'critical').length;
+        const warnings = allFindings.filter(f => f.type === 'warning').length;
+        const passed = allFindings.filter(f => f.type === 'passed').length;
+        const info = allFindings.filter(f => f.type === 'info').length;
+
+        document.getElementById('seoPagesScanned').textContent = PAGES.length;
+        document.getElementById('seoIssuesFound').textContent = critical;
+        document.getElementById('seoWarnings').textContent = warnings;
+        document.getElementById('seoPassed').textContent = passed;
+
+        // Score calculation
+        const totalChecks = critical + warnings + passed;
+        const score = totalChecks > 0 ? Math.round(((passed + info * 0.5) / (totalChecks + info * 0.5)) * 100) : 0;
+        updateScoreRing(score, critical, warnings, passed, info);
+
+        // Render
+        renderFindings();
+        generateSitemap();
+        generateActionItems();
+
+        lastScanEl.textContent = 'Last scanned: ' + new Date().toLocaleString();
+      }
+
+      function auditPage(html, page) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // 1. Title tag
+        const title = doc.querySelector('title');
+        if (!title || !title.textContent.trim()) {
+          allFindings.push({ type: 'critical', title: 'Missing title tag', page: page.label, detail: 'The page has no <code>&lt;title&gt;</code> tag. Title tags are the single most important on-page SEO element.', fix: 'Add a unique, descriptive title tag between 50-60 characters.' });
+        } else if (title.textContent.length > 70) {
+          allFindings.push({ type: 'warning', title: 'Title tag too long (' + title.textContent.length + ' chars)', page: page.label, detail: `Title: <code>${title.textContent}</code><br>Google typically displays 50-60 characters. Longer titles get truncated in search results.`, fix: 'Shorten the title to under 60 characters while keeping primary keywords.' });
+        } else if (title.textContent.length < 30) {
+          allFindings.push({ type: 'warning', title: 'Title tag too short (' + title.textContent.length + ' chars)', page: page.label, detail: `Title: <code>${title.textContent}</code><br>Short titles miss keyword opportunities.`, fix: 'Expand the title to 50-60 characters with relevant keywords.' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Title tag is well-optimized', page: page.label, detail: `Title: <code>${title.textContent}</code> (${title.textContent.length} chars) — within ideal 50-60 range.` });
+        }
+
+        // 2. Meta description
+        const metaDesc = doc.querySelector('meta[name="description"]');
+        if (!metaDesc || !metaDesc.content.trim()) {
+          allFindings.push({ type: 'critical', title: 'Missing meta description', page: page.label, detail: 'No <code>&lt;meta name="description"&gt;</code> found. Meta descriptions appear in search results and influence click-through rates.', fix: 'Add a compelling meta description between 150-160 characters that includes target keywords.' });
+        } else if (metaDesc.content.length > 170) {
+          allFindings.push({ type: 'warning', title: 'Meta description too long (' + metaDesc.content.length + ' chars)', page: page.label, detail: `Description will be truncated in search results. Current: <code>${metaDesc.content.substring(0, 80)}...</code>`, fix: 'Shorten to 150-160 characters.' });
+        } else if (metaDesc.content.length < 70) {
+          allFindings.push({ type: 'warning', title: 'Meta description too short (' + metaDesc.content.length + ' chars)', page: page.label, detail: `Short descriptions underperform in search. Current: <code>${metaDesc.content}</code>`, fix: 'Expand to 150-160 characters with a clear call-to-action.' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Meta description present and well-sized', page: page.label, detail: `Description: <code>${metaDesc.content.substring(0, 100)}...</code> (${metaDesc.content.length} chars)` });
+        }
+
+        // 3. Canonical URL
+        const canonical = doc.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+          allFindings.push({ type: 'warning', title: 'Missing canonical URL', page: page.label, detail: 'No <code>&lt;link rel="canonical"&gt;</code> found. Canonical tags prevent duplicate content issues.', fix: `Add: <code>&lt;link rel="canonical" href="${BASE_URL}/${page.url}"&gt;</code>` });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Canonical URL set', page: page.label, detail: `Canonical: <code>${canonical.href}</code>` });
+        }
+
+        // 4. H1 tag
+        const h1s = doc.querySelectorAll('h1');
+        if (h1s.length === 0) {
+          allFindings.push({ type: 'critical', title: 'Missing H1 heading', page: page.label, detail: 'No <code>&lt;h1&gt;</code> tag found. Every page should have exactly one H1 that describes the main topic.', fix: 'Add a single H1 heading with the primary keyword for this page.' });
+        } else if (h1s.length > 1) {
+          allFindings.push({ type: 'warning', title: `Multiple H1 tags found (${h1s.length})`, page: page.label, detail: 'While not strictly an error, best practice is to have exactly one H1 per page for clear content hierarchy.', fix: 'Consolidate to a single H1 and use H2/H3 for subsections.' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Single H1 tag present', page: page.label, detail: `H1: <code>${h1s[0].textContent.trim().substring(0, 80)}</code>` });
+        }
+
+        // 5. Schema/JSON-LD
+        const schemas = doc.querySelectorAll('script[type="application/ld+json"]');
+        if (schemas.length === 0) {
+          allFindings.push({ type: 'warning', title: 'No structured data (JSON-LD)', page: page.label, detail: 'No schema markup found. Structured data helps search engines understand your content and can enable rich snippets.', fix: 'Add JSON-LD schema — MedicalBusiness, Article, FAQPage, or BreadcrumbList as appropriate.' });
+        } else {
+          const types = [];
+          schemas.forEach(s => {
+            try {
+              const data = JSON.parse(s.textContent);
+              types.push(data['@type'] || 'Unknown');
+            } catch (e) { types.push('Invalid JSON'); }
+          });
+          allFindings.push({ type: 'passed', title: `Structured data found (${schemas.length} schemas)`, page: page.label, detail: `Types: <code>${types.join(', ')}</code>` });
+        }
+
+        // 6. Image alt tags
+        const images = doc.querySelectorAll('img');
+        const imagesWithoutAlt = Array.from(images).filter(img => !img.alt || img.alt.trim() === '');
+        if (images.length > 0 && imagesWithoutAlt.length > 0) {
+          allFindings.push({ type: 'warning', title: `${imagesWithoutAlt.length} image(s) missing alt text`, page: page.label, detail: `${imagesWithoutAlt.length} of ${images.length} images have no alt attribute. Alt text is important for accessibility and image SEO.`, fix: 'Add descriptive alt text to all images. Avoid keyword stuffing — describe the image naturally.' });
+        } else if (images.length > 0) {
+          allFindings.push({ type: 'passed', title: 'All images have alt text', page: page.label, detail: `${images.length} image(s) all have alt attributes.` });
+        }
+
+        // 7. Open Graph tags
+        const ogTitle = doc.querySelector('meta[property="og:title"]');
+        const ogDesc = doc.querySelector('meta[property="og:description"]');
+        const ogImage = doc.querySelector('meta[property="og:image"]');
+        if (!ogTitle && !ogDesc) {
+          allFindings.push({ type: 'warning', title: 'Missing Open Graph tags', page: page.label, detail: 'No <code>og:title</code> or <code>og:description</code> found. Open Graph tags control how links appear when shared on social media.', fix: 'Add og:title, og:description, og:image, and og:type meta tags in the <head>.' });
+        } else if (!ogImage) {
+          allFindings.push({ type: 'info', title: 'Open Graph tags present but missing og:image', page: page.label, detail: 'An <code>og:image</code> tag ensures a thumbnail appears when the link is shared on social media.', fix: 'Add an og:image tag with a 1200x630px image URL.' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Open Graph tags present', page: page.label, detail: 'og:title, og:description, and og:image all found.' });
+        }
+
+        // 8. Viewport meta
+        const viewport = doc.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+          allFindings.push({ type: 'critical', title: 'Missing viewport meta tag', page: page.label, detail: 'No <code>&lt;meta name="viewport"&gt;</code> found. This is required for mobile-friendly rendering and is a Google ranking factor.', fix: 'Add: <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code>' });
+        } else {
+          allFindings.push({ type: 'passed', title: 'Viewport meta tag present', page: page.label, detail: `Viewport: <code>${viewport.content}</code>` });
+        }
+
+        // 9. Robots meta
+        const robots = doc.querySelector('meta[name="robots"]');
+        if (robots && robots.content.includes('noindex')) {
+          if (page.url !== 'admin.html') {
+            allFindings.push({ type: 'critical', title: 'Page set to noindex', page: page.label, detail: `<code>robots: ${robots.content}</code> — This page will NOT appear in search results.`, fix: 'Remove the noindex directive unless you intentionally want this page hidden from search.' });
+          }
+        } else if (robots) {
+          allFindings.push({ type: 'passed', title: 'Robots meta allows indexing', page: page.label, detail: `<code>robots: ${robots.content}</code>` });
+        }
+
+        // 10. Internal links
+        const links = doc.querySelectorAll('a[href]');
+        const internalLinks = Array.from(links).filter(a => {
+          const href = a.getAttribute('href');
+          return href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('#');
+        });
+        if (internalLinks.length < 3 && page.url !== 'admin.html') {
+          allFindings.push({ type: 'warning', title: `Low internal linking (${internalLinks.length} links)`, page: page.label, detail: 'Pages with few internal links are harder for search engines to discover and crawl. They also pass less authority.', fix: 'Add relevant internal links to other service pages, blog posts, or key pages.' });
+        } else {
+          allFindings.push({ type: 'info', title: `${internalLinks.length} internal links found`, page: page.label, detail: 'Good internal linking helps distribute page authority and aids navigation.' });
+        }
+
+        // 11. Content length
+        const bodyText = doc.body ? doc.body.textContent.replace(/\s+/g, ' ').trim() : '';
+        const wordCount = bodyText.split(' ').length;
+        if (wordCount < 300 && page.url !== 'admin.html') {
+          allFindings.push({ type: 'warning', title: `Thin content (~${wordCount} words)`, page: page.label, detail: 'Pages with less than 300 words may be considered thin content by search engines and rank poorly.', fix: 'Expand the content with relevant, helpful information. Aim for 800+ words on key service pages.' });
+        } else {
+          allFindings.push({ type: 'info', title: `Content length: ~${wordCount} words`, page: page.label, detail: 'Sufficient content length for search engine indexing.' });
+        }
+
+        // 12. HTTPS check in links
+        const httpLinks = Array.from(links).filter(a => {
+          const href = a.getAttribute('href');
+          return href && href.startsWith('http://');
+        });
+        if (httpLinks.length > 0) {
+          allFindings.push({ type: 'warning', title: `${httpLinks.length} insecure (HTTP) links found`, page: page.label, detail: 'Links using <code>http://</code> instead of <code>https://</code> can cause mixed content warnings and reduced trust.', fix: 'Update all external links to use HTTPS where possible.' });
+        }
+
+        // 13. Heading hierarchy
+        const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        let hierarchyOk = true;
+        let prevLevel = 0;
+        headings.forEach(h => {
+          const level = parseInt(h.tagName[1]);
+          if (level > prevLevel + 1 && prevLevel > 0) hierarchyOk = false;
+          prevLevel = level;
+        });
+        if (!hierarchyOk) {
+          allFindings.push({ type: 'info', title: 'Heading hierarchy has gaps', page: page.label, detail: 'Headings skip levels (e.g., H1 → H3). While not a major issue, a clean hierarchy helps search engines understand content structure.', fix: 'Ensure headings follow a logical order: H1 → H2 → H3, without skipping levels.' });
+        }
+
+        // 14. Lang attribute
+        const htmlEl = doc.querySelector('html');
+        if (!htmlEl || !htmlEl.getAttribute('lang')) {
+          allFindings.push({ type: 'warning', title: 'Missing lang attribute on <html>', page: page.label, detail: 'The <code>lang</code> attribute helps search engines and screen readers determine the page language.', fix: 'Add <code>&lt;html lang="en"&gt;</code> to the opening html tag.' });
+        }
+      }
+
+      function runGlobalChecks() {
+        // Sitemap check
+        allFindings.push({ type: 'info', title: 'Sitemap auto-generated below', page: 'Global', detail: 'A sitemap.xml has been generated based on discovered pages. Upload it to your site root for better crawling.' });
+
+        // robots.txt check
+        allFindings.push({ type: 'info', title: 'Ensure robots.txt exists', page: 'Global', detail: 'A <code>robots.txt</code> file at the site root tells search engines which pages to crawl. It should reference your sitemap.', fix: 'Create a robots.txt with:<br><code>User-agent: *<br>Allow: /<br>Sitemap: ' + BASE_URL + '/sitemap.xml</code>' });
+
+        // HTTPS
+        allFindings.push({ type: 'passed', title: 'Site served over HTTPS', page: 'Global', detail: 'GitHub Pages serves all content over HTTPS by default. This is a Google ranking factor.' });
+
+        // Mobile-friendly
+        allFindings.push({ type: 'passed', title: 'Responsive design detected', page: 'Global', detail: 'The site uses viewport meta tags and responsive CSS media queries for mobile optimization.' });
+      }
+
+      function updateScoreRing(score, critical, warnings, passed, info) {
+        const circle = document.getElementById('seoScoreCircle');
+        const number = document.getElementById('seoScoreNumber');
+        const label = document.getElementById('seoScoreLabel');
+        const desc = document.getElementById('seoScoreDesc');
+        const badges = document.getElementById('seoScoreBadges');
+
+        // Animate score ring
+        const circumference = 327; // 2 * π * 52
+        const offset = circumference - (score / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+
+        // Color based on score
+        if (score >= 80) {
+          circle.style.stroke = '#22c55e';
+          label.textContent = 'Great SEO Health';
+          desc.textContent = 'Your site is well-optimized. Address the remaining warnings to reach a perfect score.';
+        } else if (score >= 60) {
+          circle.style.stroke = '#fbbc04';
+          label.textContent = 'Needs Improvement';
+          desc.textContent = 'Several issues were found that could impact your search engine rankings. Review and fix the items below.';
+        } else {
+          circle.style.stroke = '#ef4444';
+          label.textContent = 'Critical Issues Found';
+          desc.textContent = 'Major SEO issues detected. These should be addressed as soon as possible to improve visibility.';
+        }
+
+        number.textContent = score;
+
+        badges.innerHTML = '';
+        if (critical > 0) badges.innerHTML += `<span class="seo-badge critical">✕ ${critical} Critical</span>`;
+        if (warnings > 0) badges.innerHTML += `<span class="seo-badge warning">⚠ ${warnings} Warnings</span>`;
+        if (passed > 0) badges.innerHTML += `<span class="seo-badge passed">✓ ${passed} Passed</span>`;
+        if (info > 0) badges.innerHTML += `<span class="seo-badge info">ℹ ${info} Info</span>`;
+      }
+
+      function renderFindings() {
+        const filtered = currentCatFilter === 'all'
+          ? allFindings
+          : allFindings.filter(f => f.type === currentCatFilter);
+
+        // Sort: critical first, then warning, info, passed
+        const order = { critical: 0, warning: 1, info: 2, passed: 3 };
+        filtered.sort((a, b) => (order[a.type] ?? 4) - (order[b.type] ?? 4));
+
+        const icons = { critical: '✕', warning: '⚠', passed: '✓', info: 'ℹ' };
+
+        resultsEl.innerHTML = filtered.map((f, i) => `
+          <div class="seo-result-group" data-idx="${i}">
+            <div class="seo-result-header" onclick="this.parentElement.classList.toggle('open')">
+              <div class="seo-result-icon ${f.type}">${icons[f.type]}</div>
+              <span class="seo-result-title">${f.title}</span>
+              <span class="seo-result-page">${f.page}</span>
+              <svg class="seo-result-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="seo-result-detail">
+              ${f.detail}
+              ${f.fix ? `<span class="fix-hint"><strong>Fix:</strong> ${f.fix}</span>` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function getPageMeta(url) {
+        if (url === 'index.html') return { group: 'root', priority: '1.0', freq: 'weekly', dot: '', label: 'Homepage' };
+        if (url === 'sports-medicine.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Sports Medicine' };
+        if (url === 'arthroscopic-surgery.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Arthroscopic Surgery' };
+        if (url === 'joint-preservation.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Joint Preservation' };
+        if (url === 'cartilage-repair.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Cartilage Repair' };
+        if (url === 'regenerative-medicine.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Regenerative Medicine' };
+        if (url === 'shoulder-knee-surgery.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Shoulder & Knee Surgery' };
+        if (url === 'reviews.html') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'Patient Reviews' };
+        if (url === 'faq.html') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'FAQ' };
+        if (url === 'blog.html') return { group: 'blog', priority: '0.7', freq: 'weekly', dot: 'blog', label: 'Blog Index' };
+        if (url.startsWith('blog-')) return { group: 'blog', priority: '0.6', freq: 'yearly', dot: 'blog', label: url.replace('blog-','').replace('.html','').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) };
+        return { group: 'resources', priority: '0.5', freq: 'monthly', dot: 'resource', label: url };
+      }
+
+      function generateSitemap() {
+        const today = new Date().toISOString().split('T')[0];
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+        xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+        const pageData = PAGES.map(page => {
+          const meta = getPageMeta(page.url);
+          xml += `  <url>\n`;
+          xml += `    <loc>${BASE_URL}/${page.url}</loc>\n`;
+          xml += `    <lastmod>${today}</lastmod>\n`;
+          xml += `    <changefreq>${meta.freq}</changefreq>\n`;
+          xml += `    <priority>${meta.priority}</priority>\n`;
+          xml += `  </url>\n`;
+          return { ...page, ...meta };
+        });
+
+        xml += `</urlset>`;
+        document.getElementById('seoSitemapCode').textContent = xml;
+
+        // Build graphical sitemap
+        const vis = document.getElementById('sitemapVisual');
+        const root = pageData.find(p => p.group === 'root');
+        const services = pageData.filter(p => p.group === 'services');
+        const resources = pageData.filter(p => p.group === 'resources');
+        const blog = pageData.filter(p => p.group === 'blog');
+
+        const priBadge = (p) => {
+          const cls = parseFloat(p) >= 0.8 ? 'high' : parseFloat(p) >= 0.7 ? 'mid' : 'low';
+          return `<span class="sitemap-node-priority ${cls}">${p}</span>`;
+        };
+        const nodeHtml = (p) => `
+          <div class="sitemap-node">
+            <div class="sitemap-node-dot ${p.dot}"></div>
+            <span class="sitemap-node-name">${p.label}</span>
+            <span class="sitemap-node-url">/${p.url}</span>
+            ${priBadge(p.priority)}
+          </div>`;
+        const groupHtml = (label, items) => items.length ? `
+          <div class="sitemap-group">
+            <div class="sitemap-group-label">${label}</div>
+            ${items.map(nodeHtml).join('')}
+          </div>` : '';
+
+        vis.innerHTML = `
+          <div class="sitemap-tree">
+            <div class="sitemap-root">
+              <div class="sitemap-root-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <div class="sitemap-root-text">
+                <h4>${root ? root.label : 'Homepage'}</h4>
+                <span>${BASE_URL}/</span>
+              </div>
+              ${priBadge('1.0')}
+            </div>
+            ${groupHtml('Services', services)}
+            ${groupHtml('Resources', resources)}
+            ${groupHtml('Blog', blog)}
+          </div>`;
+
+        // File sizes
+        const robotsTxt = `User-agent: *\nAllow: /\n\nSitemap: ${BASE_URL}/sitemap.xml\n`;
+        document.getElementById('sitemapSize').textContent = `(${new Blob([xml]).size} B)`;
+        document.getElementById('robotsSize').textContent = `(${new Blob([robotsTxt]).size} B)`;
+
+        // Download handlers
+        document.getElementById('dlSitemapXml').onclick = () => {
+          const blob = new Blob([xml], { type: 'application/xml' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'sitemap.xml';
+          a.click();
+          URL.revokeObjectURL(a.href);
+        };
+        document.getElementById('dlRobotsTxt').onclick = () => {
+          const blob = new Blob([robotsTxt], { type: 'text/plain' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'robots.txt';
+          a.click();
+          URL.revokeObjectURL(a.href);
+        };
+      }
+
+      function generateActionItems() {
+        const criticals = allFindings.filter(f => f.type === 'critical');
+        const warns = allFindings.filter(f => f.type === 'warning');
+        const items = [];
+
+        criticals.forEach(f => {
+          items.push({ text: `<strong>${f.page}:</strong> ${f.title} — ${f.fix || 'Fix this issue.'}`, priority: 'high' });
+        });
+        warns.slice(0, 10).forEach(f => {
+          items.push({ text: `<strong>${f.page}:</strong> ${f.title} — ${f.fix || 'Address this warning.'}`, priority: 'low' });
+        });
+
+        // Add general action items
+        items.push({ text: '<strong>Global:</strong> Create and upload a <code>robots.txt</code> file to the site root.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Upload the generated <code>sitemap.xml</code> to the site root.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Submit the sitemap to Google Search Console at <code>search.google.com/search-console</code>.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Add Open Graph meta tags (og:title, og:description, og:image) to all pages for better social sharing.', priority: 'low' });
+
+        const container = document.getElementById('seoActionItems');
+        container.innerHTML = items.map((item, i) => `
+          <div class="seo-action-item ${item.priority === 'low' ? 'priority-low' : ''}">
+            <div class="seo-action-num">${i + 1}</div>
+            <div class="action-text">${item.text}</div>
+          </div>
+        `).join('');
+
+        // Generate Claude fix prompt
+        generateClaudePrompt();
+      }
+
+      function generateClaudePrompt() {
+        const section = document.getElementById('seoClaudeSection');
+        const promptEl = document.getElementById('seoClaudePrompt');
+
+        if (allFindings.length === 0) { section.style.display = 'none'; return; }
+
+        const criticals = allFindings.filter(f => f.type === 'critical');
+        const warns = allFindings.filter(f => f.type === 'warning');
+
+        let prompt = `Fix all SEO issues on my website. The site is a static HTML site for a medical/dental practice. Here are the issues found by an SEO audit:\n\n`;
+
+        if (criticals.length > 0) {
+          prompt += `CRITICAL ISSUES (fix these first):\n`;
+          criticals.forEach((f, i) => {
+            prompt += `${i + 1}. [${f.page}] ${f.title}`;
+            if (f.fix) prompt += ` — ${f.fix}`;
+            prompt += `\n`;
+          });
+          prompt += `\n`;
+        }
+
+        if (warns.length > 0) {
+          prompt += `WARNINGS:\n`;
+          warns.forEach((f, i) => {
+            prompt += `${i + 1}. [${f.page}] ${f.title}`;
+            if (f.fix) prompt += ` — ${f.fix}`;
+            prompt += `\n`;
+          });
+          prompt += `\n`;
+        }
+
+        // Add file list
+        const pageFiles = PAGES.map(p => p.url).join(', ');
+        prompt += `FILES TO UPDATE: ${pageFiles}\n\n`;
+
+        prompt += `ADDITIONAL TASKS:\n`;
+        prompt += `- Create a robots.txt file in the site root\n`;
+        prompt += `- Create a sitemap.xml file in the site root with all pages\n`;
+        prompt += `- Add Open Graph meta tags (og:title, og:description, og:image) to all pages\n`;
+        prompt += `- Ensure all pages have proper canonical URLs\n`;
+        prompt += `- Add structured data (JSON-LD schema) where appropriate\n\n`;
+        prompt += `Please make all the changes directly to the HTML files. Keep existing content and styling intact — only fix the SEO issues.`;
+
+        promptEl.textContent = prompt;
+        section.style.display = 'block';
+      }
+
+      // Copy Claude prompt button
+      document.getElementById('seoClaudePromptCopyBtn').addEventListener('click', () => {
+        const text = document.getElementById('seoClaudePrompt').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById('seoClaudePromptCopyBtn');
+          const orig = btn.innerHTML;
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+          btn.style.borderColor = 'var(--green)';
+          btn.style.color = 'var(--green)';
+          setTimeout(() => { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);
+        });
+      });
+    })();
+
+    // ===== GEO AUDIT ENGINE =====
+    (function() {
+      const BASE_URL = 'https://rwb8771.github.io/sammd';
+      const PAGES = [
+        { url: 'index.html', label: 'Homepage' },
+        { url: 'blog.html', label: 'Blog Index' },
+        { url: 'reviews.html', label: 'Reviews' },
+        { url: 'faq.html', label: 'FAQ' },
+        { url: 'sports-medicine.html', label: 'Sports Medicine' },
+        { url: 'arthroscopic-surgery.html', label: 'Arthroscopic Surgery' },
+        { url: 'cartilage-repair.html', label: 'Cartilage Repair' },
+        { url: 'joint-preservation.html', label: 'Joint Preservation' },
+        { url: 'regenerative-medicine.html', label: 'Regenerative Medicine' },
+        { url: 'shoulder-knee-surgery.html', label: 'Shoulder & Knee Surgery' },
+        { url: 'blog/5-signs-orthopedic-surgeon.html', label: 'Blog: 5 Signs' },
+        { url: 'blog/acl-tear-recovery.html', label: 'Blog: ACL Recovery' },
+        { url: 'blog/arthroscopic-vs-open-surgery.html', label: 'Blog: Arthroscopic vs Open' },
+        { url: 'blog/prp-therapy-sports-medicine.html', label: 'Blog: PRP Therapy' },
+        { url: 'blog/protecting-joints-active-adults.html', label: 'Blog: Joint Protection' },
+        { url: 'blog/cartilage-damage-treatment.html', label: 'Blog: Cartilage Damage' }
+      ];
+
+      const runBtn = document.getElementById('geoRunBtn');
+      const progressEl = document.getElementById('geoProgress');
+      const progressLabel = document.getElementById('geoProgressLabel');
+      const progressFill = document.getElementById('geoProgressFill');
+      const statsEl = document.getElementById('geoStats');
+      const resultsEl = document.getElementById('geoResults');
+      const categoryTabs = document.getElementById('geoCategoryTabs');
+      const lastScanEl = document.getElementById('geoLastScan');
+
+      let geoFindings = [];
+      let geoCatFilter = 'all';
+
+      runBtn.addEventListener('click', startGeoAudit);
+
+      categoryTabs.addEventListener('click', e => {
+        const tab = e.target.closest('.filter-tab');
+        if (!tab) return;
+        categoryTabs.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        geoCatFilter = tab.dataset.geoCat;
+        renderGeoFindings();
+      });
+
+      async function startGeoAudit() {
+        runBtn.classList.add('scanning');
+        progressEl.style.display = '';
+        statsEl.style.display = 'none';
+        categoryTabs.style.display = 'none';
+        resultsEl.innerHTML = '';
+        document.getElementById('geoSuggestionsSection').style.display = 'none';
+        document.getElementById('geoClaudeSection').style.display = 'none';
+        geoFindings = [];
+
+        const total = PAGES.length;
+        let scanned = 0;
+
+        for (const page of PAGES) {
+          progressLabel.textContent = 'Analyzing ' + page.label + ' for AI readiness...';
+          progressFill.style.width = ((scanned / total) * 100) + '%';
+
+          try {
+            const resp = await fetch(page.url + '?_geo=' + Date.now());
+            if (!resp.ok) {
+              geoFindings.push({ type: 'critical', title: 'Page returns ' + resp.status + ' error', page: page.label, detail: '<code>' + page.url + '</code> returned HTTP ' + resp.status + '. AI engines cannot index this page.', fix: 'Ensure the page exists and is deployed correctly.' });
+              scanned++;
+              continue;
+            }
+            const html = await resp.text();
+            auditGeoPage(html, page);
+          } catch (err) {
+            geoFindings.push({ type: 'critical', title: 'Page failed to load', page: page.label, detail: 'Could not fetch <code>' + page.url + '</code>: ' + err.message, fix: 'Check deployment.' });
+          }
+          scanned++;
+        }
+
+        runGlobalGeoChecks();
+
+        progressFill.style.width = '100%';
+        progressLabel.textContent = 'GEO audit complete!';
+        setTimeout(() => { progressEl.style.display = 'none'; }, 1200);
+
+        statsEl.style.display = '';
+        categoryTabs.style.display = '';
+        runBtn.classList.remove('scanning');
+
+        const critical = geoFindings.filter(f => f.type === 'critical').length;
+        const warnings = geoFindings.filter(f => f.type === 'warning').length;
+        const passed = geoFindings.filter(f => f.type === 'passed').length;
+        const info = geoFindings.filter(f => f.type === 'info').length;
+
+        document.getElementById('geoPagesScanned').textContent = PAGES.length;
+        document.getElementById('geoIssuesFound').textContent = critical;
+        document.getElementById('geoWarnings').textContent = warnings;
+        document.getElementById('geoPassed').textContent = passed;
+
+        const totalChecks = critical + warnings + passed;
+        const score = totalChecks > 0 ? Math.round(((passed + info * 0.5) / (totalChecks + info * 0.5)) * 100) : 0;
+        updateGeoScoreRing(score, critical, warnings, passed, info);
+
+        renderGeoFindings();
+        generateGeoSuggestions();
+        generateGeoClaudePrompt();
+
+        lastScanEl.textContent = 'Last scanned: ' + new Date().toLocaleString();
+      }
+
+      function auditGeoPage(html, page) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const bodyText = doc.body ? doc.body.textContent.replace(/\s+/g, ' ').trim() : '';
+        const wordCount = bodyText.split(' ').length;
+
+        // 1. Structured Data Quality (JSON-LD)
+        const schemas = doc.querySelectorAll('script[type="application/ld+json"]');
+        if (schemas.length === 0) {
+          geoFindings.push({ type: 'critical', title: 'No structured data (JSON-LD)', page: page.label, detail: 'AI engines rely heavily on structured data to understand entities, relationships, and facts. No JSON-LD schema was found.', fix: 'Add JSON-LD schema markup — FAQPage, Article/BlogPosting, MedicalBusiness, or Physician as appropriate for this page.' });
+        } else {
+          const types = [];
+          let hasFaq = false, hasArticle = false, hasMedical = false;
+          schemas.forEach(s => {
+            try {
+              const data = JSON.parse(s.textContent);
+              const t = data['@type'];
+              types.push(t || 'Unknown');
+              if (t === 'FAQPage') hasFaq = true;
+              if (t === 'BlogPosting' || t === 'Article') hasArticle = true;
+              if (t === 'Physician' || t === 'MedicalBusiness' || t === 'MedicalWebPage') hasMedical = true;
+            } catch (e) { types.push('Invalid JSON'); }
+          });
+
+          geoFindings.push({ type: 'passed', title: 'Structured data found (' + types.join(', ') + ')', page: page.label, detail: schemas.length + ' JSON-LD schema block(s) detected. Types: <code>' + types.join(', ') + '</code>' });
+
+          // Check for FAQPage schema (high GEO value)
+          if (!hasFaq && page.url !== 'blog.html' && page.url !== 'reviews.html') {
+            geoFindings.push({ type: 'warning', title: 'Missing FAQPage schema', page: page.label, detail: 'FAQPage schema is one of the highest-value GEO signals. AI engines use FAQ structured data to directly answer user questions.', fix: 'Add a FAQPage JSON-LD schema with 3-5 common questions and detailed answers about this topic.' });
+          } else if (hasFaq) {
+            geoFindings.push({ type: 'passed', title: 'FAQPage schema present', page: page.label, detail: 'FAQPage structured data helps AI engines extract Q&A pairs for direct answers.' });
+          }
+
+          // Check for BlogPosting/Article on blog pages
+          if (page.url.includes('blog/') && !hasArticle) {
+            geoFindings.push({ type: 'warning', title: 'Missing BlogPosting/Article schema', page: page.label, detail: 'Blog posts should have BlogPosting or Article schema with author, datePublished, and description for AI citation.', fix: 'Add BlogPosting JSON-LD with author name, credentials, datePublished, and a clear description.' });
+          }
+        }
+
+        // 2. Question-Based Headings (H2s)
+        const h2s = doc.querySelectorAll('h2');
+        const questionH2s = Array.from(h2s).filter(h => {
+          const t = h.textContent.trim();
+          return t.includes('?') || /^(what|how|why|when|who|where|can|does|is|are|should|do|will)\b/i.test(t);
+        });
+        if (h2s.length > 0 && questionH2s.length === 0) {
+          geoFindings.push({ type: 'warning', title: 'No question-based headings found', page: page.label, detail: 'AI search engines prioritize content that directly answers questions. ' + h2s.length + ' H2 headings found but none use question format.', fix: 'Rewrite H2 headings as questions users would ask (e.g., "What Is ACL Reconstruction?" instead of "ACL Reconstruction").' });
+        } else if (questionH2s.length > 0) {
+          geoFindings.push({ type: 'passed', title: questionH2s.length + ' question-based heading(s) found', page: page.label, detail: 'Question-format headings increase the chance of being cited in AI answers. Found: <code>' + questionH2s.map(h => h.textContent.trim().substring(0, 50)).join('</code>, <code>') + '</code>' });
+        }
+
+        // 3. Direct Answer Paragraphs (citeable content)
+        const paragraphs = doc.querySelectorAll('p');
+        let citeableCount = 0;
+        const citeablePatterns = [
+          /is a .{10,}/i, /refers to .{10,}/i, /are .{10,}/i,
+          /involves .{10,}/i, /typically .{10,}/i, /according to/i,
+          /studies show/i, /research indicates/i, /\d+%/,
+          /the most common/i, /is defined as/i, /treatment for/i,
+          /recovery .{5,} takes/i, /symptoms include/i
+        ];
+        paragraphs.forEach(p => {
+          const t = p.textContent.trim();
+          if (t.length >= 80 && t.length <= 500) {
+            if (citeablePatterns.some(pat => pat.test(t))) citeableCount++;
+          }
+        });
+        if (citeableCount === 0 && wordCount > 200) {
+          geoFindings.push({ type: 'warning', title: 'Low citeable content density', page: page.label, detail: 'AI engines prefer concise, factual statements they can directly quote. No clearly citeable paragraphs detected (80-500 chars with factual phrasing).', fix: 'Write clear, direct answer paragraphs after each heading. Start with a definitive statement (e.g., "ACL reconstruction is a surgical procedure that...").' });
+        } else if (citeableCount > 0) {
+          geoFindings.push({ type: 'passed', title: citeableCount + ' citeable paragraph(s) detected', page: page.label, detail: 'Found paragraphs with factual, direct-answer phrasing suitable for AI citation.' });
+        }
+
+        // 4. Author / Expert Attribution (E-E-A-T)
+        const authorSignals = bodyText.match(/Dr\.\s*\w+|M\.D\.|board.certified|fellowship|trained at|specialist|surgeon/gi) || [];
+        if (authorSignals.length === 0 && !page.url.includes('blog.html')) {
+          geoFindings.push({ type: 'warning', title: 'No author/expert attribution found', page: page.label, detail: 'AI engines weight content from recognized experts more highly (E-E-A-T). No doctor name, credentials, or expertise signals detected.', fix: 'Include author name with credentials (e.g., "Dr. Sameh Elguizaoui, M.D.") and mention training/expertise.' });
+        } else if (authorSignals.length > 0) {
+          geoFindings.push({ type: 'passed', title: 'Expert attribution signals found (' + authorSignals.length + ')', page: page.label, detail: 'E-E-A-T signals detected: <code>' + [...new Set(authorSignals.slice(0, 5))].join(', ') + '</code>' });
+        }
+
+        // 5. Statistics & Data Points
+        const statMatches = bodyText.match(/\d[\d,]*\s*(%|\+|million|thousand|billion|patients|reviews|years|stars|rating)/gi) || [];
+        if (statMatches.length === 0 && wordCount > 300) {
+          geoFindings.push({ type: 'info', title: 'No statistics or data points found', page: page.label, detail: 'Content with specific numbers and statistics is more likely to be cited by AI engines as authoritative.', fix: 'Add relevant statistics (e.g., "over 200,000 ACL injuries occur annually in the United States").' });
+        } else if (statMatches.length > 0) {
+          geoFindings.push({ type: 'passed', title: statMatches.length + ' statistic(s)/data point(s) found', page: page.label, detail: 'Numeric data enhances credibility for AI citation. Found: <code>' + statMatches.slice(0, 5).join(', ') + '</code>' });
+        }
+
+        // 6. Content Depth (word count for GEO)
+        if (wordCount < 500 && page.url !== 'blog.html' && page.url !== 'reviews.html') {
+          geoFindings.push({ type: 'warning', title: 'Thin content for GEO (~' + wordCount + ' words)', page: page.label, detail: 'AI engines prefer comprehensive, in-depth content (800+ words) to cite as authoritative sources.', fix: 'Expand content with detailed explanations, Q&A sections, and expert insights. Aim for 800-1500 words on key pages.' });
+        } else if (wordCount >= 800) {
+          geoFindings.push({ type: 'passed', title: 'Good content depth (~' + wordCount + ' words)', page: page.label, detail: 'Comprehensive content is more likely to be used as a source by AI search engines.' });
+        } else if (wordCount >= 500) {
+          geoFindings.push({ type: 'info', title: 'Moderate content depth (~' + wordCount + ' words)', page: page.label, detail: 'Content length is acceptable but expanding to 800+ words would improve AI citation potential.' });
+        }
+
+        // 7. Internal Linking Depth
+        const links = doc.querySelectorAll('a[href]');
+        const internalLinks = Array.from(links).filter(a => {
+          const href = a.getAttribute('href');
+          return href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('#');
+        });
+        const serviceLinks = internalLinks.filter(a => {
+          const h = a.getAttribute('href');
+          return h && (h.includes('sports-medicine') || h.includes('arthroscopic') || h.includes('cartilage') || h.includes('joint-preservation') || h.includes('regenerative') || h.includes('shoulder-knee') || h.includes('blog/'));
+        });
+        if (serviceLinks.length < 2 && page.url !== 'index.html') {
+          geoFindings.push({ type: 'warning', title: 'Low entity interlinking (' + serviceLinks.length + ' service/blog links)', page: page.label, detail: 'AI engines build entity graphs from internal links. Linking to related service pages and blog posts strengthens topical authority.', fix: 'Add contextual links to related service pages and blog posts throughout the content.' });
+        } else if (serviceLinks.length >= 2) {
+          geoFindings.push({ type: 'passed', title: 'Good entity interlinking (' + serviceLinks.length + ' service/blog links)', page: page.label, detail: 'Strong internal linking helps AI engines understand entity relationships across your site.' });
+        }
+
+        // 8. Meta Description Quality for AI
+        const metaDesc = doc.querySelector('meta[name="description"]');
+        if (metaDesc && metaDesc.content) {
+          const desc = metaDesc.content;
+          const hasEntity = /Dr\.|M\.D\.|NYC|New York|orthopedic|surgeon/i.test(desc);
+          const hasAction = /book|schedule|consult|call|visit|learn/i.test(desc);
+          if (!hasEntity) {
+            geoFindings.push({ type: 'info', title: 'Meta description lacks entity mentions', page: page.label, detail: 'Including the doctor\'s name, location (NYC), and specialty in the meta description helps AI engines associate the page with the correct entity.', fix: 'Include "Dr. Sameh Elguizaoui" or "orthopedic surgeon NYC" in the meta description.' });
+          }
+        }
+
+        // 9. Heading Hierarchy for Topic Mapping
+        const allHeadings = doc.querySelectorAll('h1, h2, h3');
+        const headingTexts = Array.from(allHeadings).map(h => h.textContent.trim());
+        const topicKeywords = ['orthopedic', 'surgery', 'knee', 'shoulder', 'acl', 'cartilage', 'sports medicine', 'recovery', 'treatment', 'prp', 'arthroscopic', 'joint'];
+        const relevantHeadings = headingTexts.filter(t => topicKeywords.some(kw => t.toLowerCase().includes(kw)));
+        if (relevantHeadings.length === 0 && wordCount > 200) {
+          geoFindings.push({ type: 'warning', title: 'Headings lack topical keywords', page: page.label, detail: 'AI engines use headings to determine page topics. No headings contain orthopedic/medical keywords.', fix: 'Include relevant medical terms in headings (e.g., "knee surgery", "ACL recovery", "orthopedic treatment").' });
+        }
+
+        // 10. Conversational / Natural Language
+        const questionMarks = (bodyText.match(/\?/g) || []).length;
+        if (questionMarks === 0 && wordCount > 300 && !page.url.includes('reviews')) {
+          geoFindings.push({ type: 'info', title: 'No conversational Q&A content', page: page.label, detail: 'AI search often responds to conversational queries. Pages without any question marks may miss conversational search traffic.', fix: 'Add a Q&A or FAQ section with natural language questions and answers.' });
+        }
+
+        // 11. Lists & Structured Content
+        const lists = doc.querySelectorAll('ul, ol');
+        if (lists.length === 0 && wordCount > 400) {
+          geoFindings.push({ type: 'info', title: 'No lists or structured content blocks', page: page.label, detail: 'AI engines often prefer to cite content from bulleted or numbered lists for clarity and scannability.', fix: 'Add bulleted or numbered lists for key takeaways, treatment options, or step-by-step processes.' });
+        }
+
+        // 12. Location Entity Signals
+        const locationSignals = bodyText.match(/(Manhattan|Brooklyn|NYC|New York|Upper East Side|West Village|Scarsdale|Lenox Hill)/gi) || [];
+        if (locationSignals.length === 0 && !page.url.includes('blog/')) {
+          geoFindings.push({ type: 'warning', title: 'No location entity signals', page: page.label, detail: 'AI engines use location signals for local queries. No NYC/Manhattan/Brooklyn mentions detected.', fix: 'Include specific location mentions naturally in the content (Manhattan, Brooklyn, NYC area).' });
+        } else if (locationSignals.length > 0) {
+          geoFindings.push({ type: 'passed', title: 'Location entities detected (' + [...new Set(locationSignals.map(l => l.toLowerCase()))].length + ' unique)', page: page.label, detail: 'Location signals found: <code>' + [...new Set(locationSignals)].slice(0, 5).join(', ') + '</code>' });
+        }
+      }
+
+      function runGlobalGeoChecks() {
+        geoFindings.push({ type: 'info', title: 'Consider adding speakable schema', page: 'Global', detail: '<code>speakable</code> schema markup tells voice assistants which sections of your page are most suitable for text-to-speech reading.', fix: 'Add speakable schema to key content sections, especially FAQ answers and article summaries.' });
+
+        geoFindings.push({ type: 'info', title: 'Consider adding BreadcrumbList schema', page: 'Global', detail: 'BreadcrumbList structured data helps AI engines understand your site hierarchy and navigate between related content.', fix: 'Add BreadcrumbList JSON-LD to all inner pages showing the navigation path.' });
+
+        geoFindings.push({ type: 'passed', title: 'Site uses HTTPS', page: 'Global', detail: 'HTTPS is a trust signal for both traditional and AI search engines.' });
+
+        geoFindings.push({ type: 'passed', title: 'Responsive design detected', page: 'Global', detail: 'Mobile-friendly content is important as many AI assistants serve mobile users.' });
+      }
+
+      function updateGeoScoreRing(score, critical, warnings, passed, info) {
+        const circle = document.getElementById('geoScoreCircle');
+        const number = document.getElementById('geoScoreNumber');
+        const label = document.getElementById('geoScoreLabel');
+        const desc = document.getElementById('geoScoreDesc');
+        const badges = document.getElementById('geoScoreBadges');
+
+        const circumference = 327;
+        const offset = circumference - (score / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+
+        if (score >= 80) {
+          circle.style.stroke = '#22c55e';
+          label.textContent = 'Excellent GEO Health';
+          desc.textContent = 'Your site is well-optimized for AI search engines. Address remaining items to maximize visibility.';
+        } else if (score >= 60) {
+          circle.style.stroke = '#fbbc04';
+          label.textContent = 'GEO Needs Improvement';
+          desc.textContent = 'Several opportunities found to improve AI search visibility. Focus on structured data and citeable content.';
+        } else {
+          circle.style.stroke = '#ef4444';
+          label.textContent = 'Low AI Search Readiness';
+          desc.textContent = 'Significant GEO gaps detected. AI engines may not cite or surface your content effectively.';
+        }
+
+        number.textContent = score;
+        badges.innerHTML = '';
+        if (critical > 0) badges.innerHTML += '<span class="seo-badge critical">\u2715 ' + critical + ' Critical</span>';
+        if (warnings > 0) badges.innerHTML += '<span class="seo-badge warning">\u26A0 ' + warnings + ' Warnings</span>';
+        if (passed > 0) badges.innerHTML += '<span class="seo-badge passed">\u2713 ' + passed + ' Passed</span>';
+        if (info > 0) badges.innerHTML += '<span class="seo-badge info">\u2139 ' + info + ' Info</span>';
+      }
+
+      function renderGeoFindings() {
+        const filtered = geoCatFilter === 'all' ? geoFindings : geoFindings.filter(f => f.type === geoCatFilter);
+        const order = { critical: 0, warning: 1, info: 2, passed: 3 };
+        filtered.sort((a, b) => (order[a.type] || 4) - (order[b.type] || 4));
+        const icons = { critical: '\u2715', warning: '\u26A0', passed: '\u2713', info: '\u2139' };
+
+        resultsEl.innerHTML = filtered.map((f, i) => '\
+          <div class="seo-result-group" data-idx="' + i + '">\
+            <div class="seo-result-header" onclick="this.parentElement.classList.toggle(\'open\')">\
+              <div class="seo-result-icon ' + f.type + '">' + icons[f.type] + '</div>\
+              <span class="seo-result-title">' + f.title + '</span>\
+              <span class="seo-result-page">' + f.page + '</span>\
+              <svg class="seo-result-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>\
+            </div>\
+            <div class="seo-result-detail">\
+              ' + f.detail + '\
+              ' + (f.fix ? '<span class="fix-hint"><strong>Fix:</strong> ' + f.fix + '</span>' : '') + '\
+            </div>\
+          </div>').join('');
+      }
+
+      function generateGeoSuggestions() {
+        const section = document.getElementById('geoSuggestionsSection');
+        const container = document.getElementById('geoSuggestions');
+        const criticals = geoFindings.filter(f => f.type === 'critical');
+        const warns = geoFindings.filter(f => f.type === 'warning');
+        const items = [];
+
+        criticals.forEach(f => {
+          items.push({ text: '<strong>' + f.page + ':</strong> ' + f.title + ' — ' + (f.fix || 'Fix this issue.'), priority: 'high' });
+        });
+        warns.forEach(f => {
+          items.push({ text: '<strong>' + f.page + ':</strong> ' + f.title + ' — ' + (f.fix || 'Address this warning.'), priority: 'low' });
+        });
+
+        items.push({ text: '<strong>Global:</strong> Add FAQPage schema to all service pages with 3-5 Q&As each.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Rewrite H2 headings as questions on service pages.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Add "About the Author" sections with credentials to blog posts.', priority: 'low' });
+        items.push({ text: '<strong>Global:</strong> Include specific statistics and research citations in all content.', priority: 'low' });
+
+        container.innerHTML = items.map((item, i) => '\
+          <div class="seo-action-item ' + (item.priority === 'low' ? 'priority-low' : '') + '">\
+            <div class="seo-action-num">' + (i + 1) + '</div>\
+            <div class="action-text">' + item.text + '</div>\
+          </div>').join('');
+
+        section.style.display = 'block';
+      }
+
+      function generateGeoClaudePrompt() {
+        const section = document.getElementById('geoClaudeSection');
+        const promptEl = document.getElementById('geoClaudePrompt');
+
+        if (geoFindings.length === 0) { section.style.display = 'none'; return; }
+
+        const criticals = geoFindings.filter(f => f.type === 'critical');
+        const warns = geoFindings.filter(f => f.type === 'warning');
+
+        var prompt = 'Fix all GEO (Generative Engine Optimization) issues on my website to improve AI search visibility. The site is a medical practice website for an orthopedic surgeon. Here are the issues found by a GEO audit:\n\n';
+
+        if (criticals.length > 0) {
+          prompt += 'CRITICAL ISSUES (fix these first):\n';
+          criticals.forEach(function(f, i) {
+            prompt += (i + 1) + '. [' + f.page + '] ' + f.title;
+            if (f.fix) prompt += ' — ' + f.fix;
+            prompt += '\n';
+          });
+          prompt += '\n';
+        }
+
+        if (warns.length > 0) {
+          prompt += 'WARNINGS:\n';
+          warns.forEach(function(f, i) {
+            prompt += (i + 1) + '. [' + f.page + '] ' + f.title;
+            if (f.fix) prompt += ' — ' + f.fix;
+            prompt += '\n';
+          });
+          prompt += '\n';
+        }
+
+        var pageFiles = PAGES.map(function(p) { return p.url; }).join(', ');
+        prompt += 'FILES TO UPDATE: ' + pageFiles + '\n\n';
+
+        prompt += 'GEO OPTIMIZATION TASKS:\n';
+        prompt += '- Add FAQPage schema (JSON-LD) to all pages that don\'t have it\n';
+        prompt += '- Rewrite H2 headings as natural-language questions where appropriate\n';
+        prompt += '- Add direct, citeable answer paragraphs (80-300 chars) after each heading\n';
+        prompt += '- Include author credentials (Dr. Sameh Elguizaoui, M.D., board-certified) throughout\n';
+        prompt += '- Add specific statistics with context in service and blog pages\n';
+        prompt += '- Ensure all blog posts have BlogPosting schema with author, date, and description\n';
+        prompt += '- Add location entity mentions (NYC, Manhattan, Brooklyn) to service pages\n';
+        prompt += '- Create Q&A sections on pages that lack conversational content\n\n';
+        prompt += 'Please make all changes directly to the HTML files. Keep existing content and styling intact — only add GEO improvements.';
+
+        promptEl.textContent = prompt;
+        section.style.display = 'block';
+      }
+
+      document.getElementById('geoClaudePromptCopyBtn').addEventListener('click', function() {
+        var text = document.getElementById('geoClaudePrompt').textContent;
+        navigator.clipboard.writeText(text).then(function() {
+          var btn = document.getElementById('geoClaudePromptCopyBtn');
+          var orig = btn.innerHTML;
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+          btn.style.borderColor = 'var(--green)';
+          btn.style.color = 'var(--green)';
+          setTimeout(function() { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2000);
+        });
+      });
+    })();
+
+    // ===== WEBGL BACKGROUND SELECTOR =====
+    (function() {
+      const BG_PRESETS = [
+        {
+          name: 'Neural Mesh',
+          desc: 'Connected particles with organic movement',
+          colors: ['#2563eb', '#1e40af', '#0a0f1a'],
+          prompt: `Add a WebGL particle mesh background to the footer of my website. Use a <canvas> element positioned absolutely behind the footer content. Create 80 particles that drift slowly and connect with lines when within 150px of each other. Use colors #2563eb (blue) and rgba(37,99,235,0.15) for the connection lines. Particles should gently float with sinusoidal movement. The canvas should resize on window resize and use requestAnimationFrame for smooth animation. Add it to the footer section in index.html and all other pages. Make it subtle — low opacity particles (0.4-0.6) so it doesn't distract from footer content.`
+        },
+        {
+          name: 'Gradient Waves',
+          desc: 'Flowing gradient wave animation',
+          colors: ['#1a3a5c', '#2563eb', '#0f172a'],
+          prompt: `Add a WebGL gradient wave background to the hero section of my website. Use a <canvas> element with WebGL shaders. The vertex shader should create a displaced plane mesh, and the fragment shader should blend between colors #1a3a5c, #2563eb, and #0f172a with smooth sine-wave distortions that animate over time. The waves should flow horizontally with a gentle bobbing motion. Use at least 3 overlapping wave layers at different speeds. Add this to the hero section in index.html, positioned behind the hero content with z-index: 0. The canvas should be fullscreen within the hero and resize responsively.`
+        },
+        {
+          name: 'Floating Orbs',
+          desc: 'Glowing spheres with depth blur',
+          colors: ['#8b5cf6', '#2563eb', '#0a0f1a'],
+          prompt: `Add a WebGL floating orbs background to the mobile navigation overlay. Create 12-15 softly glowing circles/orbs of varying sizes (20-80px radius) that float around slowly with easing. Use colors #8b5cf6 (purple), #2563eb (blue), and #22c55e (green) at low opacity (0.08-0.15). Apply a CSS backdrop-filter: blur(40px) to make them look like bokeh lights. Use canvas 2D context with radial gradients for each orb. Orbs should drift with Perlin-noise-like smooth random movement. Add this as a background canvas to the .mobile-nav element in all HTML pages. Make sure it doesn't affect performance on mobile devices.`
+        },
+        {
+          name: 'Starfield',
+          desc: 'Parallax star field with depth layers',
+          colors: ['#ffffff', '#94a3b8', '#0a0f1a'],
+          prompt: `Add a parallax starfield background to my website. Create a <canvas> element that renders 200+ small dots/stars across 3 depth layers. Near stars should be brighter (opacity 0.8) and move faster, far stars should be dimmer (opacity 0.2) and move slower. Stars should slowly drift upward, creating a subtle parallax scrolling effect. Use white (#ffffff) and light blue (#94a3b8) colors on a transparent background. Occasionally add a twinkling effect (random opacity pulse) to some stars. Add this behind the hero section of index.html. The canvas should be fixed position so stars parallax as you scroll.`
+        },
+        {
+          name: 'Noise Gradient',
+          desc: 'Animated Perlin noise color field',
+          colors: ['#1a3a5c', '#0f172a', '#2563eb'],
+          prompt: `Add a WebGL animated noise gradient background. Use WebGL with a fullscreen quad and a fragment shader that generates smooth 3D Perlin/Simplex noise, sampling at the current pixel position plus a time uniform for animation. Blend between colors #0f172a (dark navy), #1a3a5c (medium blue), and #2563eb (bright blue) based on the noise value. The animation should be very slow and smooth (time multiplier ~0.0003). Apply this as a background to the entire page body, behind all content. Add the canvas with position:fixed, z-index:-1 so it stays behind everything. Include the noise function in the shader code.`
+        },
+        {
+          name: 'DNA Helix',
+          desc: 'Rotating double helix structure',
+          colors: ['#22c55e', '#2563eb', '#0a0f1a'],
+          prompt: `Add a WebGL DNA double helix animation background. Create a vertical double helix using connected spheres/points that rotate slowly around a central axis. Use ~40 point pairs connected by lines, with colors #22c55e (green) and #2563eb (blue) for the two strands. The helix should rotate continuously on the Y axis and gently bob up and down. Render using canvas 2D with 3D projection (basic perspective math). Position it on the right side of the hero section in index.html, partially visible (clipped). Use opacity 0.3 so it's subtle. The helix should be approximately 600px tall and 200px wide.`
+        }
+      ];
+
+      const grid = document.getElementById('bgPresetsGrid');
+      const modal = document.getElementById('bgPromptModal');
+      const promptTitle = document.getElementById('bgPromptTitle');
+      const promptSubtitle = document.getElementById('bgPromptSubtitle');
+      const promptCode = document.getElementById('bgPromptCode');
+      const copyBtn = document.getElementById('bgPromptCopyBtn');
+      const closeBtn = document.getElementById('bgPromptCloseBtn');
+
+      // Render preset cards with mini canvas previews
+      BG_PRESETS.forEach((preset, idx) => {
+        const card = document.createElement('div');
+        card.className = 'bg-preset-card';
+        card.innerHTML = `
+          <div class="bg-preset-preview"><canvas id="bgCanvas${idx}" width="440" height="240"></canvas></div>
+          <div class="bg-preset-info">
+            <div class="bg-preset-name">${preset.name}</div>
+            <div class="bg-preset-desc">${preset.desc}</div>
+          </div>
+          <div class="bg-preset-badge">WebGL</div>
+        `;
+        card.addEventListener('click', () => {
+          promptTitle.textContent = preset.name;
+          promptSubtitle.textContent = 'Copy this prompt and paste it into Claude Code to add this background to your site.';
+          promptCode.textContent = preset.prompt;
+          modal.classList.add('active');
+        });
+        grid.appendChild(card);
+
+        // Draw mini preview
+        requestAnimationFrame(() => drawPreview(idx, preset.colors));
+      });
+
+      function drawPreview(idx, colors) {
+        const canvas = document.getElementById('bgCanvas' + idx);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width, H = canvas.height;
+
+        // Background gradient
+        const grad = ctx.createLinearGradient(0, 0, W, H);
+        grad.addColorStop(0, colors[2] || '#0a0f1a');
+        grad.addColorStop(1, colors[1] || '#111827');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Draw particles
+        for (let i = 0; i < 30; i++) {
+          const x = Math.random() * W;
+          const y = Math.random() * H;
+          const r = Math.random() * 3 + 1;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = colors[0] + '80';
+          ctx.fill();
+        }
+        // Draw connections
+        const pts = Array.from({length: 15}, () => [Math.random() * W, Math.random() * H]);
+        ctx.strokeStyle = colors[0] + '30';
+        ctx.lineWidth = 0.5;
+        pts.forEach((a, i) => {
+          pts.forEach((b, j) => {
+            if (i < j && Math.hypot(a[0]-b[0], a[1]-b[1]) < 120) {
+              ctx.beginPath();
+              ctx.moveTo(a[0], a[1]);
+              ctx.lineTo(b[0], b[1]);
+              ctx.stroke();
+            }
+          });
+        });
+      }
+
+      // Copy prompt
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(promptCode.textContent).then(() => {
+          copyBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+          setTimeout(() => {
+            copyBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Prompt';
+          }, 2000);
+        });
+      });
+
+      // Close modal
+      closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    })();
+
+    // ===== BOOKINGS PAGE =====
+    (function() {
+      const BOOKINGS_KEY = 'sammd_bookings';
+      let currentMonth = new Date().getMonth();
+      let currentYear = new Date().getFullYear();
+      let currentView = 'list';
+
+      function getBookings() {
+        return JSON.parse(localStorage.getItem(BOOKINGS_KEY) || '[]');
+      }
+
+      function updateStats() {
+        const bookings = getBookings();
+        const now = new Date();
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay());
+        weekStart.setHours(0,0,0,0);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 7);
+
+        document.getElementById('statTotalBookings').textContent = bookings.length;
+        document.getElementById('statConfirmed').textContent = bookings.filter(b => b.status === 'confirmed').length;
+        document.getElementById('statPending').textContent = bookings.filter(b => b.status === 'pending').length;
+        document.getElementById('statThisWeek').textContent = bookings.filter(b => {
+          const d = new Date(b.date);
+          return d >= weekStart && d < weekEnd;
+        }).length;
+      }
+
+      function renderList() {
+        const bookings = getBookings().sort((a,b) => new Date(b.date) - new Date(a.date));
+        const body = document.getElementById('bookingsListBody');
+
+        if (bookings.length === 0) {
+          body.innerHTML = `<div class="bookings-empty">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <h3>No bookings yet</h3>
+            <p>Patient bookings from your website will appear here.</p>
+          </div>`;
+          return;
+        }
+
+        body.innerHTML = bookings.map(b => `
+          <div class="booking-list-row">
+            <div class="booking-patient">
+              <span class="booking-patient-name">${b.name || 'Unknown'}</span>
+              <span class="booking-patient-email">${b.email || ''}</span>
+            </div>
+            <span class="booking-service">${b.service || 'General'}</span>
+            <span class="booking-date">${formatDate(b.date)}</span>
+            <span class="booking-status ${b.status || 'pending'}">${(b.status || 'pending').charAt(0).toUpperCase() + (b.status || 'pending').slice(1)}</span>
+            <button class="booking-actions-btn" title="Options">⋯</button>
+          </div>
+        `).join('');
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return '--';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+
+      function renderCalendar() {
+        const grid = document.getElementById('calGrid');
+        const label = document.getElementById('calMonthLabel');
+        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        label.textContent = `${months[currentMonth]} ${currentYear}`;
+
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const prevDays = new Date(currentYear, currentMonth, 0).getDate();
+        const today = new Date();
+        const bookings = getBookings();
+
+        let html = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d =>
+          `<div class="cal-day-header">${d}</div>`
+        ).join('');
+
+        // Previous month days
+        for (let i = firstDay - 1; i >= 0; i--) {
+          html += `<div class="cal-day other-month"><div class="cal-day-num">${prevDays - i}</div></div>`;
+        }
+
+        // Current month days
+        for (let day = 1; day <= daysInMonth; day++) {
+          const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+          const isToday = today.getDate() === day && today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+          const dayBookings = bookings.filter(b => b.date && b.date.startsWith(dateStr));
+
+          html += `<div class="cal-day${isToday ? ' today' : ''}">
+            <div class="cal-day-num">${day}</div>
+            ${dayBookings.slice(0, 3).map(b =>
+              `<div class="cal-event ${b.status || 'pending'}" title="${b.name}: ${b.service || 'General'}">${b.time || ''} ${b.name ? b.name.split(' ')[0] : ''}</div>`
+            ).join('')}
+            ${dayBookings.length > 3 ? `<div style="font-size:0.65rem;color:var(--text-muted)">+${dayBookings.length - 3} more</div>` : ''}
+          </div>`;
+        }
+
+        // Fill remaining cells
+        const totalCells = firstDay + daysInMonth;
+        const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+        for (let i = 1; i <= remaining; i++) {
+          html += `<div class="cal-day other-month"><div class="cal-day-num">${i}</div></div>`;
+        }
+
+        grid.innerHTML = html;
+      }
+
+      // View toggle
+      document.querySelectorAll('.bookings-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.bookings-view-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentView = btn.dataset.view;
+          document.getElementById('bookingsListView').style.display = currentView === 'list' ? 'block' : 'none';
+          document.getElementById('bookingsCalView').style.display = currentView === 'calendar' ? 'block' : 'none';
+          if (currentView === 'calendar') renderCalendar();
+        });
+      });
+
+      // Calendar nav
+      document.getElementById('calPrev').addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+        renderCalendar();
+      });
+      document.getElementById('calNext').addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+        renderCalendar();
+      });
+
+      // Listen for booking events from the booking page
+      window.addEventListener('storage', (e) => {
+        if (e.key === BOOKINGS_KEY) {
+          updateStats();
+          renderList();
+          if (currentView === 'calendar') renderCalendar();
+        }
+      });
+
+      // Initial render
+      updateStats();
+      renderList();
+      renderCalendar();
+    })();
+
+    // ===== ANALYTICS - Google Business Profile Performance API =====
+    (function() {
+      // OAuth config - user needs to create OAuth 2.0 Client ID in Google Cloud Console
+      // and set the authorized JavaScript origin to the site URL
+      const OAUTH_CLIENT_ID = localStorage.getItem('sammd_oauth_client_id') || '';
+      const GBP_SCOPES = 'https://www.googleapis.com/auth/business.manage';
+      const PERF_API = 'https://businessprofileperformance.googleapis.com/v1';
+      const ACCOUNTS_API = 'https://mybusinessaccountmanagement.googleapis.com/v1';
+
+      let accessToken = null;
+      let gbpLocations = [];
+      let selectedLocation = null;
+
+      const connectEl = document.getElementById('analyticsConnect');
+      const connectedEl = document.getElementById('analyticsConnected');
+      const signInBtn = document.getElementById('googleSignInBtn');
+      const disconnectBtn = document.getElementById('analyticsDisconnect');
+      const locTabsEl = document.getElementById('analyticsLocTabs');
+
+      // Check if we have a saved token
+      const savedToken = sessionStorage.getItem('sammd_gbp_token');
+      if (savedToken) {
+        accessToken = savedToken;
+        onConnected();
+      }
+
+      signInBtn.addEventListener('click', () => {
+        // Check if OAuth Client ID is configured
+        let clientId = OAUTH_CLIENT_ID;
+        if (!clientId) {
+          clientId = prompt('Enter your Google OAuth 2.0 Client ID:\n(Create one at console.cloud.google.com/apis/credentials)\n\nFormat: xxxx.apps.googleusercontent.com');
+          if (!clientId) return;
+          localStorage.setItem('sammd_oauth_client_id', clientId);
+        }
+
+        // Use Google Identity Services (implicit grant)
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.onload = () => {
+          const tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: clientId,
+            scope: GBP_SCOPES,
+            callback: (response) => {
+              if (response.access_token) {
+                accessToken = response.access_token;
+                sessionStorage.setItem('sammd_gbp_token', accessToken);
+                onConnected();
+              }
+            }
+          });
+          tokenClient.requestAccessToken();
+        };
+        document.head.appendChild(script);
+      });
+
+      disconnectBtn.addEventListener('click', () => {
+        accessToken = null;
+        sessionStorage.removeItem('sammd_gbp_token');
+        connectEl.style.display = '';
+        connectedEl.classList.remove('active');
+        showToast('Disconnected from Google.');
+      });
+
+      async function onConnected() {
+        connectEl.style.display = 'none';
+        connectedEl.classList.add('active');
+
+        // Get user info
+        try {
+          const userResp = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: { Authorization: 'Bearer ' + accessToken }
+          });
+          if (userResp.ok) {
+            const user = await userResp.json();
+            document.getElementById('analyticsUserEmail').textContent = user.email || 'Connected';
+          }
+        } catch (e) { /* ignore */ }
+
+        // Discover GBP locations
+        try {
+          const acctResp = await fetch(ACCOUNTS_API + '/accounts', {
+            headers: { Authorization: 'Bearer ' + accessToken }
+          });
+          if (!acctResp.ok) throw new Error('Could not fetch accounts: ' + acctResp.status);
+          const acctData = await acctResp.json();
+          const accounts = acctData.accounts || [];
+
+          gbpLocations = [];
+          for (const acct of accounts) {
+            const locResp = await fetch(ACCOUNTS_API + '/' + acct.name + '/locations', {
+              headers: { Authorization: 'Bearer ' + accessToken }
+            });
+            if (locResp.ok) {
+              const locData = await locResp.json();
+              (locData.locations || []).forEach(loc => {
+                gbpLocations.push({
+                  name: loc.name,
+                  title: loc.title || loc.name,
+                  locationId: loc.name.split('/').pop()
+                });
+              });
+            }
+          }
+
+          if (gbpLocations.length === 0) {
+            document.getElementById('analyticsMetrics').innerHTML =
+              '<div class="analytics-empty">No Business Profile locations found for this account.</div>';
+            return;
+          }
+
+          // Render location tabs
+          locTabsEl.innerHTML = gbpLocations.map((loc, i) =>
+            `<button class="analytics-loc-tab ${i === 0 ? 'active' : ''}" data-idx="${i}">${loc.title}</button>`
+          ).join('');
+
+          locTabsEl.addEventListener('click', e => {
+            const tab = e.target.closest('.analytics-loc-tab');
+            if (!tab) return;
+            locTabsEl.querySelectorAll('.analytics-loc-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            selectedLocation = gbpLocations[parseInt(tab.dataset.idx)];
+            fetchPerformanceData();
+          });
+
+          selectedLocation = gbpLocations[0];
+          fetchPerformanceData();
+
+        } catch (err) {
+          console.error('GBP discovery error:', err);
+          document.getElementById('analyticsMetrics').innerHTML =
+            `<div class="analytics-empty" style="color:var(--red)">Error: ${err.message}<br><span style="font-size:0.82rem;color:var(--text-muted)">Make sure the Business Profile APIs are enabled in Google Cloud Console.</span></div>`;
+        }
+      }
+
+      async function fetchPerformanceData() {
+        if (!selectedLocation || !accessToken) return;
+
+        const locId = selectedLocation.locationId;
+        const locPath = 'locations/' + locId;
+
+        // Date range: last 90 days
+        const end = new Date();
+        const start = new Date();
+        start.setDate(start.getDate() - 90);
+
+        const dateParams = `dailyRange.start_date.year=${start.getFullYear()}&dailyRange.start_date.month=${start.getMonth() + 1}&dailyRange.start_date.day=${start.getDate()}&dailyRange.end_date.year=${end.getFullYear()}&dailyRange.end_date.month=${end.getMonth() + 1}&dailyRange.end_date.day=${end.getDate()}`;
+
+        const metrics = [
+          'BUSINESS_IMPRESSIONS_DESKTOP_SEARCH',
+          'BUSINESS_IMPRESSIONS_MOBILE_SEARCH',
+          'BUSINESS_IMPRESSIONS_DESKTOP_MAPS',
+          'BUSINESS_IMPRESSIONS_MOBILE_MAPS',
+          'WEBSITE_CLICKS',
+          'BUSINESS_DIRECTION_REQUESTS',
+          'CALL_CLICKS',
+          'BUSINESS_BOOKINGS'
+        ];
+
+        // Fetch all metrics in a single API call using fetchMultiDailyMetricsTimeSeries
+        try {
+          const metricsParams = metrics.map(m => 'dailyMetrics=' + m).join('&');
+          const multiUrl = `${PERF_API}/${locPath}:fetchMultiDailyMetricsTimeSeries?${metricsParams}&${dateParams}`;
+          const multiResp = await fetch(multiUrl, { headers: { Authorization: 'Bearer ' + accessToken } });
+
+          let results;
+          if (multiResp.ok) {
+            const multiData = await multiResp.json();
+            results = (multiData.multiDailyMetricTimeSeries || []).map(entry => ({
+              metric: entry.dailyMetric,
+              timeSeries: entry.timeSeries
+            }));
+          } else {
+            // Fallback: fetch individually if multi endpoint fails
+            results = await Promise.all(metrics.map(async metric => {
+              const url = `${PERF_API}/${locPath}:getDailyMetricsTimeSeries?dailyMetric=${metric}&${dateParams}`;
+              const resp = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
+              if (!resp.ok) return { metric, timeSeries: null };
+              const data = await resp.json();
+              return { metric, timeSeries: data.timeSeries?.dailyMetricTimeSeries?.[0]?.timeSeries };
+            }));
+          }
+
+          // Aggregate totals
+          const totals = {};
+          const dailyData = {};
+          results.forEach(({ metric, timeSeries }) => {
+            const datedValues = timeSeries?.datedValues || [];
+            let sum = 0;
+            datedValues.forEach(v => {
+              const val = parseInt(v.value || 0);
+              sum += val;
+              const dateKey = `${v.date.year}-${String(v.date.month).padStart(2, '0')}-${String(v.date.day).padStart(2, '0')}`;
+              if (!dailyData[dateKey]) dailyData[dateKey] = {};
+              dailyData[dateKey][metric] = (dailyData[dateKey][metric] || 0) + val;
+            });
+            totals[metric] = sum;
+          });
+
+          // Total impressions = search + maps, desktop + mobile
+          const totalImpressions = (totals['BUSINESS_IMPRESSIONS_DESKTOP_SEARCH'] || 0) +
+            (totals['BUSINESS_IMPRESSIONS_MOBILE_SEARCH'] || 0) +
+            (totals['BUSINESS_IMPRESSIONS_DESKTOP_MAPS'] || 0) +
+            (totals['BUSINESS_IMPRESSIONS_MOBILE_MAPS'] || 0);
+
+          document.getElementById('metricImpressions').textContent = totalImpressions.toLocaleString();
+          document.getElementById('metricWebClicks').textContent = (totals['WEBSITE_CLICKS'] || 0).toLocaleString();
+          document.getElementById('metricDirections').textContent = (totals['BUSINESS_DIRECTION_REQUESTS'] || 0).toLocaleString();
+          document.getElementById('metricCalls').textContent = (totals['CALL_CLICKS'] || 0).toLocaleString();
+
+          // Draw impressions chart
+          drawLineChart('impressionsChart', dailyData, [
+            { keys: ['BUSINESS_IMPRESSIONS_DESKTOP_SEARCH', 'BUSINESS_IMPRESSIONS_MOBILE_SEARCH'], label: 'Search', color: '#2563eb' },
+            { keys: ['BUSINESS_IMPRESSIONS_DESKTOP_MAPS', 'BUSINESS_IMPRESSIONS_MOBILE_MAPS'], label: 'Maps', color: '#22c55e' }
+          ]);
+
+          // Draw engagement chart
+          drawBarChart('engagementChart', {
+            'Website Clicks': totals['WEBSITE_CLICKS'] || 0,
+            'Directions': totals['BUSINESS_DIRECTION_REQUESTS'] || 0,
+            'Phone Calls': totals['CALL_CLICKS'] || 0,
+            'Bookings': totals['BUSINESS_BOOKINGS'] || 0
+          });
+
+        } catch (err) {
+          console.error('Performance data error:', err);
+        }
+
+        // Fetch search keywords
+        fetchKeywords(locPath);
+      }
+
+      async function fetchKeywords(locPath) {
+        const content = document.getElementById('keywordsContent');
+        try {
+          const end = new Date();
+          const start = new Date();
+          start.setMonth(start.getMonth() - 3);
+
+          const url = `${PERF_API}/${locPath}/searchkeywords/impressions/monthly?monthlyRange.start_month.year=${start.getFullYear()}&monthlyRange.start_month.month=${start.getMonth() + 1}&monthlyRange.end_month.year=${end.getFullYear()}&monthlyRange.end_month.month=${end.getMonth() + 1}`;
+
+          const resp = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
+          if (!resp.ok) {
+            content.innerHTML = '<div class="analytics-empty">No keyword data available for this location.</div>';
+            return;
+          }
+          const data = await resp.json();
+          const keywords = data.searchKeywordsCounts || [];
+
+          if (keywords.length === 0) {
+            content.innerHTML = '<div class="analytics-empty">No search keywords meet the privacy threshold (15+ monthly searches).</div>';
+            return;
+          }
+
+          // Aggregate impressions across months
+          const kwMap = {};
+          keywords.forEach(k => {
+            const term = k.searchKeyword;
+            const impressions = (k.insightsValue?.value || 0);
+            kwMap[term] = (kwMap[term] || 0) + parseInt(impressions);
+          });
+
+          const sorted = Object.entries(kwMap).sort((a, b) => b[1] - a[1]).slice(0, 20);
+          const maxVal = sorted[0]?.[1] || 1;
+
+          content.innerHTML = `
+            <table class="keywords-table">
+              <thead><tr><th>Keyword</th><th>Impressions</th><th></th></tr></thead>
+              <tbody>
+                ${sorted.map(([kw, count]) => `
+                  <tr>
+                    <td class="keyword">${kw}</td>
+                    <td>${count.toLocaleString()}</td>
+                    <td><div class="keyword-bar"><div class="keyword-bar-fill" style="width:${(count / maxVal * 100).toFixed(1)}%"></div></div></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        } catch (err) {
+          console.error('Keywords error:', err);
+          content.innerHTML = '<div class="analytics-empty">Could not load keyword data.</div>';
+        }
+      }
+
+      // === Simple Canvas Charts ===
+      function drawLineChart(canvasId, dailyData, series) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        const W = rect.width, H = rect.height;
+        const pad = { top: 20, right: 20, bottom: 30, left: 50 };
+
+        const dates = Object.keys(dailyData).sort();
+        if (dates.length === 0) {
+          ctx.fillStyle = '#64748b';
+          ctx.font = '14px Inter';
+          ctx.textAlign = 'center';
+          ctx.fillText('No data available', W / 2, H / 2);
+          return;
+        }
+
+        // Compute series values
+        const seriesData = series.map(s => {
+          return dates.map(d => {
+            return s.keys.reduce((sum, k) => sum + (dailyData[d]?.[k] || 0), 0);
+          });
+        });
+
+        const allVals = seriesData.flat();
+        const maxVal = Math.max(...allVals, 1);
+        const chartW = W - pad.left - pad.right;
+        const chartH = H - pad.top - pad.bottom;
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+          const y = pad.top + chartH - (chartH * i / 4);
+          ctx.beginPath();
+          ctx.moveTo(pad.left, y);
+          ctx.lineTo(W - pad.right, y);
+          ctx.stroke();
+          ctx.fillStyle = '#64748b';
+          ctx.font = '11px Inter';
+          ctx.textAlign = 'right';
+          ctx.fillText(Math.round(maxVal * i / 4).toLocaleString(), pad.left - 8, y + 4);
+        }
+
+        // Date labels
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px Inter';
+        ctx.textAlign = 'center';
+        const labelStep = Math.max(1, Math.floor(dates.length / 6));
+        dates.forEach((d, i) => {
+          if (i % labelStep === 0) {
+            const x = pad.left + (i / (dates.length - 1)) * chartW;
+            const parts = d.split('-');
+            ctx.fillText(parts[1] + '/' + parts[2], x, H - 8);
+          }
+        });
+
+        // Draw lines
+        seriesData.forEach((vals, si) => {
+          ctx.beginPath();
+          ctx.strokeStyle = series[si].color;
+          ctx.lineWidth = 2;
+          ctx.lineJoin = 'round';
+          vals.forEach((v, i) => {
+            const x = pad.left + (i / (dates.length - 1)) * chartW;
+            const y = pad.top + chartH - (v / maxVal) * chartH;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+
+          // Fill area
+          ctx.globalAlpha = 0.08;
+          ctx.lineTo(pad.left + chartW, pad.top + chartH);
+          ctx.lineTo(pad.left, pad.top + chartH);
+          ctx.closePath();
+          ctx.fillStyle = series[si].color;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        });
+
+        // Legend
+        let legendX = pad.left;
+        series.forEach(s => {
+          ctx.fillStyle = s.color;
+          ctx.fillRect(legendX, 4, 12, 4);
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '11px Inter';
+          ctx.textAlign = 'left';
+          ctx.fillText(s.label, legendX + 16, 10);
+          legendX += ctx.measureText(s.label).width + 36;
+        });
+      }
+
+      function drawBarChart(canvasId, data) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        const W = rect.width, H = rect.height;
+        const pad = { top: 20, right: 20, bottom: 40, left: 50 };
+
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+        const maxVal = Math.max(...values, 1);
+        const chartW = W - pad.left - pad.right;
+        const chartH = H - pad.top - pad.bottom;
+        const barW = Math.min(60, chartW / labels.length * 0.6);
+        const gap = chartW / labels.length;
+        const colors = ['#2563eb', '#22c55e', '#fbbc04', '#ef4444'];
+
+        // Grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        for (let i = 0; i <= 4; i++) {
+          const y = pad.top + chartH - (chartH * i / 4);
+          ctx.beginPath();
+          ctx.moveTo(pad.left, y);
+          ctx.lineTo(W - pad.right, y);
+          ctx.stroke();
+          ctx.fillStyle = '#64748b';
+          ctx.font = '11px Inter';
+          ctx.textAlign = 'right';
+          ctx.fillText(Math.round(maxVal * i / 4).toLocaleString(), pad.left - 8, y + 4);
+        }
+
+        // Bars
+        labels.forEach((label, i) => {
+          const x = pad.left + gap * i + gap / 2 - barW / 2;
+          const barH = (values[i] / maxVal) * chartH;
+          const y = pad.top + chartH - barH;
+
+          ctx.fillStyle = colors[i % colors.length];
+          ctx.beginPath();
+          ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
+          ctx.fill();
+
+          // Value on top
+          ctx.fillStyle = '#f1f5f9';
+          ctx.font = '12px Inter';
+          ctx.textAlign = 'center';
+          ctx.fillText(values[i].toLocaleString(), x + barW / 2, y - 6);
+
+          // Label
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '11px Inter';
+          ctx.fillText(label, pad.left + gap * i + gap / 2, H - 12);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

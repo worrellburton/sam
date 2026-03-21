@@ -170,39 +170,6 @@ img { max-width: 100%; display: block; }
 
 .btn-block { width: 100%; }
 
-/* ===== Top Utility Bar ===== */
-.top-bar {
-  background: rgba(0,0,0,0.9);
-  padding: 8px 0;
-  font-size: 0.8rem;
-}
-
-.top-bar-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.top-bar-phone {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #fff;
-  font-weight: 500;
-  text-decoration: none;
-}
-.top-bar-phone:hover { color: #f5d547; }
-
-.top-bar-social {
-  display: flex;
-  gap: 16px;
-}
-.top-bar-social a {
-  color: rgba(255,255,255,0.7);
-  transition: color var(--transition);
-}
-.top-bar-social a:hover { color: #fff; }
-
 /* ===== Scroll Reveal Animations ===== */
 .reveal {
   opacity: 0;
@@ -811,7 +778,6 @@ img { max-width: 100%; display: block; }
 
 .rating-avatars {
   display: flex;
-  gap: -6px;
 }
 
 .avatar {
@@ -1016,80 +982,6 @@ img { max-width: 100%; display: block; }
   letter-spacing: 2px;
 }
 
-/* ===== Pro Sports Banner ===== */
-.pro-sports-banner {
-  padding: 56px 0;
-  background: var(--bg-dark);
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-}
-
-.pro-sports-label {
-  display: inline-block;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--primary);
-  margin-bottom: 28px;
-}
-
-.pro-sports-grid {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 48px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.pro-sports-team {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.team-logo svg {
-  border-radius: 8px;
-  box-shadow: var(--shadow-md);
-  transition: transform var(--transition);
-}
-
-.team-logo:hover svg {
-  transform: scale(1.05);
-}
-
-.team-info {
-  text-align: left;
-}
-
-.team-info h3 {
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #fff;
-  margin-bottom: 2px;
-}
-
-.team-info p {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.pro-sports-divider {
-  width: 1px;
-  height: 60px;
-  background: var(--border);
-}
-
-.pro-sports-desc {
-  max-width: 700px;
-  margin: 0 auto;
-  font-size: 0.95rem;
-  color: var(--text-light);
-  line-height: 1.7;
-}
-
 /* ===== Sections ===== */
 .section {
   padding: 120px 0;
@@ -1119,7 +1011,6 @@ img { max-width: 100%; display: block; }
   font-size: 1.1rem;
   color: var(--text-light);
   margin-top: 20px;
-  line-height: 1.8;
   line-height: 1.8;
 }
 

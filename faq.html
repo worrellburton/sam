@@ -106,6 +106,7 @@
   }
   </script>
 
+  <meta name="theme-color" content="#000000">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -469,7 +470,9 @@
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
+      let animating = false;
       function frame() {
+        if (!animating) return;
         for (let i = 0; i < NUM; i++) {
           positions[i*2]   += velocities[i*2];
           positions[i*2+1] += velocities[i*2+1];
@@ -488,7 +491,15 @@
         gl.drawArrays(gl.POINTS, 0, NUM);
         requestAnimationFrame(frame);
       }
-      frame();
+      const footerObs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !animating) {
+          animating = true;
+          frame();
+        } else if (!entry.isIntersecting) {
+          animating = false;
+        }
+      });
+      footerObs.observe(canvas);
     })();
   </script>
 

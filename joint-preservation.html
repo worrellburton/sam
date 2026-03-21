@@ -32,6 +32,7 @@
   }
   </script>
 
+  <meta name="theme-color" content="#000000">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -341,10 +342,15 @@
       const aP=gl.getAttribLocation(p,'aP'),aS=gl.getAttribLocation(p,'aS'),pb=gl.createBuffer(),sb=gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER,sb);gl.bufferData(gl.ARRAY_BUFFER,sz,gl.STATIC_DRAW);
       gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
-      function frame(){for(let i=0;i<N;i++){pos[i*2]+=vel[i*2];pos[i*2+1]+=vel[i*2+1];if(pos[i*2]<-1||pos[i*2]>1)vel[i*2]*=-1;if(pos[i*2+1]<-1||pos[i*2+1]>1)vel[i*2+1]*=-1;}
+      let animating = false;
+      function frame(){if(!animating)return;for(let i=0;i<N;i++){pos[i*2]+=vel[i*2];pos[i*2+1]+=vel[i*2+1];if(pos[i*2]<-1||pos[i*2]>1)vel[i*2]*=-1;if(pos[i*2+1]<-1||pos[i*2+1]>1)vel[i*2+1]*=-1;}
       gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.bindBuffer(gl.ARRAY_BUFFER,pb);gl.bufferData(gl.ARRAY_BUFFER,pos,gl.DYNAMIC_DRAW);gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,2,gl.FLOAT,false,0,0);
       gl.bindBuffer(gl.ARRAY_BUFFER,sb);gl.enableVertexAttribArray(aS);gl.vertexAttribPointer(aS,1,gl.FLOAT,false,0,0);gl.drawArrays(gl.POINTS,0,N);requestAnimationFrame(frame);}
-      frame();
+      const footerObs = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !animating) { animating = true; frame(); }
+        else if (!entry.isIntersecting) { animating = false; }
+      });
+      footerObs.observe(canvas);
     })();
 
     // --- Expandable service list items ---

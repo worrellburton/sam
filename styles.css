@@ -292,32 +292,35 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   list-style: none;
-  gap: 4px;
+  gap: 2px;
 }
 
 .nav-links > li > a {
-  padding: 8px 14px;
+  padding: 8px 16px;
   font-size: 0.85rem;
   font-weight: 400;
   color: rgba(255,255,255,0.85);
-  border-radius: 6px;
-  transition: all var(--transition);
+  border-radius: 8px;
+  transition: all 0.25s ease;
   letter-spacing: 0;
+  position: relative;
 }
 .nav-links > li > a:hover {
   color: #fff;
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 20px rgba(79,107,255,0.15), inset 0 0 0 1px rgba(255,255,255,0.06);
 }
 [data-theme="light"] .nav:not(.scrolled) .nav-links > li > a { color: rgba(255,255,255,0.85); }
-[data-theme="light"] .nav:not(.scrolled) .nav-links > li > a:hover { color: #fff; }
+[data-theme="light"] .nav:not(.scrolled) .nav-links > li > a:hover { color: #fff; background: rgba(255,255,255,0.12); box-shadow: 0 0 20px rgba(79,107,255,0.2), inset 0 0 0 1px rgba(255,255,255,0.1); }
 [data-theme="light"] .nav.scrolled .nav-links > li > a { color: rgba(0,0,0,0.8); }
-[data-theme="light"] .nav.scrolled .nav-links > li > a:hover { color: #000; }
+[data-theme="light"] .nav.scrolled .nav-links > li > a:hover { color: #000; background: rgba(0,0,0,0.04); box-shadow: 0 0 16px rgba(79,107,255,0.1); }
 
 /* Nav CTA Buttons */
 .nav-buttons {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-left: 12px;
+  gap: 8px;
+  margin-left: 8px;
 }
 
 .nav-btn-book {
@@ -337,6 +340,7 @@ img { max-width: 100%; display: block; }
   background: var(--primary-dark);
   transform: scale(1.04);
   color: #fff !important;
+  box-shadow: 0 0 24px rgba(79,107,255,0.4);
 }
 
 .nav-btn-contact {
@@ -354,7 +358,7 @@ img { max-width: 100%; display: block; }
 }
 .nav-btn-contact:hover {
   color: #fff !important;
-  color: #fff !important;
+  background: rgba(255,255,255,0.08);
 }
 
 /* Nav link icons */
@@ -415,7 +419,7 @@ img { max-width: 100%; display: block; }
   visibility: hidden;
   pointer-events: none;
   transform: translateY(-8px);
-  transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1), visibility 0.45s ease, transform 0.45s cubic-bezier(0.16,1,0.3,1);
 }
 .nav.scrolled .mega-menu {
   background: rgba(10,10,10,0.97);

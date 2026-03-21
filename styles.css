@@ -927,35 +927,80 @@ img { max-width: 100%; display: block; }
   100% { transform: translateX(-50%); }
 }
 
-/* Floating Book Online Button */
-.floating-book-btn {
+/* Sticky Bottom Bar */
+.sticky-bottom-bar {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 999;
-  background: var(--primary);
-  color: #fff !important;
-  font-family: inherit;
-  font-weight: 500;
-  font-size: 0.9rem;
-  padding: 14px 28px;
-  border-radius: 980px;
-  text-decoration: none;
-  box-shadow: 0 8px 30px rgba(37,99,235,0.4);
-  transition: all var(--transition);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px);
+  display: flex;
+  align-items: center;
+  height: 56px;
+  background: rgba(10,15,26,0.92);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.3);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
 }
-.floating-book-btn.visible {
-  opacity: 1;
-  pointer-events: auto;
+[data-theme="light"] .sticky-bottom-bar {
+  background: rgba(255,255,255,0.92);
+  border-top-color: rgba(0,0,0,0.06);
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.08);
+}
+.sticky-bottom-bar.visible {
   transform: translateY(0);
 }
-.floating-book-btn:hover {
+.sticky-bar-marquee {
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
+}
+.sticky-bar-track {
+  display: flex;
+  gap: 32px;
+  width: max-content;
+  animation: stickyBarScroll 20s linear infinite;
+}
+.sticky-bar-track span {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+[data-theme="light"] .sticky-bar-track span {
+  color: rgba(0,0,0,0.35);
+}
+@keyframes stickyBarScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.sticky-bar-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 32px;
+  background: var(--primary);
+  color: #fff !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: background 0.2s;
+}
+.sticky-bar-btn:hover {
   background: var(--primary-dark);
-  transform: scale(1.05);
-  box-shadow: 0 12px 40px rgba(37,99,235,0.5);
   color: #fff !important;
 }
 
@@ -2942,25 +2987,20 @@ img { max-width: 100%; display: block; }
   .service-hero h1 { font-size: 1.5rem; }
   .service-columns { grid-template-columns: 1fr; gap: 16px; }
 
-  /* Floating button mobile - Zocdoc yellow full-width bar */
-  .floating-book-btn {
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-radius: 0;
-    text-align: center;
+  /* Sticky bottom bar mobile */
+  .sticky-bottom-bar { height: 50px; }
+  .sticky-bar-marquee { display: none; }
+  .sticky-bar-btn {
+    flex: 1;
+    justify-content: center;
     font-size: 1rem;
     font-weight: 700;
-    padding: 16px 28px;
     background: #f5a623;
     color: #000 !important;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
   }
-  .floating-book-btn:hover {
+  .sticky-bar-btn:hover {
     background: #e6950f;
     color: #000 !important;
-    transform: none;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
   }
 
   /* Fixed theme toggle on mobile */

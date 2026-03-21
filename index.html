@@ -379,8 +379,15 @@
     </div>
   </header>
 
-  <!-- Floating Book Online Button -->
-  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="floating-book-btn" id="floatingBook">Book on Zocdoc</a>
+  <!-- Sticky Bottom Bar -->
+  <div class="sticky-bottom-bar" id="stickyBottomBar">
+    <div class="sticky-bar-marquee">
+      <div class="sticky-bar-track">
+        <span>Expert Orthopedic Care</span><span>NYC's Top Surgeon</span><span>Sports Medicine</span><span>Joint Preservation</span><span>Minimally Invasive</span><span>Expert Orthopedic Care</span><span>NYC's Top Surgeon</span><span>Sports Medicine</span><span>Joint Preservation</span><span>Minimally Invasive</span>
+      </div>
+    </div>
+    <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="sticky-bar-btn">Book on Zocdoc</a>
+  </div>
 
   <!-- Mobile fixed theme toggle -->
   <button class="mobile-theme-toggle theme-toggle" id="mobileThemeToggle" aria-label="Toggle theme">
@@ -984,13 +991,13 @@
     }
 
     // --- Floating Book Online button + mobile theme toggle ---
-    const floatingBook = document.getElementById('floatingBook');
+    const stickyBar = document.getElementById('stickyBottomBar');
     const mobileThemeToggle = document.getElementById('mobileThemeToggle');
     const hero = document.getElementById('hero');
     window.addEventListener('scroll', () => {
       if (hero) {
         const pastHero = hero.getBoundingClientRect().bottom < 0;
-        floatingBook.classList.toggle('visible', pastHero);
+        stickyBar.classList.toggle('visible', pastHero);
         if (mobileThemeToggle) mobileThemeToggle.classList.toggle('visible', pastHero);
       }
     }, { passive: true });

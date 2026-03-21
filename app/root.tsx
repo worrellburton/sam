@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -101,12 +102,16 @@ export default function App() {
     };
   }, []);
 
+  const location = useLocation();
+  const isDevPage = location.pathname.startsWith("/dev");
+  const isBookPage = location.pathname.startsWith("/book");
+
   return (
     <>
-      <Navigation />
-      <StickyBar />
+      {!isDevPage && !isBookPage && <Navigation />}
+      {!isDevPage && !isBookPage && <StickyBar />}
       <Outlet />
-      <Footer />
+      {!isDevPage && !isBookPage && <Footer />}
     </>
   );
 }

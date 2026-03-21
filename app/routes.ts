@@ -10,4 +10,5 @@ export default [
   route("blog/:slug", "routes/blog-post.tsx"),
   route("book", "routes/book.tsx"),
   route("services/:slug", "routes/service.tsx"),
+  route("dev", "routes/dev.tsx"),
 ] satisfies RouteConfig;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Link } from "react-router";
 import type { Route } from "./+types/doczoc";
 
@@ -251,13 +251,89 @@ function WebGLBackground() {
   );
 }
 
-export default function DocZocPage() {
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAY_HEADERS = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const APPT_COLORS = ['#a78bfa','#34d399','#fbbf24','#60a5fa','#f472b6'];
+
+function getAvail(d: number, m: number, y: number, dow: number) {
+  if (dow === 0 || dow === 6) return 0;
+  const today = new Date(); today.setHours(0,0,0,0);
+  if (new Date(y, m, d) < today) return 0;
+  const seed = (d * 7 + m * 13 + y) % 30;
+  return seed > 20 ? 4 : seed > 12 ? 3 : seed > 5 ? 2 : 1;
+}
+
+function HeroCalendar() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const todayDate = now.getDate();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const startDay = new Date(year, month, 1).getDay();
+
+  const weeks = useMemo(() => {
+    const rows: (number | null)[][] = [];
+    let row: (number | null)[] = [];
+    for (let i = 0; i < startDay; i++) row.push(null);
+    for (let d = 1; d <= daysInMonth; d++) {
+      row.push(d);
+      if (row.length === 7) { rows.push(row); row = []; }
+    }
+    if (row.length > 0) { while (row.length < 7) row.push(null); rows.push(row); }
+    return rows;
+  }, []);
+
   return (
-    <div className="dz-page dz-page-dark">
+    <div className="dz-hero-cal">
+      <div className="dz-hero-cal-header">
+        <span className="dz-hero-cal-month">{MONTHS[month]} {year}</span>
+        <div style={{ display: "flex", gap: 6 }}>
+          <button className="dz-hero-cal-nav-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button className="dz-hero-cal-nav-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+      <div className="dz-hero-cal-days">
+        {DAY_HEADERS.map(d => <div key={d} className="dz-hero-cal-dh">{d}</div>)}
+      </div>
+      <div className="dz-hero-cal-grid">
+        {weeks.map((week, wi) => (
+          <div key={wi} className="dz-hero-cal-week" style={{ animationDelay: `${0.4 + wi * 0.08}s` }}>
+            {week.map((day, di) => {
+              if (day === null) return <div key={di} className="dz-hero-cal-cell empty" />;
+              const dow = new Date(year, month, day).getDay();
+              const count = getAvail(day, month, year, dow);
+              const isToday = day === todayDate;
+              return (
+                <div key={di} className={`dz-hero-cal-cell${count > 0 ? ' has' : ''}${isToday ? ' today-cell' : ''}`}>
+                  <span className={`dz-hero-cal-num${isToday ? ' today' : ''}`}>{day}</span>
+                  {count > 0 && (
+                    <div className="dz-hero-cal-dots">
+                      {Array.from({ length: Math.min(count, 3) }, (_, i) => (
+                        <span key={i} className="dz-hero-cal-dot" style={{ background: APPT_COLORS[(day + i) % APPT_COLORS.length] }} />
+                      ))}
+                    </div>
+                  )}
+                  <span className="dz-hero-cal-avail">{count > 0 ? 'Avail.' : dow === 0 || dow === 6 ? '' : 'No avail.'}</span>
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function DocZocPage() {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => { requestAnimationFrame(() => setLoaded(true)); }, []);
+
+  return (
+    <div className={`dz-page dz-page-dark${loaded ? ' dz-loaded' : ''}`}>
       <WebGLBackground />
 
       {/* Nav */}
-      <nav className="dz-nav dz-nav-glass">
+      <nav className="dz-nav dz-nav-glass dz-anim-fade" style={{ animationDelay: "0s" }}>
         <div className="dz-nav-inner">
           <div className="dz-nav-left">
             <div className="dz-logo">
@@ -277,14 +353,14 @@ export default function DocZocPage() {
       <header className="dz-hero" style={{ position: "relative", zIndex: 1 }}>
         <div className="dz-hero-inner">
           <div className="dz-hero-content">
-            <div className="dz-hero-badge" style={{ background: "rgba(99, 102, 241, 0.2)", color: "#a5b4fc" }}>For Healthcare Providers</div>
-            <h1 style={{ color: "#f1f5f9" }}>Your Patient Bookings,<br /><span style={{ color: "#818cf8" }}>All in One Place</span></h1>
-            <p className="dz-hero-sub" style={{ color: "#94a3b8" }}>DocZoc gives doctors a simple, secure portal to view appointments, manage patient bookings, and stay organized — so you can focus on what matters most: your patients.</p>
-            <div className="dz-hero-actions">
+            <div className="dz-hero-badge dz-anim-up" style={{ background: "rgba(99, 102, 241, 0.2)", color: "#a5b4fc", animationDelay: "0.1s" }}>For Healthcare Providers</div>
+            <h1 className="dz-anim-up" style={{ color: "#f1f5f9", animationDelay: "0.2s" }}>Your Patient Bookings,<br /><span style={{ color: "#818cf8" }}>All in One Place</span></h1>
+            <p className="dz-hero-sub dz-anim-up" style={{ color: "#94a3b8", animationDelay: "0.3s" }}>DocZoc gives doctors a simple, secure portal to view appointments, manage patient bookings, and stay organized — so you can focus on what matters most: your patients.</p>
+            <div className="dz-hero-actions dz-anim-up" style={{ animationDelay: "0.4s" }}>
               <Link to="/doczoc/signin" className="dz-btn-primary" style={{ textDecoration: "none" }}>Get Started Free</Link>
               <button className="dz-btn-outline" style={{ color: "#cbd5e1", borderColor: "rgba(148, 163, 184, 0.3)" }}>Watch Demo</button>
             </div>
-            <div className="dz-hero-trust" style={{ color: "#94a3b8" }}>
+            <div className="dz-hero-trust dz-anim-up" style={{ color: "#94a3b8", animationDelay: "0.5s" }}>
               <div className="dz-trust-avatars">
                 <div className="dz-trust-avatar" style={{ background: "#4f46e5", borderColor: "#0f0f1e" }}>S</div>
                 <div className="dz-trust-avatar" style={{ background: "#059669", borderColor: "#0f0f1e" }}>M</div>
@@ -294,71 +370,14 @@ export default function DocZocPage() {
               <span>Trusted by <strong style={{ color: "#e2e8f0" }}>2,400+</strong> providers across NYC</span>
             </div>
           </div>
-          <div className="dz-hero-visual">
-            <div className="dz-dashboard-preview" style={{ background: "rgba(15, 23, 42, 0.8)", borderColor: "rgba(99, 102, 241, 0.2)", backdropFilter: "blur(12px)" }}>
-              <div className="dz-dash-header" style={{ background: "rgba(15, 23, 42, 0.9)", borderColor: "rgba(99, 102, 241, 0.15)" }}>
-                <div className="dz-dash-dots">
-                  <span></span><span></span><span></span>
-                </div>
-                <span className="dz-dash-title" style={{ color: "#94a3b8" }}>Dashboard</span>
-              </div>
-              <div className="dz-dash-body">
-                <div className="dz-dash-stat-row">
-                  <div className="dz-dash-stat" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.15)" }}>
-                    <span className="dz-dash-stat-num">24</span>
-                    <span className="dz-dash-stat-label" style={{ color: "#94a3b8" }}>Today's Appts</span>
-                  </div>
-                  <div className="dz-dash-stat" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.15)" }}>
-                    <span className="dz-dash-stat-num">8</span>
-                    <span className="dz-dash-stat-label" style={{ color: "#94a3b8" }}>New Patients</span>
-                  </div>
-                  <div className="dz-dash-stat" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.15)" }}>
-                    <span className="dz-dash-stat-num">96%</span>
-                    <span className="dz-dash-stat-label" style={{ color: "#94a3b8" }}>Show Rate</span>
-                  </div>
-                </div>
-                <div className="dz-dash-list">
-                  <div className="dz-dash-appt" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.1)" }}>
-                    <div className="dz-appt-time">9:00 AM</div>
-                    <div className="dz-appt-info">
-                      <span className="dz-appt-name" style={{ color: "#e2e8f0" }}>Sarah M.</span>
-                      <span className="dz-appt-type" style={{ color: "#94a3b8" }}>Follow-up — Shoulder</span>
-                    </div>
-                    <div className="dz-appt-badge dz-confirmed">Confirmed</div>
-                  </div>
-                  <div className="dz-dash-appt" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.1)" }}>
-                    <div className="dz-appt-time">9:30 AM</div>
-                    <div className="dz-appt-info">
-                      <span className="dz-appt-name" style={{ color: "#e2e8f0" }}>James K.</span>
-                      <span className="dz-appt-type" style={{ color: "#94a3b8" }}>New Patient — Knee</span>
-                    </div>
-                    <div className="dz-appt-badge dz-new">New</div>
-                  </div>
-                  <div className="dz-dash-appt" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.1)" }}>
-                    <div className="dz-appt-time">10:15 AM</div>
-                    <div className="dz-appt-info">
-                      <span className="dz-appt-name" style={{ color: "#e2e8f0" }}>Maria L.</span>
-                      <span className="dz-appt-type" style={{ color: "#94a3b8" }}>Post-Op — ACL</span>
-                    </div>
-                    <div className="dz-appt-badge dz-confirmed">Confirmed</div>
-                  </div>
-                  <div className="dz-dash-appt" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.1)" }}>
-                    <div className="dz-appt-time">11:00 AM</div>
-                    <div className="dz-appt-info">
-                      <span className="dz-appt-name" style={{ color: "#e2e8f0" }}>David R.</span>
-                      <span className="dz-appt-type" style={{ color: "#94a3b8" }}>Consultation — Hip</span>
-                    </div>
-                    <div className="dz-appt-badge dz-pending">Pending</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="dz-hero-visual dz-anim-scale" style={{ animationDelay: "0.3s" }}>
+            <HeroCalendar />
           </div>
         </div>
       </header>
 
       {/* Dark Footer */}
-      <footer className="dz-footer dz-footer-dark">
+      <footer className="dz-footer dz-footer-dark dz-anim-fade" style={{ animationDelay: "0.6s" }}>
         <div className="dz-footer-inner">
           <div className="dz-footer-left">
             <div className="dz-logo">

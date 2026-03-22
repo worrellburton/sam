@@ -5725,6 +5725,124 @@ img.insurance-logo {
 .dz-new { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
 .dz-pending { background: rgba(245, 158, 11, 0.1); color: #d97706; }
 
+/* Hero Calendar */
+.dz-hero-cal {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.dz-hero-cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.dz-hero-cal-month {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+.dz-hero-cal-nav-btn {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(30, 41, 59, 0.5);
+  color: #94a3b8;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dz-hero-cal-nav-btn:hover { border-color: #6366f1; color: #e2e8f0; }
+.dz-hero-cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 6px;
+}
+.dz-hero-cal-dh {
+  text-align: center;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  padding: 4px 0;
+  letter-spacing: 0.05em;
+}
+.dz-hero-cal-grid { display: flex; flex-direction: column; gap: 2px; }
+.dz-hero-cal-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  opacity: 0;
+  transform: translateY(8px);
+}
+.dz-loaded .dz-hero-cal-week {
+  animation: dzCalWeekIn 0.4s ease forwards;
+}
+.dz-hero-cal-cell {
+  padding: 6px 2px;
+  border-radius: 6px;
+  text-align: center;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  transition: background 0.15s;
+}
+.dz-hero-cal-cell.has:hover { background: rgba(99, 102, 241, 0.08); }
+.dz-hero-cal-cell.today-cell { background: rgba(99, 102, 241, 0.08); }
+.dz-hero-cal-num {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+.dz-hero-cal-num.today {
+  background: #6366f1;
+  color: #fff;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem;
+}
+.dz-hero-cal-dots { display: flex; gap: 2px; margin-top: 1px; }
+.dz-hero-cal-dot { width: 4px; height: 4px; border-radius: 50%; }
+.dz-hero-cal-avail {
+  font-size: 0.55rem;
+  color: #475569;
+}
+.dz-hero-cal-cell.has .dz-hero-cal-avail { color: #818cf8; }
+
+/* Load animations */
+.dz-anim-fade,
+.dz-anim-up,
+.dz-anim-scale {
+  opacity: 0;
+}
+.dz-loaded .dz-anim-fade { animation: dzFadeIn 0.6s ease forwards; }
+.dz-loaded .dz-anim-up { animation: dzSlideUp 0.6s ease forwards; }
+.dz-loaded .dz-anim-scale { animation: dzScaleIn 0.7s ease forwards; }
+
+@keyframes dzFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes dzSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes dzScaleIn {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes dzCalWeekIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Features */
 .dz-features {
   padding: 80px 24px;
@@ -5849,16 +5967,44 @@ img.insurance-logo {
 }
 .dz-footer-links a:hover { color: #6366f1; }
 
-/* ===== SSO Sign-In Card ===== */
+/* ===== SSO Sign-In Page ===== */
+.dz-signin-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: Inter, -apple-system, sans-serif;
+}
+.dz-signin-nav {
+  position: relative;
+  z-index: 10;
+  padding: 20px 24px;
+}
+.dz-signin-back {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dz-signin-main {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px 60px;
+}
 .dz-sso-card {
   width: 100%;
   max-width: 420px;
   background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 40px 36px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
 }
 .dz-sso-header {
   text-align: center;
@@ -5967,6 +6113,162 @@ img.insurance-logo {
 }
 .dz-sso-footer-text a { color: #818cf8; text-decoration: none; }
 .dz-sso-footer-text a:hover { text-decoration: underline; }
+
+/* SSO glow */
+.dz-sso-glow {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 120px;
+  background: radial-gradient(ellipse, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+  pointer-events: none;
+}
+.dz-sso-icon-wrap {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.dz-sso-google {
+  background: rgba(30, 41, 59, 0.6) !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  padding: 14px 16px !important;
+  font-size: 0.95rem !important;
+}
+.dz-sso-google:hover {
+  background: rgba(66, 133, 244, 0.1) !important;
+  border-color: rgba(66, 133, 244, 0.4) !important;
+}
+.dz-sso-phone {
+  background: rgba(30, 41, 59, 0.4) !important;
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
+  padding: 14px 16px !important;
+}
+.dz-sso-phone:hover {
+  background: rgba(99, 102, 241, 0.08) !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+.dz-sso-phone-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: #818cf8;
+}
+.dz-sso-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #818cf8;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: color 0.15s;
+}
+.dz-sso-back-btn:hover { color: #a5b4fc; }
+.dz-sso-phone-form { display: flex; flex-direction: column; gap: 16px; }
+.dz-phone-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.dz-phone-input-wrap:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+.dz-phone-prefix {
+  padding: 11px 0 11px 14px;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.92rem;
+  border-right: 1px solid rgba(148, 163, 184, 0.15);
+  padding-right: 10px;
+  margin-right: 10px;
+}
+.dz-phone-input-wrap input {
+  flex: 1;
+  border: none !important;
+  background: transparent !important;
+  padding: 11px 14px 11px 0 !important;
+  box-shadow: none !important;
+}
+.dz-sso-submit.disabled,
+.dz-sso-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.dz-sso-hint {
+  text-align: center;
+  font-size: 0.78rem;
+  color: #475569;
+}
+/* Verify code */
+.dz-sso-verify { text-align: center; }
+.dz-verify-icon {
+  width: 64px; height: 64px;
+  border-radius: 20px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.dz-verify-text {
+  font-size: 0.92rem;
+  color: #94a3b8;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.dz-verify-text strong { color: #e2e8f0; }
+.dz-code-inputs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.dz-code-input {
+  width: 48px !important;
+  height: 56px;
+  border-radius: 12px !important;
+  border: 1.5px solid rgba(148, 163, 184, 0.2) !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+  color: #e2e8f0 !important;
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  padding: 0 !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.dz-code-input:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+  outline: none;
+}
+.dz-resend-btn {
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 0.82rem;
+  cursor: pointer;
+  margin-top: 12px;
+  display: block;
+  width: 100%;
+}
+.dz-resend-btn span { color: #818cf8; }
+.dz-resend-btn:hover span { text-decoration: underline; }
 
 /* ===== DocZoc Platform Layout ===== */
 .dz-platform {

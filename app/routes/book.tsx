@@ -329,7 +329,7 @@ const insurances = "Aetna, BlueCross BlueShield, UnitedHealthcare, UnitedHealthc
 
 const locations = [
   {
-    name: "NY Orthopedics – Lenox Hill Greenwich Village",
+    name: "NY Orthopedics – Greenwich Village",
     address: "200 W 13th St, 6th Fl, New York, NY 10011",
     phone: "(917) 905-9370",
     hours: "Mon, Wed, Thu: 8AM–5PM",
@@ -379,7 +379,7 @@ export default function BookPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [patientType, setPatientType] = useState<'new' | 'existing'>('existing');
-  const [selectedLocs, setSelectedLocs] = useState<Set<number>>(() => new Set(locations.map((_, i) => i)));
+  const [selectedLocs, setSelectedLocs] = useState<Set<number>>(new Set());
   const toggleLoc = (idx: number) => {
     setSelectedLocs(prev => {
       const next = new Set(prev);
@@ -723,9 +723,15 @@ export default function BookPage() {
         {/* RIGHT: Booking Panel */}
         <div
           className={`dz-booking${selectedDate ? ' expanded' : ''}`}
-          onClick={() => { if (!calActive) setCalHover(true); }}
+          onClick={(e) => {
+            if (!calActive) setCalHover(true);
+            if (e.target === e.currentTarget) {
+              if (selectedSlot) { setSelectedSlot(null); }
+              else if (selectedDate) { setSelectedDate(null); }
+            }
+          }}
         >
-          <div className="dz-booking-card">
+          <div className="dz-booking-card" onClick={(e) => e.stopPropagation()}>
             {confirmed ? (
               <div className="dz-confirmed">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -771,6 +777,11 @@ export default function BookPage() {
                   })}
                 </div>
 
+                {selectedLocs.size === 0 && (
+                  <p className="dz-loc-prompt">Select a location to get started</p>
+                )}
+
+                {selectedLocs.size > 0 && <>
                 {/* Month Calendar */}
                 <div className="dz-cal-header">
                   <h3>{MONTHS[currentMonth]} {currentYear}</h3>
@@ -898,6 +909,7 @@ export default function BookPage() {
                     </button>
                   </div>
                 )}
+              </>}
               </>
             )}
           </div>

@@ -8,6 +8,7 @@ export interface Condition {
   treatments: string[];
   recovery: string;
   reassurance: string;
+  seoText: string;
   relatedService: string;
 }
 
@@ -32,6 +33,7 @@ export const conditions: Condition[] = [
     ],
     recovery: "Many rotator cuff tears respond beautifully to non-surgical treatment. If surgery is needed, arthroscopic repair means tiny incisions, less pain, and most patients are back to their daily routines within a few weeks. Full recovery typically takes 3-6 months with guided rehabilitation.",
     reassurance: "You're in experienced hands. Dr. Elguizaoui has repaired hundreds of rotator cuffs using advanced arthroscopic techniques refined during his fellowship at Lenox Hill Hospital.",
+    seoText: "Dr. Sameh Elguizaoui is a board-certified orthopedic surgeon specializing in rotator cuff repair in New York City. With offices in Manhattan, Brooklyn, and Scarsdale, he provides expert rotator cuff tear diagnosis and treatment — from conservative PRP therapy to advanced arthroscopic repair. Fellowship-trained at Lenox Hill Hospital and former team physician for the NY Jets and NY Islanders, Dr. Elguizaoui offers world-class shoulder care for patients across the NYC metropolitan area.",
     relatedService: "shoulder-knee-surgery",
   },
   {
@@ -54,6 +56,7 @@ export const conditions: Condition[] = [
     ],
     recovery: "Physical therapy alone helps many patients with first-time instability. When surgery is needed, arthroscopic repair is minimally invasive with excellent success rates. Most patients return to full activity within 4-6 months.",
     reassurance: "Every treatment plan starts with understanding your goals — whether that's getting back to sports or simply reaching for things without worry.",
+    seoText: "If you're experiencing shoulder instability or recurrent dislocations in New York City, Dr. Sameh Elguizaoui offers expert evaluation and treatment at his Manhattan, Brooklyn, and Scarsdale offices. As a fellowship-trained orthopedic surgeon, he specializes in arthroscopic Bankart repair and Latarjet procedures for patients throughout the NYC area who need lasting shoulder stability.",
     relatedService: "shoulder-knee-surgery",
   },
   {
@@ -76,6 +79,7 @@ export const conditions: Condition[] = [
     ],
     recovery: "Many labral tears improve with dedicated physical therapy. When surgery is the best option, arthroscopic repair uses tiny incisions and has you in a sling for a few weeks, with gradual return to full activity over 3-6 months.",
     reassurance: "Dr. Elguizaoui's fellowship training included extensive experience with labral repairs. He'll take the time to explain exactly what's happening and what to expect at every step.",
+    seoText: "Dr. Sameh Elguizaoui provides specialized labral tear and SLAP tear treatment in NYC. With locations in Manhattan, Brooklyn, and Scarsdale, he offers comprehensive diagnosis using advanced imaging and arthroscopic labral repair techniques. His Lenox Hill fellowship training ensures patients across New York City receive the highest standard of shoulder care.",
     relatedService: "shoulder-knee-surgery",
   },
   {
@@ -98,6 +102,7 @@ export const conditions: Condition[] = [
     ],
     recovery: "ACL reconstruction is performed arthroscopically as an outpatient procedure. You'll work closely with a physical therapist on a personalized recovery plan. Most patients return to sports between 6-9 months, with Dr. Elguizaoui guiding you through every milestone.",
     reassurance: "As a former team physician for the NY Jets and NY Islanders, Dr. Elguizaoui brings the same level of care to every patient — not just professional athletes.",
+    seoText: "Looking for an ACL surgeon in New York City? Dr. Sameh Elguizaoui is a board-certified orthopedic surgeon performing ACL reconstruction at top NYC hospitals including Lenox Hill and Mount Sinai West. With offices in Manhattan, Brooklyn, and Scarsdale, he brings the same expertise used for professional NFL and NHL athletes to every patient in the New York metropolitan area.",
     relatedService: "shoulder-knee-surgery",
   },
   {
@@ -120,6 +125,7 @@ export const conditions: Condition[] = [
     ],
     recovery: "For a simple meniscectomy, many patients walk the same day and return to normal activities in 2-4 weeks. Meniscus repair takes a bit longer — typically 3-4 months — but preserves this important cushion for the long term.",
     reassurance: "Dr. Elguizaoui always prioritizes saving your meniscus whenever possible, because preserving this tissue protects your knee for years to come.",
+    seoText: "Dr. Sameh Elguizaoui offers expert meniscus tear treatment in New York City, from conservative therapy to arthroscopic meniscus repair and meniscectomy. Conveniently located in Manhattan, Brooklyn, and Scarsdale, he prioritizes meniscus preservation to protect long-term knee health for patients across the NYC area.",
     relatedService: "shoulder-knee-surgery",
   },
   {
@@ -142,6 +148,7 @@ export const conditions: Condition[] = [
     ],
     recovery: "Many first-time dislocations heal well with physical therapy and bracing. For recurrent instability, MPFL reconstruction is highly successful, with most patients returning to full activity in 4-6 months.",
     reassurance: "If your kneecap has come out of place more than once, you're not alone — and there are excellent solutions. Dr. Elguizaoui will help you understand your options clearly.",
+    seoText: "For patellar instability and kneecap dislocation treatment in New York City, Dr. Sameh Elguizaoui offers expert care including MPFL reconstruction and physical therapy programs. With offices in Manhattan, Brooklyn, and Scarsdale, he provides comprehensive knee evaluation and treatment for patients throughout the greater NYC area.",
     relatedService: "shoulder-knee-surgery",
   },
   {
@@ -164,6 +171,7 @@ export const conditions: Condition[] = [
     ],
     recovery: "Recovery depends on the technique used. Smaller repairs may have you back in 6-8 weeks; cartilage transplant procedures take 4-6 months but offer long-lasting results. Dr. Elguizaoui will match the right technique to your specific injury.",
     reassurance: "Cartilage repair has advanced tremendously. Dr. Elguizaoui's European fellowship training means you have access to techniques that are truly at the forefront of orthopedic medicine.",
+    seoText: "Dr. Sameh Elguizaoui is one of the leading knee cartilage repair specialists in New York City, with international fellowship training in Switzerland, the Netherlands, and Italy. From microfracture to cartilage transplantation (OATS, ACI), he offers the full spectrum of cartilage restoration at his Manhattan, Brooklyn, and Scarsdale offices for patients across the NYC metro area.",
     relatedService: "cartilage-repair",
   },
   {
@@ -186,6 +194,7 @@ export const conditions: Condition[] = [
     ],
     recovery: "Most biceps tendon injuries improve significantly with physical therapy and time. When surgery (tenodesis) is needed, it's a well-established procedure with excellent outcomes. Most patients return to full strength within 3-4 months.",
     reassurance: "Biceps tendon problems might sound intimidating, but they're among the most successfully treated shoulder conditions. Dr. Elguizaoui will help you understand exactly what's going on and how to fix it.",
+    seoText: "For biceps tendon injuries and shoulder pain in New York City, Dr. Sameh Elguizaoui provides expert diagnosis and treatment including PRP therapy, physical therapy, and biceps tenodesis surgery. Board-certified and fellowship-trained, he sees patients at his Manhattan, Brooklyn, and Scarsdale offices throughout the NYC metropolitan area.",
     relatedService: "shoulder-knee-surgery",
   },
 ];

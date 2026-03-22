@@ -131,33 +131,10 @@ export default function ConditionPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="cond-cta">
-        <div className="container" style={{ maxWidth: "900px", textAlign: "center" }}>
-          <h2 className="reveal">Ready to Take the Next Step?</h2>
-          <p className="reveal">Schedule a consultation with Dr. Elguizaoui. He'll listen, explain your options clearly, and help you decide what's right for you.</p>
-          <div className="cond-cta-buttons reveal">
-            <Link to="/book" className="btn btn-primary btn-lg">Book a Consultation</Link>
-            <a href="tel:+19179059370" className="btn btn-outline">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              Call (917) 905-9370
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Other Conditions */}
-      <section className="section">
+      {/* SEO / GEO Text */}
+      <section className="section cond-seo">
         <div className="container" style={{ maxWidth: "900px" }}>
-          <h3 style={{ marginBottom: "16px" }}>Other Conditions We Treat</h3>
-          <div className="cond-other-grid">
-            {conditions.filter(c => c.slug !== condition.slug).slice(0, 4).map((c) => (
-              <Link to={`/conditions/${c.slug}`} className="cond-other-card" key={c.slug}>
-                <span className="cond-other-title">{c.title}</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
-              </Link>
-            ))}
-          </div>
+          <p className="cond-seo-text">{condition.seoText}</p>
         </div>
       </section>
 

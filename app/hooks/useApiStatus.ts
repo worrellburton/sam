@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { checkStediApi } from "./useStedi";
 
 export interface ApiStatus {
   name: string;
@@ -62,11 +63,22 @@ export function useApiStatus(pollInterval = 60000) {
   const [statuses, setStatuses] = useState<ApiStatus[]>([
     { name: "ICD-10 API", url: "https://clinicaltables.nlm.nih.gov", status: "checking" },
     { name: "Brandfetch", url: "https://cdn.brandfetch.io", status: "checking" },
+    { name: "Stedi", url: "https://healthcare.us.stedi.com", status: "checking" },
   ]);
 
   const checkAll = useCallback(async () => {
-    const results = await Promise.all([checkNlmApi(), checkBrandfetch()]);
-    setStatuses(results);
+    const [nlm, brandfetch, stedi] = await Promise.all([
+      checkNlmApi(),
+      checkBrandfetch(),
+      checkStediApi().then((r): ApiStatus => ({
+        name: "Stedi",
+        url: "https://healthcare.us.stedi.com",
+        status: r.status === "no_key" ? "offline" : r.status,
+        latency: r.latency,
+        lastChecked: new Date(),
+      })),
+    ]);
+    setStatuses([nlm, brandfetch, stedi]);
   }, []);
 
   useEffect(() => {

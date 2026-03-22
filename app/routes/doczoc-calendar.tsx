@@ -24,7 +24,9 @@ function getAppts(date: Date, locId?: string) {
   const d = date.getDate(), m = date.getMonth(), y = date.getFullYear();
   const locSeed = locId ? locId.charCodeAt(4) : 0;
   const seed = (d * 7 + m * 13 + y + locSeed) % 30;
-  const count = seed > 20 ? 4 : seed > 12 ? 3 : seed > 5 ? 2 : 1;
+  // ~50% of weekdays have no appointments
+  if (seed % 2 === 0) return [];
+  const count = seed > 20 ? 3 : seed > 12 ? 2 : 1;
   return Array.from({ length: count }, (_, i) => ({
     type: APPT_TYPES[(seed + i * 3) % APPT_TYPES.length],
     time: `${8 + ((seed + i * 2) % 9)}:${i % 2 === 0 ? '00' : '30'} AM`,
@@ -176,7 +178,7 @@ export default function CalendarPage() {
                     >
                       <span className={`dz-cal-date${isToday ? ' today' : ''}`}>{date.getDate()}</span>
                       <span className={`dz-cal-shift-count${appts.length > 0 ? ' has' : ''}`}>
-                        {appts.length > 0 ? `${appts.length} appts` : date.getDay() === 0 || date.getDay() === 6 ? '' : 'No appts'}
+                        {appts.length > 0 ? `${appts.length} appts` : date.getDay() === 0 || date.getDay() === 6 ? '' : 'No avail.'}
                       </span>
                       {appts.length > 0 && (
                         <div className="dz-cal-dots">

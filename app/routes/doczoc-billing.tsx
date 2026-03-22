@@ -3,9 +3,11 @@ import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { useApiStatus, useICD10Search } from "~/hooks/useApiStatus";
 import type { ApiStatus } from "~/hooks/useApiStatus";
+import { useStediClaims, buildClaimPayload } from "~/hooks/useStedi";
+import type { ClaimRecord } from "~/hooks/useStedi";
 
 export function meta() {
-  return [{ title: "Coding & Billing | DocZoc" }];
+  return [{ title: "Billing & Claims | DocZoc" }];
 }
 
 // ── ACL Repair Visit Data ──────────────────────────────────────────
@@ -384,16 +386,166 @@ function ICD10SearchPanel() {
   );
 }
 
+// ── Claim Status Badge ────────────────────────────────────────────
+function ClaimStatusBadge({ status }: { status: ClaimRecord["status"] }) {
+  const colors: Record<string, { bg: string; color: string }> = {
+    draft: { bg: "rgba(148, 163, 184, 0.12)", color: "#94a3b8" },
+    submitting: { bg: "rgba(251, 191, 36, 0.12)", color: "#fbbf24" },
+    accepted: { bg: "rgba(34, 197, 94, 0.12)", color: "#22c55e" },
+    rejected: { bg: "rgba(239, 68, 68, 0.12)", color: "#ef4444" },
+    error: { bg: "rgba(239, 68, 68, 0.12)", color: "#ef4444" },
+  };
+  const c = colors[status] || colors.draft;
+  return (
+    <span style={{
+      display: "inline-block", padding: "3px 10px", borderRadius: 6,
+      fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase",
+      letterSpacing: "0.05em", background: c.bg, color: c.color,
+    }}>
+      {status === "submitting" ? "Sending..." : status}
+    </span>
+  );
+}
+
+// ── Claim Preview Modal ──────────────────────────────────────────
+function ClaimPreviewModal({
+  visit,
+  onClose,
+  onSubmit,
+  submitting,
+}: {
+  visit: Visit;
+  onClose: () => void;
+  onSubmit: () => void;
+  submitting: boolean;
+}) {
+  const payload = buildClaimPayload(visit);
+  const [copied, setCopied] = useState(false);
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+    }} onClick={onClose}>
+      <div style={{
+        background: "#0f1729", border: "1px solid rgba(99,102,241,0.2)",
+        borderRadius: 16, padding: 28, maxWidth: 680, width: "90vw",
+        maxHeight: "85vh", overflow: "auto",
+      }} onClick={(e) => e.stopPropagation()}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#e4e4ee" }}>
+            837P Claim Preview
+          </h3>
+          <button onClick={onClose} style={{
+            background: "none", border: "none", color: "#5a5a6e", cursor: "pointer", fontSize: "1.2rem",
+          }}>&times;</button>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div style={{ background: "rgba(10,10,26,0.4)", border: "1px solid rgba(148,163,184,0.08)", borderRadius: 10, padding: 12 }}>
+            <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 6 }}>Patient</div>
+            <div style={{ fontSize: "0.82rem", color: "#e4e4ee", fontWeight: 600 }}>{visit.patient}</div>
+            <div style={{ fontSize: "0.72rem", color: "#5a5a6e" }}>DOB: {visit.dob} &middot; {visit.memberId}</div>
+          </div>
+          <div style={{ background: "rgba(10,10,26,0.4)", border: "1px solid rgba(148,163,184,0.08)", borderRadius: 10, padding: 12 }}>
+            <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 6 }}>Payer</div>
+            <div style={{ fontSize: "0.82rem", color: "#e4e4ee", fontWeight: 600 }}>{visit.insurance}</div>
+            <div style={{ fontSize: "0.72rem", color: "#5a5a6e" }}>Payer ID: {payload.payer.payerId}</div>
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 6 }}>
+            Stedi JSON Payload
+          </div>
+          <div style={{
+            position: "relative", background: "rgba(10,10,26,0.5)",
+            border: "1px solid rgba(148,163,184,0.08)", borderRadius: 10,
+            padding: 14, maxHeight: 300, overflow: "auto",
+          }}>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              style={{
+                position: "absolute", top: 8, right: 8,
+                background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)",
+                borderRadius: 6, padding: "4px 10px", fontSize: "0.68rem",
+                color: "#a5b4fc", cursor: "pointer", fontWeight: 600,
+              }}
+            >
+              {copied ? "Copied!" : "Copy"}
+            </button>
+            <pre style={{
+              fontSize: "0.72rem", color: "#8b8ba0", fontFamily: "'SF Mono', Consolas, monospace",
+              whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0,
+            }}>
+              {JSON.stringify(payload, null, 2)}
+            </pre>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+          <button onClick={onClose} style={{
+            padding: "10px 20px", borderRadius: 10,
+            border: "1px solid rgba(148,163,184,0.15)", background: "transparent",
+            color: "#8b8ba0", fontSize: "0.82rem", fontWeight: 600, cursor: "pointer",
+          }}>
+            Cancel
+          </button>
+          <button
+            onClick={onSubmit}
+            disabled={submitting}
+            style={{
+              padding: "10px 24px", borderRadius: 10,
+              border: "1px solid rgba(34,197,94,0.4)",
+              background: submitting ? "rgba(34,197,94,0.1)" : "rgba(34,197,94,0.2)",
+              color: submitting ? "#5a5a6e" : "#22c55e",
+              fontSize: "0.82rem", fontWeight: 700, cursor: submitting ? "not-allowed" : "pointer",
+              display: "flex", alignItems: "center", gap: 8,
+              transition: "all 0.15s",
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            {submitting ? "Submitting..." : "Submit to Stedi"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Page ───────────────────────────────────────────────────────────
 export default function BillingPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const [selectedVisit, setSelectedVisit] = useState<Visit | null>(null);
+  const [activeTab, setActiveTab] = useState<"billing" | "claims">("billing");
+  const [showClaimPreview, setShowClaimPreview] = useState(false);
   const { statuses, refresh } = useApiStatus();
+  const { claims, submitting, submitClaim } = useStediClaims();
 
   const icdCodes = selectedVisit?.codes.filter((c) => c.type === "ICD-10") || [];
   const cptCodes = selectedVisit?.codes.filter((c) => c.type === "CPT" || c.type === "HCPCS") || [];
   const totalCharges = cptCodes.reduce((sum, c) => sum + (c.fee || 0), 0);
+
+  const handleSubmitClaim = useCallback(async () => {
+    if (!selectedVisit) return;
+    const payload = buildClaimPayload(selectedVisit);
+    await submitClaim(
+      selectedVisit.id,
+      selectedVisit.patient,
+      selectedVisit.insurance,
+      totalCharges,
+      payload
+    );
+    setShowClaimPreview(false);
+  }, [selectedVisit, totalCharges, submitClaim]);
 
   return (
     <div className="dz-platform">
@@ -405,15 +557,118 @@ export default function BillingPage() {
       `}</style>
       <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
+
+      {/* Claim Preview Modal */}
+      {showClaimPreview && selectedVisit && (
+        <ClaimPreviewModal
+          visit={selectedVisit}
+          onClose={() => setShowClaimPreview(false)}
+          onSubmit={handleSubmitClaim}
+          submitting={submitting}
+        />
+      )}
+
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
         <header className="dz-platform-header">
           <div>
-            <h1>Coding & Billing</h1>
-            <p>Review visits, assign codes, and generate bills</p>
+            <h1>Billing & Claims</h1>
+            <p>Review visits, submit claims to insurance, and generate bills</p>
           </div>
           <ApiStatusBar statuses={statuses} onRefresh={refresh} />
         </header>
 
+        {/* Tabs */}
+        <div className="dz-insight-period-tabs" style={{ marginBottom: 16, width: "fit-content" }}>
+          <button
+            className={`dz-insight-period-btn${activeTab === "billing" ? " active" : ""}`}
+            onClick={() => setActiveTab("billing")}
+          >
+            Coding & Billing
+          </button>
+          <button
+            className={`dz-insight-period-btn${activeTab === "claims" ? " active" : ""}`}
+            onClick={() => setActiveTab("claims")}
+          >
+            Claims
+            {claims.length > 0 && (
+              <span style={{
+                marginLeft: 6, background: "rgba(99,102,241,0.2)", color: "#818cf8",
+                padding: "1px 6px", borderRadius: 8, fontSize: "0.65rem", fontWeight: 700,
+              }}>{claims.length}</span>
+            )}
+          </button>
+        </div>
+
+        {activeTab === "claims" ? (
+          /* ── Claims Tab ─────────────────────────────────────── */
+          <div className="dz-billing-detail" style={{ minHeight: 400 }}>
+            {claims.length === 0 ? (
+              <div className="dz-billing-empty">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3d3f4a" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <h3>No claims submitted yet</h3>
+                <p>Select a visit in the Coding & Billing tab and click "Send to Stedi" to submit a claim</p>
+              </div>
+            ) : (
+              <div>
+                <div className="dz-billing-section-label" style={{ marginBottom: 16 }}>
+                  Submitted Claims
+                  <span className="dz-billing-code-count">{claims.length}</span>
+                </div>
+                <div className="dz-table-wrap">
+                  <table className="dz-table">
+                    <thead>
+                      <tr>
+                        <th>Claim ID</th>
+                        <th>Patient</th>
+                        <th>Payer</th>
+                        <th style={{ textAlign: "right" }}>Amount</th>
+                        <th>Status</th>
+                        <th>Submitted</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {claims.map((claim) => (
+                        <tr key={claim.id}>
+                          <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.78rem", color: "#818cf8", fontWeight: 600 }}>
+                            {claim.id}
+                          </td>
+                          <td style={{ fontWeight: 600, color: "#e4e4ee" }}>{claim.patient}</td>
+                          <td style={{ color: "#8b8ba0" }}>{claim.payer}</td>
+                          <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e" }}>
+                            ${claim.totalCharge.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                          </td>
+                          <td><ClaimStatusBadge status={claim.status} /></td>
+                          <td style={{ fontSize: "0.75rem", color: "#5a5a6e" }}>
+                            {claim.submittedAt ? new Date(claim.submittedAt).toLocaleString() : "—"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Show response details for most recent claim */}
+                {claims[0]?.response && (
+                  <div style={{ marginTop: 16 }}>
+                    <div className="dz-billing-section-label">Latest Response</div>
+                    <div className="dz-billing-notes">
+                      <strong>Status:</strong> {claims[0].response.status}{"\n"}
+                      <strong>Message:</strong> {claims[0].response.message}
+                      {claims[0].response.claimId && (
+                        <>{"\n"}<strong>Stedi Claim ID:</strong> {claims[0].response.claimId}</>
+                      )}
+                      {claims[0].response.x12 && (
+                        <>{"\n\n"}<strong>277CA Acknowledgment (X12):</strong>{"\n"}{claims[0].response.x12}</>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+        /* ── Billing Tab ──────────────────────────────────────── */
         <div className="dz-billing-layout">
           {/* Visit list */}
           <div className="dz-billing-list">
@@ -447,18 +702,30 @@ export default function BillingPage() {
                     <h2>{selectedVisit.patient}</h2>
                     <p>DOB: {selectedVisit.dob} &middot; {selectedVisit.insurance} &middot; {selectedVisit.memberId}</p>
                   </div>
-                  <button
-                    className="dz-billing-pdf-btn"
-                    onClick={() => generateBillPDF(selectedVisit)}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                      <polyline points="14 2 14 8 20 8"/>
-                      <line x1="12" y1="18" x2="12" y2="12"/>
-                      <polyline points="9 15 12 18 15 15"/>
-                    </svg>
-                    Generate PDF
-                  </button>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button
+                      className="dz-billing-pdf-btn"
+                      onClick={() => setShowClaimPreview(true)}
+                      style={{ borderColor: "rgba(34,197,94,0.3)", color: "#22c55e" }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                      </svg>
+                      Send to Stedi
+                    </button>
+                    <button
+                      className="dz-billing-pdf-btn"
+                      onClick={() => generateBillPDF(selectedVisit)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="12" y1="18" x2="12" y2="12"/>
+                        <polyline points="9 15 12 18 15 15"/>
+                      </svg>
+                      Generate PDF
+                    </button>
+                  </div>
                 </div>
 
                 {/* Visit info */}
@@ -572,6 +839,7 @@ export default function BillingPage() {
             )}
           </div>
         </div>
+        )}
       </main>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 
@@ -99,6 +99,174 @@ function Donut({ segments, size = 120 }: { segments: { value: number; color: str
   );
 }
 
+// ── Timeline Range Picker ────────────────────────────────────────────
+const MONTH_ABBRS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+interface TimelineMonth {
+  year: number;
+  month: number;
+  label: string;
+  key: string;
+}
+
+function buildTimeline(startYear: number, endYear: number): TimelineMonth[] {
+  const months: TimelineMonth[] = [];
+  for (let y = startYear; y <= endYear; y++) {
+    const maxM = y === endYear ? new Date().getMonth() + 3 : 11;
+    for (let m = 0; m <= Math.min(maxM, 11); m++) {
+      months.push({ year: y, month: m, label: MONTH_ABBRS[m], key: `${y}-${m}` });
+    }
+  }
+  return months;
+}
+
+function TimelineRangePicker({
+  startIdx,
+  endIdx,
+  onChange,
+}: {
+  startIdx: number;
+  endIdx: number;
+  onChange: (start: number, end: number) => void;
+}) {
+  const now = new Date();
+  const timeline = useMemo(() => buildTimeline(now.getFullYear() - 1, now.getFullYear() + 1), []);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef<"start" | "end" | "range" | null>(null);
+  const dragOffset = useRef(0);
+  const CELL_W = 52;
+
+  // Scroll to center the selection on mount
+  useEffect(() => {
+    if (containerRef.current) {
+      const center = ((startIdx + endIdx) / 2) * CELL_W;
+      containerRef.current.scrollLeft = center - containerRef.current.clientWidth / 2;
+    }
+  }, []);
+
+  const getIdxFromX = useCallback((clientX: number) => {
+    if (!containerRef.current) return 0;
+    const rect = containerRef.current.getBoundingClientRect();
+    const scrollX = containerRef.current.scrollLeft;
+    const x = clientX - rect.left + scrollX;
+    return Math.max(0, Math.min(timeline.length - 1, Math.floor(x / CELL_W)));
+  }, [timeline.length]);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    const idx = getIdxFromX(e.clientX);
+    // Click on start handle
+    if (Math.abs(idx - startIdx) <= 0) {
+      dragging.current = "start";
+    } else if (Math.abs(idx - endIdx) <= 0) {
+      dragging.current = "end";
+    } else if (idx > startIdx && idx < endIdx) {
+      dragging.current = "range";
+      dragOffset.current = idx - startIdx;
+    } else {
+      // Click outside — set new range of same size centered on click
+      const rangeSize = endIdx - startIdx;
+      const newStart = Math.max(0, Math.min(timeline.length - 1 - rangeSize, idx - Math.floor(rangeSize / 2)));
+      onChange(newStart, newStart + rangeSize);
+      return;
+    }
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+  }, [startIdx, endIdx, getIdxFromX, onChange, timeline.length]);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragging.current) return;
+    const idx = getIdxFromX(e.clientX);
+    if (dragging.current === "start") {
+      if (idx < endIdx) onChange(idx, endIdx);
+    } else if (dragging.current === "end") {
+      if (idx > startIdx) onChange(startIdx, idx);
+    } else if (dragging.current === "range") {
+      const newStart = Math.max(0, idx - dragOffset.current);
+      const rangeSize = endIdx - startIdx;
+      const newEnd = Math.min(timeline.length - 1, newStart + rangeSize);
+      const adjustedStart = newEnd - rangeSize;
+      onChange(adjustedStart, newEnd);
+    }
+  }, [startIdx, endIdx, getIdxFromX, onChange, timeline.length]);
+
+  const handlePointerUp = useCallback(() => {
+    dragging.current = null;
+  }, []);
+
+  // Render year markers
+  const years: { year: number; startIdx: number }[] = [];
+  let lastYear = -1;
+  timeline.forEach((m, i) => {
+    if (m.year !== lastYear) {
+      years.push({ year: m.year, startIdx: i });
+      lastYear = m.year;
+    }
+  });
+
+  const rangeLabel = `${MONTH_ABBRS[timeline[startIdx].month]} ${timeline[startIdx].year === timeline[endIdx].year ? '' : timeline[startIdx].year + ' '}${timeline[startIdx].month === timeline[endIdx].month && timeline[startIdx].year === timeline[endIdx].year ? timeline[startIdx].year : `- ${MONTH_ABBRS[timeline[endIdx].month]} ${timeline[endIdx].year}`}`;
+
+  return (
+    <div className="dz-timeline-picker">
+      <button
+        className="dz-timeline-arrow"
+        onClick={() => { if (containerRef.current) containerRef.current.scrollLeft -= 200; }}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div
+        ref={containerRef}
+        className="dz-timeline-scroll"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        style={{ touchAction: "none" }}
+      >
+        <div className="dz-timeline-track" style={{ width: timeline.length * CELL_W }}>
+          {/* Year labels */}
+          {years.map((y) => (
+            <div
+              key={y.year}
+              className="dz-timeline-year"
+              style={{ left: y.startIdx * CELL_W }}
+            >
+              {y.year}
+            </div>
+          ))}
+          {/* Month ticks */}
+          {timeline.map((m, i) => (
+            <div
+              key={m.key}
+              className={`dz-timeline-month${i >= startIdx && i <= endIdx ? ' in-range' : ''}`}
+              style={{ left: i * CELL_W, width: CELL_W }}
+            >
+              <div className="dz-timeline-tick" />
+              <span>{m.label}</span>
+            </div>
+          ))}
+          {/* Selection range overlay */}
+          <div
+            className="dz-timeline-selection"
+            style={{
+              left: startIdx * CELL_W,
+              width: (endIdx - startIdx + 1) * CELL_W,
+            }}
+          >
+            <div className="dz-timeline-handle left" />
+            <span className="dz-timeline-range-label">{rangeLabel}</span>
+            <div className="dz-timeline-handle right" />
+          </div>
+        </div>
+      </div>
+      <button
+        className="dz-timeline-arrow"
+        onClick={() => { if (containerRef.current) containerRef.current.scrollLeft += 200; }}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  );
+}
+
 // ── Data ───────────────────────────────────────────────────────────
 const WEEKLY_APPTS = [18, 22, 19, 24, 21, 26, 24];
 const WEEKLY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -142,7 +310,12 @@ const PAYER_MIX = [
 export default function InsightsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
-  const [period, setPeriod] = useState<"week" | "month" | "year">("month");
+  // Default range: ~6 months centered around current month
+  // Timeline starts at previous year Jan (index 0), current year starts at index 12
+  const now = new Date();
+  const currentMonthIdx = 12 + now.getMonth(); // offset into timeline (prev year = 0-11, current = 12-23)
+  const [rangeStart, setRangeStart] = useState(Math.max(0, currentMonthIdx - 5));
+  const [rangeEnd, setRangeEnd] = useState(currentMonthIdx);
 
   return (
     <div className="dz-platform">
@@ -154,20 +327,14 @@ export default function InsightsPage() {
             <h1>Insights</h1>
             <p>Practice analytics & performance metrics</p>
           </div>
-          <div className="dz-platform-header-right">
-            <div className="dz-insight-period-tabs">
-              {(["week", "month", "year"] as const).map((p) => (
-                <button
-                  key={p}
-                  className={`dz-insight-period-btn${period === p ? " active" : ""}`}
-                  onClick={() => setPeriod(p)}
-                >
-                  {p === "week" ? "This Week" : p === "month" ? "This Month" : "This Year"}
-                </button>
-              ))}
-            </div>
-          </div>
         </header>
+
+        {/* Timeline Range Picker */}
+        <TimelineRangePicker
+          startIdx={rangeStart}
+          endIdx={rangeEnd}
+          onChange={(s, e) => { setRangeStart(s); setRangeEnd(e); }}
+        />
 
         {/* Top KPIs */}
         <div className="dz-insight-kpi-row">

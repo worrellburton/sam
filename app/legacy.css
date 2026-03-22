@@ -7056,6 +7056,116 @@ img.insurance-logo {
 .dz-insight-payer-pct { font-size: 0.78rem; font-weight: 700; color: #e4e4ee; width: 36px; text-align: right; }
 .dz-insight-payer-count { font-size: 0.72rem; color: #5a5a6e; width: 30px; text-align: right; }
 
+/* Timeline Range Picker */
+.dz-timeline-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  padding: 8px 6px;
+  backdrop-filter: blur(8px);
+}
+.dz-timeline-arrow {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 8px;
+  background: rgba(10, 10, 26, 0.4);
+  color: #8b8ba0;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dz-timeline-arrow:hover { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border-color: rgba(99, 102, 241, 0.3); }
+.dz-timeline-scroll {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+.dz-timeline-scroll::-webkit-scrollbar { display: none; }
+.dz-timeline-track {
+  position: relative;
+  height: 52px;
+}
+.dz-timeline-year {
+  position: absolute;
+  top: 2px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #5a5a6e;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+.dz-timeline-month {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+  cursor: pointer;
+}
+.dz-timeline-month span {
+  font-size: 0.68rem;
+  color: #5a5a6e;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+.dz-timeline-month.in-range span { color: #c7d2fe; }
+.dz-timeline-tick {
+  width: 1px;
+  height: 10px;
+  background: rgba(148, 163, 184, 0.12);
+  margin-bottom: 4px;
+}
+.dz-timeline-month.in-range .dz-timeline-tick { background: rgba(99, 102, 241, 0.4); }
+.dz-timeline-selection {
+  position: absolute;
+  top: 14px;
+  height: 24px;
+  background: rgba(99, 102, 241, 0.18);
+  border: 1.5px solid rgba(99, 102, 241, 0.5);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  transition: background 0.15s;
+}
+.dz-timeline-selection:active { cursor: grabbing; }
+.dz-timeline-range-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #c7d2fe;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+.dz-timeline-handle {
+  position: absolute;
+  top: -2px;
+  width: 6px;
+  height: calc(100% + 4px);
+  border-radius: 3px;
+  background: #6366f1;
+  cursor: ew-resize;
+  transition: background 0.15s;
+}
+.dz-timeline-handle:hover { background: #818cf8; }
+.dz-timeline-handle.left { left: -3px; }
+.dz-timeline-handle.right { right: -3px; }
+
 /* Responsive */
 @media (max-width: 900px) {
   .dz-hero-inner { grid-template-columns: 1fr; gap: 40px; }

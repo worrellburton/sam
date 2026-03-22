@@ -45,17 +45,23 @@ export function StickyBar() {
                   </svg>{" "}
                   Board Certified
                 </span>
+                <span className="sticky-bar-dot">·</span>
                 <span className="sticky-highlight">
                   <img src="https://cdn.brandfetch.io/newyorkjets.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="NY Jets" className="sticky-team-logo" referrerPolicy="origin" />{" "}
                   NY Jets Team Physician
                 </span>
+                <span className="sticky-bar-dot">·</span>
                 <span className="sticky-highlight">
                   <img src="https://cdn.brandfetch.io/newyorkislanders.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="NY Islanders" className="sticky-team-logo" referrerPolicy="origin" />{" "}
                   NY Islanders Team Physician
                 </span>
+                <span className="sticky-bar-dot">·</span>
                 <span>Lenox Hill Fellowship</span>
+                <span className="sticky-bar-dot">·</span>
                 <span>Minimally Invasive Surgery</span>
+                <span className="sticky-bar-dot">·</span>
                 <span>Ohio State Magna Cum Laude</span>
+                <span className="sticky-bar-dot">·</span>
               </span>
             ))}
           </div>

@@ -172,6 +172,55 @@ function useWebGLBackground(canvasRef: React.RefObject<HTMLCanvasElement | null>
   }, [canvasRef]);
 }
 
+// Google Places API for reviews
+const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
+const PLACE_IDS = [
+  { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
+  { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
+  { id: 'ChIJzeD6h0VawokRCfzPOz9Oi7E', label: 'Brooklyn' },
+];
+const REVIEW_FIELDS = 'id,rating,userRatingCount,reviews.rating,reviews.text,reviews.authorAttribution,reviews.relativePublishTimeDescription,reviews.publishTime';
+
+interface GoogleReview {
+  rating: number;
+  text?: { text?: string };
+  authorAttribution?: { displayName?: string; photoUri?: string };
+  relativePublishTimeDescription?: string;
+  publishTime?: string;
+  locationLabel: string;
+}
+
+function useGoogleReviews() {
+  const [reviews, setReviews] = useState<GoogleReview[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+
+  useEffect(() => {
+    async function fetchAllReviews() {
+      try {
+        const results = await Promise.all(PLACE_IDS.map(async (place) => {
+          const resp = await fetch(`https://places.googleapis.com/v1/places/${place.id}?fields=${REVIEW_FIELDS}&key=${PLACES_API_KEY}`);
+          if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+          const data = await resp.json();
+          return {
+            count: data.userRatingCount || 0,
+            reviews: (data.reviews || []).map((r: GoogleReview) => ({ ...r, locationLabel: place.label })),
+          };
+        }));
+        setTotalCount(results.reduce((s, r) => s + r.count, 0));
+        const all = results.flatMap(r => r.reviews)
+          .filter((r: GoogleReview) => r.rating >= 4)
+          .sort((a: GoogleReview, b: GoogleReview) => new Date(b.publishTime || 0).getTime() - new Date(a.publishTime || 0).getTime());
+        setReviews(all);
+      } catch (err) {
+        console.warn('Google Reviews fetch failed:', err);
+      }
+    }
+    fetchAllReviews();
+  }, []);
+
+  return { reviews, totalCount };
+}
+
 const highlights = [
   { icon: "return", label: "Patients often return", sub: "More patients return than other providers in the area" },
   { icon: "clock", label: "Excellent wait time", sub: "91% of patients waited less than 30 minutes" },
@@ -181,9 +230,36 @@ const highlights = [
 const insurances = "Aetna, BlueCross BlueShield, UnitedHealthcare, UnitedHealthcare Oxford";
 
 const locations = [
-  { name: "NY Orthopedics – Lenox Hill Greenwich Village", address: "200 W 13th St, 6th Fl, New York, NY 10011" },
-  { name: "NY Orthopedics – Upper East Side", address: "159 East 74th St, New York, NY 10021" },
-  { name: "NY Orthopedics – Brooklyn Heights", address: "161 Atlantic Ave, Brooklyn, NY 11201" },
+  {
+    name: "NY Orthopedics – Lenox Hill Greenwich Village",
+    address: "200 W 13th St, 6th Fl, New York, NY 10011",
+    phone: "(917) 905-9370",
+    hours: "Mon, Wed, Thu: 8AM–5PM",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=200+West+13th+Street+New+York+NY",
+  },
+  {
+    name: "NY Orthopedics – Upper East Side",
+    address: "159 East 74th St, New York, NY 10021",
+    phone: "(917) 905-9370",
+    hours: "Mon, Wed, Thu: 8AM–5PM",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=159+East+74th+Street+New+York+NY",
+  },
+  {
+    name: "NY Orthopedics – Brooklyn Heights",
+    address: "161 Atlantic Ave, Brooklyn, NY 11201",
+    phone: "(917) 905-9370",
+    hours: "Mon, Wed, Thu: 8AM–5PM",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=161+Atlantic+Avenue+Brooklyn+NY",
+  },
+];
+
+const insuranceLogos = [
+  { name: "Aetna", logo: "https://1000logos.net/wp-content/uploads/2020/09/Aetna-Logo.png" },
+  { name: "BlueCross BlueShield", logo: "https://1000logos.net/wp-content/uploads/2021/04/Blue-Cross-Blue-Shield-logo.png" },
+  { name: "UnitedHealthcare", logo: "https://1000logos.net/wp-content/uploads/2021/05/UnitedHealthcare-logo.png" },
+  { name: "Oxford", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Oxford_Health_Plans_logo.svg/1200px-Oxford_Health_Plans_logo.svg.png" },
+  { name: "Cigna", logo: "https://1000logos.net/wp-content/uploads/2021/05/Cigna-logo.png" },
+  { name: "Empire BCBS", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Empire_BlueCross_BlueShield_logo.svg/1200px-Empire_BlueCross_BlueShield_logo.svg.png" },
 ];
 
 export default function BookPage() {
@@ -191,6 +267,7 @@ export default function BookPage() {
   today.setHours(0,0,0,0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useWebGLBackground(canvasRef);
+  const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
 
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -330,27 +407,128 @@ export default function BookPage() {
             {activeTab === 'about' && (
               <div className="dz-about-tab">
                 <p>Board-certified orthopedic surgeon and fellowship-trained sports medicine specialist. Former team physician for the NY Jets (NFL) and NY Islanders (NHL). Trained at Cleveland Clinic and Lenox Hill Hospital with an international fellowship across Switzerland, the Netherlands, and Italy.</p>
+                <div className="dz-about-stats">
+                  <div className="dz-about-stat" style={{ animationDelay: '0.1s' }}>
+                    <span className="dz-about-stat-num">15+</span>
+                    <span className="dz-about-stat-label">Years Experience</span>
+                  </div>
+                  <div className="dz-about-stat" style={{ animationDelay: '0.2s' }}>
+                    <span className="dz-about-stat-num">10K+</span>
+                    <span className="dz-about-stat-label">Patients Treated</span>
+                  </div>
+                  <div className="dz-about-stat" style={{ animationDelay: '0.3s' }}>
+                    <span className="dz-about-stat-num">3</span>
+                    <span className="dz-about-stat-label">NYC Locations</span>
+                  </div>
+                </div>
+                <div className="dz-about-credentials">
+                  <div className="dz-about-cred" style={{ animationDelay: '0.15s' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+                    Cleveland Clinic &mdash; Orthopedic Residency
+                  </div>
+                  <div className="dz-about-cred" style={{ animationDelay: '0.25s' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+                    Lenox Hill Hospital &mdash; Sports Medicine Fellowship
+                  </div>
+                  <div className="dz-about-cred" style={{ animationDelay: '0.35s' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    International Fellowship &mdash; Switzerland, Netherlands, Italy
+                  </div>
+                  <div className="dz-about-cred" style={{ animationDelay: '0.45s' }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Board Certified &mdash; American Board of Orthopaedic Surgery
+                  </div>
+                </div>
               </div>
             )}
             {activeTab === 'insurances' && (
               <div className="dz-insurance-tab">
-                <p>We accept 200+ insurance plans including Aetna, BlueCross BlueShield, UnitedHealthcare, UnitedHealthcare Oxford, Cigna, Humana, and many more.</p>
-                <p style={{ marginTop: '12px', color: '#6b6b80', fontSize: '0.9rem' }}>Please call our office to verify your specific plan.</p>
+                <p>We accept 200+ insurance plans including Aetna, BlueCross BlueShield, UnitedHealthcare, Oxford, Cigna, and many more.</p>
+                <div className="dz-ins-logos">
+                  {insuranceLogos.map((ins) => (
+                    <div className="dz-ins-logo" key={ins.name}>
+                      <img src={ins.logo} alt={ins.name} />
+                      <span>{ins.name}</span>
+                    </div>
+                  ))}
+                  <div className="dz-ins-logo dz-ins-more">
+                    <span className="dz-ins-more-num">200+</span>
+                    <span>more plans</span>
+                  </div>
+                </div>
+                <p style={{ marginTop: '16px', color: '#4a4a5e', fontSize: '0.85rem' }}>Please call our office to verify your specific plan.</p>
               </div>
             )}
             {activeTab === 'locations' && (
               <div className="dz-locations-tab">
                 {locations.map((l, i) => (
-                  <div className="dz-location-item" key={i}>
-                    <strong>{l.name}</strong>
-                    <p>{l.address}</p>
+                  <div className="dz-loc-card" key={i}>
+                    <div className="dz-loc-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div className="dz-loc-info">
+                      <strong>{l.name}</strong>
+                      <p>{l.address}</p>
+                      <div className="dz-loc-details">
+                        <span>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                          {l.phone}
+                        </span>
+                        <span>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                          {l.hours}
+                        </span>
+                      </div>
+                      <a href={l.mapsUrl} target="_blank" rel="noopener" className="dz-loc-link">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        View on Google Maps
+                      </a>
+                    </div>
                   </div>
                 ))}
               </div>
             )}
             {activeTab === 'reviews' && (
               <div className="dz-reviews-tab">
-                <p>See all patient reviews on our <Link to="/reviews">reviews page</Link>.</p>
+                {googleReviews.length > 0 ? (
+                  <>
+                    <div className="dz-reviews-header">
+                      <span className="dz-reviews-count">{googleTotal.toLocaleString()} Google Reviews</span>
+                      <Link to="/reviews" className="dz-reviews-all">See all</Link>
+                    </div>
+                    <div className="dz-reviews-list">
+                      {googleReviews.slice(0, 8).map((review, i) => (
+                        <div className="dz-review-card" key={i}>
+                          <div className="dz-review-top">
+                            <div className="dz-review-author">
+                              {review.authorAttribution?.photoUri ? (
+                                <img src={review.authorAttribution.photoUri} alt="" className="dz-review-avatar" />
+                              ) : (
+                                <div className="dz-review-avatar dz-review-avatar-placeholder">
+                                  {(review.authorAttribution?.displayName || '?')[0]}
+                                </div>
+                              )}
+                              <div>
+                                <strong>{review.authorAttribution?.displayName || 'Patient'}</strong>
+                                <span className="dz-review-loc">{review.locationLabel}</span>
+                              </div>
+                            </div>
+                            <span className="dz-review-time">{review.relativePublishTimeDescription}</span>
+                          </div>
+                          <div className="dz-review-stars">
+                            {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                          </div>
+                          {review.text?.text && <p className="dz-review-text">{review.text.text}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="dz-reviews-loading">
+                    <div className="dz-spinner" />
+                    <p>Loading reviews from Google...</p>
+                  </div>
+                )}
               </div>
             )}
             {activeTab === 'faqs' && (

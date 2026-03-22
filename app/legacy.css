@@ -7083,3 +7083,33 @@ img.insurance-logo {
   .dz-font-grid { grid-template-columns: 1fr; }
   .dz-bg-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Patient detail cards ────────────────────────────────────────── */
+.dz-card {
+  background: rgba(20, 20, 35, 0.7);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+.dz-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+}
+.dz-patient-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.dz-patient-link:hover .dz-table-name {
+  color: #818cf8;
+}

@@ -15,6 +15,7 @@ export default [
   route("doczoc/signin", "routes/doczoc-signin.tsx"),
   route("doczoc/dashboard", "routes/doczoc-dashboard.tsx"),
   route("doczoc/patients", "routes/doczoc-patients.tsx"),
+  route("doczoc/patients/:id", "routes/doczoc-patient.tsx"),
   route("doczoc/clients", "routes/doczoc-clients.tsx"),
   route("doczoc/calendar", "routes/doczoc-calendar.tsx"),
   route("doczoc/appearance", "routes/doczoc-appearance.tsx"),

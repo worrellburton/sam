@@ -351,23 +351,10 @@ const locations = [
   },
 ];
 
-const BF_ID = "1id3n10pdBTarCHI0db";
-const bfUrl = (domain: string, theme: string) =>
-  `https://cdn.brandfetch.io/${domain}/w/400/h/100/theme/${theme}/fallback/lettermark/type/logo?c=${BF_ID}`;
-
-const insuranceLogos = [
-  { name: "Aetna", domain: "aetna.com" },
-  { name: "BlueCross BlueShield", domain: "bcbs.com" },
-  { name: "UnitedHealthcare", domain: "uhc.com" },
-  { name: "Oxford", domain: "oxhp.com" },
-  { name: "Cigna", domain: "cigna.com" },
-  { name: "Empire BCBS", domain: "empireblue.com" },
-  { name: "Humana", domain: "humana.com" },
-  { name: "Medicare", domain: "medicare.gov" },
-  { name: "1199SEIU", domain: "1199seiubenefits.org" },
-  { name: "Oscar", domain: "hioscar.com" },
-  { name: "Emblem Health", domain: "emblemhealth.com" },
-  { name: "Multiplan", domain: "multiplan.com" },
+const insuranceNames = [
+  "BlueCross BlueShield", "Kaiser Permanente", "UnitedHealthcare", "Aetna",
+  "Cigna", "Humana", "Anthem", "Elevance Health",
+  "Centene (Ambetter)", "Oscar Health", "Oxford", "Empire BCBS",
 ];
 
 export default function BookPage() {
@@ -635,10 +622,9 @@ export default function BookPage() {
               <div className="dz-insurance-tab">
                 <p>We accept 200+ insurance plans including Aetna, BlueCross BlueShield, UnitedHealthcare, Oxford, Cigna, and many more.</p>
                 <div className="dz-ins-logos">
-                  {insuranceLogos.map((ins) => (
-                    <div className="dz-ins-logo" key={ins.name}>
-                      <img src={bfUrl(ins.domain, dzTheme)} alt={ins.name} referrerPolicy="origin" />
-                      <span>{ins.name}</span>
+                  {insuranceNames.map((name) => (
+                    <div className="dz-ins-logo" key={name}>
+                      <span>{name}</span>
                     </div>
                   ))}
                   <div className="dz-ins-logo dz-ins-more">

@@ -3759,6 +3759,14 @@ img.insurance-logo {
   flex-shrink: 0;
   border-radius: 4px;
 }
+.insurance-logo-only {
+  justify-content: center;
+  padding: 24px 16px;
+}
+.insurance-logo-only img.insurance-logo {
+  width: 48px;
+  height: 48px;
+}
 .insurance-card span {
   font-weight: 600;
   font-size: 0.88rem;

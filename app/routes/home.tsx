@@ -221,8 +221,15 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Reviews carousel
-  const allReviews = googleReviews.length > 0 ? googleReviews : patientReviews.map(r => ({ ...r, rating: 5, isLocal: true as const }));
+  // Reviews carousel — shuffle on mount so order varies each page load
+  const allReviews = (() => {
+    const arr = googleReviews.length > 0 ? [...googleReviews] : patientReviews.map(r => ({ ...r, rating: 5, isLocal: true as const }));
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  })();
   const [reviewIndex, setReviewIndex] = useState(0);
   const reviewsPerPage = 3;
   const totalReviewPages = Math.ceil(allReviews.length / reviewsPerPage);

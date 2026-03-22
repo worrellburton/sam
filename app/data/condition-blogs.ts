@@ -4,6 +4,7 @@ import type { BlogPost } from "./blog";
 export const conditionToBlogSlug: Record<string, string> = {
   "ACL, MCL, and PCL tears": "acl-mcl-pcl-tears-guide",
   "Meniscus tears and cartilage injuries": "meniscus-tears-cartilage-injuries",
+  "Rotator cuff tears and shoulder instability": "rotator-cuff-tears-shoulder-instability",
 };
 
 export const conditionBlogPosts: BlogPost[] = [
@@ -573,6 +574,410 @@ export const conditionBlogPosts: BlogPost[] = [
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
     <p>Fellowship-trained at Lenox Hill Hospital with international cartilage repair training in Switzerland, the Netherlands, and Italy. Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Dr. Elguizaoui is dedicated to preserving joint health with the most advanced, least invasive treatments available.</p>
+  </div>
+</div>
+`,
+  },
+  {
+    slug: "rotator-cuff-tears-shoulder-instability",
+    title: "Rotator Cuff Tears & Shoulder Instability: Understanding Your Shoulder Injury",
+    excerpt:
+      "Shoulder pain doesn't have to control your life. Learn about rotator cuff tears, shoulder instability, treatment options, and what recovery really looks like — from an expert who cares.",
+    tag: "Shoulder Care",
+    date: "March 22, 2026",
+    readTime: "11 min read",
+    image:
+      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Patient receiving shoulder examination from an orthopedic specialist",
+    relatedService: "sports-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#anatomy">Your Shoulder — A Marvel of Engineering</a></li>
+    <li><a href="#rotator-cuff">Understanding Rotator Cuff Tears</a></li>
+    <li><a href="#instability">Shoulder Instability & Dislocations</a></li>
+    <li><a href="#stats">By the Numbers</a></li>
+    <li><a href="#diagnosis">How We Diagnose Your Shoulder</a></li>
+    <li><a href="#treatment">Treatment Comparison</a></li>
+    <li><a href="#recovery">Recovery Timeline</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you're dealing with shoulder pain — whether it wakes you at night, makes it hard to reach for things, or keeps you from the activities you love — please know that you're not alone. Shoulder injuries are among the most common things we treat, and recovery is absolutely within reach.</p>
+</div>
+
+<h2 id="anatomy">Your Shoulder — A Marvel of Engineering</h2>
+
+<p>Your shoulder is the most mobile joint in your entire body. It allows you to reach, throw, lift, and hug — movements most of us take for granted until something goes wrong. This incredible range of motion comes from a design that prioritizes flexibility, but that also makes the shoulder more vulnerable to injury than other joints.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=400&fit=crop&q=80" alt="Anatomical concept of the shoulder joint and rotator cuff" loading="lazy" />
+
+<p>Two key structures keep your shoulder working smoothly:</p>
+
+<ul>
+  <li><strong>The rotator cuff</strong> — a group of four muscles and their tendons that wrap around the ball of the shoulder, holding it securely in the socket while allowing full range of motion</li>
+  <li><strong>The labrum and ligaments</strong> — a ring of cartilage and strong bands of tissue that deepen the socket and provide stability</li>
+</ul>
+
+<p>When either of these structures is damaged, you feel it — and it can affect nearly everything you do with that arm.</p>
+
+<div class="blog-expert-quote">
+  <p>The shoulder is designed to move freely in every direction. When an injury disrupts that freedom, the goal isn't just to fix the damage — it's to restore the confidence you have in your own body.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="rotator-cuff">Understanding Rotator Cuff Tears</h2>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="5"/>
+    <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+  <h3>What Is a Rotator Cuff Tear?</h3>
+</div>
+
+<p>A rotator cuff tear occurs when one or more of the four tendons that form the rotator cuff become frayed or torn. It's one of the most common shoulder injuries — especially for people over 40 and those who use their arms overhead regularly. The good news: <strong>most rotator cuff tears are very treatable</strong>, and many heal without surgery.</p>
+
+<p>Tears generally fall into two categories:</p>
+
+<ul>
+  <li><strong>Acute tears</strong> — caused by a sudden injury like a fall, lifting something too heavy, or a sports collision</li>
+  <li><strong>Degenerative tears</strong> — developing gradually over time from repetitive use, reduced blood supply, or natural aging of the tendon</li>
+</ul>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop&q=80" alt="Doctor examining shoulder range of motion" loading="lazy" />
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8" x2="12" y2="12"/>
+    <line x1="12" y1="16" x2="12.01" y2="16"/>
+  </svg>
+  <h3>Signs of a Rotator Cuff Tear</h3>
+</div>
+
+<div class="blog-takeaway">
+  <h4>Symptoms to Watch For</h4>
+  <ul>
+    <li><strong>Pain when lifting or reaching overhead</strong> — even simple tasks like putting dishes away</li>
+    <li><strong>Aching at night</strong> — especially when lying on the affected shoulder</li>
+    <li><strong>Weakness</strong> — difficulty lifting or rotating your arm</li>
+    <li><strong>A crackling sensation</strong> — crepitus with certain shoulder movements</li>
+    <li><strong>Gradual loss of motion</strong> — your shoulder feels "stuck" or limited</li>
+    <li><strong>Pain radiating down the arm</strong> — sometimes reaching toward the elbow</li>
+  </ul>
+</div>
+
+<p>If any of these sound familiar, don't wait. Early evaluation means more treatment options and often a simpler path to recovery.</p>
+
+<h2 id="instability">Shoulder Instability & Dislocations</h2>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </svg>
+  <h3>When Your Shoulder Feels Unstable</h3>
+</div>
+
+<p>Shoulder instability is a different but equally distressing condition. It means the ball of the shoulder joint doesn't stay properly centered in the socket. This can range from a vague sense of looseness to a full dislocation — and it's especially common in younger, active individuals.</p>
+
+<p>Instability often develops after:</p>
+
+<ul>
+  <li><strong>A traumatic dislocation</strong> — the shoulder pops completely out of the socket</li>
+  <li><strong>Repeated subluxations</strong> — partial dislocations where the shoulder "slips" and then goes back</li>
+  <li><strong>Ligament laxity</strong> — naturally loose joints that allow excessive movement</li>
+  <li><strong>Labral tears</strong> — damage to the cartilage rim that deepens the socket (Bankart lesions)</li>
+</ul>
+
+<div class="blog-expert-quote">
+  <p>After a first-time shoulder dislocation in a young patient, there's up to a 90% chance it will happen again without proper treatment. That's why getting a thorough evaluation after a dislocation is so important — it's not just about fixing what happened, it's about preventing what could happen next.</p>
+  <cite>— Journal of the American Academy of Orthopaedic Surgeons</cite>
+</div>
+
+<h2 id="stats">By the Numbers</h2>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">4.5M</span>
+    <span class="blog-stat-label">Shoulder pain visits per year in the U.S.</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">2M+</span>
+    <span class="blog-stat-label">Americans affected by rotator cuff tears annually</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">95%</span>
+    <span class="blog-stat-label">Success rate for arthroscopic rotator cuff repair</span>
+  </div>
+</div>
+
+<div class="blog-chart">
+  <h4>Rotator Cuff Tear Incidence by Age</h4>
+  <svg viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="rcbar1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#a5b4fc"/>
+        <stop offset="100%" stop-color="#818cf8"/>
+      </linearGradient>
+      <linearGradient id="rcbar2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#818cf8"/>
+        <stop offset="100%" stop-color="#6366f1"/>
+      </linearGradient>
+      <linearGradient id="rcbar3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#4f46e5"/>
+      </linearGradient>
+      <linearGradient id="rcbar4" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#4f46e5"/>
+        <stop offset="100%" stop-color="#4338ca"/>
+      </linearGradient>
+    </defs>
+    <!-- Grid lines -->
+    <line x1="60" y1="30" x2="420" y2="30" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="60" y1="70" x2="420" y2="70" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="60" y1="110" x2="420" y2="110" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="60" y1="150" x2="420" y2="150" stroke="#e5e7eb" stroke-width="0.5"/>
+    <!-- Y-axis labels -->
+    <text x="55" y="34" text-anchor="end" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif">60%</text>
+    <text x="55" y="74" text-anchor="end" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif">40%</text>
+    <text x="55" y="114" text-anchor="end" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif">20%</text>
+    <text x="55" y="154" text-anchor="end" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif">10%</text>
+    <!-- Bars -->
+    <rect x="80" y="140" width="70" height="50" rx="6" fill="url(#rcbar1)" opacity="0.9">
+      <animate attributeName="height" from="0" to="50" dur="0.8s" fill="freeze"/>
+      <animate attributeName="y" from="190" to="140" dur="0.8s" fill="freeze"/>
+    </rect>
+    <rect x="170" y="110" width="70" height="80" rx="6" fill="url(#rcbar2)" opacity="0.9">
+      <animate attributeName="height" from="0" to="80" dur="0.8s" fill="freeze" begin="0.15s"/>
+      <animate attributeName="y" from="190" to="110" dur="0.8s" fill="freeze" begin="0.15s"/>
+    </rect>
+    <rect x="260" y="70" width="70" height="120" rx="6" fill="url(#rcbar3)" opacity="0.9">
+      <animate attributeName="height" from="0" to="120" dur="0.8s" fill="freeze" begin="0.3s"/>
+      <animate attributeName="y" from="190" to="70" dur="0.8s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <rect x="350" y="30" width="70" height="160" rx="6" fill="url(#rcbar4)" opacity="0.9">
+      <animate attributeName="height" from="0" to="160" dur="0.8s" fill="freeze" begin="0.45s"/>
+      <animate attributeName="y" from="190" to="30" dur="0.8s" fill="freeze" begin="0.45s"/>
+    </rect>
+    <!-- Labels -->
+    <text x="115" y="210" text-anchor="middle" font-size="12" fill="#6b7280" font-family="Inter, sans-serif">Under 40</text>
+    <text x="205" y="210" text-anchor="middle" font-size="12" fill="#6b7280" font-family="Inter, sans-serif">40-50</text>
+    <text x="295" y="210" text-anchor="middle" font-size="12" fill="#6b7280" font-family="Inter, sans-serif">50-60</text>
+    <text x="385" y="210" text-anchor="middle" font-size="12" fill="#6b7280" font-family="Inter, sans-serif">Over 60</text>
+    <!-- Values -->
+    <text x="115" y="135" text-anchor="middle" font-size="13" font-weight="700" fill="#818cf8" font-family="Inter, sans-serif">~10%</text>
+    <text x="205" y="105" text-anchor="middle" font-size="13" font-weight="700" fill="#6366f1" font-family="Inter, sans-serif">~22%</text>
+    <text x="295" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">~35%</text>
+    <text x="385" y="25" text-anchor="middle" font-size="13" font-weight="700" fill="#4338ca" font-family="Inter, sans-serif">~54%</text>
+  </svg>
+  <p class="blog-chart-caption">Prevalence of rotator cuff tears increases with age, but treatment outcomes remain excellent across all age groups (source: AAOS)</p>
+</div>
+
+<h2 id="diagnosis">How We Diagnose Your Shoulder</h2>
+
+<p>A precise diagnosis is the foundation of effective treatment. Dr. Elguizaoui takes a thorough, unhurried approach to understanding your shoulder:</p>
+
+<ul>
+  <li><strong>Detailed conversation</strong> — how the injury happened, what makes it better or worse, and what matters most to you</li>
+  <li><strong>Physical examination</strong> — specific tests for rotator cuff integrity, impingement, instability, and labral involvement</li>
+  <li><strong>MRI imaging</strong> — high-resolution scans that reveal tendon tears, labral damage, and inflammation</li>
+  <li><strong>X-rays</strong> — to evaluate bone spurs, arthritis, and shoulder alignment</li>
+  <li><strong>Diagnostic ultrasound</strong> — in-office dynamic imaging for real-time assessment of tendon movement</li>
+</ul>
+
+<div class="blog-expert-quote">
+  <p>I never rush the evaluation. Understanding exactly what's happening in your shoulder — and equally important, understanding your goals — is the only way to build the right treatment plan for you.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="treatment">Treatment Comparison</h2>
+
+<p>Here's an overview of the most effective treatments for rotator cuff tears and shoulder instability. Dr. Elguizaoui always starts with the least invasive approach that can achieve your goals.</p>
+
+<h3>Rotator Cuff Tear Treatments</h3>
+
+<div class="blog-chart">
+  <h4>Treatment Options at a Glance</h4>
+  <svg viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
+    <!-- Header row -->
+    <rect x="5" y="5" width="490" height="40" rx="8" fill="#4f46e5" opacity="0.1"/>
+    <text x="100" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">Treatment</text>
+    <text x="250" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">Best For</text>
+    <text x="410" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">Recovery</text>
+
+    <!-- Row 1 -->
+    <rect x="5" y="50" width="490" height="50" rx="6" fill="#f9fafb" stroke="#e5e7eb" stroke-width="0.5"/>
+    <text x="100" y="72" text-anchor="middle" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Physical Therapy</text>
+    <text x="100" y="88" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">+ Anti-inflammatories</text>
+    <text x="250" y="72" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Partial tears,</text>
+    <text x="250" y="88" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">degenerative tears</text>
+    <text x="410" y="80" text-anchor="middle" font-size="11" fill="#059669" font-weight="600" font-family="Inter, sans-serif">4-8 weeks</text>
+
+    <!-- Row 2 -->
+    <rect x="5" y="105" width="490" height="50" rx="6" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
+    <text x="100" y="127" text-anchor="middle" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">PRP Therapy</text>
+    <text x="100" y="143" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Platelet-Rich Plasma</text>
+    <text x="250" y="127" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Early/partial tears,</text>
+    <text x="250" y="143" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">tendinitis, bursitis</text>
+    <text x="410" y="135" text-anchor="middle" font-size="11" fill="#059669" font-weight="600" font-family="Inter, sans-serif">2-6 weeks</text>
+
+    <!-- Row 3 -->
+    <rect x="5" y="160" width="490" height="50" rx="6" fill="#f9fafb" stroke="#e5e7eb" stroke-width="0.5"/>
+    <text x="100" y="182" text-anchor="middle" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Arthroscopic Repair</text>
+    <text x="100" y="198" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Minimally invasive</text>
+    <text x="250" y="182" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Full-thickness tears</text>
+    <text x="250" y="198" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">in active patients</text>
+    <text x="410" y="190" text-anchor="middle" font-size="11" fill="#d97706" font-weight="600" font-family="Inter, sans-serif">3-6 months</text>
+
+    <!-- Row 4 -->
+    <rect x="5" y="215" width="490" height="50" rx="6" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
+    <text x="100" y="237" text-anchor="middle" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Bankart Repair</text>
+    <text x="100" y="253" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">For instability</text>
+    <text x="250" y="237" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Recurrent dislocations,</text>
+    <text x="250" y="253" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">labral tears</text>
+    <text x="410" y="245" text-anchor="middle" font-size="11" fill="#d97706" font-weight="600" font-family="Inter, sans-serif">4-6 months</text>
+
+    <!-- Row 5 -->
+    <rect x="5" y="270" width="490" height="50" rx="6" fill="#f9fafb" stroke="#e5e7eb" stroke-width="0.5"/>
+    <text x="100" y="292" text-anchor="middle" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Latarjet Procedure</text>
+    <text x="100" y="308" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Bone block transfer</text>
+    <text x="250" y="292" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Complex instability,</text>
+    <text x="250" y="308" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">bone loss cases</text>
+    <text x="410" y="300" text-anchor="middle" font-size="11" fill="#d97706" font-weight="600" font-family="Inter, sans-serif">5-7 months</text>
+  </svg>
+</div>
+
+<h2 id="recovery">Recovery Timeline</h2>
+
+<p>Recovery looks different for every patient, but here's a general roadmap for what to expect after arthroscopic rotator cuff repair — the most common surgical treatment:</p>
+
+<div class="blog-chart">
+  <h4>Rotator Cuff Repair Recovery Milestones</h4>
+  <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+    <!-- Timeline line -->
+    <line x1="40" y1="90" x2="460" y2="90" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+    <!-- Milestone dots and labels -->
+    <circle cx="70" cy="90" r="10" fill="#6366f1">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze"/>
+    </circle>
+    <text x="70" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Week 1-2</text>
+    <text x="70" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#4f46e5" font-family="Inter, sans-serif">Sling &amp; rest</text>
+    <text x="70" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Pain management</text>
+
+    <circle cx="160" cy="90" r="10" fill="#818cf8">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.2s"/>
+    </circle>
+    <text x="160" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Week 2-6</text>
+    <text x="160" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#4f46e5" font-family="Inter, sans-serif">Passive motion</text>
+    <text x="160" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Gentle PT begins</text>
+
+    <circle cx="250" cy="90" r="10" fill="#a5b4fc">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.4s"/>
+    </circle>
+    <text x="250" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Month 2-3</text>
+    <text x="250" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#4f46e5" font-family="Inter, sans-serif">Active motion</text>
+    <text x="250" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Stretching</text>
+
+    <circle cx="340" cy="90" r="10" fill="#c7d2fe">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.6s"/>
+    </circle>
+    <text x="340" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Month 3-5</text>
+    <text x="340" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#4f46e5" font-family="Inter, sans-serif">Strengthening</text>
+    <text x="340" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Resistance work</text>
+
+    <circle cx="430" cy="90" r="12" fill="#4f46e5" stroke="#fff" stroke-width="2">
+      <animate attributeName="r" from="0" to="12" dur="0.5s" fill="freeze" begin="0.8s"/>
+    </circle>
+    <text x="430" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Month 5-6</text>
+    <text x="430" y="70" text-anchor="middle" font-size="9" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">Return to</text>
+    <text x="430" y="58" text-anchor="middle" font-size="9" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">full activity!</text>
+  </svg>
+</div>
+
+<div class="blog-chart">
+  <h4>Patient Satisfaction After Rotator Cuff Surgery</h4>
+  <svg viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Labels -->
+    <text x="10" y="55" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Pain relief</text>
+    <text x="10" y="105" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Return to work</text>
+    <text x="10" y="155" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Return to sport</text>
+
+    <!-- Bars -->
+    <rect x="120" y="40" width="285" height="24" rx="4" fill="#6366f1" opacity="0.85">
+      <animate attributeName="width" from="0" to="285" dur="0.8s" fill="freeze"/>
+    </rect>
+    <text x="415" y="57" font-size="12" fill="#4f46e5" font-weight="700" font-family="Inter, sans-serif">95%</text>
+
+    <rect x="120" y="90" width="270" height="24" rx="4" fill="#818cf8" opacity="0.85">
+      <animate attributeName="width" from="0" to="270" dur="0.8s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="400" y="107" font-size="12" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">90%</text>
+
+    <rect x="120" y="140" width="255" height="24" rx="4" fill="#a5b4fc" opacity="0.85">
+      <animate attributeName="width" from="0" to="255" dur="0.8s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <text x="385" y="157" font-size="12" fill="#818cf8" font-weight="700" font-family="Inter, sans-serif">85%</text>
+
+    <text x="240" y="190" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Based on published orthopedic literature outcomes</text>
+  </svg>
+</div>
+
+<div class="blog-takeaway">
+  <h4>Keys to a Successful Shoulder Recovery</h4>
+  <ul>
+    <li><strong>Protect the repair early</strong> — the sling isn't optional; it gives your tendon time to heal</li>
+    <li><strong>Be patient with yourself</strong> — shoulder recovery is a marathon, not a sprint</li>
+    <li><strong>Commit to physical therapy</strong> — consistency with PT is the single biggest predictor of a good outcome</li>
+    <li><strong>Communicate with your team</strong> — if something doesn't feel right, speak up</li>
+    <li><strong>Celebrate milestones</strong> — every week brings meaningful progress</li>
+  </ul>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Can a rotator cuff tear heal without surgery?</h3>
+<p>Yes — many rotator cuff tears, especially partial tears and degenerative tears, heal well with physical therapy, anti-inflammatory treatment, and sometimes PRP injections. Dr. Elguizaoui always explores conservative options first and only recommends surgery when it will genuinely improve your outcome.</p>
+
+<h3>How do I know if I need rotator cuff surgery?</h3>
+<p>Surgery is typically considered when conservative treatment hasn't provided adequate relief after 6-12 weeks, when the tear is full-thickness in an active patient, or when there's significant weakness affecting daily life. The decision is always made together, based on your specific situation and goals.</p>
+
+<h3>What's the difference between a rotator cuff tear and shoulder impingement?</h3>
+<p>Shoulder impingement occurs when the rotator cuff tendons are pinched beneath the bone (acromion) during overhead movement. It's often a precursor to a tear — think of it as irritation before actual damage occurs. The good news is that impingement responds very well to physical therapy and often doesn't progress to a tear with proper treatment.</p>
+
+<h3>Can my shoulder dislocate again after surgery?</h3>
+<p>Modern stabilization procedures like Bankart repair and the Latarjet procedure have excellent success rates — recurrence after surgery is less than 5-10% for most patients. Dr. Elguizaoui will choose the procedure that gives you the best long-term stability based on your specific anatomy.</p>
+
+<h3>How long will I wear a sling after shoulder surgery?</h3>
+<p>Most patients wear a sling for 4-6 weeks after rotator cuff repair or instability surgery. During this time, you'll begin gentle passive motion exercises under the guidance of your physical therapist. The sling protects the repair while it heals.</p>
+
+<h3>Can I sleep comfortably after shoulder surgery?</h3>
+<p>Sleep can be challenging in the first few weeks. Many patients find it most comfortable to sleep in a recliner or propped up with pillows at a 45-degree angle. Dr. Elguizaoui's team will give you specific tips and medication guidance to help you rest well during recovery.</p>
+
+<div class="blog-cta">
+  <h3>Your Shoulder Deserves Expert Care</h3>
+  <p>If you're dealing with shoulder pain, instability, or a suspected rotator cuff tear in New York City, Dr. Elguizaoui is here to help. As a fellowship-trained shoulder specialist and former team physician for the NY Jets and NY Islanders, he brings world-class expertise and genuine compassion to every patient. Offices in <a href="/services/sports-medicine">Manhattan</a>, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/services/shoulder-knee-surgery">Shoulder & Knee Surgery</a> · <a href="/conditions/rotator-cuff-tears">Rotator Cuff Tears</a> · <a href="/conditions/shoulder-instability-and-dislocations">Shoulder Instability</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert rotator cuff tear treatment and shoulder instability care for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
   </div>
 </div>
 `,

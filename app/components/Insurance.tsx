@@ -39,9 +39,8 @@ export function Insurance() {
         </div>
         <div className="insurance-grid">
           {carriers.map(({ name, domain }) => (
-            <div className="insurance-card" key={name}>
+            <div className="insurance-card insurance-logo-only" key={name}>
               <BrandfetchLogo domain={domain} name={name} />
-              <span>{name}</span>
             </div>
           ))}
           <div className="insurance-card insurance-more">

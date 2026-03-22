@@ -123,22 +123,12 @@ const NAV_CONFIG = [
     section: "Inspect",
     items: [
       { name: "Components", path: "/dev", icon: "grid" },
-      { name: "Routes Map", path: "/dev", icon: "map" },
-      { name: "Design Tokens", path: "/dev", icon: "palette" },
     ],
   },
   {
-    section: "Tools",
+    section: "Lab",
     items: [
-      { name: "API Tester", path: "/dev", icon: "zap" },
-      { name: "Feature Flags", path: "/dev", icon: "flag" },
-    ],
-  },
-  {
-    section: "Data",
-    items: [
-      { name: "Database", path: "/dev", icon: "database" },
-      { name: "Logs & Analytics", path: "/dev", icon: "activity" },
+      { name: "Backgrounds", path: "/webgl", icon: "zap" },
     ],
   },
 ];

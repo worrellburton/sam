@@ -3,12 +3,22 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useScrollPosition } from "~/hooks/useScrollPosition";
 import { useTheme } from "~/hooks/useTheme";
 
+const services = [
+  { slug: "sports-medicine", label: "Sports Medicine", desc: "Athletic injury care" },
+  { slug: "arthroscopic-surgery", label: "Arthroscopic Surgery", desc: "Minimally invasive" },
+  { slug: "regenerative-medicine", label: "Regenerative Medicine", desc: "PRP & biologics" },
+  { slug: "joint-preservation", label: "Joint Preservation", desc: "Save natural joints" },
+  { slug: "cartilage-repair", label: "Cartilage Repair", desc: "Repair & restoration" },
+  { slug: "shoulder-knee-surgery", label: "Shoulder & Knee", desc: "ACL, rotator cuff" },
+];
+
 export function Navigation() {
   const location = useLocation();
   const { scrollY, direction } = useScrollPosition();
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const megaCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const openMega = useCallback(() => {
@@ -32,6 +42,7 @@ export function Navigation() {
 
   const closeMobile = useCallback(() => {
     setMobileOpen(false);
+    setMobileServicesOpen(false);
     document.body.style.overflow = "";
   }, []);
 
@@ -217,43 +228,93 @@ export function Navigation() {
           </li>
         </ul>
 
-        {/* Mobile fullscreen nav */}
+        {/* Mobile fullscreen nav — rebuilt from scratch */}
         <div className={`mobile-nav${mobileOpen ? " active" : ""}`}>
-          <button className="mobile-nav-close" onClick={closeMobile} aria-label="Close">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-          <div className="mobile-nav-content">
-            <Link to="/about" className="mobile-nav-link" onClick={closeMobile}>
-              About
+          <div className="mnav-header">
+            <Link to="/" className="mnav-logo" onClick={closeMobile}>
+              Sam Elguizaoui, M.D.
             </Link>
-            <span className="mobile-nav-link">Services</span>
-            <div className="mobile-nav-services">
-              <Link to="/services/sports-medicine" onClick={closeMobile}>Sports Medicine</Link>
-              <Link to="/services/arthroscopic-surgery" onClick={closeMobile}>Arthroscopic Surgery</Link>
-              <Link to="/services/regenerative-medicine" onClick={closeMobile}>Regenerative Medicine</Link>
-              <Link to="/services/joint-preservation" onClick={closeMobile}>Joint Preservation</Link>
-              <Link to="/services/cartilage-repair" onClick={closeMobile}>Cartilage Repair</Link>
-              <Link to="/services/shoulder-knee-surgery" onClick={closeMobile}>Shoulder &amp; Knee Surgery</Link>
+            <div className="mnav-header-actions">
+              <button className="mnav-theme-btn" onClick={toggleTheme} aria-label="Toggle theme">
+                {theme === "dark" ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                )}
+              </button>
+              <button className="mnav-close" onClick={closeMobile} aria-label="Close">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
             </div>
-            <Link to="/reviews" className="mobile-nav-link" onClick={closeMobile}>
-              Reviews
-            </Link>
-            <Link to="/faq" className="mobile-nav-link" onClick={closeMobile}>
-              FAQ
-            </Link>
-            <Link to="/blog" className="mobile-nav-link" onClick={closeMobile}>
-              Blog
-            </Link>
-            <div className="mobile-nav-cta">
-              <Link to="/book" onClick={closeMobile}>Book Now</Link>
-              <a href="tel:+19179059370" className="mobile-nav-phone">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          </div>
+
+          <div className="mnav-body">
+            <div className="mnav-links">
+              <Link to="/about" className="mnav-link" onClick={closeMobile}>
+                <span>About</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+
+              <button
+                className={`mnav-link mnav-link-expand${mobileServicesOpen ? " open" : ""}`}
+                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+              >
+                <span>Services</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: mobileServicesOpen ? "rotate(90deg)" : "none", transition: "transform 0.3s ease" }}><polyline points="9 6 15 12 9 18"/></svg>
+              </button>
+
+              <div className={`mnav-services${mobileServicesOpen ? " open" : ""}`}>
+                {services.map((s) => (
+                  <Link
+                    key={s.slug}
+                    to={`/services/${s.slug}`}
+                    className="mnav-service-item"
+                    onClick={closeMobile}
+                  >
+                    <span className="mnav-service-name">{s.label}</span>
+                    <span className="mnav-service-desc">{s.desc}</span>
+                  </Link>
+                ))}
+              </div>
+
+              <Link to="/reviews" className="mnav-link" onClick={closeMobile}>
+                <span>Reviews</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+
+              <Link to="/faq" className="mnav-link" onClick={closeMobile}>
+                <span>FAQ</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+
+              <Link to="/blog" className="mnav-link" onClick={closeMobile}>
+                <span>Blog</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+
+              <Link to="/contact" className="mnav-link" onClick={closeMobile}>
+                <span>Contact</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+            </div>
+
+            <div className="mnav-footer">
+              <Link to="/book" className="mnav-book-btn" onClick={closeMobile}>
+                Book Appointment
+              </Link>
+              <a href="tel:+19179059370" className="mnav-phone">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                </svg>{" "}
-                +1-917-905-9370
+                </svg>
+                (917) 905-9370
               </a>
+              <div className="mnav-locations">
+                <span>Manhattan</span>
+                <span className="mnav-loc-dot"></span>
+                <span>Brooklyn</span>
+                <span className="mnav-loc-dot"></span>
+                <span>Upper East Side</span>
+              </div>
             </div>
           </div>
         </div>

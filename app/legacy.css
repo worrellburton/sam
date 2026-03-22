@@ -4852,12 +4852,8 @@ a.nav-btn-book,
 @keyframes dzSpin { to { transform: rotate(360deg); } }
 
 /* Booking Card */
-.dz-booking { position: sticky; top: 72px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
-.dz-booking:hover { transform: translateY(-4px); }
-.dz-booking:hover .dz-booking-card { box-shadow: 0 12px 40px rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.3); }
-.dz-main.cal-active .dz-booking { cursor: default; transform: none; }
-.dz-main.cal-active .dz-booking:hover .dz-booking-card { box-shadow: none; border-color: rgba(255,255,255,0.08); }
-.dz-light .dz-main.cal-active .dz-booking:hover .dz-booking-card { border-color: #e5e7eb; }
+.dz-booking { position: sticky; top: 72px; cursor: pointer; }
+.dz-main.cal-active .dz-booking { cursor: default; }
 .dz-booking.expanded .dz-cal-cell { min-height: 52px; padding: 10px; }
 .dz-booking.expanded .dz-cal-date { font-size: 0.95rem; }
 .dz-booking.expanded .dz-cal-shift-count { font-size: 0.7rem; }

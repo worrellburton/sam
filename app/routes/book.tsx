@@ -705,8 +705,6 @@ export default function BookPage() {
         {/* RIGHT: Booking Panel */}
         <div
           className={`dz-booking${selectedDate ? ' expanded' : ''}`}
-          onMouseEnter={() => setCalHover(true)}
-          onMouseLeave={() => { if (!selectedDate) setCalHover(false); }}
           onClick={() => { if (!calActive) setCalHover(true); }}
         >
           <div className="dz-booking-card">
@@ -731,7 +729,7 @@ export default function BookPage() {
                 <div className="dz-loc-circles">
                   {locations.map((l, i) => {
                     const isActive = selectedLocs.has(i);
-                    const mapSrc = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(l.address)}&zoom=14&size=200x200&scale=2&maptype=roadmap&style=feature:all|element:geometry|color:0x1a1a2e&style=feature:all|element:labels.text.fill|color:0x8b8ba0&style=feature:all|element:labels.text.stroke|color:0x0a0e1a&style=feature:water|element:geometry|color:0x0f1629&style=feature:road|element:geometry|color:0x2a2a4a&style=feature:poi|visibility:off&markers=color:0x6366f1|${encodeURIComponent(l.address)}&key=${PLACES_API_KEY}`;
+                    const mapSrc = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(l.address)}&zoom=14&size=200x200&scale=2&maptype=roadmap&style=feature:poi|visibility:off&markers=color:0x6366f1|${encodeURIComponent(l.address)}&key=${PLACES_API_KEY}`;
                     return (
                       <button
                         key={i}

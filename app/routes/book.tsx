@@ -291,7 +291,18 @@ export default function BookPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [patientType, setPatientType] = useState<'new' | 'existing'>('existing');
-  const [locationIdx, setLocationIdx] = useState(0);
+  const [selectedLocs, setSelectedLocs] = useState<Set<number>>(() => new Set(locations.map((_, i) => i)));
+  const toggleLoc = (idx: number) => {
+    setSelectedLocs(prev => {
+      const next = new Set(prev);
+      if (next.has(idx)) { if (next.size > 1) next.delete(idx); }
+      else next.add(idx);
+      return next;
+    });
+  };
+  const toggleAllLocs = () => {
+    setSelectedLocs(prev => prev.size === locations.length ? new Set([0]) : new Set(locations.map((_, i) => i)));
+  };
   const [activeTab, setActiveTab] = useState('highlights');
   const [confirmed, setConfirmed] = useState(false);
   const [dzTheme, setDzTheme] = useState<'dark' | 'light'>(() => {
@@ -344,6 +355,8 @@ export default function BookPage() {
   };
 
   const isToday = (d: Date) => d.toDateString() === new Date().toDateString();
+  const [calHover, setCalHover] = useState(false);
+  const calActive = selectedDate !== null || calHover;
 
   const tabs = ['Highlights', 'About', 'Insurances', 'Locations', 'Reviews', 'FAQs'];
 
@@ -389,7 +402,7 @@ export default function BookPage() {
         </div>
       </nav>
 
-      <div className={`dz-main${selectedDate ? ' cal-active' : ''}`}>
+      <div className={`dz-main${calActive ? ' cal-active' : ''}`}>
         {/* LEFT: Doctor Profile */}
         <div className="dz-profile">
           <div className="dz-doctor-card">
@@ -546,38 +559,29 @@ export default function BookPage() {
             {activeTab === 'reviews' && (
               <div className="dz-reviews-tab">
                 {googleReviews.length > 0 ? (
-                  <>
-                    <div className="dz-reviews-header">
-                      <span className="dz-reviews-count">{googleTotal.toLocaleString()} Google Reviews</span>
-                      <Link to="/reviews" className="dz-reviews-all">See all</Link>
+                  <div className="dz-reviews-summary">
+                    <div className="dz-reviews-summary-left">
+                      <span className="dz-reviews-big-score">4.78</span>
+                      <span className="dz-reviews-big-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                      <span className="dz-reviews-total">{googleTotal.toLocaleString()} reviews</span>
                     </div>
-                    <div className="dz-reviews-list">
-                      {googleReviews.slice(0, 8).map((review, i) => (
-                        <div className="dz-review-card" key={i}>
-                          <div className="dz-review-top">
-                            <div className="dz-review-author">
-                              {review.authorAttribution?.photoUri ? (
-                                <img src={review.authorAttribution.photoUri} alt="" className="dz-review-avatar" />
-                              ) : (
-                                <div className="dz-review-avatar dz-review-avatar-placeholder">
-                                  {(review.authorAttribution?.displayName || '?')[0]}
-                                </div>
-                              )}
-                              <div>
-                                <strong>{review.authorAttribution?.displayName || 'Patient'}</strong>
-                                <span className="dz-review-loc">{review.locationLabel}</span>
-                              </div>
-                            </div>
-                            <span className="dz-review-time">{review.relativePublishTimeDescription}</span>
+                    <div className="dz-reviews-summary-right">
+                      {[5,4,3,2,1].map(star => {
+                        const count = googleReviews.filter(r => r.rating === star).length;
+                        const pct = googleReviews.length > 0 ? (count / googleReviews.length) * 100 : 0;
+                        return (
+                          <div className="dz-reviews-bar-row" key={star}>
+                            <span className="dz-reviews-bar-label">{star}&#9733;</span>
+                            <div className="dz-reviews-bar-track"><div className="dz-reviews-bar-fill" style={{ width: `${pct}%` }} /></div>
                           </div>
-                          <div className="dz-review-stars">
-                            {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
-                          </div>
-                          {review.text?.text && <p className="dz-review-text">{review.text.text}</p>}
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
-                  </>
+                    <div className="dz-reviews-summary-footer">
+                      <p>Across {PLACE_IDS.length} locations in NYC</p>
+                      <Link to="/reviews" className="dz-reviews-all">Read all reviews</Link>
+                    </div>
+                  </div>
                 ) : (
                   <div className="dz-reviews-loading">
                     <div className="dz-spinner" />
@@ -597,7 +601,11 @@ export default function BookPage() {
         </div>
 
         {/* RIGHT: Booking Panel */}
-        <div className={`dz-booking${selectedDate ? ' expanded' : ''}`}>
+        <div
+          className={`dz-booking${selectedDate ? ' expanded' : ''}`}
+          onMouseEnter={() => setCalHover(true)}
+          onMouseLeave={() => { if (!selectedDate) setCalHover(false); }}
+        >
           {selectedDate && (
             <button className="dz-cal-back" onClick={() => { setSelectedDate(null); setSelectedSlot(null); }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -612,7 +620,7 @@ export default function BookPage() {
                 <p className="dz-confirmed-date">
                   {selectedDate && `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}`} at {selectedSlot}
                 </p>
-                <p className="dz-confirmed-loc">{locations[locationIdx].name}</p>
+                <p className="dz-confirmed-loc">{[...selectedLocs].map(i => locations[i].name.replace('NY Orthopedics – ', '')).join(', ')}</p>
                 <p className="dz-confirmed-note">Dr. Elguizaoui&rsquo;s office will confirm your appointment via email.</p>
                 <button className="dz-btn dz-btn-primary" onClick={() => { setConfirmed(false); setSelectedDate(null); setSelectedSlot(null); }}>Book Another</button>
                 <Link to="/" className="dz-btn dz-btn-outline" style={{ marginTop: '8px' }}>Return to Site</Link>
@@ -622,13 +630,23 @@ export default function BookPage() {
                 <h2>Book an appointment for free</h2>
                 <p className="dz-booking-sub">Schedule directly with Dr. Elguizaoui&rsquo;s office</p>
 
-                <h3 className="dz-section-label">Available appointments</h3>
-                <select className="dz-select dz-location-select" value={locationIdx} onChange={e => setLocationIdx(Number(e.target.value))}>
+                <h3 className="dz-section-label">Locations</h3>
+                <div className="dz-loc-toggles">
+                  <button
+                    className={`dz-loc-chip${selectedLocs.size === locations.length ? ' active' : ''}`}
+                    onClick={toggleAllLocs}
+                  >All Locations</button>
                   {locations.map((l, i) => (
-                    <option key={i} value={i}>{l.name} — {l.address}</option>
+                    <button
+                      key={i}
+                      className={`dz-loc-chip${selectedLocs.has(i) ? ' active' : ''}`}
+                      onClick={() => toggleLoc(i)}
+                    >
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      {l.name.replace('NY Orthopedics – ', '')}
+                    </button>
                   ))}
-                </select>
-                <p className="dz-more-locations">{locations.length - 1} more locations with availability</p>
+                </div>
 
                 {/* Month Calendar */}
                 <div className="dz-cal-header">
@@ -727,10 +745,6 @@ export default function BookPage() {
                     </button>
                   </div>
                 )}
-
-                <p className="dz-view-more">
-                  <Link to="/contact">View more availability</Link>
-                </p>
               </>
             )}
           </div>

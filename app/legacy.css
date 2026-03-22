@@ -4686,19 +4686,16 @@ a.nav-btn-book,
 
 /* Main Layout */
 .dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 480px; gap: 32px; align-items: start; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-.dz-main.cal-active { grid-template-columns: 280px 1fr; }
-.dz-main.cal-active .dz-profile { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-.dz-main.cal-active .dz-doctor-card { padding: 18px; }
-.dz-main.cal-active .dz-doctor-header { flex-direction: column; align-items: center; text-align: center; gap: 12px; margin-bottom: 16px; }
-.dz-main.cal-active .dz-avatar { width: 56px; height: 56px; }
-.dz-main.cal-active .dz-doctor-info h1 { font-size: 1rem; }
+.dz-main.cal-active { grid-template-columns: 1fr; }
+.dz-main.cal-active .dz-profile { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.dz-main.cal-active .dz-doctor-card { padding: 14px 20px; }
+.dz-main.cal-active .dz-doctor-header { flex-direction: row; align-items: center; gap: 14px; margin-bottom: 0; }
+.dz-main.cal-active .dz-avatar { width: 44px; height: 44px; }
+.dz-main.cal-active .dz-doctor-info h1 { font-size: 0.95rem; }
 .dz-main.cal-active .dz-specialty { font-size: 0.78rem; }
-.dz-main.cal-active .dz-address { font-size: 0.72rem; }
-.dz-main.cal-active .dz-badge { font-size: 0.62rem; padding: 3px 8px; }
-.dz-main.cal-active .dz-rating-row { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
-.dz-main.cal-active .dz-big-number { font-size: 1.5rem; }
-.dz-main.cal-active .dz-review-snippet { display: none; }
-.dz-main.cal-active .dz-see-reviews { align-self: center; font-size: 0.78rem; }
+.dz-main.cal-active .dz-address { display: none; }
+.dz-main.cal-active .dz-badge { font-size: 0.6rem; padding: 2px 8px; }
+.dz-main.cal-active .dz-rating-row { display: none; }
 .dz-main.cal-active .dz-tabs { display: none; }
 .dz-main.cal-active .dz-tab-content { display: none; }
 
@@ -4848,8 +4845,34 @@ a.nav-btn-book,
 .dz-pt-btn.active { background: rgba(99,102,241,0.15); color: #818cf8; font-weight: 600; }
 
 .dz-scheduling-details { animation: dzTabIn 0.4s ease-out; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
-.dz-location-select { margin-bottom: 4px; }
-.dz-more-locations { font-size: 0.78rem; color: #4a4a5e; margin: 0 0 20px; }
+
+/* Location Toggles */
+.dz-loc-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.dz-loc-chip { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 980px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #6b6b80; font-size: 0.75rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.dz-loc-chip:hover { border-color: rgba(99,102,241,0.3); color: #8b8ba0; }
+.dz-loc-chip.active { background: rgba(99,102,241,0.12); border-color: rgba(99,102,241,0.3); color: #818cf8; }
+.dz-loc-chip svg { flex-shrink: 0; }
+.dz-light .dz-loc-chip { border-color: #ddd; color: #999; }
+.dz-light .dz-loc-chip:hover { border-color: rgba(37,99,235,0.3); color: #666; }
+.dz-light .dz-loc-chip.active { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.3); color: #2563eb; }
+
+/* Reviews Summary */
+.dz-reviews-summary { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; }
+.dz-reviews-summary-left { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.dz-reviews-big-score { font-size: 2.4rem; font-weight: 700; color: #e4e4ee; line-height: 1; }
+.dz-reviews-big-stars { color: #fbbf24; font-size: 1rem; }
+.dz-reviews-total { font-size: 0.78rem; color: #6b6b80; }
+.dz-reviews-summary-right { display: flex; flex-direction: column; gap: 5px; }
+.dz-reviews-bar-row { display: flex; align-items: center; gap: 8px; }
+.dz-reviews-bar-label { font-size: 0.72rem; color: #6b6b80; width: 24px; text-align: right; }
+.dz-reviews-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.dz-reviews-bar-fill { height: 100%; background: #6366f1; border-radius: 3px; transition: width 0.6s ease; }
+.dz-reviews-summary-footer { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 8px; }
+.dz-reviews-summary-footer p { font-size: 0.78rem; color: #4a4a5e; margin: 0; }
+.dz-light .dz-reviews-big-score { color: #1a1a2e; }
+.dz-light .dz-reviews-bar-track { background: rgba(0,0,0,0.06); }
+.dz-light .dz-reviews-bar-fill { background: #2563eb; }
+.dz-light .dz-reviews-summary-footer { border-top-color: #eee; }
 
 /* Month Calendar */
 .dz-cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }

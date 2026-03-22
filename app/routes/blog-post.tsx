@@ -1,5 +1,7 @@
 import { Link, useParams } from "react-router";
 import { getBlogPostBySlug } from "~/data/blog";
+import { GetStarted } from "~/components/GetStarted";
+import { Locations } from "~/components/Locations";
 
 export function meta({ params }: { params: { slug: string } }) {
   const post = getBlogPostBySlug(params.slug);
@@ -51,6 +53,9 @@ export default function BlogPostPage() {
           </div>
         </div>
       </section>
+
+      <GetStarted />
+      <Locations />
     </>
   );
 }

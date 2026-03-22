@@ -3125,6 +3125,56 @@ a.nav-btn-book,
   flex-direction: column;
   gap: 12px;
 }
+/* ===== Condition Pages ===== */
+.cond-hero { position: relative; padding: 120px 0 60px; background-size: cover; background-position: center; }
+.cond-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7)); }
+.cond-hero .container { position: relative; z-index: 1; }
+.cond-hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: #fff; margin: 8px 0 0; }
+.cond-tagline { font-size: 1.1rem; color: rgba(255,255,255,0.8); font-weight: 400; margin: 0; }
+.cond-breadcrumb { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.7); font-size: 0.85rem; text-decoration: none; margin-bottom: 20px; transition: color 0.2s; }
+.cond-breadcrumb:hover { color: #fff; }
+
+.cond-overview { padding-top: 48px; }
+.cond-overview-card { display: flex; gap: 20px; align-items: flex-start; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+.cond-overview-icon { flex-shrink: 0; width: 56px; height: 56px; border-radius: 14px; background: rgba(var(--primary-rgb, 37,99,235), 0.08); display: flex; align-items: center; justify-content: center; }
+.cond-overview-card p { margin: 0; font-size: 1.05rem; line-height: 1.8; color: var(--text-light); }
+
+.cond-details { padding-top: 0; }
+.cond-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 768px) { .cond-grid { grid-template-columns: 1fr; } }
+.cond-card { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+.cond-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.cond-card-header h2 { margin: 0; font-size: 1.15rem; font-weight: 700; }
+.cond-card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cond-card-icon-symptoms { background: rgba(249,115,22,0.1); color: #f97316; }
+.cond-card-icon-treatments { background: rgba(34,197,94,0.1); color: #22c55e; }
+.cond-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+.cond-list-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: var(--text-light); line-height: 1.5; animation: condItemIn 0.4s ease both; }
+@keyframes condItemIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+.cond-list-dot { width: 8px; height: 8px; border-radius: 50%; background: #f97316; flex-shrink: 0; margin-top: 7px; }
+.cond-list-check { width: 22px; height: 22px; border-radius: 6px; background: rgba(34,197,94,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #22c55e; margin-top: 1px; }
+
+.cond-recovery-card { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+.cond-recovery-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(99,102,241,0.1); color: #6366f1; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+.cond-recovery-card h2 { font-size: 1.2rem; font-weight: 700; margin: 0 0 12px; }
+.cond-recovery-card p { margin: 0; font-size: 1rem; line-height: 1.8; color: var(--text-light); }
+
+.cond-reassure-card { display: flex; gap: 20px; align-items: flex-start; background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(34,197,94,0.04)); border: 1px solid rgba(99,102,241,0.15); border-radius: 16px; padding: 28px; }
+.cond-reassure-icon { flex-shrink: 0; width: 52px; height: 52px; border-radius: 14px; background: rgba(99,102,241,0.12); color: #6366f1; display: flex; align-items: center; justify-content: center; }
+.cond-reassure-card p { margin: 0; font-size: 1rem; line-height: 1.8; color: var(--text-light); font-style: italic; }
+
+.cond-cta { padding: 60px 0; background: var(--bg-alt); }
+.cond-cta h2 { font-size: 1.6rem; font-weight: 800; margin: 0 0 12px; }
+.cond-cta > .container > p { color: var(--text-light); margin: 0 0 24px; font-size: 1rem; }
+.cond-cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cond-cta-buttons .btn { display: inline-flex; align-items: center; gap: 8px; }
+
+.cond-other-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 600px) { .cond-other-grid { grid-template-columns: 1fr; } }
+.cond-other-card { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.9rem; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s; }
+.cond-other-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+.cond-other-card svg { color: var(--primary); flex-shrink: 0; }
+
 .cond-faq-item {
   border: 1px solid var(--border);
   border-radius: 12px;

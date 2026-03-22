@@ -10,6 +10,7 @@ export default [
   route("blog/:slug", "routes/blog-post.tsx"),
   route("book", "routes/book.tsx"),
   route("services/:slug", "routes/service.tsx"),
+  route("conditions/:slug", "routes/condition.tsx"),
   route("dev", "routes/dev.tsx"),
   route("webgl", "routes/webgl.tsx"),
 ] satisfies RouteConfig;

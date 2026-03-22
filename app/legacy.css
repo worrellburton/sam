@@ -4910,26 +4910,41 @@ a.nav-btn-book,
 .dz-cal-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #6b6b80; transition: all 0.15s; }
 .dz-cal-btn:hover { border-color: #6366f1; color: #818cf8; }
 
-.dz-cal { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; }
-.dz-cal-row { display: grid; grid-template-columns: repeat(7, 1fr); }
+.dz-cal { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; width: 100%; }
+.dz-cal-row { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .dz-cal-day-headers { background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08); }
-.dz-cal-dh { padding: 10px 4px; text-align: center; font-size: 0.68rem; font-weight: 600; letter-spacing: 1px; color: #6b6b80; }
-.dz-cal-cell { min-height: 48px; padding: 8px 6px; border-right: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); cursor: default; transition: background 0.15s; display: flex; align-items: center; gap: 6px; }
+.dz-cal-dh { padding: 10px 4px; text-align: center; font-size: 0.68rem; font-weight: 600; letter-spacing: 1px; color: #6b6b80; overflow: hidden; }
+.dz-cal-cell { min-height: 48px; padding: 8px 4px; border-right: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); cursor: default; transition: background 0.15s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; overflow: hidden; }
 .dz-cal-cell:nth-child(7n) { border-right: none; }
 .dz-cal-row:last-child .dz-cal-cell { border-bottom: none; }
 .dz-cal-cell.has-appts { cursor: pointer; }
 .dz-cal-cell.has-appts:hover { background: rgba(99,102,241,0.1); }
+.dz-cal-cell.selected { background: rgba(99,102,241,0.15); box-shadow: inset 0 0 0 2px #6366f1; }
 .dz-cal-cell.empty { opacity: 0.3; }
-.dz-cal-date { font-size: 0.82rem; font-weight: 500; color: #8b8ba0; }
-.dz-cal-date.today { background: #6366f1; color: #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
-.dz-cal-shift-count { font-size: 0.6rem; color: #3d3f4a; white-space: nowrap; font-weight: 400; }
+.dz-cal-date { font-size: 0.85rem; font-weight: 600; color: #8b8ba0; }
+.dz-cal-date.today { background: #6366f1; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.dz-cal-shift-count { font-size: 0.58rem; color: #3d3f4a; white-space: nowrap; font-weight: 400; }
 .dz-cal-shift-count.has { color: #34d399; font-weight: 600; }
 .dz-light .dz-cal-shift-count { color: #bbb; }
 .dz-light .dz-cal-shift-count.has { color: #16a34a; }
 
-/* Time Slots */
-.dz-times { margin-top: 20px; }
-.dz-times h3 { font-size: 0.92rem; font-weight: 600; margin: 0 0 12px; color: #e4e4ee; }
+/* Inline Time Slots (below calendar) */
+.dz-times-inline { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); animation: dzStepIn 0.3s ease-out; }
+.dz-times-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.dz-times-header h3 { font-size: 0.95rem; font-weight: 600; margin: 0; color: #e4e4ee; }
+.dz-daylight { display: flex; gap: 14px; font-size: 0.72rem; color: #6b6b80; }
+.dz-sunrise, .dz-sunset { display: flex; align-items: center; gap: 4px; }
+.dz-time-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+.dz-time-scroll::-webkit-scrollbar { height: 4px; }
+.dz-time-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+.dz-time-chip { padding: 10px 16px; white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: inherit; background: rgba(255,255,255,0.03); color: #8b8ba0; flex-shrink: 0; }
+.dz-time-chip:hover { border-color: #6366f1; color: #818cf8; background: rgba(99,102,241,0.08); box-shadow: 0 0 12px rgba(99,102,241,0.2); }
+.dz-light .dz-times-inline { border-top-color: #e5e7eb; }
+.dz-light .dz-times-header h3 { color: #1a1a2e; }
+.dz-light .dz-time-chip { background: #fff; border-color: #ddd; color: #555; }
+.dz-light .dz-time-chip:hover { border-color: #2563eb; color: #2563eb; }
+
+/* Legacy time grid (kept for step 2 fallback) */
 .dz-time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .dz-time-slot { padding: 10px 6px; text-align: center; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: inherit; background: rgba(255,255,255,0.03); color: #8b8ba0; }
 .dz-time-slot:hover:not(:disabled) { border-color: #6366f1; color: #818cf8; background: rgba(99,102,241,0.08); }

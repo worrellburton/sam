@@ -459,10 +459,27 @@ export default function BookPage() {
               </svg>
               <span>DocZoc</span>
             </Link>
-            <Link to="/" className="dz-back-site">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-              Back to site
-            </Link>
+            {confirmed ? (
+              <button className="dz-back-site" onClick={() => { setConfirmed(false); setSelectedDate(null); setSelectedSlot(null); }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back
+              </button>
+            ) : selectedSlot ? (
+              <button className="dz-back-site" onClick={() => setSelectedSlot(null)}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back
+              </button>
+            ) : selectedDate ? (
+              <button className="dz-back-site" onClick={() => { setSelectedDate(null); setSelectedSlot(null); }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back
+              </button>
+            ) : (
+              <Link to="/" className="dz-back-site">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to site
+              </Link>
+            )}
           </div>
           <div className="dz-nav-links">
             <button className="dz-theme-toggle" onClick={toggleDzTheme} aria-label="Toggle theme">
@@ -704,14 +721,11 @@ export default function BookPage() {
               </div>
             ) : (
               <>
-                {!selectedDate && <>
-                  <h2>Book an appointment for free</h2>
-                  <p className="dz-booking-sub">Schedule directly with Dr. Elguizaoui&rsquo;s office</p>
-                </>}
+                <h2>Book an appointment for free</h2>
+                <p className="dz-booking-sub">Schedule directly with Dr. Elguizaoui&rsquo;s office</p>
 
-                {/* Step 1: Calendar */}
-                {!selectedDate && <h3 className="dz-section-label">Locations</h3>}
-                {!selectedDate && <><div className="dz-loc-toggles">
+                <h3 className="dz-section-label">Locations</h3>
+                <div className="dz-loc-toggles">
                   <button
                     className={`dz-loc-chip${selectedLocs.size === locations.length ? ' active' : ''}`}
                     onClick={toggleAllLocs}
@@ -729,7 +743,7 @@ export default function BookPage() {
                 </div>
 
                 {/* Location Map */}
-                {selectedLocs.size < locations.length && (
+                {selectedLocs.size > 0 && (
                   <div className="dz-map-embed">
                     {[...selectedLocs].map(i => (
                       <div className="dz-map-card" key={i}>
@@ -774,10 +788,11 @@ export default function BookPage() {
                         const slots = getApptSlots(date);
                         const todayCell = isToday(date);
                         const avail = slots.length > 0;
+                        const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
                         return (
                           <div
                             key={di}
-                            className={`dz-cal-cell${avail ? ' has-appts' : ''}`}
+                            className={`dz-cal-cell${avail ? ' has-appts' : ''}${isSelected ? ' selected' : ''}`}
                             onClick={() => { if (avail) { setSelectedDate(date); setSelectedSlot(null); }}}
                           >
                             <span className={`dz-cal-date${todayCell ? ' today' : ''}`}>{date.getDate()}</span>
@@ -789,26 +804,30 @@ export default function BookPage() {
                       })}
                     </div>
                   ))}
-                </div></>}
+                </div>
 
-                {/* Step 2: Time Slots */}
+                {/* Time Slots — inline below calendar */}
                 {selectedDate && !selectedSlot && (
-                  <div className="dz-step">
-                    <div className="dz-step-header">
-                      <button className="dz-step-back" onClick={() => { setSelectedDate(null); setSelectedSlot(null); }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                        Back to calendar
-                      </button>
-                      <div className="dz-step-badge">Step 2 of 3</div>
+                  <div className="dz-times-inline">
+                    <div className="dz-times-header">
+                      <h3>{MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()} — Select a time</h3>
+                      <div className="dz-daylight">
+                        <span className="dz-sunrise">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></svg>
+                          6:58 AM
+                        </span>
+                        <span className="dz-sunset">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="2"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="9" x2="12" y2="2"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="16 6 12 10 8 6"/></svg>
+                          7:15 PM
+                        </span>
+                      </div>
                     </div>
-                    <h3 className="dz-step-title">Select a time — {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}</h3>
-                    <div className="dz-time-grid">
-                      {TIMES.map((t, i) => (
+                    <div className="dz-time-scroll">
+                      {TIMES.filter((_, i) => timeAvail[i]).map((t) => (
                         <button
                           key={t}
-                          className={`dz-time-slot${!timeAvail[i] ? ' off' : ''}`}
-                          onClick={() => timeAvail[i] && setSelectedSlot(t)}
-                          disabled={!timeAvail[i]}
+                          className="dz-time-chip"
+                          onClick={() => setSelectedSlot(t)}
                         >
                           {t}
                         </button>

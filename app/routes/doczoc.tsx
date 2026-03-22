@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { Link } from "react-router";
 import type { Route } from "./+types/doczoc";
 
 export function meta({}: Route.MetaArgs) {
@@ -8,126 +9,344 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-function useThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window !== "undefined") {
-      return (document.documentElement.getAttribute("data-theme") as "light" | "dark") || "light";
-    }
-    return "light";
-  });
+// ── WebGL shaders (same as webgl page) ──────────────────────────────
+const POINT_VS = `
+  attribute vec2 a_position;
+  attribute float a_alpha;
+  uniform float u_pointSize;
+  varying float v_alpha;
+  void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+    gl_PointSize = u_pointSize;
+    v_alpha = a_alpha;
+  }
+`;
+const POINT_FS = `
+  precision mediump float;
+  uniform vec3 u_color;
+  varying float v_alpha;
+  void main() {
+    float d = length(gl_PointCoord - vec2(0.5));
+    if (d > 0.5) discard;
+    float glow = 1.0 - smoothstep(0.0, 0.5, d);
+    gl_FragColor = vec4(u_color, v_alpha * glow);
+  }
+`;
+const LINE_VS = `
+  attribute vec2 a_position;
+  attribute float a_alpha;
+  varying float v_alpha;
+  void main() {
+    gl_Position = vec4(a_position, 0.0, 1.0);
+    v_alpha = a_alpha;
+  }
+`;
+const LINE_FS = `
+  precision mediump float;
+  uniform vec3 u_color;
+  varying float v_alpha;
+  void main() {
+    gl_FragColor = vec4(u_color, v_alpha * 0.35);
+  }
+`;
+
+function compileShader(gl: WebGLRenderingContext, type: number, src: string): WebGLShader {
+  const s = gl.createShader(type)!;
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  return s;
+}
+
+function createProgram(gl: WebGLRenderingContext, vs: string, fs: string): WebGLProgram {
+  const p = gl.createProgram()!;
+  gl.attachShader(p, compileShader(gl, gl.VERTEX_SHADER, vs));
+  gl.attachShader(p, compileShader(gl, gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(p);
+  return p;
+}
+
+function WebGLBackground() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animRef = useRef<number>(0);
+  const mouseRef = useRef<{ x: number; y: number }>({ x: 9999, y: 9999 });
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  return { theme, toggle: () => setTheme((t) => (t === "light" ? "dark" : "light")) };
+    const gl = canvas.getContext("webgl", { alpha: false, antialias: true });
+    if (!gl) return;
+
+    const pointProg = createProgram(gl, POINT_VS, POINT_FS);
+    const lineProg = createProgram(gl, LINE_VS, LINE_FS);
+
+    const pPosLoc = gl.getAttribLocation(pointProg, "a_position");
+    const pAlphaLoc = gl.getAttribLocation(pointProg, "a_alpha");
+    const pColorLoc = gl.getUniformLocation(pointProg, "u_color");
+    const pSizeLoc = gl.getUniformLocation(pointProg, "u_pointSize");
+
+    const lPosLoc = gl.getAttribLocation(lineProg, "a_position");
+    const lAlphaLoc = gl.getAttribLocation(lineProg, "a_alpha");
+    const lColorLoc = gl.getUniformLocation(lineProg, "u_color");
+
+    const N = 300;
+    const CONNECTION_DIST = 0.12;
+    const col: [number, number, number] = [0.35, 0.34, 0.96]; // Indigo
+
+    const px = new Float32Array(N);
+    const py = new Float32Array(N);
+    const vx = new Float32Array(N);
+    const vy = new Float32Array(N);
+
+    for (let i = 0; i < N; i++) {
+      px[i] = Math.random() * 2 - 1;
+      py[i] = Math.random() * 2 - 1;
+      const angle = Math.random() * Math.PI * 2;
+      const mag = 0.0005 + Math.random() * 0.001;
+      vx[i] = Math.cos(angle) * mag;
+      vy[i] = Math.sin(angle) * mag;
+    }
+
+    const pointBuf = gl.createBuffer()!;
+    const pointData = new Float32Array(N * 3);
+    const lineBuf = gl.createBuffer()!;
+    const maxLines = N * 12;
+    const lineData = new Float32Array(maxLines * 6);
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      canvas!.width = canvas!.clientWidth * dpr;
+      canvas!.height = canvas!.clientHeight * dpr;
+      gl!.viewport(0, 0, canvas!.width, canvas!.height);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    function onMouseMove(e: MouseEvent) {
+      const rect = canvas!.getBoundingClientRect();
+      mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    }
+    function onMouseLeave() {
+      mouseRef.current.x = 9999;
+      mouseRef.current.y = 9999;
+    }
+
+    canvas.addEventListener("mousemove", onMouseMove);
+    canvas.addEventListener("mouseleave", onMouseLeave);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    function frame() {
+      if (!gl) return;
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+      const mouseRadius = 0.25;
+
+      for (let i = 0; i < N; i++) {
+        const dx = px[i] - mx;
+        const dy = py[i] - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < mouseRadius && dist > 0.001) {
+          const force = ((mouseRadius - dist) / mouseRadius) * 0.15 * 0.002;
+          vx[i] += (dx / dist) * force;
+          vy[i] += (dy / dist) * force;
+        }
+        px[i] += vx[i];
+        py[i] += vy[i];
+        vx[i] *= 0.999;
+        vy[i] *= 0.999;
+        if (px[i] > 1.05) px[i] = -1.05;
+        if (px[i] < -1.05) px[i] = 1.05;
+        if (py[i] > 1.05) py[i] = -1.05;
+        if (py[i] < -1.05) py[i] = 1.05;
+      }
+
+      gl.clearColor(0.06, 0.06, 0.12, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      for (let i = 0; i < N; i++) {
+        const dx = px[i] - mx;
+        const dy = py[i] - my;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        const proximity = d < mouseRadius ? 1.0 : 0.5;
+        pointData[i * 3] = px[i];
+        pointData[i * 3 + 1] = py[i];
+        pointData[i * 3 + 2] = 0.3 + proximity * 0.7;
+      }
+
+      gl.useProgram(pointProg);
+      gl.bindBuffer(gl.ARRAY_BUFFER, pointBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, pointData, gl.DYNAMIC_DRAW);
+      gl.enableVertexAttribArray(pPosLoc);
+      gl.vertexAttribPointer(pPosLoc, 2, gl.FLOAT, false, 12, 0);
+      gl.enableVertexAttribArray(pAlphaLoc);
+      gl.vertexAttribPointer(pAlphaLoc, 1, gl.FLOAT, false, 12, 8);
+      gl.uniform3f(pColorLoc, col[0], col[1], col[2]);
+      gl.uniform1f(pSizeLoc, 3.0);
+      gl.drawArrays(gl.POINTS, 0, N);
+
+      let lineVerts = 0;
+      const cd = CONNECTION_DIST;
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          const dx = px[i] - px[j];
+          const dy = py[i] - py[j];
+          const d2 = dx * dx + dy * dy;
+          if (d2 < cd * cd) {
+            const d = Math.sqrt(d2);
+            const alpha = 1.0 - d / cd;
+            const off = lineVerts * 3;
+            lineData[off] = px[i];
+            lineData[off + 1] = py[i];
+            lineData[off + 2] = alpha;
+            lineData[off + 3] = px[j];
+            lineData[off + 4] = py[j];
+            lineData[off + 5] = alpha;
+            lineVerts += 2;
+            if (lineVerts >= maxLines * 2) break;
+          }
+        }
+        if (lineVerts >= maxLines * 2) break;
+      }
+
+      if (lineVerts > 0) {
+        gl.useProgram(lineProg);
+        gl.bindBuffer(gl.ARRAY_BUFFER, lineBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, lineData.subarray(0, lineVerts * 3), gl.DYNAMIC_DRAW);
+        gl.enableVertexAttribArray(lPosLoc);
+        gl.vertexAttribPointer(lPosLoc, 2, gl.FLOAT, false, 12, 0);
+        gl.enableVertexAttribArray(lAlphaLoc);
+        gl.vertexAttribPointer(lAlphaLoc, 1, gl.FLOAT, false, 12, 8);
+        gl.uniform3f(lColorLoc, col[0], col[1], col[2]);
+        gl.drawArrays(gl.LINES, 0, lineVerts);
+      }
+
+      animRef.current = requestAnimationFrame(frame);
+    }
+
+    animRef.current = requestAnimationFrame(frame);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("mousemove", onMouseMove);
+      canvas.removeEventListener("mouseleave", onMouseLeave);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        display: "block",
+        zIndex: 0,
+      }}
+    />
+  );
 }
 
 export default function DocZocPage() {
-  const { theme, toggle } = useThemeToggle();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
-    <div className="dz-page">
+    <div className="dz-page dz-page-dark">
+      <WebGLBackground />
+
       {/* Nav */}
-      <nav className="dz-nav">
+      <nav className="dz-nav dz-nav-glass">
         <div className="dz-nav-inner">
           <div className="dz-nav-left">
             <div className="dz-logo">
               <div className="dz-logo-icon">D</div>
-              <span className="dz-logo-text">DocZoc</span>
+              <span className="dz-logo-text" style={{ color: "#e2e8f0" }}>DocZoc</span>
             </div>
           </div>
           <div className="dz-nav-right">
-            <button className="dz-theme-btn" onClick={toggle} aria-label="Toggle theme">
-              {theme === "dark" ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-              )}
-            </button>
-            <button className="dz-sign-in-btn">
+            <Link to="/doczoc/signin" className="dz-sign-in-btn">
               Sign In
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <header className="dz-hero">
+      <header className="dz-hero" style={{ position: "relative", zIndex: 1 }}>
         <div className="dz-hero-inner">
           <div className="dz-hero-content">
-            <div className="dz-hero-badge">For Healthcare Providers</div>
-            <h1>Your Patient Bookings,<br /><span className="dz-accent">All in One Place</span></h1>
-            <p className="dz-hero-sub">DocZoc gives doctors a simple, secure portal to view appointments, manage patient bookings, and stay organized — so you can focus on what matters most: your patients.</p>
+            <div className="dz-hero-badge" style={{ background: "rgba(99, 102, 241, 0.2)", color: "#a5b4fc" }}>For Healthcare Providers</div>
+            <h1 style={{ color: "#f1f5f9" }}>Your Patient Bookings,<br /><span style={{ color: "#818cf8" }}>All in One Place</span></h1>
+            <p className="dz-hero-sub" style={{ color: "#94a3b8" }}>DocZoc gives doctors a simple, secure portal to view appointments, manage patient bookings, and stay organized — so you can focus on what matters most: your patients.</p>
             <div className="dz-hero-actions">
-              <button className="dz-btn-primary">Get Started Free</button>
-              <button className="dz-btn-outline">Watch Demo</button>
+              <Link to="/doczoc/signin" className="dz-btn-primary" style={{ textDecoration: "none" }}>Get Started Free</Link>
+              <button className="dz-btn-outline" style={{ color: "#cbd5e1", borderColor: "rgba(148, 163, 184, 0.3)" }}>Watch Demo</button>
             </div>
-            <div className="dz-hero-trust">
+            <div className="dz-hero-trust" style={{ color: "#94a3b8" }}>
               <div className="dz-trust-avatars">
-                <div className="dz-trust-avatar" style={{ background: "#4f46e5" }}>S</div>
-                <div className="dz-trust-avatar" style={{ background: "#059669" }}>M</div>
-                <div className="dz-trust-avatar" style={{ background: "#d97706" }}>R</div>
-                <div className="dz-trust-avatar" style={{ background: "#dc2626" }}>A</div>
+                <div className="dz-trust-avatar" style={{ background: "#4f46e5", borderColor: "#0f0f1e" }}>S</div>
+                <div className="dz-trust-avatar" style={{ background: "#059669", borderColor: "#0f0f1e" }}>M</div>
+                <div className="dz-trust-avatar" style={{ background: "#d97706", borderColor: "#0f0f1e" }}>R</div>
+                <div className="dz-trust-avatar" style={{ background: "#dc2626", borderColor: "#0f0f1e" }}>A</div>
               </div>
-              <span>Trusted by <strong>2,400+</strong> providers across NYC</span>
+              <span>Trusted by <strong style={{ color: "#e2e8f0" }}>2,400+</strong> providers across NYC</span>
             </div>
           </div>
           <div className="dz-hero-visual">
-            <div className="dz-dashboard-preview">
-              <div className="dz-dash-header">
+            <div className="dz-dashboard-preview" style={{ background: "rgba(15, 23, 42, 0.8)", borderColor: "rgba(99, 102, 241, 0.2)", backdropFilter: "blur(12px)" }}>
+              <div className="dz-dash-header" style={{ background: "rgba(15, 23, 42, 0.9)", borderColor: "rgba(99, 102, 241, 0.15)" }}>
                 <div className="dz-dash-dots">
                   <span></span><span></span><span></span>
                 </div>
-                <span className="dz-dash-title">Dashboard</span>
+                <span className="dz-dash-title" style={{ color: "#94a3b8" }}>Dashboard</span>
               </div>
               <div className="dz-dash-body">
                 <div className="dz-dash-stat-row">
-                  <div className="dz-dash-stat">
+                  <div className="dz-dash-stat" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.15)" }}>
                     <span className="dz-dash-stat-num">24</span>
-                    <span className="dz-dash-stat-label">Today's Appts</span>
+                    <span className="dz-dash-stat-label" style={{ color: "#94a3b8" }}>Today's Appts</span>
                   </div>
-                  <div className="dz-dash-stat">
+                  <div className="dz-dash-stat" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.15)" }}>
                     <span className="dz-dash-stat-num">8</span>
-                    <span className="dz-dash-stat-label">New Patients</span>
+                    <span className="dz-dash-stat-label" style={{ color: "#94a3b8" }}>New Patients</span>
                   </div>
-                  <div className="dz-dash-stat">
+                  <div className="dz-dash-stat" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.15)" }}>
                     <span className="dz-dash-stat-num">96%</span>
-                    <span className="dz-dash-stat-label">Show Rate</span>
+                    <span className="dz-dash-stat-label" style={{ color: "#94a3b8" }}>Show Rate</span>
                   </div>
                 </div>
                 <div className="dz-dash-list">
-                  <div className="dz-dash-appt">
+                  <div className="dz-dash-appt" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.1)" }}>
                     <div className="dz-appt-time">9:00 AM</div>
                     <div className="dz-appt-info">
-                      <span className="dz-appt-name">Sarah M.</span>
-                      <span className="dz-appt-type">Follow-up — Shoulder</span>
+                      <span className="dz-appt-name" style={{ color: "#e2e8f0" }}>Sarah M.</span>
+                      <span className="dz-appt-type" style={{ color: "#94a3b8" }}>Follow-up — Shoulder</span>
                     </div>
                     <div className="dz-appt-badge dz-confirmed">Confirmed</div>
                   </div>
-                  <div className="dz-dash-appt">
+                  <div className="dz-dash-appt" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.1)" }}>
                     <div className="dz-appt-time">9:30 AM</div>
                     <div className="dz-appt-info">
-                      <span className="dz-appt-name">James K.</span>
-                      <span className="dz-appt-type">New Patient — Knee</span>
+                      <span className="dz-appt-name" style={{ color: "#e2e8f0" }}>James K.</span>
+                      <span className="dz-appt-type" style={{ color: "#94a3b8" }}>New Patient — Knee</span>
                     </div>
                     <div className="dz-appt-badge dz-new">New</div>
                   </div>
-                  <div className="dz-dash-appt">
+                  <div className="dz-dash-appt" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.1)" }}>
                     <div className="dz-appt-time">10:15 AM</div>
                     <div className="dz-appt-info">
-                      <span className="dz-appt-name">Maria L.</span>
-                      <span className="dz-appt-type">Post-Op — ACL</span>
+                      <span className="dz-appt-name" style={{ color: "#e2e8f0" }}>Maria L.</span>
+                      <span className="dz-appt-type" style={{ color: "#94a3b8" }}>Post-Op — ACL</span>
                     </div>
                     <div className="dz-appt-badge dz-confirmed">Confirmed</div>
                   </div>
-                  <div className="dz-dash-appt">
+                  <div className="dz-dash-appt" style={{ background: "rgba(15, 23, 42, 0.6)", borderColor: "rgba(99, 102, 241, 0.1)" }}>
                     <div className="dz-appt-time">11:00 AM</div>
                     <div className="dz-appt-info">
-                      <span className="dz-appt-name">David R.</span>
-                      <span className="dz-appt-type">Consultation — Hip</span>
+                      <span className="dz-appt-name" style={{ color: "#e2e8f0" }}>David R.</span>
+                      <span className="dz-appt-type" style={{ color: "#94a3b8" }}>Consultation — Hip</span>
                     </div>
                     <div className="dz-appt-badge dz-pending">Pending</div>
                   </div>
@@ -138,81 +357,15 @@ export default function DocZocPage() {
         </div>
       </header>
 
-      {/* Features */}
-      <section className="dz-features">
-        <div className="dz-features-inner">
-          <div className="dz-section-header">
-            <p className="dz-label">Why DocZoc</p>
-            <h2>Everything You Need to<br /><span className="dz-accent">Manage Your Practice</span></h2>
-          </div>
-          <div className="dz-features-grid">
-            <div className="dz-feature-card reveal">
-              <div className="dz-feature-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              </div>
-              <h3>Real-Time Bookings</h3>
-              <p>See new appointments the moment patients book. No refresh needed — your schedule updates live.</p>
-            </div>
-            <div className="dz-feature-card reveal">
-              <div className="dz-feature-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              </div>
-              <h3>Patient Profiles</h3>
-              <p>Instant access to patient history, insurance info, and visit notes — all in one clean view.</p>
-            </div>
-            <div className="dz-feature-card reveal">
-              <div className="dz-feature-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              </div>
-              <h3>Smart Confirmations</h3>
-              <p>Automatic reminders via SMS and email reduce no-shows by up to 40%.</p>
-            </div>
-            <div className="dz-feature-card reveal">
-              <div className="dz-feature-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </div>
-              <h3>HIPAA Compliant</h3>
-              <p>Enterprise-grade security. Your patient data is encrypted end-to-end and never shared.</p>
-            </div>
-            <div className="dz-feature-card reveal">
-              <div className="dz-feature-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              </div>
-              <h3>Analytics Dashboard</h3>
-              <p>Track booking trends, patient volume, and revenue at a glance with beautiful reports.</p>
-            </div>
-            <div className="dz-feature-card reveal">
-              <div className="dz-feature-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-              </div>
-              <h3>Multi-Location</h3>
-              <p>Manage bookings across all your offices from a single dashboard. Perfect for group practices.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="dz-cta">
-        <div className="dz-cta-inner">
-          <h2>Ready to Simplify Your Practice?</h2>
-          <p>Join thousands of providers who trust DocZoc to manage their patient bookings.</p>
-          <div className="dz-hero-actions">
-            <button className="dz-btn-primary">Create Free Account</button>
-            <button className="dz-btn-outline">Contact Sales</button>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="dz-footer">
+      {/* Dark Footer */}
+      <footer className="dz-footer dz-footer-dark">
         <div className="dz-footer-inner">
           <div className="dz-footer-left">
             <div className="dz-logo">
               <div className="dz-logo-icon">D</div>
-              <span className="dz-logo-text">DocZoc</span>
+              <span className="dz-logo-text" style={{ color: "#e2e8f0" }}>DocZoc</span>
             </div>
-            <p className="dz-footer-copy">&copy; {new Date().getFullYear()} DocZoc. All rights reserved.</p>
+            <p className="dz-footer-copy" style={{ color: "#64748b" }}>&copy; {new Date().getFullYear()} DocZoc. All rights reserved.</p>
           </div>
           <div className="dz-footer-links">
             <a href="#">Privacy Policy</a>

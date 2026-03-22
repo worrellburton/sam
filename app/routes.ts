@@ -12,6 +12,11 @@ export default [
   route("services/:slug", "routes/service.tsx"),
   route("conditions/:slug", "routes/condition.tsx"),
   route("doczoc", "routes/doczoc.tsx"),
+  route("doczoc/signin", "routes/doczoc-signin.tsx"),
+  route("doczoc/dashboard", "routes/doczoc-dashboard.tsx"),
+  route("doczoc/patients", "routes/doczoc-patients.tsx"),
+  route("doczoc/clients", "routes/doczoc-clients.tsx"),
+  route("doczoc/calendar", "routes/doczoc-calendar.tsx"),
   route("dev", "routes/dev.tsx"),
   route("webgl", "routes/webgl.tsx"),
 ] satisfies RouteConfig;

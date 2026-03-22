@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, useCallback, createContext, useContext, lazy, Suspense } from "react";
 import {
   isRouteErrorResponse,
   Links,
@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLocation,
+  useNavigate,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -14,6 +15,24 @@ import "./app.css";
 import { Navigation } from "~/components/Navigation";
 import { Footer } from "~/components/Footer";
 import { StickyBar } from "~/components/StickyBar";
+
+const BookPage = lazy(() => import("~/routes/book"));
+
+interface BookingContextType {
+  openBooking: () => void;
+  closeBooking: () => void;
+  isBookingOpen: boolean;
+}
+
+export const BookingContext = createContext<BookingContextType>({
+  openBooking: () => {},
+  closeBooking: () => {},
+  isBookingOpen: false,
+});
+
+export function useBooking() {
+  return useContext(BookingContext);
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,6 +67,55 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // If user navigates directly to /book, open the booking overlay
+  useEffect(() => {
+    if (location.pathname.startsWith("/book")) {
+      setBookingOpen(true);
+      // Navigate back to home so the site content is there underneath
+      navigate("/", { replace: true });
+    }
+  }, []);
+
+  const openBooking = useCallback(() => {
+    setBookingOpen(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const closeBooking = useCallback(() => {
+    setBookingOpen(false);
+  }, []);
+
+  // Intercept clicks on any link to /book
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      const target = (e.target as HTMLElement).closest("a, button");
+      if (!target) return;
+
+      const anchor = target as HTMLAnchorElement;
+      const href = anchor.getAttribute("href") || "";
+      const to = anchor.getAttribute("data-to") || "";
+
+      // Check for links to /book or /sammd/book
+      if (
+        href === "/book" ||
+        href === "/sammd/book" ||
+        href.endsWith("/book") ||
+        to === "/book"
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        openBooking();
+      }
+    }
+
+    document.addEventListener("click", handleClick, true);
+    return () => document.removeEventListener("click", handleClick, true);
+  }, [openBooking]);
+
   useEffect(() => {
     // IntersectionObserver for .reveal animations
     const observer = new IntersectionObserver(
@@ -74,13 +142,11 @@ export default function App() {
 
     observeRevealElements();
 
-    // Re-observe after route changes (MutationObserver on body)
     const mutationObserver = new MutationObserver(() => {
       observeRevealElements();
     });
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
-    // Move-easier slideshow
     const bgElements = document.querySelectorAll(".move-easier-bg");
     if (bgElements.length > 1) {
       let currentSlide = 0;
@@ -102,18 +168,27 @@ export default function App() {
     };
   }, []);
 
-  const location = useLocation();
   const isDevPage = location.pathname.startsWith("/dev");
-  const isBookPage = location.pathname.startsWith("/book");
   const isWebGLPage = location.pathname.startsWith("/webgl");
+  const showChrome = !isDevPage && !isWebGLPage;
 
   return (
-    <>
-      {!isDevPage && !isBookPage && !isWebGLPage && <Navigation />}
-      {!isDevPage && !isBookPage && !isWebGLPage && <StickyBar />}
-      <Outlet />
-      {!isDevPage && !isBookPage && !isWebGLPage && <Footer />}
-    </>
+    <BookingContext.Provider value={{ openBooking, closeBooking, isBookingOpen: bookingOpen }}>
+      {/* Booking layer — always rendered, sits behind the site */}
+      <div className={`booking-layer${bookingOpen ? " booking-visible" : ""}`}>
+        <Suspense fallback={null}>
+          <BookPage />
+        </Suspense>
+      </div>
+
+      {/* Site layer — fades out when booking opens */}
+      <div className={`site-layer${bookingOpen ? " site-hidden" : ""}`}>
+        {showChrome && <Navigation />}
+        {showChrome && <StickyBar />}
+        <Outlet />
+        {showChrome && <Footer />}
+      </div>
+    </BookingContext.Provider>
   );
 }
 

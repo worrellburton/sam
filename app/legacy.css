@@ -4667,6 +4667,12 @@ a.nav-btn-book,
 }
 
 /* ===== DocZoc Booking Page (Dark) ===== */
+/* Booking / Site layer transitions */
+.booking-layer { position: fixed; inset: 0; z-index: 0; opacity: 0; pointer-events: none; transition: opacity 0.6s ease; overflow-y: auto; }
+.booking-layer.booking-visible { opacity: 1; pointer-events: auto; z-index: 100; }
+.site-layer { position: relative; z-index: 1; transition: opacity 0.6s ease, transform 0.6s ease; }
+.site-layer.site-hidden { opacity: 0; pointer-events: none; transform: scale(0.98); }
+
 .dz { min-height: 100vh; background: #0a0e1a; color: #e4e4ee; font-family: 'Inter', -apple-system, sans-serif; position: relative; overflow: hidden; }
 .dz * { box-sizing: border-box; }
 .dz-webgl-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }

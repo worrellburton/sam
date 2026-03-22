@@ -1,5 +1,6 @@
 import { Link } from "react-router";
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef, useContext } from "react";
+import { BookingContext } from "~/root";
 
 export function meta() {
   return [
@@ -360,6 +361,7 @@ const insuranceLogos = [
 ];
 
 export default function BookPage() {
+  const { closeBooking } = useContext(BookingContext);
   const today = new Date();
   today.setHours(0,0,0,0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -475,10 +477,10 @@ export default function BookPage() {
                 Back
               </button>
             ) : (
-              <Link to="/" className="dz-back-site">
+              <button className="dz-back-site" onClick={closeBooking}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 Back to site
-              </Link>
+              </button>
             )}
           </div>
           <div className="dz-nav-links">
@@ -717,7 +719,7 @@ export default function BookPage() {
                 <p className="dz-confirmed-loc">{[...selectedLocs].map(i => locations[i].name.replace('NY Orthopedics – ', '')).join(', ')}</p>
                 <p className="dz-confirmed-note">Dr. Elguizaoui&rsquo;s office will confirm your appointment via email.</p>
                 <button className="dz-btn dz-btn-primary" onClick={() => { setConfirmed(false); setSelectedDate(null); setSelectedSlot(null); }}>Book Another</button>
-                <Link to="/" className="dz-btn dz-btn-outline" style={{ marginTop: '8px' }}>Return to Site</Link>
+                <button className="dz-btn dz-btn-outline" style={{ marginTop: '8px' }} onClick={closeBooking}>Return to Site</button>
               </div>
             ) : (
               <>

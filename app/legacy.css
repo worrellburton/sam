@@ -242,11 +242,19 @@ img { max-width: 100%; display: block; }
 
 .nav.nav-solid {
   position: fixed !important;
-  background: rgba(0,0,0,0.92) !important;
+  background: rgba(255,255,255,0.95) !important;
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
+.nav.nav-solid .logo-name { color: #1a1a2e; }
+.nav.nav-solid .nav-links > li > a,
+.nav.nav-solid .nav-mega-toggle { color: rgba(0,0,0,0.75); }
+.nav.nav-solid .nav-links > li > a:hover,
+.nav.nav-solid .nav-mega-toggle:hover { color: var(--primary); }
+.nav.nav-solid .nav-btn-contact { color: #1a1a2e !important; }
+.nav.nav-solid .theme-toggle { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color: #555; }
+.nav.nav-solid .theme-toggle:hover { background: rgba(0,0,0,0.1); color: var(--primary); }
 [data-theme="light"] .nav.nav-solid {
   background: rgba(255,255,255,0.92) !important;
   border-bottom: 1px solid rgba(0,0,0,0.06);
@@ -260,11 +268,19 @@ img { max-width: 100%; display: block; }
 
 .nav.scrolled {
   position: fixed;
-  background: rgba(0,0,0,0.92);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
+.nav.scrolled .logo-name { color: #1a1a2e; }
+.nav.scrolled .nav-links > li > a { color: rgba(0,0,0,0.75); }
+.nav.scrolled .nav-links > li > a:hover { color: #000; }
+.nav.scrolled .nav-mega-toggle { color: rgba(0,0,0,0.75); }
+.nav.scrolled .nav-mega-toggle:hover { color: #000; }
+.nav.scrolled .nav-btn-contact { color: #1a1a2e !important; }
+.nav.scrolled .theme-toggle { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color: #555; }
+.nav.scrolled .theme-toggle:hover { background: rgba(0,0,0,0.1); border-color: var(--primary); color: var(--primary); }
 
 [data-theme="light"] .nav {
   background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);

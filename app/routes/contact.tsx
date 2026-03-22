@@ -182,8 +182,8 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <Locations />
       <GetStarted />
+      <Locations />
     </>
   );
 }

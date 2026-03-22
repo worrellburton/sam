@@ -4699,13 +4699,8 @@ a.nav-btn-book,
 .dz-main.cal-active .dz-big-number { font-size: 1.5rem; }
 .dz-main.cal-active .dz-review-snippet { display: none; }
 .dz-main.cal-active .dz-see-reviews { align-self: center; font-size: 0.78rem; }
-.dz-main.cal-active .dz-tabs { flex-wrap: wrap; justify-content: center; }
-.dz-main.cal-active .dz-tab { padding: 10px 12px; font-size: 0.75rem; }
-.dz-main.cal-active .dz-highlight-row { gap: 10px; padding: 10px 0; }
-.dz-main.cal-active .dz-highlight-icon { width: 32px; height: 32px; }
-.dz-main.cal-active .dz-highlight-icon svg { width: 14px; height: 14px; }
-.dz-main.cal-active .dz-highlight-row strong { font-size: 0.8rem; }
-.dz-main.cal-active .dz-highlight-row p { font-size: 0.72rem; }
+.dz-main.cal-active .dz-tabs { display: none; }
+.dz-main.cal-active .dz-tab-content { display: none; }
 
 /* Profile Section */
 .dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; }
@@ -4911,6 +4906,130 @@ a.nav-btn-book,
 .dz-confirmed-date { font-size: 1rem; font-weight: 600; color: #e4e4ee; margin: 0 0 4px; }
 .dz-confirmed-loc { font-size: 0.88rem; color: #6b6b80; margin: 0 0 16px; }
 .dz-confirmed-note { font-size: 0.85rem; color: #4a4a5e; margin: 0 0 24px; }
+
+/* Theme toggle */
+.dz-theme-toggle { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #6b6b80; transition: all 0.2s; }
+.dz-theme-toggle:hover { border-color: #6366f1; color: #818cf8; }
+.dz-light .dz-theme-toggle { border-color: rgba(0,0,0,0.1); color: #999; }
+.dz-light .dz-theme-toggle:hover { border-color: #2563eb; color: #2563eb; }
+
+/* Light mode overrides */
+.dz-light { background: #f8f9fb !important; color: #1a1a2e !important; }
+.dz-light .dz-nav { background: rgba(255,255,255,0.9); border-bottom-color: #e5e7eb; }
+.dz-light .dz-logo { color: #1a1a2e; }
+.dz-light .dz-nav-phone { color: #666; }
+.dz-light .dz-nav-phone:hover { color: #1a1a2e; }
+.dz-light .dz-bg-switcher { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); }
+.dz-light .dz-bg-opt { color: #999; }
+.dz-light .dz-bg-opt:hover { color: #666; }
+.dz-light .dz-bg-opt.active { background: rgba(37,99,235,0.1); color: #2563eb; }
+
+.dz-light .dz-doctor-card { background: #fff; border-color: #e5e7eb; }
+.dz-light .dz-avatar { border-color: rgba(37,99,235,0.2); }
+.dz-light .dz-badge { background: #e8f5e9; color: #2e7d32; border-color: #c8e6c9; }
+.dz-light .dz-doctor-info h1 { color: #1a1a2e !important; }
+.dz-light .dz-specialty { color: #666; }
+.dz-light .dz-address { color: #999; }
+.dz-light .dz-big-number { color: #1a1a2e; }
+.dz-light .dz-review-snippet p { color: #555; }
+.dz-light .dz-review-meta { color: #999; }
+.dz-light .dz-see-reviews { color: #2563eb; }
+.dz-light .dz-snippet-avatar { border-color: rgba(37,99,235,0.2); }
+
+.dz-light .dz-tabs { border-bottom-color: #e5e7eb; }
+.dz-light .dz-tab { color: #999; }
+.dz-light .dz-tab:hover { color: #1a1a2e; }
+.dz-light .dz-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
+.dz-light .dz-tab-content { color: #555; }
+.dz-light .dz-highlight-row { border-bottom-color: #f0f0f5; }
+.dz-light .dz-highlight-icon { background: rgba(37,99,235,0.08); }
+.dz-light .dz-highlight-icon svg { stroke: #2563eb !important; }
+.dz-light .dz-highlight-row strong { color: #1a1a2e !important; }
+.dz-light .dz-highlight-row p { color: #888; }
+.dz-light .dz-link-btn { color: #2563eb; }
+
+.dz-light .dz-about-stat { background: rgba(37,99,235,0.04); border-color: rgba(37,99,235,0.1); }
+.dz-light .dz-about-stat-num { color: #2563eb; }
+.dz-light .dz-about-stat-label { color: #888; }
+.dz-light .dz-about-cred { background: #f8f9fb; border-color: #e5e7eb; color: #555; }
+.dz-light .dz-about-cred svg { stroke: #2563eb !important; }
+.dz-light .dz-about-tab p, .dz-light .dz-insurance-tab p, .dz-light .dz-reviews-tab p { color: #555; }
+.dz-light .dz-reviews-tab a { color: #2563eb; }
+
+.dz-light .dz-ins-logo { background: #fff; border-color: #e5e7eb; }
+.dz-light .dz-ins-logo:hover { border-color: rgba(37,99,235,0.3); background: rgba(37,99,235,0.03); }
+.dz-light .dz-ins-logo img { filter: none; opacity: 0.8; }
+.dz-light .dz-ins-logo span { color: #666; }
+.dz-light .dz-ins-more { border-color: #d0d0d0; }
+.dz-light .dz-ins-more-num { color: #2563eb; }
+
+.dz-light .dz-loc-card { border-bottom-color: #f0f0f5; }
+.dz-light .dz-loc-icon { background: rgba(37,99,235,0.08); }
+.dz-light .dz-loc-icon svg { stroke: #2563eb !important; }
+.dz-light .dz-loc-info strong { color: #1a1a2e !important; }
+.dz-light .dz-loc-info > p { color: #888; }
+.dz-light .dz-loc-details span { color: #666; }
+.dz-light .dz-loc-link { color: #2563eb; }
+
+.dz-light .dz-review-card { background: #fff; border-color: #e5e7eb; }
+.dz-light .dz-review-card:hover { border-color: rgba(37,99,235,0.2); }
+.dz-light .dz-review-author strong { color: #1a1a2e !important; }
+.dz-light .dz-review-avatar-placeholder { background: rgba(37,99,235,0.1); color: #2563eb; }
+.dz-light .dz-review-text { color: #555; }
+.dz-light .dz-reviews-count { color: #666; }
+.dz-light .dz-reviews-all { color: #2563eb; }
+
+.dz-light .dz-location-item strong { color: #1a1a2e !important; }
+.dz-light .dz-faqs-tab details { border-bottom-color: #f0f0f5; }
+.dz-light .dz-faqs-tab summary { color: #1a1a2e !important; }
+.dz-light .dz-faqs-tab details p { color: #666; }
+
+.dz-light .dz-booking-card { background: #fff; border-color: #e5e7eb; }
+.dz-light .dz-booking-card h2 { color: #1a1a2e !important; }
+.dz-light .dz-booking-sub { color: #888; }
+.dz-light .dz-section-label { color: #666; }
+.dz-light .dz-select { background: #fff; border-color: #ddd; color: #1a1a2e; }
+.dz-light .dz-select:focus { border-color: #2563eb; }
+.dz-light .dz-select option { background: #fff; color: #1a1a2e; }
+.dz-light .dz-insurance-check { color: #555; border-bottom-color: #eee; }
+.dz-light .dz-patient-toggle { border-color: #ddd; }
+.dz-light .dz-pt-btn { background: #fff; color: #999; border-color: #ddd !important; }
+.dz-light .dz-pt-btn.active { background: rgba(37,99,235,0.06); color: #2563eb; }
+.dz-light .dz-more-locations { color: #999; }
+
+.dz-light .dz-cal { border-color: #e5e7eb; }
+.dz-light .dz-cal-day-headers { background: #f8f9fb; border-bottom-color: #e5e7eb; }
+.dz-light .dz-cal-dh { color: #999; }
+.dz-light .dz-cal-cell { border-color: #f0f0f5; }
+.dz-light .dz-cal-cell:hover { background: rgba(37,99,235,0.03); }
+.dz-light .dz-cal-cell.selected { background: rgba(37,99,235,0.06); box-shadow: inset 0 0 0 2px #2563eb; }
+.dz-light .dz-cal-date { color: #555; }
+.dz-light .dz-cal-date.today { background: #2563eb; color: #fff; }
+.dz-light .dz-cal-shift-count { color: #999; }
+.dz-light .dz-cal-header h3 { color: #1a1a2e !important; }
+.dz-light .dz-cal-btn { border-color: #ddd; color: #999; }
+.dz-light .dz-cal-btn:hover { border-color: #2563eb; color: #2563eb; }
+.dz-light .dz-cal-back { border-color: #ddd; color: #999; }
+.dz-light .dz-cal-back:hover { border-color: #2563eb; color: #2563eb; }
+
+.dz-light .dz-times h3 { color: #1a1a2e !important; }
+.dz-light .dz-time-slot { background: #fff; border-color: #ddd; color: #555; }
+.dz-light .dz-time-slot:hover:not(:disabled) { border-color: #2563eb; color: #2563eb; background: rgba(37,99,235,0.03); }
+.dz-light .dz-time-slot.picked { background: #2563eb; border-color: #2563eb; color: #fff; }
+.dz-light .dz-time-slot.off { opacity: 0.3; }
+
+.dz-light .dz-scheduling-details { border-top-color: #eee; }
+.dz-light .dz-btn-primary { background: #2563eb; }
+.dz-light .dz-btn-primary:hover { background: #1d4ed8; }
+.dz-light .dz-btn-outline { background: #fff; color: #1a1a2e; border-color: #ddd; }
+.dz-light .dz-btn-outline:hover { border-color: #2563eb; color: #2563eb; }
+.dz-light .dz-btn-confirm { background: #2563eb; color: #fff; }
+.dz-light .dz-btn-confirm:hover { background: #1d4ed8; }
+.dz-light .dz-view-more a { color: #2563eb; }
+.dz-light .dz-confirmed h2 { color: #1a1a2e !important; }
+.dz-light .dz-confirmed-date { color: #1a1a2e; }
+.dz-light .dz-confirmed-loc { color: #666; }
+.dz-light .dz-confirmed-note { color: #888; }
 
 /* Fade-in animation */
 .dz { animation: dzFadeIn 0.6s ease-out; }

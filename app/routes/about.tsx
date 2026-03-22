@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
 import { Insurance } from "~/components/Insurance";
+import { AboutSection } from "~/components/AboutSection";
 
 export function meta() {
   return [
@@ -59,6 +60,8 @@ export default function AboutPage() {
           <p>Sports Medicine Surgeon &amp; Joint Preservation Specialist</p>
         </div>
       </section>
+
+      <AboutSection />
 
       {/* Quote + Intro */}
       <section className="section">

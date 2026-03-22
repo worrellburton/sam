@@ -823,7 +823,7 @@ a.nav-btn-book,
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0 24px 100px;
+  padding: 0 24px 120px;
   gap: 40px;
   width: 100%;
 }
@@ -4226,7 +4226,7 @@ a.nav-btn-book,
 
   /* Hero mobile */
   .hero { height: 100vh; }
-  .hero-content { padding: 0 20px 90px; gap: 24px; }
+  .hero-content { padding: 0 20px 110px; gap: 24px; }
   .hero-text h1 { font-size: 1.5rem; margin-bottom: 20px; line-height: 1.35; }
   .section-desc { font-size: 0.95rem; padding: 0 8px; }
   .about-lead { padding: 0; }
@@ -4333,7 +4333,7 @@ a.nav-btn-book,
   .location-map { height: 200px; }
   .container { padding: 0 14px; }
   .hero-text h1 { font-size: 1.3rem; }
-  .hero-content { padding: 0 16px 90px; }
+  .hero-content { padding: 0 16px 110px; }
   .hero-rating-card { padding: 12px 14px; }
   .rating-score { font-size: 1.8rem; }
   .section { padding: 40px 0; }

@@ -351,10 +351,19 @@ const locations = [
   },
 ];
 
-const insuranceNames = [
-  "BlueCross BlueShield", "Kaiser Permanente", "UnitedHealthcare", "Aetna",
-  "Cigna", "Humana", "Anthem", "Elevance Health",
-  "Centene (Ambetter)", "Oscar Health", "Oxford", "Empire BCBS",
+const insuranceLogos: { name: string; logo: JSX.Element }[] = [
+  { name: "Aetna", logo: <svg viewBox="0 0 120 40" width="100" height="34"><text x="60" y="28" textAnchor="middle" fontFamily="Georgia,serif" fontWeight="700" fontSize="22" fill="#7B2D8E">Aetna</text><path d="M14 16a5 5 0 0 1 5-5 5 5 0 0 1 5 5" stroke="#7B2D8E" strokeWidth="2" fill="none"/></svg> },
+  { name: "BlueCross BlueShield", logo: <svg viewBox="0 0 140 40" width="120" height="34"><text x="70" y="26" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="13" fill="#005DAA">BlueCross</text><text x="70" y="38" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="11" fill="#005DAA">BlueShield</text><path d="M15 12l3 8h-6l3-8z" fill="#005DAA"/><circle cx="15" cy="24" r="4" fill="none" stroke="#005DAA" strokeWidth="1.5"/></svg> },
+  { name: "UnitedHealthcare", logo: <svg viewBox="0 0 150 40" width="130" height="34"><text x="75" y="22" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="13" fill="#002677">United</text><text x="75" y="36" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="400" fontSize="12" fill="#002677">Healthcare</text></svg> },
+  { name: "Cigna", logo: <svg viewBox="0 0 100 40" width="90" height="34"><text x="50" y="28" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="22" fill="#168736">Cigna</text></svg> },
+  { name: "Humana", logo: <svg viewBox="0 0 120 40" width="100" height="34"><text x="60" y="28" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="22" fill="#4D8C2A">Humana</text></svg> },
+  { name: "Anthem", logo: <svg viewBox="0 0 120 40" width="100" height="34"><text x="60" y="28" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="22" fill="#003DA5">Anthem</text></svg> },
+  { name: "Oscar Health", logo: <svg viewBox="0 0 120 40" width="100" height="34"><text x="60" y="28" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="24" fill="#6633CC">oscar</text></svg> },
+  { name: "Empire BCBS", logo: <svg viewBox="0 0 130 40" width="110" height="34"><text x="65" y="22" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="14" fill="#005DAA">Empire</text><text x="65" y="36" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="400" fontSize="11" fill="#005DAA">BCBS</text></svg> },
+  { name: "Oxford", logo: <svg viewBox="0 0 100 40" width="90" height="34"><text x="50" y="28" textAnchor="middle" fontFamily="Georgia,serif" fontWeight="700" fontSize="22" fill="#002677">Oxford</text></svg> },
+  { name: "Emblem Health", logo: <svg viewBox="0 0 140 40" width="120" height="34"><text x="70" y="22" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="14" fill="#6A2C91">Emblem</text><text x="70" y="36" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="400" fontSize="12" fill="#F7941D">Health</text></svg> },
+  { name: "Medicare", logo: <svg viewBox="0 0 130 40" width="110" height="34"><text x="65" y="22" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="14" fill="#004990">Medicare</text><text x="65" y="36" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="400" fontSize="10" fill="#C41230">.gov</text></svg> },
+  { name: "1199SEIU", logo: <svg viewBox="0 0 120 40" width="100" height="34"><text x="60" y="28" textAnchor="middle" fontFamily="Arial,sans-serif" fontWeight="700" fontSize="16" fill="#F7941D">1199SEIU</text></svg> },
 ];
 
 export default function BookPage() {
@@ -622,9 +631,9 @@ export default function BookPage() {
               <div className="dz-insurance-tab">
                 <p>We accept 200+ insurance plans including Aetna, BlueCross BlueShield, UnitedHealthcare, Oxford, Cigna, and many more.</p>
                 <div className="dz-ins-logos">
-                  {insuranceNames.map((name) => (
-                    <div className="dz-ins-logo" key={name}>
-                      <span>{name}</span>
+                  {insuranceLogos.map((ins) => (
+                    <div className="dz-ins-logo" key={ins.name} title={ins.name}>
+                      {ins.logo}
                     </div>
                   ))}
                   <div className="dz-ins-logo dz-ins-more">

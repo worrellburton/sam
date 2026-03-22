@@ -9,12 +9,48 @@ export function meta() {
   ];
 }
 
+const platformIcons: Record<string, JSX.Element> = {
+  ZocDoc: (
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
+      <rect width="24" height="24" rx="5" fill="#FF7043"/>
+      <path d="M6 7h6l-6 10h6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      <circle cx="17" cy="12" r="3.5" stroke="#fff" strokeWidth="2" fill="none"/>
+    </svg>
+  ),
+  Google: (
+    <svg viewBox="0 0 24 24" width="28" height="28">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+    </svg>
+  ),
+  Healthgrades: (
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
+      <rect width="24" height="24" rx="5" fill="#1976D2"/>
+      <path d="M7 8v8M7 12h10M17 8v8" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"/>
+    </svg>
+  ),
+  Vitals: (
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
+      <rect width="24" height="24" rx="5" fill="#00BFA5"/>
+      <path d="M5 12l4 5 6-10 4 5" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+  "U.S. News": (
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="none">
+      <rect width="24" height="24" rx="5" fill="#1B3A5C"/>
+      <path d="M8 7v6c0 2.2 1.8 4 4 4s4-1.8 4-4V7" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"/>
+    </svg>
+  ),
+};
+
 const platforms = [
-  { name: "DocZoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", color: "#FF7043", icon: "Z" },
-  { name: "Google", rating: "4.8", reviews: "150+", url: "https://www.google.com/search?q=Dr+Sam+Elguizaoui+orthopedic+surgeon+NYC", color: "#4285F4", icon: "G" },
-  { name: "Healthgrades", rating: "5.0", reviews: "50+", url: "https://www.healthgrades.com/physician/dr-sam-elguizaoui", color: "#1976D2", icon: "H" },
-  { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", color: "#00BFA5", icon: "V" },
-  { name: "U.S. News", rating: "Top", reviews: "Doctor Rankings", url: "https://health.usnews.com/doctors", color: "#1B3A5C", icon: "U" },
+  { name: "ZocDoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", color: "#FF7043" },
+  { name: "Google", rating: "4.8", reviews: "150+", url: "https://www.google.com/search?q=Dr+Sam+Elguizaoui+orthopedic+surgeon+NYC", color: "#4285F4" },
+  { name: "Healthgrades", rating: "5.0", reviews: "50+", url: "https://www.healthgrades.com/physician/dr-sam-elguizaoui", color: "#1976D2" },
+  { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", color: "#00BFA5" },
+  { name: "U.S. News", rating: "Top", reviews: "Doctor Rankings", url: "https://health.usnews.com/doctors", color: "#1B3A5C" },
 ];
 
 const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
@@ -80,7 +116,7 @@ export default function ReviewsPage() {
           <div className="platform-cards-grid">
             {platforms.map((p) => (
               <a key={p.name} href={p.url} target="_blank" rel="noopener" className="platform-card">
-                <div className="platform-icon" style={{ background: p.color }}>{p.icon}</div>
+                <div className="platform-icon" style={{ background: "transparent" }}>{platformIcons[p.name]}</div>
                 <div className="platform-info">
                   <div className="platform-name">{p.name}</div>
                   <div className="platform-rating">

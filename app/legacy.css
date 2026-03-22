@@ -4675,7 +4675,12 @@ a.nav-btn-book,
 /* Nav */
 .dz-nav { position: sticky; top: 0; z-index: 50; background: rgba(10,14,26,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
 .dz-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.dz-logo-group { display: flex; align-items: center; gap: 16px; }
 .dz-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #e4e4ee; font-weight: 700; font-size: 1.1rem; }
+.dz-back-site { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; font-weight: 500; color: #6b6b80; text-decoration: none; padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); transition: all 0.15s; }
+.dz-back-site:hover { color: #818cf8; border-color: rgba(99,102,241,0.3); }
+.dz-light .dz-back-site { color: #999; border-color: rgba(0,0,0,0.1); }
+.dz-light .dz-back-site:hover { color: #2563eb; border-color: rgba(37,99,235,0.3); }
 .dz-nav-links { display: flex; align-items: center; gap: 20px; }
 .dz-bg-switcher { display: flex; gap: 2px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 2px; }
 .dz-bg-opt { padding: 4px 10px; border-radius: 6px; border: none; background: transparent; color: #4a4a5e; font-size: 0.68rem; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.15s; white-space: nowrap; }

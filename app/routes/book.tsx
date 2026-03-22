@@ -367,13 +367,19 @@ export default function BookPage() {
       {/* Top Nav */}
       <nav className="dz-nav">
         <div className="dz-nav-inner">
-          <Link to="/" className="dz-logo">
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="8" fill="#6366f1"/>
-              <text x="16" y="22" textAnchor="middle" fontWeight="700" fontSize="16" fill="#fff" fontFamily="Inter, sans-serif">D</text>
-            </svg>
-            <span>DocZoc</span>
-          </Link>
+          <div className="dz-logo-group">
+            <Link to="/" className="dz-logo">
+              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                <rect width="32" height="32" rx="8" fill="#6366f1"/>
+                <text x="16" y="22" textAnchor="middle" fontWeight="700" fontSize="16" fill="#fff" fontFamily="Inter, sans-serif">D</text>
+              </svg>
+              <span>DocZoc</span>
+            </Link>
+            <Link to="/" className="dz-back-site">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Back to site
+            </Link>
+          </div>
           <div className="dz-nav-links">
             <div className="dz-bg-switcher">
               {BG_OPTIONS.map(opt => (

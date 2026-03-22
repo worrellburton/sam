@@ -59,15 +59,38 @@ function checkBrandfetch(): Promise<ApiStatus> {
   });
 }
 
+async function checkCmsMpfsApi(): Promise<ApiStatus> {
+  const name = "CMS MPFS";
+  const url = "https://data.cms.gov";
+  const start = performance.now();
+  try {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch(
+      url + "/data-api/v1/dataset/fee-for-service-physician/data?size=1",
+      { signal: controller.signal }
+    );
+    clearTimeout(tid);
+    const latency = Math.round(performance.now() - start);
+    if (res.ok) {
+      return { name, url, status: latency > 3000 ? "degraded" : "connected", latency, lastChecked: new Date() };
+    }
+    return { name, url, status: "degraded", latency, lastChecked: new Date() };
+  } catch {
+    return { name, url, status: "offline", lastChecked: new Date() };
+  }
+}
+
 export function useApiStatus(pollInterval = 60000) {
   const [statuses, setStatuses] = useState<ApiStatus[]>([
     { name: "ICD-10 API", url: "https://clinicaltables.nlm.nih.gov", status: "checking" },
     { name: "Brandfetch", url: "https://cdn.brandfetch.io", status: "checking" },
     { name: "Stedi", url: "https://healthcare.us.stedi.com", status: "checking" },
+    { name: "CMS MPFS", url: "https://data.cms.gov", status: "checking" },
   ]);
 
   const checkAll = useCallback(async () => {
-    const [nlm, brandfetch, stedi] = await Promise.all([
+    const [nlm, brandfetch, stedi, cms] = await Promise.all([
       checkNlmApi(),
       checkBrandfetch(),
       checkStediApi().then((r): ApiStatus => ({
@@ -77,8 +100,9 @@ export function useApiStatus(pollInterval = 60000) {
         latency: r.latency,
         lastChecked: new Date(),
       })),
+      checkCmsMpfsApi(),
     ]);
-    setStatuses([nlm, brandfetch, stedi]);
+    setStatuses([nlm, brandfetch, stedi, cms]);
   }, []);
 
   useEffect(() => {

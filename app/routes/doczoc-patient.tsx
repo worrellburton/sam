@@ -96,6 +96,7 @@ export default function PatientDetailPage() {
               Demographics
             </div>
             <InfoRow label="Date of Birth" value={patient.dob} />
+            <InfoRow label="Sex" value={patient.sex} />
             <InfoRow label="Phone" value={patient.phone} />
             <InfoRow label="Email" value={patient.email} />
             <InfoRow label="Address" value={patient.address} />
@@ -111,8 +112,65 @@ export default function PatientDetailPage() {
             </div>
             <InfoRow label="Plan" value={patient.insurance} />
             <InfoRow label="Member ID" value={patient.memberId} />
+            <InfoRow label="Group Number" value={patient.groupNumber} />
+            {patient.priorAuth && <InfoRow label="Prior Auth #" value={patient.priorAuth} />}
             <InfoRow label="Provider" value={patient.provider} />
             <InfoRow label="Referred By" value={patient.referredBy} />
+            {/* Subscriber */}
+            {patient.subscriberRelationship && patient.subscriberRelationship !== "Self" && (
+              <>
+                <div style={{ borderTop: "1px solid rgba(99,102,241,0.1)", margin: "8px 0 4px" }} />
+                <InfoRow label="Subscriber" value={patient.subscriberName || "—"} />
+                {patient.subscriberDob && <InfoRow label="Subscriber DOB" value={patient.subscriberDob} />}
+                <InfoRow label="Relationship" value={patient.subscriberRelationship} />
+              </>
+            )}
+          </div>
+
+          {/* Signatures on File */}
+          <div className="dz-card">
+            <div className="dz-card-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+              Signatures on File
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0" }}>
+              <span style={{ fontSize: "0.78rem", color: "#94a3b8", fontWeight: 600 }}>Assignment of Benefits</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {patient.aobSigned ? (
+                  <>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      Signed
+                    </span>
+                    {patient.aobDate && <span style={{ fontSize: "0.72rem", color: "#64748b" }}>{patient.aobDate}</span>}
+                  </>
+                ) : (
+                  <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>
+                    Missing
+                  </span>
+                )}
+              </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0" }}>
+              <span style={{ fontSize: "0.78rem", color: "#94a3b8", fontWeight: 600 }}>Release of Information</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {patient.roiSigned ? (
+                  <>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      Signed
+                    </span>
+                    {patient.roiDate && <span style={{ fontSize: "0.72rem", color: "#64748b" }}>{patient.roiDate}</span>}
+                  </>
+                ) : (
+                  <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>
+                    Missing
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Medical */}

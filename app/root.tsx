@@ -170,7 +170,8 @@ export default function App() {
 
   const isDevPage = location.pathname.startsWith("/dev");
   const isWebGLPage = location.pathname.startsWith("/webgl");
-  const showChrome = !isDevPage && !isWebGLPage;
+  const isDocZocPage = location.pathname.startsWith("/doczoc");
+  const showChrome = !isDevPage && !isWebGLPage && !isDocZocPage;
 
   return (
     <BookingContext.Provider value={{ openBooking, closeBooking, isBookingOpen: bookingOpen }}>

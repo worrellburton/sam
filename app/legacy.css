@@ -6328,7 +6328,152 @@ img.insurance-logo {
 }
 .dz-sidebar-link:hover { background: rgba(99, 102, 241, 0.08); color: #e2e8f0; }
 .dz-sidebar-link.active { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; }
-.dz-sidebar-bottom { margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(148, 163, 184, 0.1); }
+.dz-sidebar-bottom {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  position: relative;
+}
+
+/* User button */
+.dz-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-align: left;
+}
+.dz-user-btn:hover { background: rgba(99, 102, 241, 0.08); }
+.dz-avatar-sm {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+.dz-user-info { flex: 1; min-width: 0; }
+.dz-user-name { display: block; font-size: 0.82rem; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dz-user-role { display: block; font-size: 0.68rem; color: #64748b; }
+
+/* User popup menu */
+.dz-user-popup {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 8px;
+  right: 8px;
+  background: rgba(15, 20, 35, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.4);
+  z-index: 50;
+  animation: dzPopupIn 0.2s ease;
+}
+@keyframes dzPopupIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.dz-user-popup-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.15s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+}
+.dz-user-popup-item:hover { background: rgba(99, 102, 241, 0.1); color: #e2e8f0; }
+.dz-user-popup-logout:hover { color: #f87171; }
+.dz-user-popup-divider { height: 1px; background: rgba(148, 163, 184, 0.1); margin: 4px 8px; }
+
+/* Appearance page */
+.dz-appear-section { margin-bottom: 40px; }
+.dz-appear-section h2 { font-size: 1.15rem; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+.dz-appear-desc { font-size: 0.85rem; color: #64748b; margin-bottom: 20px; }
+
+/* Font grid */
+.dz-font-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.dz-font-card {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1.5px solid rgba(148, 163, 184, 0.1);
+  border-radius: 12px;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dz-font-card:hover { border-color: rgba(99, 102, 241, 0.3); }
+.dz-font-card.active { border-color: #6366f1; background: rgba(99, 102, 241, 0.08); box-shadow: 0 0 20px rgba(99, 102, 241, 0.1); }
+.dz-font-preview { font-size: 2rem; font-weight: 700; color: #e2e8f0; }
+.dz-font-label { font-size: 0.85rem; font-weight: 600; color: #94a3b8; }
+.dz-font-sample { font-size: 0.72rem; color: #475569; line-height: 1.4; }
+
+/* Background grid */
+.dz-bg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.dz-bg-card {
+  background: transparent;
+  border: 1.5px solid rgba(148, 163, 184, 0.1);
+  border-radius: 12px;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+.dz-bg-card:hover { border-color: rgba(99, 102, 241, 0.3); }
+.dz-bg-card.active { border-color: #6366f1; box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); }
+.dz-bg-preview {
+  width: 100%;
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dz-bg-preview-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.dz-bg-label {
+  display: block;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(10, 10, 26, 0.8);
+}
 
 .dz-platform-main {
   flex: 1;
@@ -6561,6 +6706,57 @@ img.insurance-logo {
 .dz-cal-appt-patient { font-weight: 600; font-size: 0.88rem; color: #e2e8f0; }
 .dz-cal-appt-meta { font-size: 0.78rem; color: #64748b; }
 
+/* Location filter */
+.dz-loc-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.dz-loc-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: rgba(15, 23, 42, 0.5);
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dz-loc-btn:hover { border-color: rgba(99, 102, 241, 0.3); color: #e2e8f0; }
+.dz-loc-btn.active { background: rgba(99, 102, 241, 0.15); border-color: #6366f1; color: #a5b4fc; }
+
+/* Availability toggle */
+.dz-avail-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: rgba(15, 23, 42, 0.5);
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dz-avail-toggle:hover { border-color: rgba(34, 197, 94, 0.3); color: #e2e8f0; }
+.dz-avail-toggle.active { background: rgba(34, 197, 94, 0.15); border-color: #22c55e; color: #22c55e; }
+
+/* Calendar availability states */
+.dz-cal-cell.avail-mode { cursor: pointer; }
+.dz-cal-cell.avail-mode:not(.empty):hover { background: rgba(34, 197, 94, 0.08) !important; }
+.dz-cal-cell.avail-set { background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.2); }
+.dz-cal-avail-tag {
+  font-size: 0.55rem;
+  color: #22c55e;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .dz-hero-inner { grid-template-columns: 1fr; gap: 40px; }
@@ -6570,6 +6766,7 @@ img.insurance-logo {
   .dz-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .dz-cal-layout { grid-template-columns: 1fr; }
   .dz-sidebar { display: none; }
+  .dz-font-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 600px) {
   .dz-hero { padding: 48px 16px 40px; }
@@ -6578,4 +6775,6 @@ img.insurance-logo {
   .dz-footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
   .dz-sso-card { padding: 28px 20px; margin: 0 16px; }
   .dz-stats-grid { grid-template-columns: 1fr; }
+  .dz-font-grid { grid-template-columns: 1fr; }
+  .dz-bg-grid { grid-template-columns: repeat(2, 1fr); }
 }

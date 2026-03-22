@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Sidebar } from "./doczoc-dashboard";
+import { locations } from "~/data/locations";
 
 export function meta() {
   return [{ title: "Calendar | DocZoc" }];
@@ -16,11 +17,12 @@ const APPT_TYPES = [
   { label: 'Post-Op', color: '#f472b6' },
 ];
 
-function getAppts(date: Date) {
+function getAppts(date: Date, locId?: string) {
   const dow = date.getDay();
   if (dow === 0 || dow === 6) return [];
   const d = date.getDate(), m = date.getMonth(), y = date.getFullYear();
-  const seed = (d * 7 + m * 13 + y) % 30;
+  const locSeed = locId ? locId.charCodeAt(4) : 0;
+  const seed = (d * 7 + m * 13 + y + locSeed) % 30;
   const count = seed > 20 ? 4 : seed > 12 ? 3 : seed > 5 ? 2 : 1;
   return Array.from({ length: count }, (_, i) => ({
     type: APPT_TYPES[(seed + i * 3) % APPT_TYPES.length],
@@ -35,6 +37,9 @@ export default function CalendarPage() {
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedLoc, setSelectedLoc] = useState<string>("all");
+  const [availMode, setAvailMode] = useState(false);
+  const [availSlots, setAvailSlots] = useState<Record<string, string[]>>({});
 
   const weeks = useMemo(() => {
     const first = new Date(year, month, 1);
@@ -55,7 +60,21 @@ export default function CalendarPage() {
   const nextMonth = () => { if (month === 11) { setMonth(0); setYear(year + 1); } else setMonth(month + 1); };
 
   const todayStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-  const selectedAppts = selectedDate ? getAppts(selectedDate) : [];
+  const selectedAppts = selectedDate ? getAppts(selectedDate, selectedLoc === "all" ? undefined : selectedLoc) : [];
+
+  function toggleAvailSlot(dateKey: string) {
+    setAvailSlots(prev => {
+      const loc = selectedLoc === "all" ? locations[0].id : selectedLoc;
+      const key = `${dateKey}-${loc}`;
+      const current = prev[key] || [];
+      if (current.length > 0) {
+        const copy = { ...prev };
+        delete copy[key];
+        return copy;
+      }
+      return { ...prev, [key]: ["9:00 AM - 5:00 PM"] };
+    });
+  }
 
   return (
     <div className="dz-platform">
@@ -66,7 +85,35 @@ export default function CalendarPage() {
             <h1>Calendar</h1>
             <p>{MONTHS[month]} {year}</p>
           </div>
+          <div className="dz-platform-header-right">
+            <button
+              className={`dz-avail-toggle${availMode ? " active" : ""}`}
+              onClick={() => setAvailMode(!availMode)}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              {availMode ? "Done Setting" : "Set Availability"}
+            </button>
+          </div>
         </header>
+
+        {/* Location filter */}
+        <div className="dz-loc-filter">
+          <button
+            className={`dz-loc-btn${selectedLoc === "all" ? " active" : ""}`}
+            onClick={() => setSelectedLoc("all")}
+          >
+            All Locations
+          </button>
+          {locations.map((loc) => (
+            <button
+              key={loc.id}
+              className={`dz-loc-btn${selectedLoc === loc.id ? " active" : ""}`}
+              onClick={() => setSelectedLoc(loc.id)}
+            >
+              {loc.label}
+            </button>
+          ))}
+        </div>
 
         <div className="dz-cal-layout">
           <div className="dz-cal-main">
@@ -93,12 +140,20 @@ export default function CalendarPage() {
                   const dateStr = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
                   const isToday = dateStr === todayStr;
                   const isSelected = selectedDate && date.getTime() === selectedDate.getTime();
-                  const appts = getAppts(date);
+                  const appts = getAppts(date, selectedLoc === "all" ? undefined : selectedLoc);
+                  const loc = selectedLoc === "all" ? locations[0].id : selectedLoc;
+                  const hasAvail = availSlots[`${dateStr}-${loc}`];
                   return (
                     <div
                       key={di}
-                      className={`dz-cal-cell${appts.length > 0 ? ' has-appts' : ''}${isSelected ? ' selected' : ''}`}
-                      onClick={() => setSelectedDate(date)}
+                      className={`dz-cal-cell${appts.length > 0 ? ' has-appts' : ''}${isSelected ? ' selected' : ''}${hasAvail ? ' avail-set' : ''}${availMode ? ' avail-mode' : ''}`}
+                      onClick={() => {
+                        if (availMode) {
+                          toggleAvailSlot(dateStr);
+                        } else {
+                          setSelectedDate(date);
+                        }
+                      }}
                     >
                       <span className={`dz-cal-date${isToday ? ' today' : ''}`}>{date.getDate()}</span>
                       <span className={`dz-cal-shift-count${appts.length > 0 ? ' has' : ''}`}>
@@ -111,6 +166,9 @@ export default function CalendarPage() {
                           ))}
                         </div>
                       )}
+                      {hasAvail && (
+                        <span className="dz-cal-avail-tag">Available</span>
+                      )}
                     </div>
                   );
                 })}
@@ -119,25 +177,52 @@ export default function CalendarPage() {
           </div>
 
           <div className="dz-cal-sidebar-panel">
-            <h3>{selectedDate ? `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}` : 'Select a day'}</h3>
-            {selectedDate ? (
-              selectedAppts.length > 0 ? (
-                <div className="dz-cal-appt-list">
-                  {selectedAppts.map((a, i) => (
-                    <div key={i} className="dz-cal-appt-item">
-                      <div className="dz-cal-appt-dot" style={{ background: a.type.color }} />
-                      <div className="dz-cal-appt-detail">
-                        <div className="dz-cal-appt-patient">{a.patient}</div>
-                        <div className="dz-cal-appt-meta">{a.time} &middot; {a.type.label}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="dz-cal-no-appts">No appointments scheduled</p>
-              )
+            {availMode ? (
+              <>
+                <h3>Set Availability</h3>
+                <p className="dz-cal-no-appts">Click on dates to toggle availability for <strong>{selectedLoc === "all" ? locations[0].label : locations.find(l => l.id === selectedLoc)?.label}</strong></p>
+                {Object.keys(availSlots).length > 0 && (
+                  <div className="dz-cal-appt-list" style={{ marginTop: 16 }}>
+                    <div style={{ fontSize: "0.78rem", color: "#64748b", marginBottom: 8 }}>Available dates:</div>
+                    {Object.entries(availSlots).map(([key, slots]) => {
+                      const [dateStr, locId] = key.split("-map-");
+                      const loc = locations.find(l => l.id === `map-${locId}`);
+                      return (
+                        <div key={key} className="dz-cal-appt-item">
+                          <div className="dz-cal-appt-dot" style={{ background: "#22c55e" }} />
+                          <div className="dz-cal-appt-detail">
+                            <div className="dz-cal-appt-patient">{dateStr}</div>
+                            <div className="dz-cal-appt-meta">{loc?.label} &middot; {slots[0]}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
             ) : (
-              <p className="dz-cal-no-appts">Click a date to see appointments</p>
+              <>
+                <h3>{selectedDate ? `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}` : 'Select a day'}</h3>
+                {selectedDate ? (
+                  selectedAppts.length > 0 ? (
+                    <div className="dz-cal-appt-list">
+                      {selectedAppts.map((a, i) => (
+                        <div key={i} className="dz-cal-appt-item">
+                          <div className="dz-cal-appt-dot" style={{ background: a.type.color }} />
+                          <div className="dz-cal-appt-detail">
+                            <div className="dz-cal-appt-patient">{a.patient}</div>
+                            <div className="dz-cal-appt-meta">{a.time} &middot; {a.type.label}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="dz-cal-no-appts">No appointments scheduled</p>
+                  )
+                ) : (
+                  <p className="dz-cal-no-appts">Click a date to see appointments</p>
+                )}
+              </>
             )}
           </div>
         </div>

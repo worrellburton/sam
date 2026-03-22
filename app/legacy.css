@@ -1229,6 +1229,13 @@ a.nav-btn-book,
   color: rgba(255,255,255,0.85);
   font-weight: 600;
 }
+.sticky-team-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  vertical-align: middle;
+  border-radius: 2px;
+}
 [data-theme="light"] .sticky-bar-track span {
   color: rgba(0,0,0,0.3);
 }

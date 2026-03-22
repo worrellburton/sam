@@ -4941,9 +4941,16 @@ a.nav-btn-book,
 }
 
 /* ===== Dev Tools Dashboard ===== */
-.dev-layout { display: flex; min-height: 100vh; }
-.dev-main { flex: 1; margin-left: 240px; padding: 72px 32px 32px; transition: margin-left 0.3s ease; }
+.dev-layout {
+  display: flex; min-height: 100vh; background: #0a0a0f !important; color: #e4e4ee !important;
+  --dev-bg: #0a0a0f; --dev-bg-card: #1a1a26; --dev-bg-input: #1a1a26;
+  --dev-text: #e4e4ee; --dev-text-dim: #6b6b80; --dev-text-muted: #4a4a5e;
+  --dev-border: #2a2a3a; --dev-primary: #6366f1;
+}
 .dev-layout, .dev-layout * { box-sizing: border-box; }
+.dev-layout h1, .dev-layout h2, .dev-layout h3, .dev-layout h4 { color: #e4e4ee !important; }
+.dev-layout p { color: #6b6b80; }
+.dev-main { flex: 1; margin-left: 240px; padding: 72px 32px 32px; transition: margin-left 0.3s ease; background: #0a0a0f !important; }
 .dev-sidebar {
   position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
   background: #12121a; border-right: 1px solid #2a2a3a;

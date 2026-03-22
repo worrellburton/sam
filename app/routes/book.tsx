@@ -172,33 +172,33 @@ function useAnimatedBackground(canvasRef: React.RefObject<HTMLCanvasElement | nu
 
     function renderAuroraWaves() {
       ctx!.clearRect(0, 0, w(), h());
-      // Aurora glow layer
-      for (let i = 0; i < 4; i++) {
+      // Aurora glow layer — very slow drift
+      for (let i = 0; i < 3; i++) {
         const grad = ctx!.createLinearGradient(0, 0, w(), h());
-        const shift = Math.sin(t * 0.006 + i * 0.8) * 0.12;
+        const shift = Math.sin(t * 0.0015 + i * 0.6) * 0.08;
         grad.addColorStop(0, 'rgba(99,102,241,0)');
-        grad.addColorStop(0.25 + shift, `rgba(99,102,241,${0.035 - i * 0.006})`);
-        grad.addColorStop(0.5 + shift, `rgba(129,140,248,${0.045 - i * 0.008})`);
-        grad.addColorStop(0.75 - shift, `rgba(79,70,229,${0.03 - i * 0.005})`);
+        grad.addColorStop(0.3 + shift, `rgba(99,102,241,${0.02 - i * 0.004})`);
+        grad.addColorStop(0.5 + shift, `rgba(129,140,248,${0.025 - i * 0.005})`);
+        grad.addColorStop(0.7 - shift, `rgba(79,70,229,${0.018 - i * 0.004})`);
         grad.addColorStop(1, 'rgba(99,102,241,0)');
         ctx!.fillStyle = grad;
-        const yOff = Math.sin(t * 0.008 + i * 1.2) * 50;
-        ctx!.fillRect(0, yOff + i * 30, w(), h());
+        const yOff = Math.sin(t * 0.002 + i * 1.0) * 40;
+        ctx!.fillRect(0, yOff + i * 50, w(), h());
       }
-      // Waves on top
-      for (let layer = 0; layer < 4; layer++) {
+      // Waves — slow, gentle
+      for (let layer = 0; layer < 3; layer++) {
         ctx!.beginPath();
-        const amp = 20 + layer * 12;
-        const freq = 0.006 - layer * 0.0008;
-        const speed = 0.012 + layer * 0.004;
-        const yBase = h() * (0.3 + layer * 0.15);
-        for (let x = 0; x <= w(); x += 2) {
-          const y = yBase + Math.sin(x * freq + t * speed) * amp + Math.sin(x * freq * 1.8 + t * speed * 0.7) * amp * 0.5;
+        const amp = 15 + layer * 8;
+        const freq = 0.004 - layer * 0.0005;
+        const speed = 0.003 + layer * 0.001;
+        const yBase = h() * (0.35 + layer * 0.18);
+        for (let x = 0; x <= w(); x += 3) {
+          const y = yBase + Math.sin(x * freq + t * speed) * amp + Math.sin(x * freq * 1.6 + t * speed * 0.5) * amp * 0.3;
           if (x === 0) ctx!.moveTo(x, y);
           else ctx!.lineTo(x, y);
         }
-        ctx!.strokeStyle = `rgba(129,140,248,${0.07 - layer * 0.014})`;
-        ctx!.lineWidth = 1.2;
+        ctx!.strokeStyle = `rgba(129,140,248,${0.04 - layer * 0.01})`;
+        ctx!.lineWidth = 0.8;
         ctx!.stroke();
       }
     }

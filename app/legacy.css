@@ -5070,11 +5070,11 @@ a.nav-btn-book,
 .dz-light .dz-confirmed-loc { color: #666; }
 .dz-light .dz-confirmed-note { color: #888; }
 
-/* Fade-in animation */
-.dz { animation: dzFadeIn 0.6s ease-out; }
-@keyframes dzFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Dissolve-in animation */
+.dz { animation: dzDissolve 1.2s ease-in-out; }
+@keyframes dzDissolve {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Mobile */

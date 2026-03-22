@@ -19,6 +19,7 @@ export default [
   route("doczoc/calendar", "routes/doczoc-calendar.tsx"),
   route("doczoc/appearance", "routes/doczoc-appearance.tsx"),
   route("doczoc/billing", "routes/doczoc-billing.tsx"),
+  route("doczoc/insights", "routes/doczoc-insights.tsx"),
   route("dev", "routes/dev.tsx"),
   route("webgl", "routes/webgl.tsx"),
 ] satisfies RouteConfig;

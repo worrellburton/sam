@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { Sidebar } from "./doczoc-dashboard";
+import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
+import { PlatformBg } from "~/components/PlatformBg";
 import { locations } from "~/data/locations";
 
 export function meta() {
@@ -31,8 +32,22 @@ function getAppts(date: Date, locId?: string) {
   }));
 }
 
+function MapThumb({ lat, lng }: { lat: number; lng: number }) {
+  return (
+    <div className="dz-loc-map-thumb">
+      <iframe
+        src={`https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed&disableDefaultUI=1`}
+        loading="lazy"
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+    </div>
+  );
+}
+
 export default function CalendarPage() {
   const [collapsed, setCollapsed] = useState(false);
+  const { bgId } = useDzPrefs();
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
@@ -78,6 +93,7 @@ export default function CalendarPage() {
 
   return (
     <div className="dz-platform">
+      <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
         <header className="dz-platform-header">
@@ -86,13 +102,15 @@ export default function CalendarPage() {
             <p>{MONTHS[month]} {year}</p>
           </div>
           <div className="dz-platform-header-right">
-            <button
-              className={`dz-avail-toggle${availMode ? " active" : ""}`}
-              onClick={() => setAvailMode(!availMode)}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              {availMode ? "Done Setting" : "Set Availability"}
+            {selectedLoc !== "all" && (
+              <button
+                className={`dz-avail-toggle${availMode ? " active" : ""}`}
+                onClick={() => setAvailMode(!availMode)}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                {availMode ? "Done Setting" : "Set Availability"}
             </button>
+            )}
           </div>
         </header>
 
@@ -100,7 +118,7 @@ export default function CalendarPage() {
         <div className="dz-loc-filter">
           <button
             className={`dz-loc-btn${selectedLoc === "all" ? " active" : ""}`}
-            onClick={() => setSelectedLoc("all")}
+            onClick={() => { setSelectedLoc("all"); setAvailMode(false); }}
           >
             All Locations
           </button>
@@ -110,6 +128,7 @@ export default function CalendarPage() {
               className={`dz-loc-btn${selectedLoc === loc.id ? " active" : ""}`}
               onClick={() => setSelectedLoc(loc.id)}
             >
+              <MapThumb lat={loc.lat} lng={loc.lng} />
               {loc.label}
             </button>
           ))}

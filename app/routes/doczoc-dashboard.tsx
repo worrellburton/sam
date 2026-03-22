@@ -1,9 +1,33 @@
 import { Link, useLocation } from "react-router";
 import { useState, useRef, useEffect } from "react";
+import { PlatformBg } from "~/components/PlatformBg";
 
 export function meta() {
   return [{ title: "Dashboard | DocZoc" }];
 }
+
+function useDzPrefs() {
+  const [bgId, setBgId] = useState(() => {
+    if (typeof window !== "undefined") return localStorage.getItem("dz-bg") || "none";
+    return "none";
+  });
+  const [fontFamily, setFontFamily] = useState(() => {
+    if (typeof window !== "undefined") return localStorage.getItem("dz-font") || "inter";
+    return "inter";
+  });
+  useEffect(() => {
+    const onStorage = () => {
+      setBgId(localStorage.getItem("dz-bg") || "none");
+      setFontFamily(localStorage.getItem("dz-font") || "inter");
+    };
+    window.addEventListener("storage", onStorage);
+    const interval = setInterval(onStorage, 500);
+    return () => { window.removeEventListener("storage", onStorage); clearInterval(interval); };
+  }, []);
+  return { bgId, fontFamily };
+}
+
+export { useDzPrefs };
 
 function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const location = useLocation();
@@ -36,7 +60,7 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
         </Link>
         <button className="dz-sidebar-toggle" onClick={onToggle}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            {collapsed ? <><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></> : <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>}
+            <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
         </button>
       </div>
@@ -93,6 +117,7 @@ export { Sidebar };
 
 export default function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
+  const { bgId } = useDzPrefs();
 
   const stats = [
     { label: "Today's Appointments", value: "24", change: "+3", color: "#6366f1" },
@@ -112,6 +137,7 @@ export default function DashboardPage() {
 
   return (
     <div className="dz-platform">
+      <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
         <header className="dz-platform-header">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Sidebar } from "./doczoc-dashboard";
+import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
+import { PlatformBg } from "~/components/PlatformBg";
 
 export function meta() {
   return [{ title: "Patients | DocZoc" }];
@@ -20,6 +21,7 @@ const PATIENTS = [
 export default function PatientsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
+  const { bgId } = useDzPrefs();
 
   const filtered = PATIENTS.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -28,6 +30,7 @@ export default function PatientsPage() {
 
   return (
     <div className="dz-platform">
+      <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
         <header className="dz-platform-header">

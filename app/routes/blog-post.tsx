@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useParams } from "react-router";
 import { getBlogPostBySlug } from "~/data/blog";
 import { GetStarted } from "~/components/GetStarted";
@@ -14,6 +15,16 @@ export function meta({ params }: { params: { slug: string } }) {
 export default function BlogPostPage() {
   const { slug } = useParams();
   const post = getBlogPostBySlug(slug || "");
+
+  useEffect(() => {
+    if (!post?.contentHtml) return;
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("visible"); }),
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll(".blog-reveal, .blog-reveal-left, .blog-reveal-scale").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [post]);
 
   if (!post) {
     return (
@@ -43,10 +54,10 @@ export default function BlogPostPage() {
       </section>
 
       <section className="section">
-        <div className="container" style={{ maxWidth: "760px" }}>
+        <div className="container" style={{ maxWidth: post.contentHtml ? "820px" : "760px" }}>
           <div
-            className="blog-post-content"
-            dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
+            className={post.contentHtml ? "blog-article" : "blog-post-content"}
+            dangerouslySetInnerHTML={{ __html: post.contentHtml || markdownToHtml(post.content) }}
           />
           <div style={{ marginTop: "60px", paddingTop: "30px", borderTop: "1px solid var(--border)" }}>
             <Link to="/blog" className="btn btn-outline">&larr; Back to All Articles</Link>

@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router";
 import { getServiceBySlug, services } from "~/data/services";
+import { conditionToBlogSlug } from "~/data/condition-blogs";
 import { SpecialtyCanvas } from "~/components/SpecialtyCanvas";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
@@ -103,10 +104,12 @@ export default function ServicePage() {
           <div className="svc-conditions-row">
             <div className="svc-conditions-list">
               {service.conditions.map((c, i) => {
+                const blogSlug = conditionToBlogSlug[c];
                 const condSlug = c.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+                const linkTo = blogSlug ? `/blog/${blogSlug}` : `/conditions/${condSlug}`;
                 return (
                   <Link
-                    to={`/conditions/${condSlug}`}
+                    to={linkTo}
                     className="svc-condition-row"
                     key={i}
                   >

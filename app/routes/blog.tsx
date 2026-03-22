@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { blogPosts } from "~/data/blog";
+import { allBlogPosts } from "~/data/blog";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
 
@@ -23,7 +23,7 @@ export default function BlogPage() {
       <section className="section">
         <div className="container">
           <div className="blog-home-grid">
-            {blogPosts.map((post) => (
+            {allBlogPosts.map((post) => (
               <Link to={`/blog/${post.slug}`} className="blog-card" key={post.slug}>
                 <img className="blog-card-img" src={post.image} alt={post.imageAlt} loading="lazy" />
                 <div className="blog-card-body">

@@ -8,6 +8,8 @@ export interface BlogPost {
   image: string;
   imageAlt: string;
   content: string;
+  contentHtml?: string;
+  relatedService?: string;
 }
 
 export const blogPosts: BlogPost[] = [
@@ -277,6 +279,10 @@ If you're experiencing persistent joint pain, swelling, or limited mobility desp
   },
 ];
 
+import { conditionBlogPosts } from "./condition-blogs";
+
+export const allBlogPosts = [...conditionBlogPosts, ...blogPosts];
+
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
-  return blogPosts.find((p) => p.slug === slug);
+  return allBlogPosts.find((p) => p.slug === slug);
 }

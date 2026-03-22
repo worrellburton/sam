@@ -1,0 +1,580 @@
+import type { BlogPost } from "./blog";
+
+// Maps condition text (as it appears in services.ts) to blog post slug
+export const conditionToBlogSlug: Record<string, string> = {
+  "ACL, MCL, and PCL tears": "acl-mcl-pcl-tears-guide",
+  "Meniscus tears and cartilage injuries": "meniscus-tears-cartilage-injuries",
+};
+
+export const conditionBlogPosts: BlogPost[] = [
+  {
+    slug: "acl-mcl-pcl-tears-guide",
+    title: "ACL, MCL & PCL Tears: A Compassionate Guide to Knee Ligament Injuries",
+    excerpt:
+      "Knee ligament tears can feel overwhelming — but understanding your injury is the first step toward healing. Learn about ACL, MCL, and PCL tears from a place of care.",
+    tag: "Sports Medicine",
+    date: "March 20, 2026",
+    readTime: "10 min read",
+    image:
+      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Athlete rehabilitating knee with supportive care",
+    relatedService: "sports-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#understanding">Understanding Your Knee Ligaments</a></li>
+    <li><a href="#types">ACL vs. MCL vs. PCL — What's the Difference?</a></li>
+    <li><a href="#symptoms">Recognizing the Signs</a></li>
+    <li><a href="#stats">By the Numbers</a></li>
+    <li><a href="#treatment">Treatment Options</a></li>
+    <li><a href="#recovery">Recovery Timeline</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you're reading this, you or someone you care about may be dealing with a knee injury. We want you to know — you're not alone, and there is a clear path forward.</p>
+</div>
+
+<h2 id="understanding">Understanding Your Knee Ligaments</h2>
+
+<p>Your knee is one of the most remarkable joints in your body — a beautifully engineered structure that carries you through every step of your life. Four major ligaments work together like a team to keep your knee stable and moving smoothly.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=400&fit=crop&q=80" alt="Medical illustration concept of knee joint anatomy" loading="lazy" />
+
+<p>Think of your ligaments as strong, flexible bands that connect bone to bone. When one of these bands is stretched beyond its limits or torn, it's called a <strong>ligament tear</strong> — and while it can feel scary, modern medicine has made recovery more successful than ever before.</p>
+
+<div class="blog-expert-quote">
+  <p>The knee is designed to be resilient. Even after a significant ligament injury, with the right care and patience, the vast majority of patients return to the activities they love.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="types">ACL vs. MCL vs. PCL — What's the Difference?</h2>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 2 C12 2 8 8 8 12 C8 16 12 22 12 22 C12 22 16 16 16 12 C16 8 12 2 12 2Z"/>
+    <line x1="2" y1="12" x2="22" y2="12"/>
+  </svg>
+  <h3>ACL (Anterior Cruciate Ligament)</h3>
+</div>
+
+<p>The ACL sits deep inside your knee, crossing from the back of the thighbone to the front of the shinbone. It prevents your shin from sliding forward and controls rotational stability. ACL tears are among the most well-known sports injuries — and among the most successfully treated.</p>
+
+<ul>
+  <li><strong>Most common cause:</strong> Sudden stops, pivots, or changes in direction</li>
+  <li><strong>Who it affects:</strong> Athletes in basketball, soccer, football, and skiing</li>
+  <li><strong>The "pop":</strong> Many patients report hearing or feeling a pop at the moment of injury</li>
+</ul>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 20 L4 4 L20 4"/>
+    <path d="M4 12 L12 12 L12 4"/>
+  </svg>
+  <h3>MCL (Medial Collateral Ligament)</h3>
+</div>
+
+<p>The MCL runs along the inner side of your knee, connecting your thighbone to your shinbone. It's the knee's guardian against forces that push the knee inward. The good news? MCL injuries often heal well without surgery.</p>
+
+<ul>
+  <li><strong>Most common cause:</strong> A blow to the outside of the knee (common in football)</li>
+  <li><strong>Healing advantage:</strong> The MCL has a good blood supply, which helps it heal naturally</li>
+  <li><strong>Treatment:</strong> Many MCL tears respond well to bracing and physical therapy alone</li>
+</ul>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 20 L20 4 L4 20"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+  <h3>PCL (Posterior Cruciate Ligament)</h3>
+</div>
+
+<p>The PCL is the strongest ligament in the knee, crossing from the front of the thighbone to the back of the shinbone. It prevents the shin from sliding backward. Because of its strength, PCL tears are less common — but they do happen.</p>
+
+<ul>
+  <li><strong>Most common cause:</strong> Dashboard injuries in car accidents, or falling on a bent knee</li>
+  <li><strong>Often partial:</strong> PCL injuries are frequently partial tears that can heal conservatively</li>
+  <li><strong>Combined injuries:</strong> PCL tears sometimes occur alongside other ligament injuries</li>
+</ul>
+
+<h2 id="symptoms">Recognizing the Signs</h2>
+
+<p>Every person's experience is different, but here are the most common signs that something may need attention:</p>
+
+<div class="blog-takeaway">
+  <h4>Warning Signs to Watch For</h4>
+  <ul>
+    <li>A popping sound or sensation at the time of injury</li>
+    <li>Rapid swelling within the first few hours</li>
+    <li>Feeling like your knee is "giving way" or unstable</li>
+    <li>Difficulty putting weight on the affected leg</li>
+    <li>Pain along the inner or outer side of the knee</li>
+    <li>Stiffness and reduced range of motion</li>
+  </ul>
+</div>
+
+<p>If you notice any of these signs, please don't push through the pain. Your body is telling you something important, and getting an early evaluation means more options and better outcomes.</p>
+
+<h2 id="stats">By the Numbers</h2>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">200,000+</span>
+    <span class="blog-stat-label">ACL injuries per year in the U.S.</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">90%+</span>
+    <span class="blog-stat-label">Success rate for ACL reconstruction</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">6-9 mo</span>
+    <span class="blog-stat-label">Typical return to sport after ACL surgery</span>
+  </div>
+</div>
+
+<div class="blog-chart">
+  <h4>Ligament Injury Frequency Comparison</h4>
+  <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bar1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#4f46e5"/>
+      </linearGradient>
+      <linearGradient id="bar2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#818cf8"/>
+        <stop offset="100%" stop-color="#6366f1"/>
+      </linearGradient>
+      <linearGradient id="bar3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#a5b4fc"/>
+        <stop offset="100%" stop-color="#818cf8"/>
+      </linearGradient>
+    </defs>
+    <!-- Grid lines -->
+    <line x1="80" y1="30" x2="380" y2="30" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="80" y1="70" x2="380" y2="70" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="80" y1="110" x2="380" y2="110" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="80" y1="150" x2="380" y2="150" stroke="#e5e7eb" stroke-width="0.5"/>
+    <!-- Bars -->
+    <rect x="100" y="40" width="80" height="140" rx="6" fill="url(#bar1)" opacity="0.9">
+      <animate attributeName="height" from="0" to="140" dur="1s" fill="freeze"/>
+      <animate attributeName="y" from="180" to="40" dur="1s" fill="freeze"/>
+    </rect>
+    <rect x="210" y="80" width="80" height="100" rx="6" fill="url(#bar2)" opacity="0.9">
+      <animate attributeName="height" from="0" to="100" dur="1s" fill="freeze" begin="0.2s"/>
+      <animate attributeName="y" from="180" to="80" dur="1s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <rect x="320" y="120" width="80" height="60" rx="6" fill="url(#bar3)" opacity="0.9">
+      <animate attributeName="height" from="0" to="60" dur="1s" fill="freeze" begin="0.4s"/>
+      <animate attributeName="y" from="180" to="120" dur="1s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <!-- Labels -->
+    <text x="140" y="200" text-anchor="middle" font-size="13" fill="#6b7280" font-family="Inter, sans-serif">ACL</text>
+    <text x="250" y="200" text-anchor="middle" font-size="13" fill="#6b7280" font-family="Inter, sans-serif">MCL</text>
+    <text x="360" y="200" text-anchor="middle" font-size="13" fill="#6b7280" font-family="Inter, sans-serif">PCL</text>
+    <!-- Values -->
+    <text x="140" y="33" text-anchor="middle" font-size="14" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">~46%</text>
+    <text x="250" y="73" text-anchor="middle" font-size="14" font-weight="700" fill="#6366f1" font-family="Inter, sans-serif">~33%</text>
+    <text x="360" y="113" text-anchor="middle" font-size="14" font-weight="700" fill="#818cf8" font-family="Inter, sans-serif">~20%</text>
+  </svg>
+  <p class="blog-chart-caption">Approximate distribution of knee ligament injuries among athletes (source: AAOS)</p>
+</div>
+
+<h2 id="treatment">Treatment Options</h2>
+
+<p>Here's the reassuring truth: treatment for ligament injuries has never been better. Dr. Elguizaoui believes in exploring every option and always choosing the gentlest effective path.</p>
+
+<h3>Conservative (Non-Surgical) Treatment</h3>
+
+<p>Many ligament injuries — especially MCL tears and partial PCL tears — can heal beautifully without surgery:</p>
+
+<ul>
+  <li><strong>R.I.C.E. protocol</strong> — Rest, Ice, Compression, Elevation in the early days</li>
+  <li><strong>Bracing</strong> — A hinged knee brace protects the healing ligament</li>
+  <li><strong>Physical therapy</strong> — Guided exercises to restore strength and stability</li>
+  <li><strong>PRP therapy</strong> — Platelet-rich plasma injections to accelerate healing</li>
+</ul>
+
+<h3>Surgical Reconstruction</h3>
+
+<p>When surgery is the best path — particularly for complete ACL tears in active individuals — modern techniques make it more successful and less invasive than ever:</p>
+
+<ul>
+  <li><strong>Arthroscopic surgery</strong> — Tiny incisions, a camera, and specialized instruments</li>
+  <li><strong>Graft options</strong> — Using your own tissue (autograft) or donor tissue (allograft)</li>
+  <li><strong>Same-day procedure</strong> — You go home the same day</li>
+  <li><strong>Personalized rehab</strong> — A recovery plan tailored just for you</li>
+</ul>
+
+<div class="blog-expert-quote">
+  <p>I always explore conservative treatment first. Surgery is a tool — a powerful one — but it's not always the first answer. When we do operate, we use minimally invasive techniques that get patients back to their lives faster.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="recovery">Recovery Timeline</h2>
+
+<div class="blog-chart">
+  <h4>ACL Reconstruction Recovery Milestones</h4>
+  <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+    <!-- Timeline line -->
+    <line x1="40" y1="90" x2="460" y2="90" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+    <!-- Milestone dots and labels -->
+    <circle cx="70" cy="90" r="10" fill="#6366f1">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze"/>
+    </circle>
+    <text x="70" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Week 1-2</text>
+    <text x="70" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#4f46e5" font-family="Inter, sans-serif">Pain mgmt</text>
+    <text x="70" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Crutches</text>
+
+    <circle cx="160" cy="90" r="10" fill="#818cf8">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.2s"/>
+    </circle>
+    <text x="160" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Week 2-6</text>
+    <text x="160" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#4f46e5" font-family="Inter, sans-serif">Early PT</text>
+    <text x="160" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Range of motion</text>
+
+    <circle cx="250" cy="90" r="10" fill="#a5b4fc">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.4s"/>
+    </circle>
+    <text x="250" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Month 2-4</text>
+    <text x="250" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#4f46e5" font-family="Inter, sans-serif">Strengthening</text>
+    <text x="250" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Swim & bike</text>
+
+    <circle cx="340" cy="90" r="10" fill="#c7d2fe">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.6s"/>
+    </circle>
+    <text x="340" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Month 4-6</text>
+    <text x="340" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#4f46e5" font-family="Inter, sans-serif">Jogging</text>
+    <text x="340" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Agility drills</text>
+
+    <circle cx="430" cy="90" r="12" fill="#4f46e5" stroke="#fff" stroke-width="2">
+      <animate attributeName="r" from="0" to="12" dur="0.5s" fill="freeze" begin="0.8s"/>
+    </circle>
+    <text x="430" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Month 6-9</text>
+    <text x="430" y="70" text-anchor="middle" font-size="9" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">Return to</text>
+    <text x="430" y="58" text-anchor="middle" font-size="9" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">sport!</text>
+  </svg>
+</div>
+
+<div class="blog-takeaway">
+  <h4>Keys to a Successful Recovery</h4>
+  <ul>
+    <li><strong>Be patient with yourself</strong> — healing takes time, and that's okay</li>
+    <li><strong>Follow your PT program</strong> — consistency matters more than intensity</li>
+    <li><strong>Celebrate small wins</strong> — every milestone is progress</li>
+    <li><strong>Ask for help</strong> — your care team is here for every question</li>
+    <li><strong>Trust the process</strong> — thousands of patients have walked this path successfully</li>
+  </ul>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Can I walk after an ACL tear?</h3>
+<p>Many people can walk after an ACL tear, especially once the initial swelling subsides. However, the knee may feel unstable during cutting or pivoting movements. Walking ability doesn't mean the ligament doesn't need treatment — please get evaluated.</p>
+
+<h3>Do all ACL tears require surgery?</h3>
+<p>No. Some patients, particularly those who are less active or older, may do well with physical therapy alone. Dr. Elguizaoui evaluates each patient individually and only recommends surgery when it will truly improve quality of life.</p>
+
+<h3>How long before I can drive after knee ligament surgery?</h3>
+<p>Most patients can drive an automatic transmission within 2-4 weeks after surgery on the left knee, or 4-6 weeks for the right knee. Your surgeon will give you specific guidance based on your recovery.</p>
+
+<h3>Will my knee ever be the same?</h3>
+<p>With proper treatment and rehabilitation, the vast majority of patients return to their pre-injury activity level. Modern surgical techniques and rehabilitation protocols have made outcomes better than ever.</p>
+
+<div class="blog-cta">
+  <h3>You Deserve Answers — And a Plan</h3>
+  <p>If you're dealing with a knee ligament injury in New York City, Dr. Elguizaoui is here to listen, evaluate, and guide you toward the best outcome. With offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui brings compassionate, world-class orthopedic care to patients throughout the NYC metropolitan area.</p>
+  </div>
+</div>
+`,
+  },
+  {
+    slug: "meniscus-tears-cartilage-injuries",
+    title: "Meniscus Tears & Cartilage Injuries: Your Complete Guide to Healing",
+    excerpt:
+      "A meniscus tear doesn't have to slow you down forever. Learn about the latest treatments, recovery timelines, and how to protect your knee for the long term.",
+    tag: "Sports Medicine",
+    date: "March 18, 2026",
+    readTime: "9 min read",
+    image:
+      "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Runner on a trail with healthy knees",
+    relatedService: "sports-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what-is">What Is the Meniscus?</a></li>
+    <li><a href="#types">Types of Meniscus Tears</a></li>
+    <li><a href="#symptoms">Signs You May Have a Meniscus Tear</a></li>
+    <li><a href="#cartilage">Understanding Cartilage Injuries</a></li>
+    <li><a href="#diagnosis">How We Diagnose</a></li>
+    <li><a href="#treatment">Treatment Options</a></li>
+    <li><a href="#recovery">Recovery & Getting Back to Life</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>A knee injury can make the simplest things feel hard — walking, climbing stairs, even sleeping comfortably. If that's where you are right now, please know that healing is absolutely possible, and we're here to help every step of the way.</p>
+</div>
+
+<h2 id="what-is">What Is the Meniscus?</h2>
+
+<p>Your meniscus is one of your knee's unsung heroes. Each knee has two of these C-shaped pieces of cartilage — one on the inner side (medial) and one on the outer side (lateral). They act as shock absorbers, cushioning the space between your thighbone and shinbone.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=400&fit=crop&q=80" alt="Knee joint anatomy concept" loading="lazy" />
+
+<p>Every time you walk, run, or jump, your menisci distribute the load across your knee joint, reducing stress on the bone surfaces by up to <strong>70%</strong>. They also help stabilize the joint and nourish the surrounding cartilage.</p>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">750K+</span>
+    <span class="blog-stat-label">Meniscus surgeries per year in the U.S.</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">70%</span>
+    <span class="blog-stat-label">Load reduction provided by healthy menisci</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">2-4 wk</span>
+    <span class="blog-stat-label">Recovery from simple meniscectomy</span>
+  </div>
+</div>
+
+<h2 id="types">Types of Meniscus Tears</h2>
+
+<p>Not all meniscus tears are created equal. The type, location, and size of your tear all influence how it's treated — and the great news is that many types have excellent treatment outcomes.</p>
+
+<div class="blog-chart">
+  <h4>Common Meniscus Tear Patterns</h4>
+  <svg viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
+    <!-- Radial tear -->
+    <g transform="translate(80, 70)">
+      <circle cx="40" cy="40" r="38" fill="none" stroke="#e5e7eb" stroke-width="2"/>
+      <path d="M40 2 C60 15 68 30 68 40" fill="none" stroke="#6366f1" stroke-width="12" stroke-linecap="round" opacity="0.3"/>
+      <line x1="40" y1="40" x2="68" y2="20" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="40" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Radial</text>
+      <text x="40" y="115" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Common in</text>
+      <text x="40" y="128" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">younger patients</text>
+    </g>
+    <!-- Horizontal tear -->
+    <g transform="translate(210, 70)">
+      <circle cx="40" cy="40" r="38" fill="none" stroke="#e5e7eb" stroke-width="2"/>
+      <path d="M10 30 C20 25 60 25 70 30" fill="none" stroke="#6366f1" stroke-width="12" stroke-linecap="round" opacity="0.3"/>
+      <path d="M15 30 C30 35 50 35 65 30" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,3"/>
+      <text x="40" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Horizontal</text>
+      <text x="40" y="115" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Often from</text>
+      <text x="40" y="128" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">degenerative wear</text>
+    </g>
+    <!-- Bucket handle -->
+    <g transform="translate(340, 70)">
+      <circle cx="40" cy="40" r="38" fill="none" stroke="#e5e7eb" stroke-width="2"/>
+      <path d="M15 20 C15 20 25 55 40 60 C55 55 65 20 65 20" fill="none" stroke="#6366f1" stroke-width="12" stroke-linecap="round" opacity="0.3"/>
+      <path d="M25 35 C30 50 50 50 55 35" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="40" y="100" text-anchor="middle" font-size="12" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Bucket Handle</text>
+      <text x="40" y="115" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Can cause</text>
+      <text x="40" y="128" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">knee locking</text>
+    </g>
+  </svg>
+  <p class="blog-chart-caption">Each tear pattern requires a different treatment approach — repair when possible, trim only when necessary</p>
+</div>
+
+<div class="blog-expert-quote">
+  <p>My philosophy is simple: save the meniscus whenever we can. This cushion protects your knee for decades to come. When we preserve it, we preserve your joint health for the long term.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="symptoms">Signs You May Have a Meniscus Tear</h2>
+
+<p>Meniscus tears don't always announce themselves dramatically. Sometimes the signs develop gradually. Here's what to watch for:</p>
+
+<div class="blog-takeaway">
+  <h4>Common Symptoms</h4>
+  <ul>
+    <li><strong>Pain along the joint line</strong> — the inner or outer edge of your knee</li>
+    <li><strong>Swelling</strong> — often developing over 24-48 hours after the injury</li>
+    <li><strong>Catching or locking</strong> — feeling like your knee gets "stuck"</li>
+    <li><strong>Difficulty straightening</strong> — especially with bucket-handle tears</li>
+    <li><strong>Giving way</strong> — a sense that your knee might buckle</li>
+    <li><strong>Stiffness</strong> — particularly after sitting for a long time</li>
+  </ul>
+</div>
+
+<p>If you're experiencing any of these symptoms, you don't need to have all the answers right now. That's what your evaluation is for — to understand exactly what's happening and what your options are.</p>
+
+<h2 id="cartilage">Understanding Cartilage Injuries</h2>
+
+<p>Beyond the meniscus, your knee also has <strong>articular cartilage</strong> — the smooth, glassy surface that coats the ends of your bones and allows them to glide against each other without friction. When this cartilage is damaged, it can cause pain, swelling, and stiffness.</p>
+
+<p>Cartilage injuries often occur alongside meniscus tears, especially in athletes. The encouraging news is that cartilage repair has advanced tremendously in recent years.</p>
+
+<div class="blog-chart">
+  <h4>Cartilage Damage Grades</h4>
+  <svg viewBox="0 0 460 160" xmlns="http://www.w3.org/2000/svg">
+    <!-- Grade boxes -->
+    <rect x="10" y="20" width="100" height="80" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="60" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#166534" font-family="Inter, sans-serif">Grade I</text>
+    <text x="60" y="66" text-anchor="middle" font-size="10" fill="#166534" font-family="Inter, sans-serif">Softening</text>
+    <text x="60" y="80" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">Often heals with</text>
+    <text x="60" y="92" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">rest & therapy</text>
+
+    <rect x="125" y="20" width="100" height="80" rx="8" fill="#fef9c3" stroke="#fde047" stroke-width="1.5"/>
+    <text x="175" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#854d0e" font-family="Inter, sans-serif">Grade II</text>
+    <text x="175" y="66" text-anchor="middle" font-size="10" fill="#854d0e" font-family="Inter, sans-serif">Partial thickness</text>
+    <text x="175" y="80" text-anchor="middle" font-size="9" fill="#a16207" font-family="Inter, sans-serif">May respond to</text>
+    <text x="175" y="92" text-anchor="middle" font-size="9" fill="#a16207" font-family="Inter, sans-serif">PRP or biologics</text>
+
+    <rect x="240" y="20" width="100" height="80" rx="8" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5"/>
+    <text x="290" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#9a3412" font-family="Inter, sans-serif">Grade III</text>
+    <text x="290" y="66" text-anchor="middle" font-size="10" fill="#9a3412" font-family="Inter, sans-serif">Full thickness</text>
+    <text x="290" y="80" text-anchor="middle" font-size="9" fill="#c2410c" font-family="Inter, sans-serif">Microfracture or</text>
+    <text x="290" y="92" text-anchor="middle" font-size="9" fill="#c2410c" font-family="Inter, sans-serif">cartilage repair</text>
+
+    <rect x="355" y="20" width="100" height="80" rx="8" fill="#fecaca" stroke="#f87171" stroke-width="1.5"/>
+    <text x="405" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b" font-family="Inter, sans-serif">Grade IV</text>
+    <text x="405" y="66" text-anchor="middle" font-size="10" fill="#991b1b" font-family="Inter, sans-serif">Bone exposed</text>
+    <text x="405" y="80" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">Cartilage transplant</text>
+    <text x="405" y="92" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">or restoration</text>
+
+    <!-- Arrows -->
+    <path d="M112 60 L123 60" stroke="#9ca3af" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
+    <path d="M227 60 L238 60" stroke="#9ca3af" stroke-width="1.5" fill="none"/>
+    <path d="M342 60 L353 60" stroke="#9ca3af" stroke-width="1.5" fill="none"/>
+
+    <text x="230" y="140" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif" font-style="italic">Earlier detection = more treatment options = better outcomes</text>
+  </svg>
+</div>
+
+<h2 id="diagnosis">How We Diagnose</h2>
+
+<p>Getting an accurate diagnosis is the foundation of effective treatment. Dr. Elguizaoui uses a thorough, compassionate approach:</p>
+
+<ul>
+  <li><strong>Careful history</strong> — Understanding how your injury happened and what you're feeling</li>
+  <li><strong>Physical examination</strong> — Specific tests that help identify meniscus and cartilage injuries</li>
+  <li><strong>MRI imaging</strong> — High-resolution imaging that shows the meniscus and cartilage in detail</li>
+  <li><strong>X-rays</strong> — To evaluate bone alignment and rule out fractures</li>
+</ul>
+
+<h2 id="treatment">Treatment Options</h2>
+
+<h3>Non-Surgical Care</h3>
+
+<p>Many meniscus tears and early cartilage injuries respond well to conservative treatment, especially in older patients or those with degenerative tears:</p>
+
+<ul>
+  <li><strong>Rest and activity modification</strong> — Giving your knee time to settle down</li>
+  <li><strong>Physical therapy</strong> — Strengthening muscles that support and protect the knee</li>
+  <li><strong>Anti-inflammatory care</strong> — Medications, ice, and compression</li>
+  <li><strong>PRP injections</strong> — Your own platelets concentrated to support healing</li>
+  <li><strong>Hyaluronic acid</strong> — Injections that restore joint lubrication</li>
+</ul>
+
+<h3>Arthroscopic Surgery</h3>
+
+<p>When surgery is the best option, Dr. Elguizaoui uses minimally invasive arthroscopic techniques:</p>
+
+<ul>
+  <li><strong>Meniscus repair</strong> — Stitching the tear back together (preferred when possible)</li>
+  <li><strong>Partial meniscectomy</strong> — Removing only the damaged portion, preserving the rest</li>
+  <li><strong>Microfracture</strong> — Stimulating your body to grow new cartilage</li>
+  <li><strong>Cartilage transplantation</strong> — OATS or ACI procedures for larger defects</li>
+</ul>
+
+<div class="blog-expert-quote">
+  <p>Every knee is unique. I take the time to understand each patient's injury, activity level, and goals before recommending a treatment path. The best procedure is the one that's right for you — not the one that's right in general.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="recovery">Recovery & Getting Back to Life</h2>
+
+<div class="blog-chart">
+  <h4>Recovery Timeline Comparison</h4>
+  <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Labels -->
+    <text x="10" y="55" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Meniscectomy</text>
+    <text x="10" y="105" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Meniscus Repair</text>
+    <text x="10" y="155" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Cartilage Repair</text>
+
+    <!-- Bars -->
+    <rect x="130" y="40" width="100" height="24" rx="4" fill="#6366f1" opacity="0.85">
+      <animate attributeName="width" from="0" to="100" dur="0.8s" fill="freeze"/>
+    </rect>
+    <text x="240" y="57" font-size="11" fill="#6366f1" font-weight="600" font-family="Inter, sans-serif">2-4 weeks</text>
+
+    <rect x="130" y="90" width="200" height="24" rx="4" fill="#818cf8" opacity="0.85">
+      <animate attributeName="width" from="0" to="200" dur="0.8s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="340" y="107" font-size="11" fill="#818cf8" font-weight="600" font-family="Inter, sans-serif">3-4 months</text>
+
+    <rect x="130" y="140" width="300" height="24" rx="4" fill="#a5b4fc" opacity="0.85">
+      <animate attributeName="width" from="0" to="300" dur="0.8s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <text x="438" y="157" font-size="11" fill="#a5b4fc" font-weight="600" font-family="Inter, sans-serif">4-6 mo</text>
+
+    <text x="290" y="190" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Meniscus repair takes longer but preserves the tissue for the long term</text>
+  </svg>
+</div>
+
+<div class="blog-takeaway">
+  <h4>Tips for a Smooth Recovery</h4>
+  <ul>
+    <li><strong>Follow your PT plan faithfully</strong> — it's designed specifically for your injury</li>
+    <li><strong>Ice after exercises</strong> — 15-20 minutes to manage swelling</li>
+    <li><strong>Be patient with yourself</strong> — healing has its own timeline</li>
+    <li><strong>Stay in communication</strong> — let your care team know how you're feeling</li>
+    <li><strong>Celebrate progress</strong> — every small improvement matters</li>
+  </ul>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Can a meniscus tear heal on its own?</h3>
+<p>Small tears in the outer third of the meniscus (the "red zone" with good blood supply) sometimes heal on their own with rest and physical therapy. Tears in the inner portion typically don't heal without intervention because of limited blood supply.</p>
+
+<h3>How do I know if I need surgery?</h3>
+<p>If conservative treatment hasn't improved your symptoms after 4-6 weeks, or if your knee is locking or giving way, surgery may be the better option. Dr. Elguizaoui will discuss this with you honestly and openly.</p>
+
+<h3>Is meniscus repair better than meniscectomy?</h3>
+<p>When repair is possible, it's generally preferred because it preserves the meniscus tissue. However, not all tears can be repaired. Dr. Elguizaoui will assess your specific tear and recommend the approach that gives you the best long-term outcome.</p>
+
+<h3>Can I still run after a meniscus injury?</h3>
+<p>Many patients return to running after meniscus treatment. The timeline depends on your specific injury and treatment. Dr. Elguizaoui works with patients to create a personalized return-to-activity plan.</p>
+
+<h3>What happens if cartilage damage is left untreated?</h3>
+<p>Untreated cartilage damage can progressively worsen, potentially leading to arthritis over time. That's why early evaluation is so important — catching it early means more options and better outcomes.</p>
+
+<div class="blog-cta">
+  <h3>Your Knee Deserves Expert Care</h3>
+  <p>If you're dealing with knee pain, catching, or swelling, Dr. Elguizaoui can help you understand what's happening and map out a path to recovery. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Fellowship-trained at Lenox Hill Hospital with international cartilage repair training in Switzerland, the Netherlands, and Italy. Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Dr. Elguizaoui is dedicated to preserving joint health with the most advanced, least invasive treatments available.</p>
+  </div>
+</div>
+`,
+  },
+];

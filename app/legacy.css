@@ -4750,6 +4750,75 @@ img.insurance-logo {
   color: var(--primary);
 }
 
+/* Blog Content Images */
+.blog-content-img {
+  width: 100%;
+  border-radius: var(--radius);
+  margin: 32px 0;
+  box-shadow: var(--shadow);
+}
+
+/* Blog SVG Chart */
+.blog-chart {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin: 32px 0;
+  text-align: center;
+}
+.blog-chart h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.blog-chart svg {
+  max-width: 100%;
+  height: auto;
+}
+.blog-chart-caption {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  font-style: italic;
+}
+
+/* Blog SVG Icon Header */
+.blog-icon-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 48px 0 20px;
+}
+.blog-icon-header svg {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+.blog-icon-header h2,
+.blog-icon-header h3 {
+  margin: 0;
+}
+
+/* Blog Kindness Banner */
+.blog-kindness {
+  background: linear-gradient(135deg, var(--primary-light), rgba(99,102,241,0.08));
+  border-radius: var(--radius);
+  padding: 32px;
+  margin: 40px 0;
+  text-align: center;
+  border: 1px solid rgba(99,102,241,0.15);
+}
+.blog-kindness p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.7;
+  margin: 0;
+}
+
 /* Blog Post Responsive */
 @media (max-width: 768px) {
   .blog-post-hero { padding: 120px 0 48px; }

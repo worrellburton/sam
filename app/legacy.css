@@ -4695,7 +4695,15 @@ a.nav-btn-book,
 .dz-main.cal-active .dz-specialty { font-size: 0.78rem; }
 .dz-main.cal-active .dz-address { display: none; }
 .dz-main.cal-active .dz-badge { font-size: 0.6rem; padding: 2px 8px; }
-.dz-main.cal-active .dz-rating-row { display: none; }
+.dz-main.cal-active .dz-rating-row { flex-wrap: nowrap; gap: 12px; padding-top: 14px; align-items: center; }
+.dz-main.cal-active .dz-rating-score { flex-direction: row; gap: 6px; align-items: center; }
+.dz-main.cal-active .dz-big-number { font-size: 1.1rem; }
+.dz-main.cal-active .dz-stars { font-size: 0.7rem; margin-top: 0; }
+.dz-main.cal-active .dz-review-snippet { min-width: 0; }
+.dz-main.cal-active .dz-review-snippet p { font-size: 0.78rem; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.dz-main.cal-active .dz-review-meta { font-size: 0.68rem; }
+.dz-main.cal-active .dz-snippet-author { display: none; }
+.dz-main.cal-active .dz-see-reviews { font-size: 0.75rem; }
 .dz-main.cal-active .dz-tabs { display: none; }
 .dz-main.cal-active .dz-tab-content { display: none; }
 

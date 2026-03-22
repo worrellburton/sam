@@ -4685,9 +4685,9 @@ a.nav-btn-book,
 .dz-nav-phone:hover { color: #e4e4ee; }
 
 /* Main Layout */
-.dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 480px; gap: 32px; align-items: start; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 480px; gap: 32px; align-items: start; transition: all 10s ease-in-out; }
 .dz-main.cal-active { grid-template-columns: 1fr; }
-.dz-main.cal-active .dz-profile { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.dz-main.cal-active .dz-profile { transition: all 10s ease-in-out; }
 .dz-main.cal-active .dz-doctor-card { padding: 14px 20px; }
 .dz-main.cal-active .dz-doctor-header { flex-direction: row; align-items: center; gap: 14px; margin-bottom: 0; }
 .dz-main.cal-active .dz-avatar { width: 44px; height: 44px; }
@@ -4700,9 +4700,9 @@ a.nav-btn-book,
 .dz-main.cal-active .dz-tab-content { display: none; }
 
 /* Profile Section */
-.dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; }
-.dz-doctor-header { display: flex; gap: 20px; margin-bottom: 24px; }
-.dz-avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid rgba(99,102,241,0.3); }
+.dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; transition: padding 10s ease-in-out; }
+.dz-doctor-header { display: flex; gap: 20px; margin-bottom: 24px; transition: all 10s ease-in-out; }
+.dz-avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid rgba(99,102,241,0.3); transition: all 10s ease-in-out; }
 .dz-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .dz-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.12); color: #34d399; font-size: 0.72rem; font-weight: 600; padding: 5px 12px; border-radius: 980px; margin-bottom: 6px; border: 1px solid rgba(34,197,94,0.2); }
 .dz-badge svg { flex-shrink: 0; }
@@ -4818,7 +4818,7 @@ a.nav-btn-book,
 @keyframes dzSpin { to { transform: rotate(360deg); } }
 
 /* Booking Card */
-.dz-booking { position: sticky; top: 72px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.dz-booking { position: sticky; top: 72px; transition: all 10s ease-in-out; }
 .dz-booking.expanded .dz-cal-cell { min-height: 100px; padding: 10px; }
 .dz-booking.expanded .dz-cal-date { font-size: 0.95rem; }
 .dz-booking.expanded .dz-cal-pill { font-size: 0.68rem; padding: 4px 8px; }

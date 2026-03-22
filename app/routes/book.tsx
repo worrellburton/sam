@@ -367,11 +367,26 @@ export default function BookPage() {
                 <span className="dz-big-number">4.78</span>
                 <span className="dz-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
               </div>
-              <div className="dz-review-snippet">
-                <p>&ldquo;Honestly, highly recommend. This is the 2nd time I broke a bone and came straight back to Dr. Elguizaoui. Not sure how many times an Ortho gets a repeat client, but that...&rdquo;</p>
-                <span className="dz-review-meta">Carlos G. &middot; March 16, 2026</span>
-              </div>
-              <Link to="/reviews" className="dz-see-reviews">See all 1470 reviews</Link>
+              {googleReviews.length > 0 ? (
+                <div className="dz-review-snippet">
+                  <div className="dz-snippet-author">
+                    {googleReviews[0].authorAttribution?.photoUri ? (
+                      <img src={googleReviews[0].authorAttribution.photoUri} alt="" className="dz-snippet-avatar" />
+                    ) : (
+                      <div className="dz-snippet-avatar dz-snippet-avatar-placeholder">
+                        {(googleReviews[0].authorAttribution?.displayName || '?')[0]}
+                      </div>
+                    )}
+                  </div>
+                  <p>&ldquo;{googleReviews[0].text?.text?.slice(0, 180)}{(googleReviews[0].text?.text?.length || 0) > 180 ? '...' : ''}&rdquo;</p>
+                  <span className="dz-review-meta">{googleReviews[0].authorAttribution?.displayName} &middot; {googleReviews[0].relativePublishTimeDescription} &middot; {googleReviews[0].locationLabel}</span>
+                </div>
+              ) : (
+                <div className="dz-review-snippet">
+                  <p className="dz-snippet-loading">Loading reviews...</p>
+                </div>
+              )}
+              <Link to="/reviews" className="dz-see-reviews">See all {googleTotal > 0 ? googleTotal.toLocaleString() : '1,470'} reviews</Link>
             </div>
           </div>
 

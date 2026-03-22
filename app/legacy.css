@@ -4701,6 +4701,10 @@ img { max-width: 100%; display: block; }
 .dz-review-snippet { flex: 1; min-width: 200px; }
 .dz-review-snippet p { font-size: 0.88rem; color: #8b8ba0; line-height: 1.6; margin: 0; font-style: italic; }
 .dz-review-meta { font-size: 0.78rem; color: #4a4a5e; margin-top: 6px; display: block; }
+.dz-snippet-author { margin-bottom: 8px; }
+.dz-snippet-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(99,102,241,0.3); }
+.dz-snippet-avatar-placeholder { background: rgba(99,102,241,0.2); color: #818cf8; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; width: 36px; height: 36px; border-radius: 50%; }
+.dz-snippet-loading { color: #4a4a5e !important; font-style: italic !important; }
 .dz-see-reviews { font-size: 0.85rem; color: #818cf8; font-weight: 600; text-decoration: underline; white-space: nowrap; align-self: flex-end; }
 
 /* Tabs */

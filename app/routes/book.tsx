@@ -767,7 +767,7 @@ export default function BookPage() {
                 ) : (
                   <div className="dz-no-loc">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <p>Please select at least one location to view available appointments.</p>
+                    <p>Select a location to get started.</p>
                   </div>
                 )}
 

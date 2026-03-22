@@ -98,26 +98,51 @@ export default function ServicePage() {
             <p className="section-label">What We Treat</p>
             <h2>Conditions Treated</h2>
           </div>
-          <div className="svc-conditions-list">
-            {service.conditions.map((c, i) => {
-              const condSlug = c.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-              return (
-                <Link
-                  to={`/conditions/${condSlug}`}
-                  className="svc-condition-row"
-                  key={i}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                    <polyline points="22 4 12 14.01 9 11.01" />
-                  </svg>
-                  <span className="svc-condition-name">{c}</span>
-                  <svg className="svc-condition-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="9 6 15 12 9 18" />
-                  </svg>
-                </Link>
-              );
-            })}
+          <div className="svc-conditions-row">
+            <div className="svc-conditions-list">
+              {service.conditions.map((c, i) => {
+                const condSlug = c.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+                return (
+                  <Link
+                    to={`/conditions/${condSlug}`}
+                    className="svc-condition-row"
+                    key={i}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    <span className="svc-condition-name">{c}</span>
+                    <svg className="svc-condition-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="9 6 15 12 9 18" />
+                    </svg>
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="svc-conditions-sidebar">
+              <div className="svc-sidebar-card">
+                <div className="svc-sidebar-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <h4>Expert Diagnosis</h4>
+                <p>Advanced imaging and hands-on evaluation to pinpoint the exact issue</p>
+              </div>
+              <div className="svc-sidebar-card">
+                <div className="svc-sidebar-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h4>Personalized Plan</h4>
+                <p>Treatment tailored to your activity level, goals, and lifestyle</p>
+              </div>
+              <div className="svc-sidebar-card">
+                <div className="svc-sidebar-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+                <h4>Faster Recovery</h4>
+                <p>Evidence-based protocols to get you back to what you love sooner</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

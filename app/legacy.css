@@ -4665,112 +4665,162 @@ img { max-width: 100%; display: block; }
   .blog-post-meta span { font-size: 0.8rem; }
 }
 
-/* ===== Booking Page ===== */
-body { overflow-x: hidden; }
-.book-topbar { padding: 14px 0; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; background: var(--bg); }
-.book-topbar-inner { display: flex; align-items: center; justify-content: space-between; }
-.book-topbar a { font-family: 'Inter', sans-serif; text-decoration: none; }
-.book-back { font-weight: 600; font-size: 1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.book-phone { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-.book-stage { min-height: calc(100vh - 52px); display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; }
-.book-panel { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 720px; width: 100%; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-.book-panel h2 { font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; font-size: 1.6rem; margin-bottom: 4px; }
-.book-panel .book-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px; }
-.book-section-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
-.book-select { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; cursor: pointer; margin-bottom: 14px; }
-.book-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,107,255,0.1); }
-.book-insurance-check { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 20px; cursor: pointer; font-size: 0.9rem; color: var(--text-light); }
-.book-insurance-check input { accent-color: var(--primary); width: 18px; height: 18px; }
-.patient-toggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
-.patient-toggle-btn { padding: 12px; text-align: center; font-size: 0.9rem; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-light); transition: all 0.2s; }
-.patient-toggle-btn.active { background: var(--primary); color: #fff; }
-.cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.cal-header h3 { font-size: 1.1rem; font-weight: 600; }
-.cal-nav { display: flex; gap: 8px; }
-.cal-nav-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); transition: all 0.2s; }
-.cal-nav-btn:hover { background: var(--primary-light); color: var(--primary); }
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.cal-day-header { padding: 10px 4px; text-align: center; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); background: var(--bg); border-bottom: 1px solid var(--border); }
-.cal-day { min-height: 80px; padding: 8px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
-.cal-day:nth-child(7n+7) { border-right: none; }
-.cal-day:hover { background: rgba(79,107,255,0.04); }
-.cal-day.empty { background: var(--bg); cursor: default; opacity: 0.4; }
-.cal-day.empty:hover { background: var(--bg); }
-.cal-day.today .cal-date { background: var(--primary); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
-.cal-date { font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
-.cal-event { font-size: 0.65rem; padding: 3px 6px; border-radius: 4px; color: #fff; font-weight: 500; }
-.cal-event.green { background: #22c55e; }
-.cal-day.selected { background: rgba(79,107,255,0.08); box-shadow: inset 0 0 0 2px var(--primary); }
-.time-slots { margin-top: 24px; }
-.time-slots h3 { font-size: 1rem; font-weight: 600; margin-bottom: 14px; }
-.time-slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.time-slot { padding: 10px; text-align: center; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); }
-.time-slot:hover { border-color: var(--primary); color: var(--primary); background: rgba(79,107,255,0.04); }
-.time-slot.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
-.time-slot.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-.book-confirm { margin-top: 24px; }
-.book-confirm .btn { width: 100%; padding: 14px; font-size: 1rem; }
-.book-footer-note { text-align: center; margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); }
-.book-zocdoc-alt { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
-.book-zocdoc-alt a { color: var(--primary); font-weight: 500; }
-.cal-back-btn { display: none; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; font-family: 'Inter', sans-serif; color: var(--text-muted); cursor: pointer; margin-bottom: 20px; transition: all 0.2s; }
-.cal-back-btn:hover { border-color: var(--primary); color: var(--primary); }
+/* ===== DocZoc Booking Page ===== */
+.dz { min-height: 100vh; background: #f7f7f2; color: #1a1a1a; font-family: 'Inter', -apple-system, sans-serif; }
+.dz * { box-sizing: border-box; }
 
-/* Stage 2: Expanded sidebar + calendar */
-.book-stage.expanded { padding: 0; align-items: stretch; }
-.book-stage.expanded .book-panel { max-width: none; border-radius: 0; border: none; border-right: 1px solid var(--border); display: grid; grid-template-columns: 300px 1fr; grid-template-rows: 1fr; gap: 0; padding: 0; width: 100%; }
-.book-sidebar-content { transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; }
-.book-stage.expanded .book-sidebar-content { background: var(--bg-alt); border-right: 1px solid var(--border); padding: 28px 24px; overflow-y: auto; max-height: calc(100vh - 52px); position: sticky; top: 52px; }
-.book-cal-content { transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-.book-stage.expanded .book-cal-content { padding: 32px 48px; flex: 1; }
-.book-stage.expanded .cal-back-btn { display: inline-flex; }
-.book-stage.expanded .cal-header h3 { font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; font-size: 1.5rem; }
-.book-stage.expanded .cal-day { min-height: 100px; padding: 10px; }
-.book-stage.expanded .cal-date { font-size: 0.95rem; }
-.book-stage.expanded .cal-event { font-size: 0.72rem; padding: 4px 8px; }
-.book-stage.expanded .time-slots-grid { grid-template-columns: repeat(6, 1fr); }
-.book-stage.expanded .book-zocdoc-alt { display: none; }
+/* Nav */
+.dz-nav { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #e5e5e0; padding: 0 24px; }
+.dz-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.dz-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #1a1a1a; font-weight: 700; font-size: 1.1rem; }
+.dz-nav-links { display: flex; align-items: center; gap: 20px; }
+.dz-nav-phone { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #666; text-decoration: none; }
+.dz-nav-phone:hover { color: #1a1a1a; }
 
-/* Doctor sidebar card */
-.sidebar-doc { display: none; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px; }
-.book-stage.expanded .sidebar-doc { display: block; }
-.sidebar-doc-header { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
-.sidebar-doc-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
-.sidebar-doc-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.sidebar-doc-name { font-weight: 700; font-size: 0.85rem; }
-.sidebar-doc-spec { font-size: 0.72rem; color: var(--text-muted); }
-.sidebar-doc-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
-.sidebar-doc-rating .score { font-weight: 700; font-size: 0.85rem; }
-.sidebar-doc-rating .stars { color: #f59e0b; font-size: 0.75rem; }
-.sidebar-doc-rating .count { font-size: 0.7rem; color: var(--text-muted); text-decoration: none; }
-.sidebar-highlight { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 0.75rem; color: var(--text-light); }
-.sidebar-highlight-icon { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--primary); }
-.sidebar-insurance { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
-.sidebar-insurance p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
-.sidebar-insurance a { font-size: 0.72rem; color: var(--primary); }
-.sidebar-zocdoc { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); text-align: center; font-size: 0.75rem; color: var(--text-muted); }
-.sidebar-zocdoc a { color: var(--primary); }
-.book-stage.expanded .book-panel h2 { font-size: 1.15rem; margin-bottom: 2px; }
-.book-stage.expanded .book-panel .book-sub { font-size: 0.78rem; margin-bottom: 20px; }
-.book-stage.expanded .book-section-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
-.book-stage.expanded .book-select { padding: 10px 14px; font-size: 0.82rem; margin-bottom: 12px; }
-.book-stage.expanded .book-insurance-check { padding: 10px 14px; font-size: 0.82rem; margin-bottom: 14px; }
-.book-stage.expanded .patient-toggle-btn { padding: 10px; font-size: 0.78rem; }
-.book-stage.expanded .patient-toggle { margin-bottom: 16px; }
+/* Main Layout */
+.dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 420px; gap: 32px; align-items: start; }
 
+/* Profile Section */
+.dz-doctor-card { background: #fff; border: 1px solid #e5e5e0; border-radius: 16px; padding: 28px; margin-bottom: 0; }
+.dz-doctor-header { display: flex; gap: 20px; margin-bottom: 24px; }
+.dz-avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+.dz-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.dz-badge { display: inline-block; background: #e8f5e9; color: #2e7d32; font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 12px; margin-bottom: 6px; }
+.dz-doctor-info h1 { font-size: 1.5rem; font-weight: 700; margin: 0 0 4px; color: #1a1a1a; }
+.dz-specialty { font-size: 0.9rem; color: #666; margin: 0 0 2px; }
+.dz-address { font-size: 0.85rem; color: #999; margin: 0; }
+
+/* Rating Row */
+.dz-rating-row { display: flex; align-items: flex-start; gap: 20px; padding-top: 20px; border-top: 1px solid #eee; flex-wrap: wrap; }
+.dz-rating-score { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.dz-big-number { font-size: 2.2rem; font-weight: 700; line-height: 1; color: #1a1a1a; }
+.dz-stars { color: #FFD60A; font-size: 0.9rem; margin-top: 4px; }
+.dz-review-snippet { flex: 1; min-width: 200px; }
+.dz-review-snippet p { font-size: 0.88rem; color: #444; line-height: 1.6; margin: 0; font-style: italic; }
+.dz-review-meta { font-size: 0.78rem; color: #999; margin-top: 6px; display: block; }
+.dz-see-reviews { font-size: 0.85rem; color: #1a1a1a; font-weight: 600; text-decoration: underline; white-space: nowrap; align-self: flex-end; }
+
+/* Tabs */
+.dz-tabs { display: flex; gap: 0; border-bottom: 1px solid #e5e5e0; margin-top: 24px; overflow-x: auto; }
+.dz-tab { padding: 14px 20px; font-size: 0.88rem; font-weight: 500; color: #666; background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+.dz-tab:hover { color: #1a1a1a; }
+.dz-tab.active { color: #1a1a1a; border-bottom-color: #1a1a1a; font-weight: 600; }
+
+/* Tab Content */
+.dz-tab-content { padding: 24px 0; }
+.dz-highlight-row { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid #f0f0eb; }
+.dz-highlight-row:last-of-type { border-bottom: none; }
+.dz-highlight-icon { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: #fffdf0; display: flex; align-items: center; justify-content: center; }
+.dz-highlight-row strong { font-size: 0.92rem; display: block; margin-bottom: 2px; }
+.dz-highlight-row p { font-size: 0.82rem; color: #888; margin: 0; }
+.dz-insurance-row { margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e5e0; }
+.dz-insurance-row h4 { font-size: 0.92rem; font-weight: 600; margin: 0 0 6px; }
+.dz-insurance-row p { font-size: 0.85rem; color: #666; margin: 0 0 8px; }
+.dz-link-btn { background: none; border: none; color: #1a1a1a; font-size: 0.85rem; font-weight: 600; text-decoration: underline; cursor: pointer; padding: 0; font-family: inherit; }
+
+.dz-about-tab p, .dz-insurance-tab p, .dz-reviews-tab p { font-size: 0.95rem; color: #444; line-height: 1.8; }
+.dz-reviews-tab a { color: #1a1a1a; font-weight: 600; }
+.dz-location-item { padding: 14px 0; border-bottom: 1px solid #f0f0eb; }
+.dz-location-item:last-child { border-bottom: none; }
+.dz-location-item strong { font-size: 0.9rem; display: block; margin-bottom: 2px; }
+.dz-location-item p { font-size: 0.82rem; color: #888; margin: 0; }
+.dz-faqs-tab details { border-bottom: 1px solid #f0f0eb; }
+.dz-faqs-tab summary { padding: 14px 0; font-weight: 600; font-size: 0.92rem; cursor: pointer; list-style: none; }
+.dz-faqs-tab summary::-webkit-details-marker { display: none; }
+.dz-faqs-tab details p { padding: 0 0 14px; margin: 0; font-size: 0.88rem; color: #666; line-height: 1.7; }
+
+/* Booking Card */
+.dz-booking { position: sticky; top: 72px; }
+.dz-booking-card { background: #fff; border: 1px solid #e5e5e0; border-radius: 16px; padding: 28px; }
+.dz-booking-card h2 { font-size: 1.3rem; font-weight: 700; margin: 0 0 4px; }
+.dz-booking-sub { font-size: 0.85rem; color: #888; margin: 0 0 24px; }
+.dz-section-label { font-size: 0.82rem; font-weight: 600; margin: 20px 0 10px; color: #1a1a1a; }
+.dz-section-label:first-of-type { margin-top: 0; }
+
+.dz-select { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.88rem; font-family: inherit; background: #fff; color: #1a1a1a; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+.dz-select:focus { outline: none; border-color: #1a1a1a; }
+
+.dz-insurance-check { display: flex; align-items: center; gap: 10px; padding: 14px 0; font-size: 0.88rem; color: #444; border-bottom: 1px solid #eee; margin-bottom: 16px; cursor: default; }
+
+.dz-patient-toggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+.dz-pt-btn { padding: 12px; text-align: center; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; border: none; background: #fff; color: #666; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.dz-pt-btn:first-child { border-right: 1px solid #ddd; }
+.dz-pt-btn.active { background: #f7f7f2; color: #1a1a1a; font-weight: 600; }
+
+.dz-location-select { margin-bottom: 4px; }
+.dz-more-locations { font-size: 0.78rem; color: #999; margin: 0 0 20px; }
+
+/* Week Calendar */
+.dz-week-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 0.88rem; font-weight: 600; }
+.dz-week-nav { display: flex; gap: 4px; }
+.dz-week-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #666; transition: all 0.15s; }
+.dz-week-btn:hover { border-color: #1a1a1a; color: #1a1a1a; }
+
+.dz-week-grid { display: flex; flex-direction: column; gap: 4px; }
+.dz-week-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.dz-day-cell { display: flex; flex-direction: column; align-items: center; padding: 10px 4px; border: 1px solid #eee; border-radius: 8px; background: #fff; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.dz-day-cell:disabled { opacity: 0.5; cursor: default; }
+.dz-day-cell.available { border-color: #ddd; }
+.dz-day-cell.available:hover { border-color: #FFD60A; background: #fffdf0; }
+.dz-day-cell.selected { border-color: #FFD60A; background: #FFD60A; }
+.dz-day-cell.selected .dz-day-name,
+.dz-day-cell.selected .dz-day-date { color: #1a1a1a; font-weight: 700; }
+.dz-day-name { font-size: 0.7rem; font-weight: 600; color: #1a1a1a; }
+.dz-day-date { font-size: 0.68rem; color: #888; margin: 2px 0; }
+.dz-day-count { font-size: 0.62rem; font-weight: 600; color: #bbb; }
+.dz-day-count.has { color: #d4a017; }
+
+/* Time Slots */
+.dz-times { margin-top: 20px; }
+.dz-times h3 { font-size: 0.92rem; font-weight: 600; margin: 0 0 12px; }
+.dz-time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.dz-time-slot { padding: 10px 6px; text-align: center; border: 1px solid #ddd; border-radius: 8px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: inherit; background: #fff; color: #1a1a1a; }
+.dz-time-slot:hover:not(:disabled) { border-color: #FFD60A; background: #fffdf0; }
+.dz-time-slot.picked { background: #FFD60A; border-color: #FFD60A; color: #1a1a1a; font-weight: 700; }
+.dz-time-slot.off { opacity: 0.25; cursor: not-allowed; }
+
+/* Buttons */
+.dz-btn { display: block; width: 100%; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; font-family: inherit; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.2s; }
+.dz-btn-primary { background: #1a1a1a; color: #fff; border: none; }
+.dz-btn-primary:hover { background: #333; }
+.dz-btn-outline { background: #fff; color: #1a1a1a; border: 1px solid #ddd; }
+.dz-btn-outline:hover { border-color: #1a1a1a; }
+.dz-btn-confirm { background: #FFD60A; color: #1a1a1a; border: none; margin-top: 16px; }
+.dz-btn-confirm:hover { background: #e6c200; }
+
+.dz-view-more { text-align: center; margin-top: 16px; font-size: 0.82rem; }
+.dz-view-more a { color: #1a1a1a; font-weight: 600; text-decoration: underline; }
+
+/* Confirmed State */
+.dz-confirmed { text-align: center; padding: 32px 0; }
+.dz-confirmed h2 { font-size: 1.4rem; margin: 16px 0 8px; }
+.dz-confirmed-date { font-size: 1rem; font-weight: 600; color: #1a1a1a; margin: 0 0 4px; }
+.dz-confirmed-loc { font-size: 0.88rem; color: #666; margin: 0 0 16px; }
+.dz-confirmed-note { font-size: 0.85rem; color: #888; margin: 0 0 24px; }
+
+/* Fade-in animation */
+.dz { animation: dzFadeIn 0.6s ease-out; }
+@keyframes dzFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile */
 @media (max-width: 900px) {
-  .book-stage.expanded .book-panel { grid-template-columns: 1fr; }
-  .book-stage.expanded .book-sidebar-content { max-height: none; position: static; border-right: none; border-bottom: 1px solid var(--border); }
-  .book-stage.expanded .book-cal-content { padding: 20px 16px; }
-  .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(3, 1fr); }
-  .book-stage.expanded .cal-day { min-height: 70px; }
+  .dz-main { grid-template-columns: 1fr; }
+  .dz-booking { position: static; }
+  .dz-doctor-header { flex-direction: column; align-items: center; text-align: center; }
+  .dz-rating-row { justify-content: center; text-align: center; }
+  .dz-time-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 600px) {
-  .book-panel { padding: 24px 16px; }
-  .cal-day { min-height: 60px; padding: 4px; }
-  .cal-event { font-size: 0.6rem; padding: 2px 4px; }
-  .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
-  .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+  .dz-main { padding: 16px; }
+  .dz-doctor-card { padding: 20px; }
+  .dz-booking-card { padding: 20px; }
+  .dz-week-row { grid-template-columns: repeat(4, 1fr); }
+  .dz-time-grid { grid-template-columns: repeat(2, 1fr); }
+  .dz-tabs { gap: 0; }
+  .dz-tab { padding: 12px 14px; font-size: 0.8rem; }
 }
 
 /* ===== Dev Tools Dashboard ===== */

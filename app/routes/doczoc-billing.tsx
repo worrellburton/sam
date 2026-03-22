@@ -1,6 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
+import { useApiStatus, useICD10Search } from "~/hooks/useApiStatus";
+import type { ApiStatus } from "~/hooks/useApiStatus";
 
 export function meta() {
   return [{ title: "Coding & Billing | DocZoc" }];
@@ -246,11 +248,148 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+// ── API Status Indicator ───────────────────────────────────────────
+function ApiStatusDot({ api }: { api: ApiStatus }) {
+  const colorMap: Record<string, string> = {
+    checking: "#fbbf24",
+    connected: "#22c55e",
+    degraded: "#f59e0b",
+    offline: "#ef4444",
+  };
+  const labelMap: Record<string, string> = {
+    checking: "Checking...",
+    connected: "Connected",
+    degraded: "Slow",
+    offline: "Offline",
+  };
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <span style={{
+        width: 8, height: 8, borderRadius: "50%",
+        background: colorMap[api.status],
+        boxShadow: api.status === "connected" ? `0 0 6px ${colorMap[api.status]}` : "none",
+        display: "inline-block",
+        animation: api.status === "checking" ? "pulse 1.5s ease-in-out infinite" : "none",
+      }} />
+      <span style={{ fontSize: "0.7rem", color: "#8a8a9a", fontWeight: 500 }}>
+        {api.name}
+      </span>
+      <span style={{ fontSize: "0.65rem", color: colorMap[api.status], fontWeight: 600 }}>
+        {labelMap[api.status]}
+      </span>
+      {api.latency != null && (
+        <span style={{ fontSize: "0.6rem", color: "#5a5a6e" }}>
+          {api.latency}ms
+        </span>
+      )}
+    </div>
+  );
+}
+
+function ApiStatusBar({ statuses, onRefresh }: { statuses: ApiStatus[]; onRefresh: () => void }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 16,
+      padding: "6px 14px", borderRadius: 8,
+      background: "rgba(30, 30, 45, 0.6)",
+      border: "1px solid rgba(99, 102, 241, 0.15)",
+      backdropFilter: "blur(8px)",
+    }}>
+      <span style={{ fontSize: "0.65rem", color: "#5a5a6e", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+        APIs
+      </span>
+      {statuses.map((s) => (
+        <ApiStatusDot key={s.name} api={s} />
+      ))}
+      <button
+        onClick={onRefresh}
+        style={{
+          background: "none", border: "none", cursor: "pointer", color: "#6366f1",
+          padding: 2, display: "flex", alignItems: "center",
+        }}
+        title="Refresh status"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="23 4 23 10 17 10" /><polyline points="1 20 1 14 7 14" />
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+// ── ICD-10 Search Panel ────────────────────────────────────────────
+function ICD10SearchPanel() {
+  const { results, loading, error, search } = useICD10Search();
+  const [query, setQuery] = useState("");
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  const handleChange = useCallback((val: string) => {
+    setQuery(val);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => search(val), 300);
+  }, [search]);
+
+  useEffect(() => {
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, []);
+
+  return (
+    <div className="dz-billing-codes-section">
+      <div className="dz-billing-section-label">
+        ICD-10 Code Lookup
+        <span style={{ fontSize: "0.65rem", color: "#5a5a6e", fontWeight: 400, marginLeft: 8 }}>
+          Powered by NLM Clinical Tables
+        </span>
+      </div>
+      <div style={{ position: "relative", marginBottom: 8 }}>
+        <input
+          type="text"
+          placeholder="Search ICD-10 codes (e.g. &quot;ACL tear&quot;, &quot;M75&quot;, &quot;rotator cuff&quot;)..."
+          value={query}
+          onChange={(e) => handleChange(e.target.value)}
+          className="dz-search-input"
+          style={{ width: "100%", fontSize: "0.82rem" }}
+        />
+        {loading && (
+          <span style={{
+            position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+            fontSize: "0.7rem", color: "#6366f1",
+          }}>
+            Searching...
+          </span>
+        )}
+      </div>
+      {error && (
+        <div style={{ padding: "8px 12px", borderRadius: 6, background: "rgba(239,68,68,0.1)", color: "#ef4444", fontSize: "0.75rem", marginBottom: 8 }}>
+          {error}
+        </div>
+      )}
+      {results.length > 0 && (
+        <div className="dz-billing-codes-list">
+          {results.map((r) => (
+            <div key={r.code} className="dz-billing-code-row">
+              <span className="dz-billing-code-badge icd">{r.code}</span>
+              <span className="dz-billing-code-desc">{r.description}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {query.length >= 2 && !loading && !error && results.length === 0 && (
+        <div style={{ padding: 12, textAlign: "center", color: "#5a5a6e", fontSize: "0.78rem" }}>
+          No codes found for "{query}"
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Page ───────────────────────────────────────────────────────────
 export default function BillingPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const [selectedVisit, setSelectedVisit] = useState<Visit | null>(null);
+  const { statuses, refresh } = useApiStatus();
 
   const icdCodes = selectedVisit?.codes.filter((c) => c.type === "ICD-10") || [];
   const cptCodes = selectedVisit?.codes.filter((c) => c.type === "CPT" || c.type === "HCPCS") || [];
@@ -258,6 +397,12 @@ export default function BillingPage() {
 
   return (
     <div className="dz-platform">
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+      `}</style>
       <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
@@ -266,6 +411,7 @@ export default function BillingPage() {
             <h1>Coding & Billing</h1>
             <p>Review visits, assign codes, and generate bills</p>
           </div>
+          <ApiStatusBar statuses={statuses} onRefresh={refresh} />
         </header>
 
         <div className="dz-billing-layout">
@@ -408,6 +554,9 @@ export default function BillingPage() {
                   <div className="dz-billing-section-label">Clinical Notes</div>
                   <div className="dz-billing-notes">{selectedVisit.notes}</div>
                 </div>
+
+                {/* ICD-10 Live Search */}
+                <ICD10SearchPanel />
               </>
             ) : (
               <div className="dz-billing-empty">

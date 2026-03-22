@@ -4863,6 +4863,27 @@ a.nav-btn-book,
 .dz-pt-btn:first-child { border-right: 1px solid rgba(255,255,255,0.1); }
 .dz-pt-btn.active { background: rgba(99,102,241,0.15); color: #818cf8; font-weight: 600; }
 
+/* Step Flow */
+.dz-step { animation: dzStepIn 0.5s ease-out; }
+@keyframes dzStepIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.dz-step-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.dz-step-back { display: flex; align-items: center; gap: 6px; background: none; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; font-size: 0.82rem; font-family: inherit; color: #8b8ba0; cursor: pointer; transition: all 0.15s; }
+.dz-step-back:hover { border-color: #6366f1; color: #818cf8; }
+.dz-step-badge { font-size: 0.68rem; font-weight: 600; color: #4a4a5e; background: rgba(255,255,255,0.04); padding: 4px 10px; border-radius: 980px; }
+.dz-step-title { font-size: 1.1rem; font-weight: 600; color: #e4e4ee; margin: 0 0 16px; }
+.dz-step-summary { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15); border-radius: 10px; margin-bottom: 20px; font-size: 0.88rem; font-weight: 600; color: #818cf8; }
+.dz-step-dot { width: 4px; height: 4px; border-radius: 50%; background: #6366f1; }
+
+.dz-light .dz-step-back { border-color: #ddd; color: #999; }
+.dz-light .dz-step-back:hover { border-color: #2563eb; color: #2563eb; }
+.dz-light .dz-step-badge { color: #999; background: rgba(0,0,0,0.04); }
+.dz-light .dz-step-title { color: #1a1a2e; }
+.dz-light .dz-step-summary { background: rgba(37,99,235,0.06); border-color: rgba(37,99,235,0.12); color: #2563eb; }
+.dz-light .dz-step-dot { background: #2563eb; }
+
 .dz-scheduling-details { animation: dzTabIn 0.4s ease-out; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
 
 /* Location Toggles */
@@ -4874,6 +4895,17 @@ a.nav-btn-book,
 .dz-light .dz-loc-chip { border-color: #ddd; color: #999; }
 .dz-light .dz-loc-chip:hover { border-color: rgba(37,99,235,0.3); color: #666; }
 .dz-light .dz-loc-chip.active { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.3); color: #2563eb; }
+
+/* Location Map Embed */
+.dz-map-embed { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; animation: dzTabIn 0.4s ease-out; }
+.dz-map-card { border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); }
+.dz-map-iframe { width: 100%; height: 140px; border: none; display: block; }
+.dz-map-info { padding: 10px 12px; }
+.dz-map-info strong { font-size: 0.8rem; color: #e4e4ee; display: block; margin-bottom: 2px; }
+.dz-map-info span { font-size: 0.72rem; color: #6b6b80; }
+.dz-light .dz-map-card { border-color: #e5e7eb; background: #fff; }
+.dz-light .dz-map-info strong { color: #1a1a2e; }
+.dz-light .dz-map-info span { color: #888; }
 
 /* Reviews Summary */
 .dz-reviews-summary { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; }

@@ -646,12 +646,6 @@ export default function BookPage() {
           onMouseEnter={() => setCalHover(true)}
           onMouseLeave={() => { if (!selectedDate) setCalHover(false); }}
         >
-          {selectedDate && (
-            <button className="dz-cal-back" onClick={() => { setSelectedDate(null); setSelectedSlot(null); }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-              Back to calendar
-            </button>
-          )}
           <div className="dz-booking-card">
             {confirmed ? (
               <div className="dz-confirmed">
@@ -667,11 +661,14 @@ export default function BookPage() {
               </div>
             ) : (
               <>
-                <h2>Book an appointment for free</h2>
-                <p className="dz-booking-sub">Schedule directly with Dr. Elguizaoui&rsquo;s office</p>
+                {!selectedDate && <>
+                  <h2>Book an appointment for free</h2>
+                  <p className="dz-booking-sub">Schedule directly with Dr. Elguizaoui&rsquo;s office</p>
+                </>}
 
-                <h3 className="dz-section-label">Locations</h3>
-                <div className="dz-loc-toggles">
+                {/* Step 1: Calendar */}
+                {!selectedDate && <h3 className="dz-section-label">Locations</h3>}
+                {!selectedDate && <><div className="dz-loc-toggles">
                   <button
                     className={`dz-loc-chip${selectedLocs.size === locations.length ? ' active' : ''}`}
                     onClick={toggleAllLocs}
@@ -687,6 +684,28 @@ export default function BookPage() {
                     </button>
                   ))}
                 </div>
+
+                {/* Location Map */}
+                {selectedLocs.size < locations.length && (
+                  <div className="dz-map-embed">
+                    {[...selectedLocs].map(i => (
+                      <div className="dz-map-card" key={i}>
+                        <iframe
+                          title={locations[i].name}
+                          src={`https://www.google.com/maps/embed/v1/place?key=${PLACES_API_KEY}&q=${encodeURIComponent(locations[i].address)}`}
+                          className="dz-map-iframe"
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          allowFullScreen
+                        />
+                        <div className="dz-map-info">
+                          <strong>{locations[i].name.replace('NY Orthopedics – ', '')}</strong>
+                          <span>{locations[i].address}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* Month Calendar */}
                 <div className="dz-cal-header">
@@ -711,7 +730,7 @@ export default function BookPage() {
                         if (!date) return <div className="dz-cal-cell empty" key={di} />;
                         const slots = getApptSlots(date);
                         const count = getApptCount(date);
-                        const selected = selectedDate?.toDateString() === date.toDateString();
+                        const selected = false;
                         const todayCell = isToday(date);
                         return (
                           <div
@@ -735,17 +754,24 @@ export default function BookPage() {
                       })}
                     </div>
                   ))}
-                </div>
+                </div></>}
 
-                {/* Time Slots */}
-                {selectedDate && (
-                  <div className="dz-times">
-                    <h3>Select a time — {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}</h3>
+                {/* Step 2: Time Slots */}
+                {selectedDate && !selectedSlot && (
+                  <div className="dz-step">
+                    <div className="dz-step-header">
+                      <button className="dz-step-back" onClick={() => { setSelectedDate(null); setSelectedSlot(null); }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                        Back to calendar
+                      </button>
+                      <div className="dz-step-badge">Step 2 of 3</div>
+                    </div>
+                    <h3 className="dz-step-title">Select a time — {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}</h3>
                     <div className="dz-time-grid">
                       {TIMES.map((t, i) => (
                         <button
                           key={t}
-                          className={`dz-time-slot${!timeAvail[i] ? ' off' : ''}${selectedSlot === t ? ' picked' : ''}`}
+                          className={`dz-time-slot${!timeAvail[i] ? ' off' : ''}`}
                           onClick={() => timeAvail[i] && setSelectedSlot(t)}
                           disabled={!timeAvail[i]}
                         >
@@ -756,9 +782,23 @@ export default function BookPage() {
                   </div>
                 )}
 
+                {/* Step 3: Patient Details */}
                 {selectedSlot && (
-                  <div className="dz-scheduling-details">
-                    <h3 className="dz-section-label">Scheduling details</h3>
+                  <div className="dz-step">
+                    <div className="dz-step-header">
+                      <button className="dz-step-back" onClick={() => setSelectedSlot(null)}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                        Back to times
+                      </button>
+                      <div className="dz-step-badge">Step 3 of 3</div>
+                    </div>
+                    <div className="dz-step-summary">
+                      <span>{MONTHS[selectedDate!.getMonth()]} {selectedDate!.getDate()}, {selectedDate!.getFullYear()}</span>
+                      <span className="dz-step-dot" />
+                      <span>{selectedSlot}</span>
+                    </div>
+
+                    <h3 className="dz-step-title">Patient details</h3>
                     <select className="dz-select">
                       <option>Orthopedic Consultation</option>
                       <option>Sports Injury Evaluation</option>

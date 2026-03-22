@@ -4691,32 +4691,10 @@ a.nav-btn-book,
 
 /* Main Layout */
 .dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: flex; gap: 32px; align-items: start; }
-.dz-main .dz-profile { flex: 1; min-width: 0; transition: flex 3s ease-in-out, opacity 2s ease-in-out, max-height 3s ease-in-out; }
-.dz-main .dz-booking { width: 480px; flex-shrink: 0; transition: width 3s ease-in-out, flex 3s ease-in-out; }
-.dz-main.cal-active .dz-profile { flex: 0 0 100%; max-height: 120px; overflow: hidden; }
-.dz-main.cal-active .dz-booking { width: 100%; flex: 1; }
-.dz-main.cal-active { flex-wrap: wrap; }
-.dz-main.cal-active .dz-profile { }
-.dz-main.cal-active .dz-doctor-card { padding: 14px 20px; }
-.dz-main.cal-active .dz-doctor-header { flex-direction: row; align-items: center; gap: 14px; margin-bottom: 0; }
-.dz-main.cal-active .dz-avatar { width: 44px; height: 44px; }
-.dz-main.cal-active .dz-doctor-info h1 { font-size: 0.95rem; }
-.dz-main.cal-active .dz-specialty { font-size: 0.78rem; }
-.dz-main.cal-active .dz-address { display: none; }
-.dz-main.cal-active .dz-badge { font-size: 0.6rem; padding: 2px 8px; }
-.dz-main.cal-active .dz-rating-row { flex-wrap: nowrap; gap: 12px; padding-top: 14px; align-items: center; }
-.dz-main.cal-active .dz-rating-score { flex-direction: row; gap: 6px; align-items: center; }
-.dz-main.cal-active .dz-big-number { font-size: 1.1rem; }
-.dz-main.cal-active .dz-stars { font-size: 0.7rem; margin-top: 0; }
-.dz-main.cal-active .dz-review-snippet { min-width: 0; }
-.dz-main.cal-active .dz-review-snippet p { font-size: 0.78rem; -webkit-line-clamp: 1; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
-.dz-main.cal-active .dz-review-meta { font-size: 0.68rem; }
-.dz-main.cal-active .dz-snippet-author { display: none; }
-.dz-main.cal-active .dz-see-reviews { font-size: 0.75rem; }
-.dz-tabs { transition: opacity 1.5s ease-in-out, max-height 2s ease-in-out; max-height: 200px; overflow: hidden; }
-.dz-tab-content { transition: opacity 1.5s ease-in-out, max-height 2s ease-in-out; max-height: 2000px; overflow: hidden; }
-.dz-main.cal-active .dz-tabs { opacity: 0; max-height: 0; pointer-events: none; }
-.dz-main.cal-active .dz-tab-content { opacity: 0; max-height: 0; pointer-events: none; }
+.dz-main .dz-profile { flex: 1; min-width: 0; transition: flex-basis 3s ease-in-out, flex-grow 3s ease-in-out, max-width 3s ease-in-out, opacity 2s ease-in-out, max-height 3s ease-in-out, margin 3s ease-in-out, padding 3s ease-in-out; overflow: hidden; }
+.dz-main .dz-booking { width: 480px; flex-shrink: 0; transition: width 3s ease-in-out; }
+.dz-main.cal-active .dz-profile { flex: 0 0 0px; max-width: 0; opacity: 0; margin: 0; padding: 0; overflow: hidden; }
+.dz-main.cal-active .dz-booking { width: 100%; }
 
 /* Profile Section */
 .dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; transition: padding 3s ease-in-out; }

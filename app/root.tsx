@@ -105,13 +105,14 @@ export default function App() {
   const location = useLocation();
   const isDevPage = location.pathname.startsWith("/dev");
   const isBookPage = location.pathname.startsWith("/book");
+  const isWebGLPage = location.pathname.startsWith("/webgl");
 
   return (
     <>
-      {!isDevPage && !isBookPage && <Navigation />}
-      {!isDevPage && !isBookPage && <StickyBar />}
+      {!isDevPage && !isBookPage && !isWebGLPage && <Navigation />}
+      {!isDevPage && !isBookPage && !isWebGLPage && <StickyBar />}
       <Outlet />
-      {!isDevPage && !isBookPage && <Footer />}
+      {!isDevPage && !isBookPage && !isWebGLPage && <Footer />}
     </>
   );
 }

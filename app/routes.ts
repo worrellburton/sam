@@ -11,4 +11,5 @@ export default [
   route("book", "routes/book.tsx"),
   route("services/:slug", "routes/service.tsx"),
   route("dev", "routes/dev.tsx"),
+  route("webgl", "routes/webgl.tsx"),
 ] satisfies RouteConfig;

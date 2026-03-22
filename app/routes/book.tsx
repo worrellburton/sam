@@ -48,128 +48,141 @@ function getTimeAvail(day: number, month: number) {
   return TIMES.map((_, i) => ((day * 7 + month * 3 + i * 11) % 10) > 3);
 }
 
-// Subtle WebGL particle background
-function useWebGLBackground(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
+// Background animation types
+type BgType = 'particles' | 'grid' | 'waves' | 'aurora' | 'none';
+
+const BG_OPTIONS: { id: BgType; label: string }[] = [
+  { id: 'particles', label: 'Particles' },
+  { id: 'grid', label: 'Grid Pulse' },
+  { id: 'waves', label: 'Waves' },
+  { id: 'aurora', label: 'Aurora' },
+  { id: 'none', label: 'None' },
+];
+
+function useAnimatedBackground(canvasRef: React.RefObject<HTMLCanvasElement | null>, bgType: BgType) {
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
-    if (!gl) return;
+    if (!canvas || bgType === 'none') return;
 
-    const vsSource = `
-      attribute vec2 a_position;
-      attribute float a_size;
-      attribute float a_alpha;
-      varying float v_alpha;
-      void main() {
-        gl_Position = vec4(a_position, 0.0, 1.0);
-        gl_PointSize = a_size;
-        v_alpha = a_alpha;
-      }
-    `;
-    const fsSource = `
-      precision mediump float;
-      varying float v_alpha;
-      void main() {
-        float dist = length(gl_PointCoord - vec2(0.5));
-        if (dist > 0.5) discard;
-        float fade = 1.0 - smoothstep(0.2, 0.5, dist);
-        gl_FragColor = vec4(0.39, 0.4, 0.95, v_alpha * fade * 0.15);
-      }
-    `;
-
-    function createShader(g: WebGLRenderingContext, type: number, source: string) {
-      const s = g.createShader(type)!;
-      g.shaderSource(s, source);
-      g.compileShader(s);
-      return s;
-    }
-    const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
-    const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
-    const program = gl.createProgram()!;
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    const NUM = 60;
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; alpha: number }[] = [];
-    for (let i = 0; i < NUM; i++) {
-      particles.push({
-        x: Math.random() * 2 - 1,
-        y: Math.random() * 2 - 1,
-        vx: (Math.random() - 0.5) * 0.0008,
-        vy: (Math.random() - 0.5) * 0.0008,
-        size: Math.random() * 3 + 1.5,
-        alpha: Math.random() * 0.6 + 0.2,
-      });
-    }
-
-    const posLoc = gl.getAttribLocation(program, 'a_position');
-    const sizeLoc = gl.getAttribLocation(program, 'a_size');
-    const alphaLoc = gl.getAttribLocation(program, 'a_alpha');
-
-    const posBuf = gl.createBuffer()!;
-    const sizeBuf = gl.createBuffer()!;
-    const alphaBuf = gl.createBuffer()!;
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
     let raf: number;
     const resize = () => {
       canvas.width = canvas.clientWidth * window.devicePixelRatio;
       canvas.height = canvas.clientHeight * window.devicePixelRatio;
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     };
     resize();
     window.addEventListener('resize', resize);
 
-    const posData = new Float32Array(NUM * 2);
-    const sizeData = new Float32Array(NUM);
-    const alphaData = new Float32Array(NUM);
+    const w = () => canvas.clientWidth;
+    const h = () => canvas.clientHeight;
+    let t = 0;
 
-    function render() {
-      gl!.clearColor(0, 0, 0, 0);
-      gl!.clear(gl!.COLOR_BUFFER_BIT);
+    // Particles
+    const NUM = 50;
+    const pts = Array.from({ length: NUM }, () => ({
+      x: Math.random(), y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 2 + 1,
+    }));
 
+    function renderParticles() {
+      ctx!.clearRect(0, 0, w(), h());
+      pts.forEach(p => {
+        p.x += p.vx / w(); p.y += p.vy / h();
+        if (p.x < 0 || p.x > 1) p.vx *= -1;
+        if (p.y < 0 || p.y > 1) p.vy *= -1;
+        ctx!.beginPath();
+        ctx!.arc(p.x * w(), p.y * h(), p.r, 0, Math.PI * 2);
+        ctx!.fillStyle = 'rgba(99,102,241,0.12)';
+        ctx!.fill();
+      });
+      // connections
       for (let i = 0; i < NUM; i++) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -1 || p.x > 1) p.vx *= -1;
-        if (p.y < -1 || p.y > 1) p.vy *= -1;
-        posData[i * 2] = p.x;
-        posData[i * 2 + 1] = p.y;
-        sizeData[i] = p.size * window.devicePixelRatio;
-        alphaData[i] = p.alpha;
+        for (let j = i + 1; j < NUM; j++) {
+          const dx = (pts[i].x - pts[j].x) * w();
+          const dy = (pts[i].y - pts[j].y) * h();
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx!.beginPath();
+            ctx!.moveTo(pts[i].x * w(), pts[i].y * h());
+            ctx!.lineTo(pts[j].x * w(), pts[j].y * h());
+            ctx!.strokeStyle = `rgba(99,102,241,${0.06 * (1 - dist / 120)})`;
+            ctx!.lineWidth = 0.5;
+            ctx!.stroke();
+          }
+        }
       }
-
-      gl!.bindBuffer(gl!.ARRAY_BUFFER, posBuf);
-      gl!.bufferData(gl!.ARRAY_BUFFER, posData, gl!.DYNAMIC_DRAW);
-      gl!.enableVertexAttribArray(posLoc);
-      gl!.vertexAttribPointer(posLoc, 2, gl!.FLOAT, false, 0, 0);
-
-      gl!.bindBuffer(gl!.ARRAY_BUFFER, sizeBuf);
-      gl!.bufferData(gl!.ARRAY_BUFFER, sizeData, gl!.DYNAMIC_DRAW);
-      gl!.enableVertexAttribArray(sizeLoc);
-      gl!.vertexAttribPointer(sizeLoc, 1, gl!.FLOAT, false, 0, 0);
-
-      gl!.bindBuffer(gl!.ARRAY_BUFFER, alphaBuf);
-      gl!.bufferData(gl!.ARRAY_BUFFER, alphaData, gl!.DYNAMIC_DRAW);
-      gl!.enableVertexAttribArray(alphaLoc);
-      gl!.vertexAttribPointer(alphaLoc, 1, gl!.FLOAT, false, 0, 0);
-
-      gl!.drawArrays(gl!.POINTS, 0, NUM);
-      raf = requestAnimationFrame(render);
     }
-    render();
+
+    function renderGrid() {
+      ctx!.clearRect(0, 0, w(), h());
+      const spacing = 40;
+      const cols = Math.ceil(w() / spacing) + 1;
+      const rows = Math.ceil(h() / spacing) + 1;
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+          const pulse = Math.sin(t * 0.02 + i * 0.3 + j * 0.3) * 0.5 + 0.5;
+          const alpha = 0.03 + pulse * 0.06;
+          ctx!.beginPath();
+          ctx!.arc(i * spacing, j * spacing, 1 + pulse * 1.5, 0, Math.PI * 2);
+          ctx!.fillStyle = `rgba(99,102,241,${alpha})`;
+          ctx!.fill();
+        }
+      }
+    }
+
+    function renderWaves() {
+      ctx!.clearRect(0, 0, w(), h());
+      for (let layer = 0; layer < 3; layer++) {
+        ctx!.beginPath();
+        const amp = 30 + layer * 15;
+        const freq = 0.008 - layer * 0.001;
+        const speed = 0.015 + layer * 0.005;
+        const yBase = h() * (0.4 + layer * 0.15);
+        for (let x = 0; x <= w(); x += 2) {
+          const y = yBase + Math.sin(x * freq + t * speed) * amp + Math.sin(x * freq * 2.3 + t * speed * 1.5) * amp * 0.4;
+          if (x === 0) ctx!.moveTo(x, y);
+          else ctx!.lineTo(x, y);
+        }
+        ctx!.strokeStyle = `rgba(99,102,241,${0.06 - layer * 0.015})`;
+        ctx!.lineWidth = 1;
+        ctx!.stroke();
+      }
+    }
+
+    function renderAurora() {
+      ctx!.clearRect(0, 0, w(), h());
+      for (let i = 0; i < 5; i++) {
+        const grad = ctx!.createLinearGradient(0, 0, w(), h());
+        const shift = Math.sin(t * 0.008 + i) * 0.1;
+        grad.addColorStop(0, 'rgba(99,102,241,0)');
+        grad.addColorStop(0.3 + shift, `rgba(99,102,241,${0.04 - i * 0.006})`);
+        grad.addColorStop(0.5 + shift, `rgba(129,140,248,${0.05 - i * 0.008})`);
+        grad.addColorStop(0.7 - shift, `rgba(99,102,241,${0.03 - i * 0.005})`);
+        grad.addColorStop(1, 'rgba(99,102,241,0)');
+        ctx!.fillStyle = grad;
+        const yOff = Math.sin(t * 0.01 + i * 1.5) * 60;
+        ctx!.fillRect(0, yOff + i * 40, w(), h());
+      }
+    }
+
+    const renderers = { particles: renderParticles, grid: renderGrid, waves: renderWaves, aurora: renderAurora };
+
+    function loop() {
+      t++;
+      renderers[bgType as keyof typeof renderers]?.();
+      raf = requestAnimationFrame(loop);
+    }
+    loop();
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
     };
-  }, [canvasRef]);
+  }, [canvasRef, bgType]);
 }
 
 // Google Places API for reviews
@@ -266,7 +279,11 @@ export default function BookPage() {
   const today = new Date();
   today.setHours(0,0,0,0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  useWebGLBackground(canvasRef);
+  const [bgType, setBgType] = useState<BgType>(() => {
+    if (typeof window !== 'undefined') return (localStorage.getItem('dz-bg') as BgType) || 'particles';
+    return 'particles';
+  });
+  useAnimatedBackground(canvasRef, bgType);
   const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
 
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -336,6 +353,18 @@ export default function BookPage() {
             <span>DocZoc</span>
           </Link>
           <div className="dz-nav-links">
+            <div className="dz-bg-switcher">
+              {BG_OPTIONS.map(opt => (
+                <button
+                  key={opt.id}
+                  className={`dz-bg-opt${bgType === opt.id ? ' active' : ''}`}
+                  onClick={() => { setBgType(opt.id); localStorage.setItem('dz-bg', opt.id); }}
+                  title={opt.label}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
             <a href="tel:+19179059370" className="dz-nav-phone">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               (917) 905-9370

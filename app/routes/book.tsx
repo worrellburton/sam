@@ -571,30 +571,6 @@ export default function BookPage() {
                 <h2>Book an appointment for free</h2>
                 <p className="dz-booking-sub">Schedule directly with Dr. Elguizaoui&rsquo;s office</p>
 
-                <h3 className="dz-section-label">Scheduling details</h3>
-                <select className="dz-select">
-                  <option>Orthopedic Consultation</option>
-                  <option>Sports Injury Evaluation</option>
-                  <option>Follow-up Visit</option>
-                  <option>Second Opinion</option>
-                  <option>Joint Pain Assessment</option>
-                </select>
-
-                <label className="dz-insurance-check">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#6366f1" stroke="#fff" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 11 12 14 22 4" stroke="#fff" strokeWidth="2.5"/></svg>
-                  Insurance carrier and plan
-                </label>
-
-                <div className="dz-patient-toggle">
-                  <button className={`dz-pt-btn${patientType === 'new' ? ' active' : ''}`} onClick={() => setPatientType('new')}>
-                    New patient
-                  </button>
-                  <button className={`dz-pt-btn${patientType === 'existing' ? ' active' : ''}`} onClick={() => setPatientType('existing')}>
-                    {patientType === 'existing' && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>}
-                    Existing patient
-                  </button>
-                </div>
-
                 <h3 className="dz-section-label">Available appointments</h3>
                 <select className="dz-select dz-location-select" value={locationIdx} onChange={e => setLocationIdx(Number(e.target.value))}>
                   {locations.map((l, i) => (
@@ -670,9 +646,35 @@ export default function BookPage() {
                 )}
 
                 {selectedSlot && (
-                  <button className="dz-btn dz-btn-confirm" onClick={handleConfirm}>
-                    Confirm Appointment
-                  </button>
+                  <div className="dz-scheduling-details">
+                    <h3 className="dz-section-label">Scheduling details</h3>
+                    <select className="dz-select">
+                      <option>Orthopedic Consultation</option>
+                      <option>Sports Injury Evaluation</option>
+                      <option>Follow-up Visit</option>
+                      <option>Second Opinion</option>
+                      <option>Joint Pain Assessment</option>
+                    </select>
+
+                    <label className="dz-insurance-check">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#6366f1" stroke="#fff" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 11 12 14 22 4" stroke="#fff" strokeWidth="2.5"/></svg>
+                      Insurance carrier and plan
+                    </label>
+
+                    <div className="dz-patient-toggle">
+                      <button className={`dz-pt-btn${patientType === 'new' ? ' active' : ''}`} onClick={() => setPatientType('new')}>
+                        New patient
+                      </button>
+                      <button className={`dz-pt-btn${patientType === 'existing' ? ' active' : ''}`} onClick={() => setPatientType('existing')}>
+                        {patientType === 'existing' && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>}
+                        Existing patient
+                      </button>
+                    </div>
+
+                    <button className="dz-btn dz-btn-confirm" onClick={handleConfirm}>
+                      Confirm Appointment
+                    </button>
+                  </div>
                 )}
 
                 <p className="dz-view-more">

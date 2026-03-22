@@ -707,6 +707,7 @@ export default function BookPage() {
           className={`dz-booking${selectedDate ? ' expanded' : ''}`}
           onMouseEnter={() => setCalHover(true)}
           onMouseLeave={() => { if (!selectedDate) setCalHover(false); }}
+          onClick={() => { if (!calActive) setCalHover(true); }}
         >
           <div className="dz-booking-card">
             {confirmed ? (
@@ -727,49 +728,32 @@ export default function BookPage() {
                 <p className="dz-booking-sub">Schedule directly with Dr. Elguizaoui&rsquo;s office</p>
 
                 <h3 className="dz-section-label">Locations</h3>
-                <div className="dz-loc-toggles">
-                  <button
-                    className={`dz-loc-chip${selectedLocs.size === locations.length ? ' active' : ''}`}
-                    onClick={toggleAllLocs}
-                  >All Locations</button>
-                  {locations.map((l, i) => (
-                    <button
-                      key={i}
-                      className={`dz-loc-chip${selectedLocs.has(i) ? ' active' : ''}`}
-                      onClick={() => toggleLoc(i)}
-                    >
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                      {l.name.replace('NY Orthopedics – ', '')}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Location Map */}
-                {selectedLocs.size > 0 ? (
-                  <div className="dz-map-embed">
-                    {[...selectedLocs].map(i => (
-                      <div className="dz-map-card" key={i}>
-                        <iframe
-                          title={locations[i].name}
-                          src={`https://www.google.com/maps/embed/v1/place?key=${PLACES_API_KEY}&q=${encodeURIComponent(locations[i].address)}&zoom=13`}
-                          className="dz-map-iframe"
-                          loading="lazy"
-                          referrerPolicy="no-referrer-when-downgrade"
-                          allowFullScreen
-                        />
-                        <div className="dz-map-info">
-                          <strong>{locations[i].name.replace('NY Orthopedics – ', '')}</strong>
-                          <span>{locations[i].address}</span>
+                <div className="dz-loc-circles">
+                  {locations.map((l, i) => {
+                    const isActive = selectedLocs.has(i);
+                    const mapSrc = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(l.address)}&zoom=14&size=200x200&scale=2&maptype=roadmap&style=feature:all|element:geometry|color:0x1a1a2e&style=feature:all|element:labels.text.fill|color:0x8b8ba0&style=feature:all|element:labels.text.stroke|color:0x0a0e1a&style=feature:water|element:geometry|color:0x0f1629&style=feature:road|element:geometry|color:0x2a2a4a&style=feature:poi|visibility:off&markers=color:0x6366f1|${encodeURIComponent(l.address)}&key=${PLACES_API_KEY}`;
+                    return (
+                      <button
+                        key={i}
+                        className={`dz-loc-circle${isActive ? ' active' : ''}`}
+                        onClick={() => toggleLoc(i)}
+                      >
+                        <div className="dz-loc-circle-img">
+                          <img
+                            src={mapSrc}
+                            alt={l.name}
+                            loading="lazy"
+                          />
+                          <div className="dz-loc-circle-check">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="dz-no-loc">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <p>Select a location to get started.</p>
-                  </div>
-                )}
+                        <span className="dz-loc-circle-label">{l.name.replace('NY Orthopedics – ', '')}</span>
+                        <span className="dz-loc-circle-addr">{l.address.split(',')[0]}</span>
+                      </button>
+                    );
+                  })}
+                </div>
 
                 {/* Month Calendar */}
                 <div className="dz-cal-header">

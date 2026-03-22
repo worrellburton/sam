@@ -351,23 +351,23 @@ const locations = [
   },
 ];
 
-const BF = "https://cdn.brandfetch.io/domain";
 const BF_ID = "1id3n10pdBTarCHI0db";
-const bf = (domain: string) => `${BF}/${domain}?c=${BF_ID}`;
+const bfUrl = (domain: string, theme: string) =>
+  `https://cdn.brandfetch.io/${domain}/w/400/h/100/theme/${theme}/fallback/lettermark/type/logo?c=${BF_ID}`;
 
 const insuranceLogos = [
-  { name: "Aetna", logo: bf("aetna.com") },
-  { name: "BlueCross BlueShield", logo: bf("bcbs.com") },
-  { name: "UnitedHealthcare", logo: bf("uhc.com") },
-  { name: "Oxford", logo: bf("oxhp.com") },
-  { name: "Cigna", logo: bf("cigna.com") },
-  { name: "Empire BCBS", logo: bf("empireblue.com") },
-  { name: "Humana", logo: bf("humana.com") },
-  { name: "Medicare", logo: bf("medicare.gov") },
-  { name: "1199SEIU", logo: bf("1199seiubenefits.org") },
-  { name: "Oscar", logo: bf("hioscar.com") },
-  { name: "Emblem Health", logo: bf("emblemhealth.com") },
-  { name: "Multiplan", logo: bf("multiplan.com") },
+  { name: "Aetna", domain: "aetna.com" },
+  { name: "BlueCross BlueShield", domain: "bcbs.com" },
+  { name: "UnitedHealthcare", domain: "uhc.com" },
+  { name: "Oxford", domain: "oxhp.com" },
+  { name: "Cigna", domain: "cigna.com" },
+  { name: "Empire BCBS", domain: "empireblue.com" },
+  { name: "Humana", domain: "humana.com" },
+  { name: "Medicare", domain: "medicare.gov" },
+  { name: "1199SEIU", domain: "1199seiubenefits.org" },
+  { name: "Oscar", domain: "hioscar.com" },
+  { name: "Emblem Health", domain: "emblemhealth.com" },
+  { name: "Multiplan", domain: "multiplan.com" },
 ];
 
 export default function BookPage() {
@@ -550,25 +550,22 @@ export default function BookPage() {
                 <span className="dz-big-number">4.78</span>
                 <span className="dz-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
               </div>
-              {googleReviews.length > 0 ? (
-                <div className="dz-review-snippet">
-                  <div className="dz-snippet-author">
-                    {googleReviews[0].authorAttribution?.photoUri ? (
-                      <img src={googleReviews[0].authorAttribution.photoUri} alt="" className="dz-snippet-avatar" />
-                    ) : (
-                      <div className="dz-snippet-avatar dz-snippet-avatar-placeholder">
-                        {(googleReviews[0].authorAttribution?.displayName || '?')[0]}
-                      </div>
-                    )}
+              {(() => {
+                const photoReview = googleReviews.find(r => r.authorAttribution?.photoUri);
+                return photoReview ? (
+                  <div className="dz-review-snippet">
+                    <div className="dz-snippet-author">
+                      <img src={photoReview.authorAttribution!.photoUri!} alt="" className="dz-snippet-avatar" />
+                    </div>
+                    <p>&ldquo;{photoReview.text?.text?.slice(0, 180)}{(photoReview.text?.text?.length || 0) > 180 ? '...' : ''}&rdquo;</p>
+                    <span className="dz-review-meta">{photoReview.authorAttribution?.displayName} &middot; {photoReview.relativePublishTimeDescription} &middot; {photoReview.locationLabel}</span>
                   </div>
-                  <p>&ldquo;{googleReviews[0].text?.text?.slice(0, 180)}{(googleReviews[0].text?.text?.length || 0) > 180 ? '...' : ''}&rdquo;</p>
-                  <span className="dz-review-meta">{googleReviews[0].authorAttribution?.displayName} &middot; {googleReviews[0].relativePublishTimeDescription} &middot; {googleReviews[0].locationLabel}</span>
-                </div>
-              ) : (
-                <div className="dz-review-snippet">
-                  <p className="dz-snippet-loading">Loading reviews...</p>
-                </div>
-              )}
+                ) : (
+                  <div className="dz-review-snippet">
+                    <p className="dz-snippet-loading">Loading reviews...</p>
+                  </div>
+                );
+              })()}
               <Link to="/reviews" className="dz-see-reviews">See all {googleTotal > 0 ? googleTotal.toLocaleString() : '1,470'} reviews</Link>
             </div>
           </div>
@@ -640,7 +637,7 @@ export default function BookPage() {
                 <div className="dz-ins-logos">
                   {insuranceLogos.map((ins) => (
                     <div className="dz-ins-logo" key={ins.name}>
-                      <img src={ins.logo} alt={ins.name} />
+                      <img src={bfUrl(ins.domain, dzTheme)} alt={ins.name} referrerPolicy="origin" />
                       <span>{ins.name}</span>
                     </div>
                   ))}
@@ -787,11 +784,12 @@ export default function BookPage() {
                   })}
                 </div>
 
+                <div className={selectedLocs.size === 0 ? 'dz-cal-disabled' : ''}>
                 {selectedLocs.size === 0 && (
-                  <p className="dz-loc-prompt">Select a location to get started</p>
+                  <div className="dz-cal-overlay">
+                    <p className="dz-loc-prompt">Select a location to get started</p>
+                  </div>
                 )}
-
-                {selectedLocs.size > 0 && <>
                 {/* Month Calendar */}
                 <div className="dz-cal-header">
                   <h3>{MONTHS[currentMonth]} {currentYear}</h3>
@@ -919,7 +917,7 @@ export default function BookPage() {
                     </button>
                   </div>
                 )}
-              </>}
+              </div>
               </>
             )}
           </div>

@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
+import { Insurance } from "~/components/Insurance";
 
 export function meta() {
   return [
@@ -161,6 +162,7 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <Insurance />
       <GetStarted />
       <Locations />
     </>

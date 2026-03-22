@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import type { Route } from "./+types/home";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
+import { Insurance } from "~/components/Insurance";
 import { services } from "~/data/services";
 import { blogPosts } from "~/data/blog";
 import { SpecialtyCanvas } from "~/components/SpecialtyCanvas";
@@ -131,14 +132,6 @@ const patientReviews = [
   },
 ];
 
-const insuranceLogos = [
-  { name: "Aetna", logo: "https://1000logos.net/wp-content/uploads/2020/09/Aetna-Logo.png" },
-  { name: "BlueCross BlueShield", logo: "https://1000logos.net/wp-content/uploads/2021/04/Blue-Cross-Blue-Shield-logo.png" },
-  { name: "UnitedHealthcare", logo: "https://1000logos.net/wp-content/uploads/2021/05/UnitedHealthcare-logo.png" },
-  { name: "Oxford", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Oxford_Health_Plans_logo.svg/1200px-Oxford_Health_Plans_logo.svg.png" },
-  { name: "Cigna", logo: "https://1000logos.net/wp-content/uploads/2021/05/Cigna-logo.png" },
-  { name: "Empire BCBS", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Empire_BlueCross_BlueShield_logo.svg/1200px-Empire_BlueCross_BlueShield_logo.svg.png" },
-];
 
 
 const timeline = [
@@ -339,30 +332,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Insurance */}
-      <section className="section insurance reveal" id="insurance">
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">Insurance</p>
-            <h2>In-Network <span className="text-accent">Insurance Plans</span></h2>
-            <p className="section-desc">Dr. Elguizaoui accepts most major insurance plans. <strong style={{ color: "var(--accent)" }}>99% of patients</strong> have successfully booked with their insurance.</p>
-          </div>
-          <div className="insurance-grid">
-            {insuranceLogos.map((ins) => (
-              <div className="insurance-card" key={ins.name}>
-                <div className="insurance-logo">
-                  <img src={ins.logo} alt={`${ins.name} logo`} width="56" height="56" loading="lazy" style={{ borderRadius: "8px", objectFit: "contain" }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                </div>
-                <span>{ins.name}</span>
-              </div>
-            ))}
-            <div className="insurance-card insurance-more">
-              <span>200+ more in-network plans</span>
-              <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">View All Reviews</a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Insurance />
 
       {/* Specialties */}
       <section className="section specialties reveal" id="specialties">

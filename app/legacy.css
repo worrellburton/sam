@@ -778,6 +778,7 @@ a.nav-btn-book,
 .hero {
   position: relative;
   height: 100vh;
+  max-height: 800px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

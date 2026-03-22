@@ -1,6 +1,8 @@
 import { Link, useParams } from "react-router";
 import { getServiceBySlug, services } from "~/data/services";
 import { SpecialtyCanvas } from "~/components/SpecialtyCanvas";
+import { GetStarted } from "~/components/GetStarted";
+import { Locations } from "~/components/Locations";
 
 const serviceStats: Record<string, { stat: string; label: string }[]> = {
   "sports-medicine": [
@@ -167,32 +169,6 @@ export default function ServicePage() {
         </section>
       )}
 
-      {/* Why Choose */}
-      <section className="svc-why">
-        <div className="container">
-          <div className="svc-why-inner">
-            <div className="svc-why-left">
-              <p className="section-label">Why Choose Us</p>
-              <h2>Why Dr. Elguizaoui</h2>
-              <p className="svc-why-desc">World-class training combined with a patient-first philosophy. Every treatment plan is tailored to your specific goals.</p>
-              <Link to="/book" className="btn btn-primary" style={{ marginTop: "20px" }}>Schedule a Visit</Link>
-            </div>
-            <div className="svc-why-right">
-              {service.benefits.map((b, i) => (
-                <div className="svc-benefit-row" key={i}>
-                  <div className="svc-benefit-check">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </div>
-                  <span>{b}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="svc-cta">
         <div className="container" style={{ textAlign: "center" }}>
@@ -204,6 +180,9 @@ export default function ServicePage() {
           </div>
         </div>
       </section>
+
+      <GetStarted />
+      <Locations />
     </>
   );
 }

@@ -365,6 +365,8 @@ export default function BookPage() {
   const today = new Date();
   today.setHours(0,0,0,0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const timeSlotsRef = useRef<HTMLDivElement>(null);
+  const patientDetailsRef = useRef<HTMLDivElement>(null);
   const [bgType, setBgType] = useState<BgType>(() => {
     if (typeof window !== 'undefined') return (localStorage.getItem('dz-bg') as BgType) || 'aurorawaves';
     return 'aurorawaves';
@@ -443,6 +445,22 @@ export default function BookPage() {
   const isToday = (d: Date) => d.toDateString() === new Date().toDateString();
   const [calHover, setCalHover] = useState(false);
   const calActive = selectedDate !== null || calHover;
+
+  useEffect(() => {
+    if (selectedDate && !selectedSlot) {
+      requestAnimationFrame(() => {
+        timeSlotsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  }, [selectedDate, selectedSlot]);
+
+  useEffect(() => {
+    if (selectedSlot) {
+      requestAnimationFrame(() => {
+        patientDetailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  }, [selectedSlot]);
 
   const tabs = ['Highlights', 'About', 'Insurances', 'Locations', 'Reviews', 'FAQs'];
 
@@ -797,7 +815,7 @@ export default function BookPage() {
 
                 {/* Time Slots — inline below calendar */}
                 {selectedDate && !selectedSlot && (
-                  <div className="dz-times-inline">
+                  <div className="dz-times-inline" ref={timeSlotsRef}>
                     <div className="dz-times-header">
                       <h3>{MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()} — Select a time</h3>
                       <div className="dz-daylight">
@@ -811,15 +829,25 @@ export default function BookPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="dz-time-scroll">
-                      {TIMES.filter((_, i) => timeAvail[i]).map((t) => (
-                        <button
-                          key={t}
-                          className="dz-time-chip"
-                          onClick={() => setSelectedSlot(t)}
-                        >
-                          {t}
-                        </button>
+                    <div className="dz-time-columns">
+                      {[
+                        { label: 'Early Morning', times: TIMES.filter((t, i) => timeAvail[i] && t.includes('AM') && parseInt(t) >= 8 && parseInt(t) < 10) },
+                        { label: 'Late Morning', times: TIMES.filter((t, i) => timeAvail[i] && t.includes('AM') && parseInt(t) >= 10) },
+                        { label: 'Early Afternoon', times: TIMES.filter((t, i) => timeAvail[i] && t.includes('PM') && parseInt(t) >= 1 && parseInt(t) < 3 && parseInt(t) !== 12) },
+                        { label: 'Afternoon', times: TIMES.filter((t, i) => timeAvail[i] && t.includes('PM') && (parseInt(t) >= 3 || parseInt(t) === 12)) },
+                      ].filter(g => g.times.length > 0).map((group) => (
+                        <div className="dz-time-col" key={group.label}>
+                          <span className="dz-time-col-label">{group.label}</span>
+                          {group.times.map((t) => (
+                            <button
+                              key={t}
+                              className="dz-time-chip"
+                              onClick={() => setSelectedSlot(t)}
+                            >
+                              {t}
+                            </button>
+                          ))}
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -827,7 +855,7 @@ export default function BookPage() {
 
                 {/* Step 3: Patient Details */}
                 {selectedSlot && (
-                  <div className="dz-step">
+                  <div className="dz-step" ref={patientDetailsRef}>
                     <div className="dz-step-header">
                       <button className="dz-step-back" onClick={() => setSelectedSlot(null)}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -872,6 +900,40 @@ export default function BookPage() {
                 )}
               </>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom credentials bar */}
+      <div className="dz-bottom-bar">
+        <div className="dz-bottom-bar-inner">
+          <div className="dz-bottom-rating">
+            <svg width="14" height="14" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+            </svg>
+            <span className="dz-bottom-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span>4.8</span>
+            <span className="dz-bottom-count">(1,469 reviews)</span>
+          </div>
+          <div className="dz-bottom-marquee">
+            <div className="dz-bottom-track">
+              {[1, 2].map((k) => (
+                <span key={k}>
+                  <span className="dz-bottom-hl">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Board Certified
+                  </span>
+                  <span>NY Jets Team Physician</span>
+                  <span>NY Islanders Team Physician</span>
+                  <span>Lenox Hill Fellowship</span>
+                  <span>Minimally Invasive Surgery</span>
+                  <span>Ohio State Magna Cum Laude</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

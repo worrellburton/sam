@@ -379,13 +379,13 @@ export default function BookPage() {
   const toggleLoc = (idx: number) => {
     setSelectedLocs(prev => {
       const next = new Set(prev);
-      if (next.has(idx)) { if (next.size > 1) next.delete(idx); }
+      if (next.has(idx)) next.delete(idx);
       else next.add(idx);
       return next;
     });
   };
   const toggleAllLocs = () => {
-    setSelectedLocs(prev => prev.size === locations.length ? new Set([0]) : new Set(locations.map((_, i) => i)));
+    setSelectedLocs(new Set(locations.map((_, i) => i)));
   };
   const [activeTab, setActiveTab] = useState('highlights');
   const [confirmed, setConfirmed] = useState(false);
@@ -628,7 +628,7 @@ export default function BookPage() {
                   <div className="dz-loc-card" key={i}>
                     <iframe
                       title={l.name}
-                      src={`https://www.google.com/maps/embed/v1/place?key=${PLACES_API_KEY}&q=${encodeURIComponent(l.address)}&zoom=15`}
+                      src={`https://www.google.com/maps/embed/v1/place?key=${PLACES_API_KEY}&q=${encodeURIComponent(l.address)}&zoom=13`}
                       className="dz-loc-minimap"
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
@@ -743,13 +743,13 @@ export default function BookPage() {
                 </div>
 
                 {/* Location Map */}
-                {selectedLocs.size > 0 && (
+                {selectedLocs.size > 0 ? (
                   <div className="dz-map-embed">
                     {[...selectedLocs].map(i => (
                       <div className="dz-map-card" key={i}>
                         <iframe
                           title={locations[i].name}
-                          src={`https://www.google.com/maps/embed/v1/place?key=${PLACES_API_KEY}&q=${encodeURIComponent(locations[i].address)}`}
+                          src={`https://www.google.com/maps/embed/v1/place?key=${PLACES_API_KEY}&q=${encodeURIComponent(locations[i].address)}&zoom=13`}
                           className="dz-map-iframe"
                           loading="lazy"
                           referrerPolicy="no-referrer-when-downgrade"
@@ -761,6 +761,11 @@ export default function BookPage() {
                         </div>
                       </div>
                     ))}
+                  </div>
+                ) : (
+                  <div className="dz-no-loc">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <p>Please select at least one location to view available appointments.</p>
                   </div>
                 )}
 

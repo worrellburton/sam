@@ -65,152 +65,202 @@ function useAnimatedBackground(canvasRef: React.RefObject<HTMLCanvasElement | nu
     const canvas = canvasRef.current;
     if (!canvas || bgType === 'none') return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d')!;
     if (!ctx) return;
 
     let raf: number;
+    let cw = 0;
+    let ch = 0;
+
     const resize = () => {
-      canvas.width = canvas.clientWidth * window.devicePixelRatio;
-      canvas.height = canvas.clientHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      const dpr = window.devicePixelRatio || 1;
+      cw = canvas.clientWidth;
+      ch = canvas.clientHeight;
+      canvas.width = cw * dpr;
+      canvas.height = ch * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     resize();
     window.addEventListener('resize', resize);
 
-    const w = () => canvas.clientWidth;
-    const h = () => canvas.clientHeight;
-    let t = 0;
-
-    // Particles
-    const NUM = 50;
+    // Particles state
+    const NUM = 60;
     const pts = Array.from({ length: NUM }, () => ({
-      x: Math.random(), y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-      r: Math.random() * 2 + 1,
+      x: Math.random(),
+      y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2.5 + 1,
     }));
 
-    function renderParticles() {
-      ctx!.clearRect(0, 0, w(), h());
+    function renderParticles(time: number) {
+      ctx.clearRect(0, 0, cw, ch);
+      const dt = 0.016;
       pts.forEach(p => {
-        p.x += p.vx / w(); p.y += p.vy / h();
+        p.x += p.vx * dt / cw * 60;
+        p.y += p.vy * dt / ch * 60;
         if (p.x < 0 || p.x > 1) p.vx *= -1;
         if (p.y < 0 || p.y > 1) p.vy *= -1;
-        ctx!.beginPath();
-        ctx!.arc(p.x * w(), p.y * h(), p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = 'rgba(99,102,241,0.12)';
-        ctx!.fill();
+        p.x = Math.max(0, Math.min(1, p.x));
+        p.y = Math.max(0, Math.min(1, p.y));
+        const glow = ctx.createRadialGradient(p.x * cw, p.y * ch, 0, p.x * cw, p.y * ch, p.r * 4);
+        glow.addColorStop(0, 'rgba(129,140,248,0.35)');
+        glow.addColorStop(1, 'rgba(129,140,248,0)');
+        ctx.beginPath();
+        ctx.arc(p.x * cw, p.y * ch, p.r * 4, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x * cw, p.y * ch, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(129,140,248,0.5)';
+        ctx.fill();
       });
-      // connections
       for (let i = 0; i < NUM; i++) {
         for (let j = i + 1; j < NUM; j++) {
-          const dx = (pts[i].x - pts[j].x) * w();
-          const dy = (pts[i].y - pts[j].y) * h();
+          const dx = (pts[i].x - pts[j].x) * cw;
+          const dy = (pts[i].y - pts[j].y) * ch;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx!.beginPath();
-            ctx!.moveTo(pts[i].x * w(), pts[i].y * h());
-            ctx!.lineTo(pts[j].x * w(), pts[j].y * h());
-            ctx!.strokeStyle = `rgba(99,102,241,${0.06 * (1 - dist / 120)})`;
-            ctx!.lineWidth = 0.5;
-            ctx!.stroke();
+          if (dist < 140) {
+            const alpha = 0.15 * (1 - dist / 140);
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x * cw, pts[i].y * ch);
+            ctx.lineTo(pts[j].x * cw, pts[j].y * ch);
+            ctx.strokeStyle = `rgba(129,140,248,${alpha})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
           }
         }
       }
     }
 
-    function renderGrid() {
-      ctx!.clearRect(0, 0, w(), h());
-      const spacing = 40;
-      const cols = Math.ceil(w() / spacing) + 1;
-      const rows = Math.ceil(h() / spacing) + 1;
+    function renderGrid(time: number) {
+      ctx.clearRect(0, 0, cw, ch);
+      const spacing = 36;
+      const cols = Math.ceil(cw / spacing) + 1;
+      const rows = Math.ceil(ch / spacing) + 1;
+      const t = time * 0.001;
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
-          const pulse = Math.sin(t * 0.02 + i * 0.3 + j * 0.3) * 0.5 + 0.5;
-          const alpha = 0.03 + pulse * 0.06;
-          ctx!.beginPath();
-          ctx!.arc(i * spacing, j * spacing, 1 + pulse * 1.5, 0, Math.PI * 2);
-          ctx!.fillStyle = `rgba(99,102,241,${alpha})`;
-          ctx!.fill();
+          const cx = i * spacing;
+          const cy = j * spacing;
+          const distFromCenter = Math.sqrt((cx - cw / 2) ** 2 + (cy - ch / 2) ** 2) / Math.max(cw, ch);
+          const pulse = Math.sin(t * 1.5 + i * 0.4 + j * 0.4) * 0.5 + 0.5;
+          const wave = Math.sin(t * 0.8 + distFromCenter * 8) * 0.5 + 0.5;
+          const alpha = 0.06 + (pulse * 0.12 + wave * 0.08);
+          const radius = 1.2 + pulse * 2 + wave * 1;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(129,140,248,${alpha})`;
+          ctx.fill();
         }
       }
     }
 
-    function renderWaves() {
-      ctx!.clearRect(0, 0, w(), h());
-      for (let layer = 0; layer < 3; layer++) {
-        ctx!.beginPath();
-        const amp = 30 + layer * 15;
-        const freq = 0.008 - layer * 0.001;
-        const speed = 0.015 + layer * 0.005;
-        const yBase = h() * (0.4 + layer * 0.15);
-        for (let x = 0; x <= w(); x += 2) {
-          const y = yBase + Math.sin(x * freq + t * speed) * amp + Math.sin(x * freq * 2.3 + t * speed * 1.5) * amp * 0.4;
-          if (x === 0) ctx!.moveTo(x, y);
-          else ctx!.lineTo(x, y);
+    function renderWaves(time: number) {
+      ctx.clearRect(0, 0, cw, ch);
+      const t = time * 0.001;
+      for (let layer = 0; layer < 5; layer++) {
+        ctx.beginPath();
+        const amp = 25 + layer * 12;
+        const freq = 0.006 - layer * 0.0008;
+        const speed = 0.8 + layer * 0.3;
+        const yBase = ch * (0.3 + layer * 0.12);
+        for (let x = 0; x <= cw; x += 2) {
+          const y = yBase +
+            Math.sin(x * freq + t * speed) * amp +
+            Math.sin(x * freq * 2.1 + t * speed * 1.4) * amp * 0.35 +
+            Math.cos(x * freq * 0.5 + t * speed * 0.6) * amp * 0.2;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
-        ctx!.strokeStyle = `rgba(99,102,241,${0.06 - layer * 0.015})`;
-        ctx!.lineWidth = 1;
-        ctx!.stroke();
+        const alpha = 0.12 - layer * 0.018;
+        ctx.strokeStyle = `rgba(129,140,248,${Math.max(0.03, alpha)})`;
+        ctx.lineWidth = 1.5 - layer * 0.15;
+        ctx.stroke();
+        // Fill below the wave with a subtle gradient
+        ctx.lineTo(cw, ch);
+        ctx.lineTo(0, ch);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(99,102,241,${0.015 - layer * 0.002})`;
+        ctx.fill();
       }
     }
 
-    function renderAurora() {
-      ctx!.clearRect(0, 0, w(), h());
-      for (let i = 0; i < 5; i++) {
-        const grad = ctx!.createLinearGradient(0, 0, w(), h());
-        const shift = Math.sin(t * 0.008 + i) * 0.1;
+    function renderAurora(time: number) {
+      ctx.clearRect(0, 0, cw, ch);
+      const t = time * 0.001;
+      for (let i = 0; i < 4; i++) {
+        const yCenter = ch * (0.3 + i * 0.15) + Math.sin(t * 0.5 + i * 1.2) * 60;
+        const grad = ctx.createLinearGradient(0, yCenter - 120, 0, yCenter + 120);
+        const hueShift = Math.sin(t * 0.3 + i * 0.8) * 20;
+        const r = Math.round(99 + hueShift);
+        const g = Math.round(102 + hueShift * 0.5);
+        const b = 241;
+        const alpha = 0.08 + Math.sin(t * 0.4 + i * 1.5) * 0.03;
         grad.addColorStop(0, 'rgba(99,102,241,0)');
-        grad.addColorStop(0.3 + shift, `rgba(99,102,241,${0.04 - i * 0.006})`);
-        grad.addColorStop(0.5 + shift, `rgba(129,140,248,${0.05 - i * 0.008})`);
-        grad.addColorStop(0.7 - shift, `rgba(99,102,241,${0.03 - i * 0.005})`);
+        grad.addColorStop(0.3, `rgba(${r},${g},${b},${alpha * 0.6})`);
+        grad.addColorStop(0.5, `rgba(${r},${g},${b},${alpha})`);
+        grad.addColorStop(0.7, `rgba(${r},${g},${b},${alpha * 0.6})`);
         grad.addColorStop(1, 'rgba(99,102,241,0)');
-        ctx!.fillStyle = grad;
-        const yOff = Math.sin(t * 0.01 + i * 1.5) * 60;
-        ctx!.fillRect(0, yOff + i * 40, w(), h());
+        ctx.fillStyle = grad;
+        const xShift = Math.sin(t * 0.2 + i) * 80;
+        ctx.fillRect(-100 + xShift, yCenter - 120, cw + 200, 240);
       }
     }
 
-    function renderAuroraWaves() {
-      ctx!.clearRect(0, 0, w(), h());
-      // Aurora glow layer — very slow drift
+    function renderAuroraWaves(time: number) {
+      ctx.clearRect(0, 0, cw, ch);
+      const t = time * 0.001;
+
+      // Aurora bands — smooth drifting color
       for (let i = 0; i < 3; i++) {
-        const grad = ctx!.createLinearGradient(0, 0, w(), h());
-        const shift = Math.sin(t * 0.0015 + i * 0.6) * 0.08;
-        grad.addColorStop(0, 'rgba(99,102,241,0)');
-        grad.addColorStop(0.3 + shift, `rgba(99,102,241,${0.02 - i * 0.004})`);
-        grad.addColorStop(0.5 + shift, `rgba(129,140,248,${0.025 - i * 0.005})`);
-        grad.addColorStop(0.7 - shift, `rgba(79,70,229,${0.018 - i * 0.004})`);
-        grad.addColorStop(1, 'rgba(99,102,241,0)');
-        ctx!.fillStyle = grad;
-        const yOff = Math.sin(t * 0.002 + i * 1.0) * 40;
-        ctx!.fillRect(0, yOff + i * 50, w(), h());
+        const yCenter = ch * (0.25 + i * 0.2) + Math.sin(t * 0.3 + i * 1.5) * 50;
+        const bandHeight = 180 + Math.sin(t * 0.2 + i) * 30;
+        const grad = ctx.createLinearGradient(0, yCenter - bandHeight / 2, 0, yCenter + bandHeight / 2);
+        const alpha = 0.07 + Math.sin(t * 0.25 + i * 2) * 0.025;
+        grad.addColorStop(0, 'rgba(79,70,229,0)');
+        grad.addColorStop(0.35, `rgba(99,102,241,${alpha * 0.7})`);
+        grad.addColorStop(0.5, `rgba(129,140,248,${alpha})`);
+        grad.addColorStop(0.65, `rgba(99,102,241,${alpha * 0.7})`);
+        grad.addColorStop(1, 'rgba(79,70,229,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, yCenter - bandHeight / 2, cw, bandHeight);
       }
-      // Waves — slow, gentle
-      for (let layer = 0; layer < 3; layer++) {
-        ctx!.beginPath();
-        const amp = 15 + layer * 8;
-        const freq = 0.004 - layer * 0.0005;
-        const speed = 0.003 + layer * 0.001;
-        const yBase = h() * (0.35 + layer * 0.18);
-        for (let x = 0; x <= w(); x += 3) {
-          const y = yBase + Math.sin(x * freq + t * speed) * amp + Math.sin(x * freq * 1.6 + t * speed * 0.5) * amp * 0.3;
-          if (x === 0) ctx!.moveTo(x, y);
-          else ctx!.lineTo(x, y);
+
+      // Flowing waves on top
+      for (let layer = 0; layer < 4; layer++) {
+        ctx.beginPath();
+        const amp = 18 + layer * 10;
+        const freq = 0.005 - layer * 0.0006;
+        const speed = 0.5 + layer * 0.15;
+        const yBase = ch * (0.3 + layer * 0.14);
+        for (let x = 0; x <= cw; x += 2) {
+          const y = yBase +
+            Math.sin(x * freq + t * speed) * amp +
+            Math.sin(x * freq * 1.8 + t * speed * 0.7) * amp * 0.3;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
-        ctx!.strokeStyle = `rgba(129,140,248,${0.04 - layer * 0.01})`;
-        ctx!.lineWidth = 0.8;
-        ctx!.stroke();
+        const alpha = 0.1 - layer * 0.018;
+        ctx.strokeStyle = `rgba(129,140,248,${Math.max(0.03, alpha)})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
       }
     }
 
-    const renderers = { aurorawaves: renderAuroraWaves, particles: renderParticles, grid: renderGrid, waves: renderWaves, aurora: renderAurora };
+    const renderers: Record<string, (time: number) => void> = {
+      aurorawaves: renderAuroraWaves,
+      particles: renderParticles,
+      grid: renderGrid,
+      waves: renderWaves,
+      aurora: renderAurora,
+    };
 
-    function loop() {
-      t++;
-      renderers[bgType as keyof typeof renderers]?.();
+    function loop(time: number) {
+      renderers[bgType]?.(time);
       raf = requestAnimationFrame(loop);
     }
-    loop();
+    raf = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(raf);

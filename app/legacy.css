@@ -3732,45 +3732,45 @@ a.nav-btn-book,
 }
 
 /* ===== Insurance ===== */
-.insurance-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+/* Insurance logos — no cards, just a clean logo grid */
+.insurance-logo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px 56px;
+  padding: 20px 0 10px;
 }
-.insurance-card {
+.insurance-logo-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 20px 16px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  transition: all var(--transition);
-  min-height: 72px;
-}
-.insurance-card:hover {
-  border-color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  justify-content: center;
 }
 img.insurance-logo {
-  width: 32px;
   height: 32px;
+  width: auto;
+  max-width: 140px;
   object-fit: contain;
-  flex-shrink: 0;
-  border-radius: 4px;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+  filter: brightness(1.1);
 }
-.insurance-logo-only {
-  justify-content: center;
-  padding: 24px 16px;
+img.insurance-logo:hover {
+  opacity: 1;
 }
-.insurance-logo-only img.insurance-logo {
-  width: 48px;
-  height: 48px;
+[data-theme="light"] img.insurance-logo {
+  filter: brightness(0) saturate(100%);
+  opacity: 0.45;
 }
-.insurance-card span {
-  font-weight: 600;
+[data-theme="light"] img.insurance-logo:hover {
+  opacity: 0.7;
+}
+.insurance-more-text {
+  text-align: center;
+  color: var(--text-muted);
   font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 28px;
 }
 .insurance-fallback {
   font-weight: 600;
@@ -3790,11 +3790,13 @@ img.insurance-logo {
   font-size: 0.88rem;
   text-decoration: underline;
 }
-@media (max-width: 1024px) {
-  .insurance-grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 768px) {
+  .insurance-logo-grid { gap: 28px 36px; }
+  img.insurance-logo { height: 26px; max-width: 110px; }
 }
 @media (max-width: 480px) {
-  .insurance-grid { grid-template-columns: 1fr; }
+  .insurance-logo-grid { gap: 20px 28px; }
+  img.insurance-logo { height: 22px; max-width: 90px; }
 }
 
 /* ===== Service Page Stats Bar ===== */

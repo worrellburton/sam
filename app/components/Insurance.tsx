@@ -16,7 +16,7 @@ const carriers = [
 function BrandfetchLogo({ domain, name }: { domain: string; name: string }) {
   return (
     <img
-      src={`https://cdn.brandfetch.io/${domain}/w/128/h/128/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db`}
+      src={`https://cdn.brandfetch.io/${domain}/w/512/h/200/fallback/lettermark/theme/dark/type/logo?c=1id3n10pdBTarCHI0db`}
       alt={name}
       className="insurance-logo"
       loading="lazy"
@@ -37,16 +37,14 @@ export function Insurance() {
           <h2>In-Network <span className="text-accent">Insurance Plans</span></h2>
           <p className="section-desc">Dr. Elguizaoui accepts most major insurance plans. <strong style={{ color: "var(--accent)" }}>99% of patients</strong> have successfully booked with their insurance.</p>
         </div>
-        <div className="insurance-grid">
+        <div className="insurance-logo-grid">
           {carriers.map(({ name, domain }) => (
-            <div className="insurance-card insurance-logo-only" key={name}>
+            <div className="insurance-logo-item" key={name}>
               <BrandfetchLogo domain={domain} name={name} />
             </div>
           ))}
-          <div className="insurance-card insurance-more">
-            <span>200+ more in-network plans</span>
-          </div>
         </div>
+        <p className="insurance-more-text">...and 200+ more in-network plans</p>
       </div>
     </section>
   );

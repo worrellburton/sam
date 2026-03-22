@@ -681,7 +681,9 @@ export default function BookPage() {
                           >
                             <div className="dz-cal-cell-top">
                               <span className={`dz-cal-date${todayCell ? ' today' : ''}`}>{date.getDate()}</span>
-                              {slots.length > 0 && <span className="dz-cal-shift-count">{count} appts</span>}
+                              <span className={`dz-cal-shift-count${slots.length > 0 ? ' has' : ''}`}>
+                                {slots.length > 0 ? `${count} slots` : 'No avail.'}
+                              </span>
                             </div>
                             <div className="dz-cal-pills">
                               {slots.map((s, si) => (

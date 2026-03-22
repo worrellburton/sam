@@ -4905,7 +4905,10 @@ a.nav-btn-book,
 .dz-cal-cell-top { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
 .dz-cal-date { font-size: 0.82rem; font-weight: 500; color: #8b8ba0; }
 .dz-cal-date.today { background: #6366f1; color: #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-.dz-cal-shift-count { font-size: 0.6rem; color: #6b6b80; white-space: nowrap; }
+.dz-cal-shift-count { font-size: 0.6rem; color: #3d3f4a; white-space: nowrap; font-weight: 400; }
+.dz-cal-shift-count.has { color: #818cf8; font-weight: 600; }
+.dz-light .dz-cal-shift-count { color: #bbb; }
+.dz-light .dz-cal-shift-count.has { color: #2563eb; }
 
 .dz-cal-pills { display: flex; flex-direction: column; gap: 3px; }
 .dz-cal-pill { font-size: 0.6rem; font-weight: 600; padding: 3px 6px; border-radius: 4px; color: #0a0e1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

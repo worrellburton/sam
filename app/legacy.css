@@ -357,17 +357,18 @@ img { max-width: 100%; display: block; }
   margin-left: 8px;
 }
 
+a.nav-btn-book,
 .nav-btn-book {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 8px 20px;
-  background: #2563eb;
+  background: #2563eb !important;
   color: #fff !important;
   font-weight: 600;
   font-size: 0.85rem;
   border-radius: 980px;
-  text-decoration: none;
+  text-decoration: none !important;
   transition: all var(--transition);
 }
 .nav-btn-book:hover {

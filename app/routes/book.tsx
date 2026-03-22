@@ -344,7 +344,7 @@ export default function BookPage() {
         </div>
       </nav>
 
-      <div className="dz-main">
+      <div className={`dz-main${selectedDate ? ' cal-active' : ''}`}>
         {/* LEFT: Doctor Profile */}
         <div className="dz-profile">
           <div className="dz-doctor-card">
@@ -552,7 +552,13 @@ export default function BookPage() {
         </div>
 
         {/* RIGHT: Booking Panel */}
-        <div className="dz-booking">
+        <div className={`dz-booking${selectedDate ? ' expanded' : ''}`}>
+          {selectedDate && (
+            <button className="dz-cal-back" onClick={() => { setSelectedDate(null); setSelectedSlot(null); }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Back to calendar
+            </button>
+          )}
           <div className="dz-booking-card">
             {confirmed ? (
               <div className="dz-confirmed">

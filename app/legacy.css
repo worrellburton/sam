@@ -4680,7 +4680,27 @@ img { max-width: 100%; display: block; }
 .dz-nav-phone:hover { color: #e4e4ee; }
 
 /* Main Layout */
-.dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 480px; gap: 32px; align-items: start; }
+.dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 480px; gap: 32px; align-items: start; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.dz-main.cal-active { grid-template-columns: 280px 1fr; }
+.dz-main.cal-active .dz-profile { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.dz-main.cal-active .dz-doctor-card { padding: 18px; }
+.dz-main.cal-active .dz-doctor-header { flex-direction: column; align-items: center; text-align: center; gap: 12px; margin-bottom: 16px; }
+.dz-main.cal-active .dz-avatar { width: 56px; height: 56px; }
+.dz-main.cal-active .dz-doctor-info h1 { font-size: 1rem; }
+.dz-main.cal-active .dz-specialty { font-size: 0.78rem; }
+.dz-main.cal-active .dz-address { font-size: 0.72rem; }
+.dz-main.cal-active .dz-badge { font-size: 0.62rem; padding: 3px 8px; }
+.dz-main.cal-active .dz-rating-row { flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.dz-main.cal-active .dz-big-number { font-size: 1.5rem; }
+.dz-main.cal-active .dz-review-snippet { display: none; }
+.dz-main.cal-active .dz-see-reviews { align-self: center; font-size: 0.78rem; }
+.dz-main.cal-active .dz-tabs { flex-wrap: wrap; justify-content: center; }
+.dz-main.cal-active .dz-tab { padding: 10px 12px; font-size: 0.75rem; }
+.dz-main.cal-active .dz-highlight-row { gap: 10px; padding: 10px 0; }
+.dz-main.cal-active .dz-highlight-icon { width: 32px; height: 32px; }
+.dz-main.cal-active .dz-highlight-icon svg { width: 14px; height: 14px; }
+.dz-main.cal-active .dz-highlight-row strong { font-size: 0.8rem; }
+.dz-main.cal-active .dz-highlight-row p { font-size: 0.72rem; }
 
 /* Profile Section */
 .dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; }
@@ -4801,7 +4821,15 @@ img { max-width: 100%; display: block; }
 @keyframes dzSpin { to { transform: rotate(360deg); } }
 
 /* Booking Card */
-.dz-booking { position: sticky; top: 72px; }
+.dz-booking { position: sticky; top: 72px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.dz-booking.expanded .dz-cal-cell { min-height: 100px; padding: 10px; }
+.dz-booking.expanded .dz-cal-date { font-size: 0.95rem; }
+.dz-booking.expanded .dz-cal-pill { font-size: 0.68rem; padding: 4px 8px; }
+.dz-booking.expanded .dz-cal-shift-count { font-size: 0.7rem; }
+.dz-booking.expanded .dz-time-grid { grid-template-columns: repeat(6, 1fr); }
+.dz-booking.expanded .dz-cal-header h3 { font-size: 1.2rem; }
+.dz-cal-back { display: flex; align-items: center; gap: 8px; background: none; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; font-family: inherit; color: #8b8ba0; cursor: pointer; margin-bottom: 16px; transition: all 0.2s; }
+.dz-cal-back:hover { border-color: #6366f1; color: #818cf8; }
 .dz-booking-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; }
 .dz-booking-card h2 { font-size: 1.3rem; font-weight: 700; margin: 0 0 4px; color: #e4e4ee; }
 .dz-booking-sub { font-size: 0.85rem; color: #6b6b80; margin: 0 0 24px; }
@@ -4889,12 +4917,15 @@ img { max-width: 100%; display: block; }
 /* Mobile */
 @media (max-width: 900px) {
   .dz-main { grid-template-columns: 1fr; }
+  .dz-main.cal-active { grid-template-columns: 1fr; }
+  .dz-main.cal-active .dz-profile { display: none; }
   .dz-booking { position: static; }
   .dz-doctor-header { flex-direction: column; align-items: center; text-align: center; }
   .dz-rating-row { justify-content: center; text-align: center; }
   .dz-time-grid { grid-template-columns: repeat(3, 1fr); }
   .dz-cal-cell { min-height: 60px; padding: 4px; }
   .dz-cal-pill { font-size: 0.55rem; padding: 2px 4px; }
+  .dz-booking.expanded .dz-time-grid { grid-template-columns: repeat(4, 1fr); }
 }
 @media (max-width: 600px) {
   .dz-main { padding: 16px; }
@@ -4905,6 +4936,7 @@ img { max-width: 100%; display: block; }
   .dz-tab { padding: 12px 14px; font-size: 0.8rem; }
   .dz-cal-cell { min-height: 50px; }
   .dz-cal-pills { display: none; }
+  .dz-booking.expanded .dz-time-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ===== Dev Tools Dashboard ===== */

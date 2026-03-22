@@ -351,13 +351,23 @@ const locations = [
   },
 ];
 
+const BF = "https://cdn.brandfetch.io/domain";
+const BF_ID = "1id3n10pdBTarCHI0db";
+const bf = (domain: string) => `${BF}/${domain}?c=${BF_ID}`;
+
 const insuranceLogos = [
-  { name: "Aetna", logo: "https://1000logos.net/wp-content/uploads/2020/09/Aetna-Logo.png" },
-  { name: "BlueCross BlueShield", logo: "https://1000logos.net/wp-content/uploads/2021/04/Blue-Cross-Blue-Shield-logo.png" },
-  { name: "UnitedHealthcare", logo: "https://1000logos.net/wp-content/uploads/2021/05/UnitedHealthcare-logo.png" },
-  { name: "Oxford", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Oxford_Health_Plans_logo.svg/1200px-Oxford_Health_Plans_logo.svg.png" },
-  { name: "Cigna", logo: "https://1000logos.net/wp-content/uploads/2021/05/Cigna-logo.png" },
-  { name: "Empire BCBS", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Empire_BlueCross_BlueShield_logo.svg/1200px-Empire_BlueCross_BlueShield_logo.svg.png" },
+  { name: "Aetna", logo: bf("aetna.com") },
+  { name: "BlueCross BlueShield", logo: bf("bcbs.com") },
+  { name: "UnitedHealthcare", logo: bf("uhc.com") },
+  { name: "Oxford", logo: bf("oxhp.com") },
+  { name: "Cigna", logo: bf("cigna.com") },
+  { name: "Empire BCBS", logo: bf("empireblue.com") },
+  { name: "Humana", logo: bf("humana.com") },
+  { name: "Medicare", logo: bf("medicare.gov") },
+  { name: "1199SEIU", logo: bf("1199seiubenefits.org") },
+  { name: "Oscar", logo: bf("hioscar.com") },
+  { name: "Emblem Health", logo: bf("emblemhealth.com") },
+  { name: "Multiplan", logo: bf("multiplan.com") },
 ];
 
 export default function BookPage() {

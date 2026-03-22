@@ -6800,6 +6800,204 @@ img.insurance-logo {
   letter-spacing: 0.05em;
 }
 
+/* Billing page */
+.dz-billing-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  min-height: calc(100vh - 120px);
+}
+.dz-billing-list {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+}
+.dz-billing-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e4e4ee;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+}
+.dz-billing-visit {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  color: #e4e4ee;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+  transition: background 0.15s;
+}
+.dz-billing-visit:hover { background: rgba(99, 102, 241, 0.06); }
+.dz-billing-visit.active { background: rgba(99, 102, 241, 0.12); border-left: 3px solid #6366f1; }
+.dz-billing-visit-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.dz-billing-visit-name { font-size: 0.88rem; font-weight: 600; }
+.dz-billing-visit-meta { font-size: 0.72rem; color: #5a5a6e; margin-bottom: 2px; }
+.dz-billing-visit-proc { font-size: 0.75rem; color: #8b8ba0; }
+
+.dz-billing-detail {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 14px;
+  padding: 24px;
+  backdrop-filter: blur(8px);
+  overflow-y: auto;
+}
+.dz-billing-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.dz-billing-detail-header h2 { font-size: 1.2rem; font-weight: 700; color: #e4e4ee; margin-bottom: 4px; }
+.dz-billing-detail-header p { font-size: 0.78rem; color: #5a5a6e; }
+.dz-billing-pdf-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.12);
+  color: #a5b4fc;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.dz-billing-pdf-btn:hover { background: rgba(99, 102, 241, 0.2); border-color: #6366f1; color: #c7d2fe; }
+
+.dz-billing-info-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.dz-billing-info-card {
+  background: rgba(10, 10, 26, 0.4);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.dz-billing-info-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #5a5a6e;
+  margin-bottom: 4px;
+}
+.dz-billing-info-value { font-size: 0.88rem; font-weight: 700; color: #e4e4ee; }
+
+.dz-billing-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.dz-billing-dx {
+  background: rgba(10, 10, 26, 0.3);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 10px;
+  padding: 14px;
+}
+.dz-billing-dx p { font-size: 0.82rem; color: #8b8ba0; line-height: 1.5; }
+
+.dz-billing-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6366f1;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dz-billing-code-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0 5px;
+}
+
+.dz-billing-codes-section { margin-bottom: 20px; }
+.dz-billing-codes-list { display: flex; flex-direction: column; gap: 6px; }
+.dz-billing-code-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(10, 10, 26, 0.3);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+}
+.dz-billing-code-badge {
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.dz-billing-code-badge.icd { background: rgba(139, 92, 246, 0.12); color: #a78bfa; }
+.dz-billing-code-badge.cpt { background: rgba(59, 130, 246, 0.12); color: #60a5fa; }
+.dz-billing-code-badge.hcpcs { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+.dz-billing-code-desc { font-size: 0.8rem; color: #8b8ba0; }
+
+.dz-billing-type-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+.dz-billing-notes {
+  background: rgba(10, 10, 26, 0.3);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 0.8rem;
+  color: #8b8ba0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.dz-billing-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 400px;
+  gap: 12px;
+  text-align: center;
+}
+.dz-billing-empty h3 { font-size: 1rem; font-weight: 600; color: #5a5a6e; }
+.dz-billing-empty p { font-size: 0.82rem; color: #3d3f4a; }
+
 /* Responsive */
 @media (max-width: 900px) {
   .dz-hero-inner { grid-template-columns: 1fr; gap: 40px; }
@@ -6810,6 +7008,9 @@ img.insurance-logo {
   .dz-cal-layout { grid-template-columns: 1fr; }
   .dz-sidebar { display: none; }
   .dz-font-grid { grid-template-columns: repeat(2, 1fr); }
+  .dz-billing-layout { grid-template-columns: 1fr; }
+  .dz-billing-info-row { grid-template-columns: repeat(2, 1fr); }
+  .dz-billing-summary { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .dz-hero { padding: 48px 16px 40px; }

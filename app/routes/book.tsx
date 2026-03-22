@@ -397,11 +397,6 @@ export default function BookPage() {
                     </div>
                   </div>
                 ))}
-                <div className="dz-insurance-row">
-                  <h4>In-network insurances</h4>
-                  <p>{insurances}</p>
-                  <button className="dz-link-btn">(200+) more in-network plans</button>
-                </div>
               </div>
             )}
             {activeTab === 'about' && (

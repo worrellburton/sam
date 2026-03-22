@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 
 export function meta() {
   return [
@@ -9,30 +9,167 @@ export function meta() {
 }
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const SHORT_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAY_HEADERS = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 const TIMES = ['8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM'];
 
-function getWeekStart(date: Date) {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
-  d.setHours(0,0,0,0);
-  return d;
+const APPT_TYPES = [
+  { label: 'Consultation', color: '#a78bfa' },
+  { label: 'Follow-up', color: '#34d399' },
+  { label: 'Sports Injury', color: '#fbbf24' },
+  { label: 'Joint Assessment', color: '#60a5fa' },
+  { label: 'Second Opinion', color: '#f472b6' },
+];
+
+function getApptSlots(date: Date) {
+  const dow = date.getDay();
+  if (dow === 0 || dow === 6) return [];
+  const today = new Date(); today.setHours(0,0,0,0);
+  if (date < today) return [];
+  const d = date.getDate(), m = date.getMonth(), y = date.getFullYear();
+  const seed = (d * 7 + m * 13 + y) % 30;
+  if (dow === 2 || dow === 5) return seed > 15 ? [APPT_TYPES[seed % APPT_TYPES.length]] : [];
+  const count = seed > 20 ? 2 : seed > 8 ? 1 : 0;
+  if (count === 0) return [];
+  const slots = [];
+  for (let i = 0; i < count; i++) {
+    slots.push(APPT_TYPES[(seed + i * 3) % APPT_TYPES.length]);
+  }
+  return slots;
 }
 
 function getApptCount(date: Date) {
-  const dow = date.getDay();
-  if (dow === 0 || dow === 6) return 0; // no weekends
-  if (dow === 2 || dow === 5) return 0; // Tue/Fri off
-  const today = new Date(); today.setHours(0,0,0,0);
-  if (date < today) return 0;
+  const slots = getApptSlots(date);
+  if (slots.length === 0) return 0;
   const d = date.getDate(), m = date.getMonth(), y = date.getFullYear();
   return ((d * 7 + m * 13 + y) % 20) + 10;
 }
 
 function getTimeAvail(day: number, month: number) {
   return TIMES.map((_, i) => ((day * 7 + month * 3 + i * 11) % 10) > 3);
+}
+
+// Subtle WebGL particle background
+function useWebGLBackground(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const gl = canvas.getContext('webgl', { alpha: true, antialias: true });
+    if (!gl) return;
+
+    const vsSource = `
+      attribute vec2 a_position;
+      attribute float a_size;
+      attribute float a_alpha;
+      varying float v_alpha;
+      void main() {
+        gl_Position = vec4(a_position, 0.0, 1.0);
+        gl_PointSize = a_size;
+        v_alpha = a_alpha;
+      }
+    `;
+    const fsSource = `
+      precision mediump float;
+      varying float v_alpha;
+      void main() {
+        float dist = length(gl_PointCoord - vec2(0.5));
+        if (dist > 0.5) discard;
+        float fade = 1.0 - smoothstep(0.2, 0.5, dist);
+        gl_FragColor = vec4(0.39, 0.4, 0.95, v_alpha * fade * 0.15);
+      }
+    `;
+
+    function createShader(g: WebGLRenderingContext, type: number, source: string) {
+      const s = g.createShader(type)!;
+      g.shaderSource(s, source);
+      g.compileShader(s);
+      return s;
+    }
+    const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+    const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    const program = gl.createProgram()!;
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    const NUM = 60;
+    const particles: { x: number; y: number; vx: number; vy: number; size: number; alpha: number }[] = [];
+    for (let i = 0; i < NUM; i++) {
+      particles.push({
+        x: Math.random() * 2 - 1,
+        y: Math.random() * 2 - 1,
+        vx: (Math.random() - 0.5) * 0.0008,
+        vy: (Math.random() - 0.5) * 0.0008,
+        size: Math.random() * 3 + 1.5,
+        alpha: Math.random() * 0.6 + 0.2,
+      });
+    }
+
+    const posLoc = gl.getAttribLocation(program, 'a_position');
+    const sizeLoc = gl.getAttribLocation(program, 'a_size');
+    const alphaLoc = gl.getAttribLocation(program, 'a_alpha');
+
+    const posBuf = gl.createBuffer()!;
+    const sizeBuf = gl.createBuffer()!;
+    const alphaBuf = gl.createBuffer()!;
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    let raf: number;
+    const resize = () => {
+      canvas.width = canvas.clientWidth * window.devicePixelRatio;
+      canvas.height = canvas.clientHeight * window.devicePixelRatio;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const posData = new Float32Array(NUM * 2);
+    const sizeData = new Float32Array(NUM);
+    const alphaData = new Float32Array(NUM);
+
+    function render() {
+      gl!.clearColor(0, 0, 0, 0);
+      gl!.clear(gl!.COLOR_BUFFER_BIT);
+
+      for (let i = 0; i < NUM; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -1 || p.x > 1) p.vx *= -1;
+        if (p.y < -1 || p.y > 1) p.vy *= -1;
+        posData[i * 2] = p.x;
+        posData[i * 2 + 1] = p.y;
+        sizeData[i] = p.size * window.devicePixelRatio;
+        alphaData[i] = p.alpha;
+      }
+
+      gl!.bindBuffer(gl!.ARRAY_BUFFER, posBuf);
+      gl!.bufferData(gl!.ARRAY_BUFFER, posData, gl!.DYNAMIC_DRAW);
+      gl!.enableVertexAttribArray(posLoc);
+      gl!.vertexAttribPointer(posLoc, 2, gl!.FLOAT, false, 0, 0);
+
+      gl!.bindBuffer(gl!.ARRAY_BUFFER, sizeBuf);
+      gl!.bufferData(gl!.ARRAY_BUFFER, sizeData, gl!.DYNAMIC_DRAW);
+      gl!.enableVertexAttribArray(sizeLoc);
+      gl!.vertexAttribPointer(sizeLoc, 1, gl!.FLOAT, false, 0, 0);
+
+      gl!.bindBuffer(gl!.ARRAY_BUFFER, alphaBuf);
+      gl!.bufferData(gl!.ARRAY_BUFFER, alphaData, gl!.DYNAMIC_DRAW);
+      gl!.enableVertexAttribArray(alphaLoc);
+      gl!.vertexAttribPointer(alphaLoc, 1, gl!.FLOAT, false, 0, 0);
+
+      gl!.drawArrays(gl!.POINTS, 0, NUM);
+      raf = requestAnimationFrame(render);
+    }
+    render();
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+    };
+  }, [canvasRef]);
 }
 
 const highlights = [
@@ -52,7 +189,11 @@ const locations = [
 export default function BookPage() {
   const today = new Date();
   today.setHours(0,0,0,0);
-  const [weekStart, setWeekStart] = useState(() => getWeekStart(today));
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useWebGLBackground(canvasRef);
+
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [patientType, setPatientType] = useState<'new' | 'existing'>('existing');
@@ -60,59 +201,60 @@ export default function BookPage() {
   const [activeTab, setActiveTab] = useState('highlights');
   const [confirmed, setConfirmed] = useState(false);
 
-  // Two weeks of dates
-  const weeks = useMemo(() => {
-    const result: Date[][] = [];
-    for (let w = 0; w < 2; w++) {
-      const week: Date[] = [];
-      for (let d = 0; d < 7; d++) {
-        const date = new Date(weekStart);
-        date.setDate(weekStart.getDate() + w * 7 + d);
-        week.push(date);
-      }
-      result.push(week);
-    }
-    return result;
-  }, [weekStart]);
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-  const weekEnd = useMemo(() => {
-    const d = new Date(weekStart);
-    d.setDate(d.getDate() + 13);
-    return d;
-  }, [weekStart]);
+  const calendarWeeks = useMemo(() => {
+    const weeks: (Date | null)[][] = [];
+    let week: (Date | null)[] = [];
+    for (let i = 0; i < firstDayOfMonth; i++) week.push(null);
+    for (let d = 1; d <= daysInMonth; d++) {
+      week.push(new Date(currentYear, currentMonth, d));
+      if (week.length === 7) { weeks.push(week); week = []; }
+    }
+    if (week.length > 0) {
+      while (week.length < 7) week.push(null);
+      weeks.push(week);
+    }
+    return weeks;
+  }, [currentMonth, currentYear, firstDayOfMonth, daysInMonth]);
 
   const timeAvail = useMemo(() => {
     if (!selectedDate) return [];
     return getTimeAvail(selectedDate.getDate(), selectedDate.getMonth());
   }, [selectedDate]);
 
-  const handlePrevWeek = useCallback(() => {
-    setWeekStart(prev => { const d = new Date(prev); d.setDate(d.getDate() - 14); return d; });
+  const handlePrevMonth = useCallback(() => {
+    if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1); }
+    else setCurrentMonth(m => m - 1);
     setSelectedDate(null); setSelectedSlot(null);
-  }, []);
+  }, [currentMonth]);
 
-  const handleNextWeek = useCallback(() => {
-    setWeekStart(prev => { const d = new Date(prev); d.setDate(d.getDate() + 14); return d; });
+  const handleNextMonth = useCallback(() => {
+    if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(y => y + 1); }
+    else setCurrentMonth(m => m + 1);
     setSelectedDate(null); setSelectedSlot(null);
-  }, []);
+  }, [currentMonth]);
 
   const handleConfirm = () => {
     if (selectedDate && selectedSlot) setConfirmed(true);
   };
 
-  const formatShortDate = (d: Date) => `${SHORT_DAYS[d.getDay() === 0 ? 6 : d.getDay() - 1]}\n${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}`;
+  const isToday = (d: Date) => d.toDateString() === new Date().toDateString();
 
   const tabs = ['Highlights', 'About', 'Insurances', 'Locations', 'Reviews', 'FAQs'];
 
   return (
     <div className="dz">
+      <canvas ref={canvasRef} className="dz-webgl-bg" />
+
       {/* Top Nav */}
       <nav className="dz-nav">
         <div className="dz-nav-inner">
           <Link to="/" className="dz-logo">
             <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="8" fill="#FFD60A"/>
-              <text x="16" y="22" textAnchor="middle" fontWeight="700" fontSize="16" fill="#1a1a2e" fontFamily="Inter, sans-serif">D</text>
+              <rect width="32" height="32" rx="8" fill="#6366f1"/>
+              <text x="16" y="22" textAnchor="middle" fontWeight="700" fontSize="16" fill="#fff" fontFamily="Inter, sans-serif">D</text>
             </svg>
             <span>DocZoc</span>
           </Link>
@@ -128,21 +270,21 @@ export default function BookPage() {
       <div className="dz-main">
         {/* LEFT: Doctor Profile */}
         <div className="dz-profile">
-          {/* Doctor Card */}
           <div className="dz-doctor-card">
             <div className="dz-doctor-header">
               <div className="dz-avatar">
                 <img src="/sammd/header.jpg" alt="Dr. Sam Elguizaoui" />
               </div>
               <div className="dz-doctor-info">
-                <span className="dz-badge">Patient Choice</span>
+                <span className="dz-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 13.14 2 8.27l6.91-1.01L12 1z"/></svg>
+                  Patient Choice
+                </span>
                 <h1>Dr. Sam Elguizaoui, MD</h1>
                 <p className="dz-specialty">Orthopedic Surgeon</p>
                 <p className="dz-address">200 W 13th St, 6th Fl, New York, NY</p>
               </div>
             </div>
-
-            {/* Rating + Review snippet */}
             <div className="dz-rating-row">
               <div className="dz-rating-score">
                 <span className="dz-big-number">4.78</span>
@@ -156,29 +298,21 @@ export default function BookPage() {
             </div>
           </div>
 
-          {/* Tabs */}
           <div className="dz-tabs">
             {tabs.map(t => (
-              <button
-                key={t}
-                className={`dz-tab${activeTab === t.toLowerCase() ? ' active' : ''}`}
-                onClick={() => setActiveTab(t.toLowerCase())}
-              >
-                {t}
-              </button>
+              <button key={t} className={`dz-tab${activeTab === t.toLowerCase() ? ' active' : ''}`} onClick={() => setActiveTab(t.toLowerCase())}>{t}</button>
             ))}
           </div>
 
-          {/* Tab Content */}
           <div className="dz-tab-content">
             {activeTab === 'highlights' && (
               <div className="dz-highlights">
                 {highlights.map((h, i) => (
                   <div className="dz-highlight-row" key={i}>
                     <div className="dz-highlight-icon">
-                      {h.icon === 'return' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFD60A" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>}
-                      {h.icon === 'clock' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFD60A" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}
-                      {h.icon === 'new' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFD60A" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>}
+                      {h.icon === 'return' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>}
+                      {h.icon === 'clock' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}
+                      {h.icon === 'new' && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>}
                     </div>
                     <div>
                       <strong>{h.label}</strong>
@@ -201,7 +335,7 @@ export default function BookPage() {
             {activeTab === 'insurances' && (
               <div className="dz-insurance-tab">
                 <p>We accept 200+ insurance plans including Aetna, BlueCross BlueShield, UnitedHealthcare, UnitedHealthcare Oxford, Cigna, Humana, and many more.</p>
-                <p style={{ marginTop: '12px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Please call our office to verify your specific plan.</p>
+                <p style={{ marginTop: '12px', color: '#6b6b80', fontSize: '0.9rem' }}>Please call our office to verify your specific plan.</p>
               </div>
             )}
             {activeTab === 'locations' && (
@@ -247,7 +381,7 @@ export default function BookPage() {
             ) : (
               <>
                 <h2>Book an appointment for free</h2>
-                <p className="dz-booking-sub">The office partners with Zocdoc to schedule appointments</p>
+                <p className="dz-booking-sub">Schedule directly with Dr. Elguizaoui&rsquo;s office</p>
 
                 <h3 className="dz-section-label">Scheduling details</h3>
                 <select className="dz-select">
@@ -259,7 +393,7 @@ export default function BookPage() {
                 </select>
 
                 <label className="dz-insurance-check">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)" stroke="white" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 11 12 14 22 4" stroke="white" strokeWidth="2.5"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#6366f1" stroke="#fff" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 11 12 14 22 4" stroke="#fff" strokeWidth="2.5"/></svg>
                   Insurance carrier and plan
                 </label>
 
@@ -281,39 +415,47 @@ export default function BookPage() {
                 </select>
                 <p className="dz-more-locations">{locations.length - 1} more locations with availability</p>
 
-                {/* Week Calendar */}
-                <div className="dz-week-header">
-                  <span>{MONTHS[weekStart.getMonth()].slice(0,3)} {weekStart.getDate()} – {MONTHS[weekEnd.getMonth()].slice(0,3)} {weekEnd.getDate()}</span>
-                  <div className="dz-week-nav">
-                    <button className="dz-week-btn" onClick={handlePrevWeek}>
+                {/* Month Calendar */}
+                <div className="dz-cal-header">
+                  <h3>{MONTHS[currentMonth]} {currentYear}</h3>
+                  <div className="dz-cal-nav">
+                    <button className="dz-cal-btn" onClick={handlePrevMonth}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
-                    <button className="dz-week-btn" onClick={handleNextWeek}>
+                    <button className="dz-cal-btn" onClick={handleNextMonth}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
                     </button>
                   </div>
                 </div>
 
-                <div className="dz-week-grid">
-                  {weeks.map((week, wi) => (
-                    <div className="dz-week-row" key={wi}>
+                <div className="dz-cal">
+                  <div className="dz-cal-row dz-cal-day-headers">
+                    {DAY_HEADERS.map(d => <div className="dz-cal-dh" key={d}>{d}</div>)}
+                  </div>
+                  {calendarWeeks.map((week, wi) => (
+                    <div className="dz-cal-row" key={wi}>
                       {week.map((date, di) => {
+                        if (!date) return <div className="dz-cal-cell empty" key={di} />;
+                        const slots = getApptSlots(date);
                         const count = getApptCount(date);
-                        const isSelected = selectedDate?.toDateString() === date.toDateString();
-                        const hasAppts = count > 0;
+                        const selected = selectedDate?.toDateString() === date.toDateString();
+                        const todayCell = isToday(date);
                         return (
-                          <button
+                          <div
                             key={di}
-                            className={`dz-day-cell${isSelected ? ' selected' : ''}${hasAppts ? ' available' : ''}`}
-                            onClick={() => { if (hasAppts) { setSelectedDate(date); setSelectedSlot(null); }}}
-                            disabled={!hasAppts}
+                            className={`dz-cal-cell${selected ? ' selected' : ''}${slots.length > 0 ? ' has-appts' : ''}`}
+                            onClick={() => { if (slots.length > 0) { setSelectedDate(date); setSelectedSlot(null); }}}
                           >
-                            <span className="dz-day-name">{SHORT_DAYS[di]}</span>
-                            <span className="dz-day-date">{MONTHS[date.getMonth()].slice(0,3)} {date.getDate()}</span>
-                            <span className={`dz-day-count${hasAppts ? ' has' : ''}`}>
-                              {hasAppts ? `${count} appts` : 'No appts'}
-                            </span>
-                          </button>
+                            <div className="dz-cal-cell-top">
+                              <span className={`dz-cal-date${todayCell ? ' today' : ''}`}>{date.getDate()}</span>
+                              {slots.length > 0 && <span className="dz-cal-shift-count">{count} appts</span>}
+                            </div>
+                            <div className="dz-cal-pills">
+                              {slots.map((s, si) => (
+                                <div key={si} className="dz-cal-pill" style={{ background: s.color }}>{s.label}</div>
+                              ))}
+                            </div>
+                          </div>
                         );
                       })}
                     </div>
@@ -346,7 +488,7 @@ export default function BookPage() {
                 )}
 
                 <p className="dz-view-more">
-                  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">View more availability</a>
+                  <Link to="/contact">View more availability</Link>
                 </p>
               </>
             )}

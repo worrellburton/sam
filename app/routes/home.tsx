@@ -238,7 +238,7 @@ export default function Home() {
             <div className="rating-top">
               <div className="rating-score">4.8<span className="rating-star">&#9733;</span></div>
               <div className="rating-info">
-                <span className="rating-platform">Rating on Zocdoc</span>
+                <span className="rating-platform">Patient Rating</span>
                 <span className="rating-count"><strong>1,466</strong> Reviews</span>
               </div>
             </div>
@@ -248,7 +248,7 @@ export default function Home() {
                 <div className="avatar">M</div>
                 <div className="avatar">A</div>
               </div>
-              <span className="rating-zocdoc">Zocdoc</span>
+              <span className="rating-zocdoc">DocZoc</span>
             </div>
           </div>
         </div>
@@ -340,7 +340,7 @@ export default function Home() {
             ))}
             <div className="insurance-card insurance-more">
               <span>200+ more in-network plans</span>
-              <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">View All on Zocdoc</a>
+              <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">View All Reviews</a>
             </div>
           </div>
         </div>

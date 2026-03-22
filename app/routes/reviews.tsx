@@ -5,12 +5,12 @@ import { Locations } from "~/components/Locations";
 export function meta() {
   return [
     { title: "Patient Reviews | Dr. Sam Elguizaoui, M.D." },
-    { name: "description", content: "Read patient reviews for Dr. Sameh Elguizaoui. 4.8/5 stars on Zocdoc with 1,400+ reviews." },
+    { name: "description", content: "Read patient reviews for Dr. Sameh Elguizaoui. 4.8/5 stars with 1,400+ reviews." },
   ];
 }
 
 const platforms = [
-  { name: "Zocdoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", color: "#FF7043", icon: "Z" },
+  { name: "DocZoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", color: "#FF7043", icon: "Z" },
   { name: "Google", rating: "4.8", reviews: "150+", url: "https://www.google.com/search?q=Dr+Sam+Elguizaoui+orthopedic+surgeon+NYC", color: "#4285F4", icon: "G" },
   { name: "Healthgrades", rating: "5.0", reviews: "50+", url: "https://www.healthgrades.com/physician/dr-sam-elguizaoui", color: "#1976D2", icon: "H" },
   { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", color: "#00BFA5", icon: "V" },
@@ -99,7 +99,7 @@ export default function ReviewsPage() {
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
             <div>
-              <strong>Zocdoc Patient Choice Award</strong>
+              <strong>Patient Choice Award</strong>
               <p>Providers with this badge are highly rated, reliable, and recommended by other patients.</p>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function ReviewsPage() {
 
           <div style={{ textAlign: "center", marginTop: "40px" }}>
             <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-primary btn-lg">
-              View All 1,400+ Reviews on Zocdoc
+              View All 1,400+ Reviews
             </a>
           </div>
         </div>

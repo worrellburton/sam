@@ -168,8 +168,8 @@ export function Navigation() {
                   <div className="mega-cta-card">
                     <h4>Ready to get started?</h4>
                     <p>Book a consultation with Dr. Elguizaoui today.</p>
-                    <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-primary btn-block">
-                      Book on Zocdoc
+                    <a href="/sammd/book" className="btn btn-primary btn-block">
+                      Book Now
                     </a>
                     <a href="tel:+19179059370" className="mega-phone">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -24,7 +24,7 @@ export function GetStarted() {
           <div className="contact-actions">
             <div className="contact-card">
               <h3>Book Online</h3>
-              <p>Schedule your appointment through Zocdoc for instant confirmation.</p>
+              <p>Schedule your appointment online for instant confirmation.</p>
               <Link to="/book" className="btn btn-primary btn-lg btn-block">
                 Book Now
               </Link>

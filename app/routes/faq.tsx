@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     q: "How do I schedule an appointment?",
-    a: "You can schedule an appointment by calling the office directly, or booking online through Zocdoc. Same-week appointments are often available for urgent orthopedic concerns.",
+    a: "You can schedule an appointment by calling the office directly, or booking online through our website. Same-week appointments are often available for urgent orthopedic concerns.",
   },
   {
     q: "What should I bring to my first appointment?",

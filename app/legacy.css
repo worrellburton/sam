@@ -4690,9 +4690,13 @@ a.nav-btn-book,
 .dz-nav-phone:hover { color: #e4e4ee; }
 
 /* Main Layout */
-.dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 1fr 480px; gap: 32px; align-items: start; transition: all 10s ease-in-out; }
-.dz-main.cal-active { grid-template-columns: 1fr; }
-.dz-main.cal-active .dz-profile { transition: all 10s ease-in-out; }
+.dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: flex; gap: 32px; align-items: start; }
+.dz-main .dz-profile { flex: 1; min-width: 0; transition: flex 3s ease-in-out, opacity 2s ease-in-out, max-height 3s ease-in-out; }
+.dz-main .dz-booking { width: 480px; flex-shrink: 0; transition: width 3s ease-in-out, flex 3s ease-in-out; }
+.dz-main.cal-active .dz-profile { flex: 0 0 100%; max-height: 120px; overflow: hidden; }
+.dz-main.cal-active .dz-booking { width: 100%; flex: 1; }
+.dz-main.cal-active { flex-wrap: wrap; }
+.dz-main.cal-active .dz-profile { }
 .dz-main.cal-active .dz-doctor-card { padding: 14px 20px; }
 .dz-main.cal-active .dz-doctor-header { flex-direction: row; align-items: center; gap: 14px; margin-bottom: 0; }
 .dz-main.cal-active .dz-avatar { width: 44px; height: 44px; }
@@ -4709,13 +4713,15 @@ a.nav-btn-book,
 .dz-main.cal-active .dz-review-meta { font-size: 0.68rem; }
 .dz-main.cal-active .dz-snippet-author { display: none; }
 .dz-main.cal-active .dz-see-reviews { font-size: 0.75rem; }
-.dz-main.cal-active .dz-tabs { display: none; }
-.dz-main.cal-active .dz-tab-content { display: none; }
+.dz-tabs { transition: opacity 1.5s ease-in-out, max-height 2s ease-in-out; max-height: 200px; overflow: hidden; }
+.dz-tab-content { transition: opacity 1.5s ease-in-out, max-height 2s ease-in-out; max-height: 2000px; overflow: hidden; }
+.dz-main.cal-active .dz-tabs { opacity: 0; max-height: 0; pointer-events: none; }
+.dz-main.cal-active .dz-tab-content { opacity: 0; max-height: 0; pointer-events: none; }
 
 /* Profile Section */
-.dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; transition: padding 10s ease-in-out; }
-.dz-doctor-header { display: flex; gap: 20px; margin-bottom: 24px; transition: all 10s ease-in-out; }
-.dz-avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid rgba(99,102,241,0.3); transition: all 10s ease-in-out; }
+.dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; transition: padding 3s ease-in-out; }
+.dz-doctor-header { display: flex; gap: 20px; margin-bottom: 24px; transition: gap 3s ease-in-out, margin 3s ease-in-out; }
+.dz-avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid rgba(99,102,241,0.3); transition: width 3s ease-in-out, height 3s ease-in-out; }
 .dz-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .dz-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.12); color: #34d399; font-size: 0.72rem; font-weight: 600; padding: 5px 12px; border-radius: 980px; margin-bottom: 6px; border: 1px solid rgba(34,197,94,0.2); }
 .dz-badge svg { flex-shrink: 0; }
@@ -4724,7 +4730,7 @@ a.nav-btn-book,
 .dz-address { font-size: 0.85rem; color: #4a4a5e; margin: 0; }
 
 /* Rating Row */
-.dz-rating-row { display: flex; align-items: flex-start; gap: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; }
+.dz-rating-row { display: flex; align-items: flex-start; gap: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; transition: gap 3s ease-in-out, padding 3s ease-in-out; }
 .dz-rating-score { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
 .dz-big-number { font-size: 2.2rem; font-weight: 700; line-height: 1; color: #e4e4ee; }
 .dz-stars { color: #FFD60A; font-size: 0.9rem; margin-top: 4px; }
@@ -4831,7 +4837,7 @@ a.nav-btn-book,
 @keyframes dzSpin { to { transform: rotate(360deg); } }
 
 /* Booking Card */
-.dz-booking { position: sticky; top: 72px; transition: all 10s ease-in-out; }
+.dz-booking { position: sticky; top: 72px; }
 .dz-booking.expanded .dz-cal-cell { min-height: 100px; padding: 10px; }
 .dz-booking.expanded .dz-cal-date { font-size: 0.95rem; }
 .dz-booking.expanded .dz-cal-pill { font-size: 0.68rem; padding: 4px 8px; }
@@ -5079,8 +5085,8 @@ a.nav-btn-book,
 
 /* Mobile */
 @media (max-width: 900px) {
-  .dz-main { grid-template-columns: 1fr; }
-  .dz-main.cal-active { grid-template-columns: 1fr; }
+  .dz-main { flex-direction: column; }
+  .dz-main .dz-booking { width: 100%; }
   .dz-main.cal-active .dz-profile { display: none; }
   .dz-booking { position: static; }
   .dz-doctor-header { flex-direction: column; align-items: center; text-align: center; }

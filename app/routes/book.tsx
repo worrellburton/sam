@@ -465,18 +465,6 @@ export default function BookPage() {
             </Link>
           </div>
           <div className="dz-nav-links">
-            <div className="dz-bg-switcher">
-              {BG_OPTIONS.map(opt => (
-                <button
-                  key={opt.id}
-                  className={`dz-bg-opt${bgType === opt.id ? ' active' : ''}`}
-                  onClick={() => { setBgType(opt.id); localStorage.setItem('dz-bg', opt.id); }}
-                  title={opt.label}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
             <button className="dz-theme-toggle" onClick={toggleDzTheme} aria-label="Toggle theme">
               {dzTheme === 'dark' ? (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -784,26 +772,18 @@ export default function BookPage() {
                       {week.map((date, di) => {
                         if (!date) return <div className="dz-cal-cell empty" key={di} />;
                         const slots = getApptSlots(date);
-                        const count = getApptCount(date);
-                        const selected = false;
                         const todayCell = isToday(date);
+                        const avail = slots.length > 0;
                         return (
                           <div
                             key={di}
-                            className={`dz-cal-cell${selected ? ' selected' : ''}${slots.length > 0 ? ' has-appts' : ''}`}
-                            onClick={() => { if (slots.length > 0) { setSelectedDate(date); setSelectedSlot(null); }}}
+                            className={`dz-cal-cell${avail ? ' has-appts' : ''}`}
+                            onClick={() => { if (avail) { setSelectedDate(date); setSelectedSlot(null); }}}
                           >
-                            <div className="dz-cal-cell-top">
-                              <span className={`dz-cal-date${todayCell ? ' today' : ''}`}>{date.getDate()}</span>
-                              <span className={`dz-cal-shift-count${slots.length > 0 ? ' has' : ''}`}>
-                                {slots.length > 0 ? `${count} slots` : 'No avail.'}
-                              </span>
-                            </div>
-                            <div className="dz-cal-pills">
-                              {slots.map((s, si) => (
-                                <div key={si} className="dz-cal-pill" style={{ background: s.color }}>{s.label}</div>
-                              ))}
-                            </div>
+                            <span className={`dz-cal-date${todayCell ? ' today' : ''}`}>{date.getDate()}</span>
+                            <span className={`dz-cal-shift-count${avail ? ' has' : ''}`}>
+                              {avail ? 'Avail.' : 'No avail.'}
+                            </span>
                           </div>
                         );
                       })}

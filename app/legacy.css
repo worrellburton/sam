@@ -4691,15 +4691,15 @@ a.nav-btn-book,
 
 /* Main Layout */
 .dz-main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; display: flex; gap: 32px; align-items: start; }
-.dz-main .dz-profile { flex: 1; min-width: 0; transition: flex-basis 3s ease-in-out, flex-grow 3s ease-in-out, max-width 3s ease-in-out, opacity 2s ease-in-out, max-height 3s ease-in-out, margin 3s ease-in-out, padding 3s ease-in-out; overflow: hidden; }
-.dz-main .dz-booking { width: 480px; flex-shrink: 0; transition: width 3s ease-in-out; }
-.dz-main.cal-active .dz-profile { flex: 0 0 0px; max-width: 0; opacity: 0; margin: 0; padding: 0; overflow: hidden; }
+.dz-main .dz-profile { flex: 1; min-width: 0; overflow: hidden; }
+.dz-main .dz-booking { width: 480px; flex-shrink: 0; }
+.dz-main.cal-active .dz-profile { display: none; }
 .dz-main.cal-active .dz-booking { width: 100%; }
 
 /* Profile Section */
-.dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; transition: padding 3s ease-in-out; }
-.dz-doctor-header { display: flex; gap: 20px; margin-bottom: 24px; transition: gap 3s ease-in-out, margin 3s ease-in-out; }
-.dz-avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid rgba(99,102,241,0.3); transition: width 3s ease-in-out, height 3s ease-in-out; }
+.dz-doctor-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; margin-bottom: 0; }
+.dz-doctor-header { display: flex; gap: 20px; margin-bottom: 24px; }
+.dz-avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid rgba(99,102,241,0.3); }
 .dz-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .dz-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.12); color: #34d399; font-size: 0.72rem; font-weight: 600; padding: 5px 12px; border-radius: 980px; margin-bottom: 6px; border: 1px solid rgba(34,197,94,0.2); }
 .dz-badge svg { flex-shrink: 0; }
@@ -4708,7 +4708,7 @@ a.nav-btn-book,
 .dz-address { font-size: 0.85rem; color: #4a4a5e; margin: 0; }
 
 /* Rating Row */
-.dz-rating-row { display: flex; align-items: flex-start; gap: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; transition: gap 3s ease-in-out, padding 3s ease-in-out; }
+.dz-rating-row { display: flex; align-items: flex-start; gap: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; }
 .dz-rating-score { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
 .dz-big-number { font-size: 2.2rem; font-weight: 700; line-height: 1; color: #e4e4ee; }
 .dz-stars { color: #FFD60A; font-size: 0.9rem; margin-top: 4px; }
@@ -4817,9 +4817,8 @@ a.nav-btn-book,
 
 /* Booking Card */
 .dz-booking { position: sticky; top: 72px; }
-.dz-booking.expanded .dz-cal-cell { min-height: 100px; padding: 10px; }
+.dz-booking.expanded .dz-cal-cell { min-height: 52px; padding: 10px; }
 .dz-booking.expanded .dz-cal-date { font-size: 0.95rem; }
-.dz-booking.expanded .dz-cal-pill { font-size: 0.68rem; padding: 4px 8px; }
 .dz-booking.expanded .dz-cal-shift-count { font-size: 0.7rem; }
 .dz-booking.expanded .dz-time-grid { grid-template-columns: repeat(6, 1fr); }
 .dz-booking.expanded .dz-cal-header h3 { font-size: 1.2rem; }
@@ -4915,25 +4914,18 @@ a.nav-btn-book,
 .dz-cal-row { display: grid; grid-template-columns: repeat(7, 1fr); }
 .dz-cal-day-headers { background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08); }
 .dz-cal-dh { padding: 10px 4px; text-align: center; font-size: 0.68rem; font-weight: 600; letter-spacing: 1px; color: #6b6b80; }
-.dz-cal-cell { min-height: 80px; padding: 8px; border-right: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: background 0.15s; }
+.dz-cal-cell { min-height: 48px; padding: 8px 6px; border-right: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); cursor: default; transition: background 0.15s; display: flex; align-items: center; gap: 6px; }
 .dz-cal-cell:nth-child(7n) { border-right: none; }
 .dz-cal-row:last-child .dz-cal-cell { border-bottom: none; }
-.dz-cal-cell:hover { background: rgba(99,102,241,0.06); }
-.dz-cal-cell.empty { cursor: default; opacity: 0.3; }
-.dz-cal-cell.empty:hover { background: transparent; }
-.dz-cal-cell.selected { background: rgba(99,102,241,0.12); box-shadow: inset 0 0 0 2px #6366f1; }
 .dz-cal-cell.has-appts { cursor: pointer; }
-
-.dz-cal-cell-top { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.dz-cal-cell.has-appts:hover { background: rgba(99,102,241,0.1); }
+.dz-cal-cell.empty { opacity: 0.3; }
 .dz-cal-date { font-size: 0.82rem; font-weight: 500; color: #8b8ba0; }
-.dz-cal-date.today { background: #6366f1; color: #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.dz-cal-date.today { background: #6366f1; color: #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
 .dz-cal-shift-count { font-size: 0.6rem; color: #3d3f4a; white-space: nowrap; font-weight: 400; }
-.dz-cal-shift-count.has { color: #818cf8; font-weight: 600; }
+.dz-cal-shift-count.has { color: #34d399; font-weight: 600; }
 .dz-light .dz-cal-shift-count { color: #bbb; }
-.dz-light .dz-cal-shift-count.has { color: #2563eb; }
-
-.dz-cal-pills { display: flex; flex-direction: column; gap: 3px; }
-.dz-cal-pill { font-size: 0.6rem; font-weight: 600; padding: 3px 6px; border-radius: 4px; color: #0a0e1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dz-light .dz-cal-shift-count.has { color: #16a34a; }
 
 /* Time Slots */
 .dz-times { margin-top: 20px; }
@@ -4946,12 +4938,13 @@ a.nav-btn-book,
 
 /* Buttons */
 .dz-btn { display: block; width: 100%; padding: 14px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; font-family: inherit; cursor: pointer; text-align: center; text-decoration: none; transition: all 0.2s; }
-.dz-btn-primary { background: #6366f1; color: #fff; border: none; }
-.dz-btn-primary:hover { background: #4f46e5; }
+.dz-btn-primary { background: #6366f1; color: #fff; border: none; box-shadow: 0 0 20px rgba(99,102,241,0.4), 0 0 40px rgba(99,102,241,0.15); }
+.dz-btn-primary:hover { background: #4f46e5; box-shadow: 0 0 25px rgba(99,102,241,0.6), 0 0 50px rgba(99,102,241,0.25); }
 .dz-btn-outline { background: transparent; color: #e4e4ee; border: 1px solid rgba(255,255,255,0.1); }
-.dz-btn-outline:hover { border-color: #6366f1; color: #818cf8; }
-.dz-btn-confirm { background: #6366f1; color: #fff; border: none; margin-top: 16px; }
-.dz-btn-confirm:hover { background: #4f46e5; }
+.dz-btn-outline:hover { border-color: #6366f1; color: #818cf8; box-shadow: 0 0 15px rgba(99,102,241,0.2); }
+.dz-btn-confirm { background: #6366f1; color: #fff; border: none; margin-top: 16px; box-shadow: 0 0 20px rgba(99,102,241,0.4), 0 0 40px rgba(99,102,241,0.15); animation: btnGlow 2s ease-in-out infinite; }
+.dz-btn-confirm:hover { background: #4f46e5; box-shadow: 0 0 30px rgba(99,102,241,0.6), 0 0 60px rgba(99,102,241,0.3); }
+@keyframes btnGlow { 0%, 100% { box-shadow: 0 0 20px rgba(99,102,241,0.4), 0 0 40px rgba(99,102,241,0.15); } 50% { box-shadow: 0 0 30px rgba(99,102,241,0.6), 0 0 60px rgba(99,102,241,0.3); } }
 
 .dz-view-more { text-align: center; margin-top: 16px; font-size: 0.82rem; }
 .dz-view-more a { color: #818cf8; font-weight: 600; text-decoration: underline; }

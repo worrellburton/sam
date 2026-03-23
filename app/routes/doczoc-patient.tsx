@@ -194,9 +194,6 @@ export default function PatientDetailPage() {
           </div>
         </header>
 
-        {/* Surgeries — animated liquid glass hero button */}
-        <SurgeriesButton patient={patient} />
-
         {/* Patient Details — collapsible */}
         <PatientDetailsSection patient={patient} />
 
@@ -212,178 +209,6 @@ export default function PatientDetailPage() {
         {/* Consent & Signatures — at the bottom */}
         <ConsentSection patient={patient} />
       </main>
-    </div>
-  );
-}
-
-// ── Surgeries Button (animated liquid glass) ───────────────────────
-function SurgeriesButton({ patient }: { patient: Patient }) {
-  const surgeries = patient.visits.filter(v => v.type.toLowerCase().includes("surgery"));
-  const [expanded, setExpanded] = useState(false);
-
-  if (surgeries.length === 0) return null;
-
-  const latest = surgeries[0];
-
-  return (
-    <div style={{ marginBottom: 24 }}>
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="dz-surgery-btn"
-        style={{
-          width: "100%", border: "none", cursor: "pointer", textAlign: "left",
-          position: "relative", overflow: "hidden",
-          borderRadius: 16, padding: "24px 28px",
-          background: "linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(168,85,247,0.12) 40%, rgba(99,102,241,0.1) 100%)",
-          backdropFilter: "blur(20px)",
-          isolation: "isolate",
-        }}
-      >
-        {/* Animated border glow */}
-        <div style={{
-          position: "absolute", inset: 0, borderRadius: 16, padding: 1,
-          background: "linear-gradient(135deg, #ef4444, #a855f7, #6366f1, #ec4899, #ef4444)",
-          backgroundSize: "300% 300%",
-          animation: "dz-surgery-border 4s ease infinite",
-          WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          WebkitMaskComposite: "xor" as any,
-          maskComposite: "exclude",
-          pointerEvents: "none",
-          zIndex: 1,
-        }} />
-
-        {/* Shimmer sweep */}
-        <div style={{
-          position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%",
-          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)",
-          animation: "dz-surgery-shimmer 3s ease-in-out infinite",
-          pointerEvents: "none",
-          zIndex: 2,
-        }} />
-
-        {/* Floating glow orbs */}
-        <div style={{
-          position: "absolute", top: -20, right: 60, width: 80, height: 80,
-          borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%)",
-          animation: "dz-surgery-float 6s ease-in-out infinite",
-          pointerEvents: "none",
-        }} />
-        <div style={{
-          position: "absolute", bottom: -10, left: "30%", width: 60, height: 60,
-          borderRadius: "50%", background: "radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 70%)",
-          animation: "dz-surgery-float 5s ease-in-out infinite 1s",
-          pointerEvents: "none",
-        }} />
-
-        {/* Content */}
-        <div style={{ position: "relative", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            {/* Pulsing icon */}
-            <div style={{
-              width: 48, height: 48, borderRadius: 14, flexShrink: 0,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              background: "linear-gradient(135deg, rgba(239,68,68,0.2), rgba(168,85,247,0.2))",
-              border: "1px solid rgba(239,68,68,0.2)",
-              animation: "dz-surgery-pulse 2s ease-in-out infinite",
-            }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-              </svg>
-            </div>
-            <div>
-              <div style={{
-                fontSize: "1rem", fontWeight: 800, color: "#f1f5f9",
-                display: "flex", alignItems: "center", gap: 8,
-              }}>
-                Surgeries
-                <span style={{
-                  fontSize: "0.68rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20,
-                  background: "linear-gradient(135deg, rgba(239,68,68,0.25), rgba(168,85,247,0.25))",
-                  color: "#f87171",
-                }}>
-                  {surgeries.length}
-                </span>
-              </div>
-              <div style={{ fontSize: "0.82rem", color: "#94a3b8", marginTop: 2 }}>
-                {latest.type} &middot; {latest.date}
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Link
-              to="/doczoc/in-person"
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "8px 16px", borderRadius: 10,
-                background: "linear-gradient(135deg, #ef4444, #a855f7)",
-                color: "#fff", fontSize: "0.78rem", fontWeight: 700,
-                textDecoration: "none",
-                boxShadow: "0 0 20px rgba(239,68,68,0.3), 0 0 40px rgba(168,85,247,0.15)",
-                transition: "transform 0.2s, box-shadow 0.2s",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; e.currentTarget.style.boxShadow = "0 0 30px rgba(239,68,68,0.5), 0 0 60px rgba(168,85,247,0.25)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = "0 0 20px rgba(239,68,68,0.3), 0 0 40px rgba(168,85,247,0.15)"; }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-              </svg>
-              Operative Report
-            </Link>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-              style={{ transition: "transform 0.2s", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}>
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </div>
-        </div>
-      </button>
-
-      {/* Expanded surgery details */}
-      {expanded && (
-        <div style={{
-          marginTop: -8, padding: "24px 28px 20px",
-          borderRadius: "0 0 16px 16px",
-          background: "rgba(15,23,42,0.5)",
-          border: "1px solid rgba(239,68,68,0.1)",
-          borderTop: "none",
-          backdropFilter: "blur(12px)",
-        }}>
-          {surgeries.map((s, i) => (
-            <div key={i} style={{
-              display: "flex", gap: 14, alignItems: "flex-start",
-              padding: "12px 0",
-              borderBottom: i < surgeries.length - 1 ? "1px solid rgba(99,102,241,0.08)" : "none",
-            }}>
-              <div style={{
-                width: 8, height: 8, borderRadius: "50%", marginTop: 6, flexShrink: 0,
-                background: "linear-gradient(135deg, #ef4444, #a855f7)",
-                boxShadow: "0 0 8px rgba(239,68,68,0.4)",
-              }} />
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 4 }}>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f1f5f9" }}>{s.type}</span>
-                  <span style={{ fontSize: "0.75rem", color: "#818cf8", fontWeight: 600 }}>{s.date}</span>
-                </div>
-                <p style={{ fontSize: "0.78rem", color: "#94a3b8", lineHeight: 1.5, margin: 0 }}>{s.notes}</p>
-                {s.codes.length > 0 && (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 6 }}>
-                    {s.codes.map((code) => (
-                      <span key={code} style={{
-                        fontSize: "0.68rem", fontFamily: "'SF Mono', Consolas, monospace",
-                        padding: "2px 7px", borderRadius: 4, fontWeight: 600,
-                        background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
-                        color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
-                      }}>
-                        {code}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -424,6 +249,24 @@ function PatientDetailsSection({ patient }: { patient: Patient }) {
                 </>
               )}
               {patient.primaryLanguage && <InfoRow label="Language" value={patient.primaryLanguage} />}
+              <div style={{ borderTop: "1px solid rgba(99,102,241,0.1)", margin: "8px 0 4px" }} />
+              <button
+                onClick={() => {
+                  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Driver's License — ${patient.name}</title><style>*{margin:0;padding:0;box-sizing:border-box}@page{size:landscape;margin:0.5in}body{font-family:'Helvetica Neue',Arial,sans-serif;padding:0.5in}.card{width:500px;border:2px solid #1e40af;border-radius:12px;padding:24px;background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%)}.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #93c5fd}.card-header h2{font-size:13pt;color:#1e40af}.row{display:flex;justify-content:space-between;margin-bottom:6px}.label{font-size:8pt;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}.value{font-size:10pt;color:#1e293b;font-weight:700}</style></head><body><div class="card"><div class="card-header"><h2>NEW YORK STATE</h2><span style="font-size:8pt;color:#64748b;font-weight:700">DRIVER LICENSE</span></div><div class="row"><span class="label">Name</span><span class="value">${patient.name}</span></div><div class="row"><span class="label">Date of Birth</span><span class="value">${patient.dob}</span></div><div class="row"><span class="label">Sex</span><span class="value">${patient.sex}</span></div><div class="row"><span class="label">Address</span><span class="value">${patient.address}</span></div><div class="row"><span class="label">License No.</span><span class="value">DL-${patient.memberId.replace(/[^0-9]/g, "").slice(0, 9)}</span></div><div class="row"><span class="label">Expires</span><span class="value">${patient.dob.split("/")[0]}/${patient.dob.split("/")[1]}/2030</span></div></div></body></html>`;
+                  const win = window.open("", "_blank"); if (!win) return; win.document.write(html); win.document.close(); setTimeout(() => win.print(), 400);
+                }}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 5,
+                  padding: "5px 10px", borderRadius: 6, border: "1px solid rgba(30,64,175,0.2)",
+                  background: "rgba(30,64,175,0.08)", color: "#60a5fa",
+                  fontSize: "0.72rem", fontWeight: 700, cursor: "pointer", marginTop: 4,
+                }}
+              >
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2" /><circle cx="8" cy="12" r="2" /><line x1="14" y1="10" x2="20" y2="10" /><line x1="14" y1="14" x2="18" y2="14" />
+                </svg>
+                Driver's License
+              </button>
             </CopyableCard>
 
             {/* Insurance */}
@@ -450,16 +293,16 @@ function PatientDetailsSection({ patient }: { patient: Patient }) {
               <button
                 onClick={() => generateInsuranceCardPDF(patient)}
                 style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  padding: "6px 12px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.2)",
+                  display: "inline-flex", alignItems: "center", gap: 5,
+                  padding: "5px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.2)",
                   background: "rgba(99,102,241,0.08)", color: "#818cf8",
-                  fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", marginTop: 4,
+                  fontSize: "0.72rem", fontWeight: 700, cursor: "pointer", marginTop: 4,
                 }}
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" />
                 </svg>
-                View Insurance Card PDF
+                Insurance Card
               </button>
             </CopyableCard>
 
@@ -767,6 +610,9 @@ function CollapsibleHeader({ title, icon, count, countLabel, open, onToggle }: {
 // ── Invoices Section ───────────────────────────────────────────────
 function InvoicesSection({ patient }: { patient: Patient }) {
   const [open, setOpen] = useState(false);
+  const totalCharged = patient.invoices.reduce((s, i) => s + i.totalCharged, 0);
+  const totalInsurancePaid = patient.invoices.reduce((s, i) => s + i.insurancePaid, 0);
+  const totalPatientOwes = patient.invoices.reduce((s, i) => s + i.patientOwes, 0);
 
   return (
     <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
@@ -779,87 +625,101 @@ function InvoicesSection({ patient }: { patient: Patient }) {
         onToggle={() => setOpen(!open)}
       />
       {open && (
-        <>
-          <div className="dz-table-wrap">
-            <table className="dz-table" style={{ margin: 0 }}>
-              <thead>
-                <tr>
-                  <th>Invoice</th>
-                  <th>Date</th>
-                  <th>Description</th>
-                  <th style={{ textAlign: "right" }}>Charged</th>
-                  <th style={{ textAlign: "right" }}>Insurance Paid</th>
-                  <th style={{ textAlign: "right" }}>Deductible</th>
-                  <th style={{ textAlign: "right" }}>Copay</th>
-                  <th style={{ textAlign: "right" }}>Patient Owes</th>
-                  <th>Status</th>
-                  <th style={{ textAlign: "center" }}>PDF</th>
-                </tr>
-              </thead>
-              <tbody>
-                {patient.invoices.map((inv) => {
-                  const invStatusColors: Record<string, { bg: string; color: string }> = {
-                    Paid: { bg: "rgba(34,197,94,0.12)", color: "#22c55e" },
-                    Pending: { bg: "rgba(251,191,36,0.12)", color: "#fbbf24" },
-                    Overdue: { bg: "rgba(239,68,68,0.12)", color: "#f87171" },
-                    "Insurance Processing": { bg: "rgba(99,102,241,0.12)", color: "#818cf8" },
-                  };
-                  const isc = invStatusColors[inv.status] || invStatusColors.Pending;
-                  return (
-                    <tr key={inv.id} onClick={() => generateInvoicePDF(inv, patient)} style={{ cursor: "pointer" }} title={`Click to view ${inv.id} PDF`}>
-                      <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.75rem", fontWeight: 600, color: "#818cf8" }}>{inv.id}</td>
-                      <td style={{ whiteSpace: "nowrap", fontSize: "0.82rem" }}>{inv.date}</td>
-                      <td style={{ fontSize: "0.82rem", maxWidth: 260 }}>{inv.description}</td>
-                      <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", fontWeight: 600 }}>${inv.totalCharged.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
-                      <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", color: "#22c55e" }}>${inv.insurancePaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
-                      <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", color: "#f59e0b" }}>${inv.deductibleApplied.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
-                      <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem" }}>${inv.copay.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
-                      <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", fontWeight: 700 }}>${inv.patientOwes.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
-                      <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.7rem", fontWeight: 700, background: isc.bg, color: isc.color, whiteSpace: "nowrap" }}>{inv.status}</span></td>
-                      <td style={{ textAlign: "center" }}>
-                        <span style={{
-                          display: "inline-flex", alignItems: "center", gap: 4,
-                          padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.2)",
-                          background: "rgba(99,102,241,0.08)", color: "#818cf8",
-                          fontSize: "0.7rem", fontWeight: 700,
-                        }}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-                          </svg>
-                          PDF
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        <div style={{ padding: "16px 20px" }}>
+          {/* Invoice document cards row */}
+          <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 8 }}>
+            {patient.invoices.map((inv) => {
+              const isPaid = inv.status === "Paid";
+              const isOverdue = inv.status === "Overdue";
+              const statusColor = isPaid ? "#22c55e" : isOverdue ? "#ef4444" : "#f59e0b";
+              const statusLabel = isPaid ? "Paid" : isOverdue ? "Outstanding" : inv.status === "Insurance Processing" ? "Processing" : "Outstanding";
+              return (
+                <button
+                  key={inv.id}
+                  onClick={() => generateInvoicePDF(inv, patient)}
+                  style={{
+                    flexShrink: 0, width: 160, padding: "16px 14px",
+                    borderRadius: 12, border: `1px solid ${statusColor}22`,
+                    background: `${statusColor}06`, cursor: "pointer",
+                    display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
+                    transition: "all 0.15s", textAlign: "center",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${statusColor}44`; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = `${statusColor}22`; e.currentTarget.style.transform = "translateY(0)"; }}
+                  title={`View ${inv.id} PDF`}
+                >
+                  {/* PDF icon */}
+                  <div style={{
+                    width: 40, height: 48, borderRadius: 6, position: "relative",
+                    background: `${statusColor}12`, border: `1px solid ${statusColor}20`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={statusColor} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    {/* Corner fold */}
+                    <div style={{
+                      position: "absolute", top: 0, right: 0, width: 12, height: 12,
+                      borderBottomLeft: `1px solid ${statusColor}30`,
+                      background: `linear-gradient(135deg, transparent 50%, ${statusColor}15 50%)`,
+                      borderRadius: "0 6px 0 0",
+                    }} />
+                  </div>
+
+                  {/* Invoice ID */}
+                  <div style={{
+                    fontSize: "0.72rem", fontWeight: 700,
+                    fontFamily: "'SF Mono', Consolas, monospace",
+                    color: "#a5b4fc",
+                  }}>{inv.id}</div>
+
+                  {/* Amount */}
+                  <div style={{
+                    fontSize: "0.88rem", fontWeight: 800,
+                    fontFamily: "'SF Mono', Consolas, monospace",
+                    color: "#e2e8f0",
+                  }}>${inv.totalCharged.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+
+                  {/* Status badge */}
+                  <span style={{
+                    fontSize: "0.65rem", fontWeight: 700, padding: "2px 10px", borderRadius: 20,
+                    background: `${statusColor}18`, color: statusColor,
+                  }}>
+                    {statusLabel}
+                  </span>
+
+                  {/* Date */}
+                  <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{inv.date}</div>
+                </button>
+              );
+            })}
           </div>
-          {/* Totals */}
+
+          {/* Totals bar */}
           <div style={{
-            padding: "14px 20px", borderTop: "1px solid rgba(99,102,241,0.1)",
             display: "flex", justifyContent: "flex-end", gap: 32, flexWrap: "wrap",
+            marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(99,102,241,0.1)",
           }}>
             <div style={{ textAlign: "right" }}>
               <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Total Charged</div>
               <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace" }}>
-                ${patient.invoices.reduce((s, i) => s + i.totalCharged, 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                ${totalCharged.toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
               <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Insurance Paid</div>
               <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace", color: "#22c55e" }}>
-                ${patient.invoices.reduce((s, i) => s + i.insurancePaid, 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                ${totalInsurancePaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
               <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Patient Owes</div>
               <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace", color: "#f59e0b" }}>
-                ${patient.invoices.reduce((s, i) => s + i.patientOwes, 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                ${totalPatientOwes.toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
@@ -868,6 +728,7 @@ function InvoicesSection({ patient }: { patient: Patient }) {
 // ── Documents Section ──────────────────────────────────────────────
 function DocumentsSection({ patient }: { patient: Patient }) {
   const [open, setOpen] = useState(true);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [dragOver, setDragOver] = useState(false);
   const [uploadedDocs, setUploadedDocs] = useState<{ name: string; size: string; date: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -914,96 +775,145 @@ function DocumentsSection({ patient }: { patient: Patient }) {
     return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>;
   };
 
+  const allDocs = [
+    ...builtInDocs.map(d => ({ ...d, size: "", date: "" })),
+    ...uploadedDocs.map(d => ({ name: d.name, type: "file", icon: "file", color: "#a78bfa", onClick: () => {}, size: d.size, date: d.date })),
+  ];
+
   return (
     <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
-      <CollapsibleHeader
-        title="Documents"
-        icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>}
-        count={totalDocs}
-        countLabel="documents"
-        open={open}
-        onToggle={() => setOpen(!open)}
-      />
-      {open && (
-        <div style={{ padding: "16px 20px" }}>
-          {/* Document grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10, marginBottom: 16 }}>
-            {builtInDocs.map((doc, i) => (
-              <button
-                key={i}
-                onClick={doc.onClick}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, padding: "12px 14px",
-                  borderRadius: 10, border: "1px solid rgba(99,102,241,0.12)",
-                  background: "rgba(99,102,241,0.04)", cursor: "pointer",
-                  textAlign: "left", width: "100%",
-                  transition: "all 0.15s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)"; e.currentTarget.style.background = "rgba(99,102,241,0.08)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(99,102,241,0.12)"; e.currentTarget.style.background = "rgba(99,102,241,0.04)"; }}
-                title={`View ${doc.name} PDF`}
-              >
-                <div style={{
-                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  background: `${doc.color}18`, color: doc.color,
-                }}>
-                  {docIcon(doc.icon)}
-                </div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
-                  <div style={{ fontSize: "0.68rem", color: "#64748b" }}>PDF</div>
-                </div>
+      <button
+        onClick={() => setOpen(!open)}
+        style={{
+          padding: "16px 20px", borderBottom: open ? "1px solid rgba(99,102,241,0.1)" : "none",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          width: "100%", background: "none", border: "none", cursor: "pointer",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>
+          <span className="dz-text-primary" style={{ fontWeight: 700, fontSize: "0.88rem" }}>Documents</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* View toggle buttons */}
+          {open && (
+            <div style={{ display: "flex", gap: 2, marginRight: 8 }} onClick={e => e.stopPropagation()}>
+              <button onClick={() => setViewMode("grid")} style={{
+                padding: "4px 6px", borderRadius: "4px 0 0 4px", border: "none", cursor: "pointer",
+                background: viewMode === "grid" ? "rgba(99,102,241,0.15)" : "rgba(148,163,184,0.06)",
+                color: viewMode === "grid" ? "#818cf8" : "#64748b",
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
               </button>
-            ))}
-            {uploadedDocs.map((doc, i) => (
-              <div
-                key={`upload-${i}`}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, padding: "12px 14px",
-                  borderRadius: 10, border: "1px solid rgba(99,102,241,0.12)",
-                  background: "rgba(99,102,241,0.04)",
-                }}
-              >
-                <div style={{
-                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(167,139,250,0.15)", color: "#a78bfa",
-                }}>
-                  {docIcon("file")}
-                </div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
-                  <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{doc.size} &middot; {doc.date}</div>
-                </div>
+              <button onClick={() => setViewMode("list")} style={{
+                padding: "4px 6px", borderRadius: "0 4px 4px 0", border: "none", cursor: "pointer",
+                background: viewMode === "list" ? "rgba(99,102,241,0.15)" : "rgba(148,163,184,0.06)",
+                color: viewMode === "list" ? "#818cf8" : "#64748b",
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
+              </button>
+            </div>
+          )}
+          <span className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>{totalDocs} documents</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </div>
+      </button>
+      {open && (
+        <div style={{ display: "flex", gap: 0 }}>
+          {/* Left: Grid or drag zone */}
+          <div style={{ flex: 1, padding: "16px 20px", borderRight: viewMode === "list" ? "1px solid rgba(99,102,241,0.08)" : "none" }}>
+            {viewMode === "grid" && (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10, marginBottom: 16 }}>
+                {builtInDocs.map((doc, i) => (
+                  <button
+                    key={i}
+                    onClick={doc.onClick}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 10, padding: "12px 14px",
+                      borderRadius: 10, border: "1px solid rgba(99,102,241,0.12)",
+                      background: "rgba(99,102,241,0.04)", cursor: "pointer",
+                      textAlign: "left", width: "100%", transition: "all 0.15s",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)"; e.currentTarget.style.background = "rgba(99,102,241,0.08)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(99,102,241,0.12)"; e.currentTarget.style.background = "rgba(99,102,241,0.04)"; }}
+                    title={`View ${doc.name} PDF`}
+                  >
+                    <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: `${doc.color}18`, color: doc.color }}>
+                      {docIcon(doc.icon)}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
+                      <div style={{ fontSize: "0.68rem", color: "#64748b" }}>PDF</div>
+                    </div>
+                  </button>
+                ))}
+                {uploadedDocs.map((doc, i) => (
+                  <div key={`upload-${i}`} style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 14px", borderRadius: 10, border: "1px solid rgba(99,102,241,0.12)", background: "rgba(99,102,241,0.04)" }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}>{docIcon("file")}</div>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
+                      <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{doc.size} &middot; {doc.date}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+
+            {/* Drag-and-drop zone */}
+            <div
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              style={{
+                border: `2px dashed ${dragOver ? "#818cf8" : "rgba(99,102,241,0.2)"}`,
+                borderRadius: 10, padding: viewMode === "list" ? "16px 20px" : "24px 20px", textAlign: "center",
+                cursor: "pointer", transition: "all 0.2s",
+                background: dragOver ? "rgba(99,102,241,0.08)" : "transparent",
+              }}
+            >
+              <input ref={fileInputRef} type="file" multiple onChange={handleFileInput} style={{ display: "none" }} />
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={dragOver ? "#818cf8" : "#64748b"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 8 }}>
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <div style={{ fontSize: "0.82rem", fontWeight: 600, color: dragOver ? "#818cf8" : "#94a3b8" }}>
+                Drag & drop files here or click to upload
+              </div>
+              <div style={{ fontSize: "0.72rem", color: "#64748b", marginTop: 4 }}>PDF, images, or documents</div>
+            </div>
           </div>
 
-          {/* Drag-and-drop zone */}
-          <div
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            style={{
-              border: `2px dashed ${dragOver ? "#818cf8" : "rgba(99,102,241,0.2)"}`,
-              borderRadius: 10, padding: "24px 20px", textAlign: "center",
-              cursor: "pointer", transition: "all 0.2s",
-              background: dragOver ? "rgba(99,102,241,0.08)" : "transparent",
-            }}
-          >
-            <input ref={fileInputRef} type="file" multiple onChange={handleFileInput} style={{ display: "none" }} />
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={dragOver ? "#818cf8" : "#64748b"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 8 }}>
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            <div style={{ fontSize: "0.82rem", fontWeight: 600, color: dragOver ? "#818cf8" : "#94a3b8" }}>
-              Drag & drop files here or click to upload
+          {/* Right: List view */}
+          {viewMode === "list" && (
+            <div style={{ width: 300, padding: "12px 16px", overflowY: "auto", maxHeight: 400 }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>All Documents</div>
+              {allDocs.map((doc, i) => (
+                <button
+                  key={i}
+                  onClick={doc.onClick}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 10, padding: "8px 10px",
+                    borderRadius: 8, border: "none", width: "100%", textAlign: "left",
+                    background: "transparent", cursor: "pointer", transition: "background 0.15s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(99,102,241,0.06)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                >
+                  <div style={{ width: 28, height: 28, borderRadius: 6, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: `${doc.color}15`, color: doc.color }}>
+                    {docIcon(doc.icon)}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
+                    <div style={{ fontSize: "0.65rem", color: "#64748b" }}>{doc.size || "PDF"}{doc.date ? ` · ${doc.date}` : ""}</div>
+                  </div>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              ))}
             </div>
-            <div style={{ fontSize: "0.72rem", color: "#64748b", marginTop: 4 }}>
-              PDF, images, or documents
-            </div>
-          </div>
+          )}
         </div>
       )}
     </div>

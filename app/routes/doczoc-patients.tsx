@@ -21,17 +21,20 @@ function InsuranceLogo({ name }: { name: string }) {
     : name.toLowerCase().includes("blue cross") ? "bcbs.com"
     : name.toLowerCase().includes("medicare") ? "medicare.gov"
     : null;
+  const [imgFailed, setImgFailed] = useState(false);
+  const logoUrl = domain ? `https://img.logo.dev/${domain}?token=pk_a8CO3SJdRhOFUZlNgTmVcQ&size=80&format=png` : null;
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }} title={name}>
-      {domain ? (
+      {logoUrl && !imgFailed ? (
         <img
-          src={`https://logo.clearbit.com/${domain}?size=40`}
+          src={logoUrl}
           alt={name}
-          style={{ width: 24, height: 24, borderRadius: 4, objectFit: "contain" }}
-          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; (e.target as HTMLImageElement).nextElementSibling && ((e.target as HTMLImageElement).nextElementSibling as HTMLElement).style.removeProperty("display"); }}
+          style={{ width: 28, height: 28, borderRadius: 6, objectFit: "contain", background: "#fff", padding: 2 }}
+          onError={() => setImgFailed(true)}
         />
-      ) : null}
-      <span style={{ display: domain ? "none" : "flex", width: 24, height: 24, borderRadius: 4, background: brand.bg, color: brand.color, alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 800, flexShrink: 0 }}>{brand.initial}</span>
+      ) : (
+        <span style={{ display: "flex", width: 28, height: 28, borderRadius: 6, background: brand.bg, color: brand.color, alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 800, flexShrink: 0 }}>{brand.initial}</span>
+      )}
     </div>
   );
 }

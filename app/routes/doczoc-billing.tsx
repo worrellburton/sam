@@ -673,7 +673,7 @@ export default function BillingPage() {
           {/* Visit list */}
           <div className="dz-billing-list">
             <div className="dz-billing-list-header">
-              <span>Recent Visits</span>
+              <span>Claims in Progress</span>
               <span style={{ fontSize: "0.68rem", color: "#5a5a6e" }}>{VISITS.length} visits</span>
             </div>
             {VISITS.map((v) => (

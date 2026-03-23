@@ -37,8 +37,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Copy 404.html for SPA routing
-        run: cp build/client/index.html build/client/404.html
+      - name: Copy SPA fallback to 404.html for client-side routing
+        run: cp build/client/__spa-fallback.html build/client/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

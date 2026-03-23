@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
+import { seoMeta } from "~/seo";
 
 export function meta() {
-  return [
-    { title: "FAQ | Dr. Sam Elguizaoui, M.D." },
-    { name: "description", content: "Find answers to common questions about Dr. Elguizaoui's practice, treatments, insurance, and what to expect at your appointment." },
-  ];
+  return seoMeta({
+    title: "FAQ | Dr. Sam Elguizaoui, M.D.",
+    description: "Find answers to common questions about Dr. Elguizaoui's practice, treatments, insurance, and what to expect at your appointment.",
+    path: "/faq",
+  });
 }
 
 const faqs = [

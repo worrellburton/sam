@@ -2,12 +2,14 @@ import { Link } from "react-router";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
 import { Insurance } from "~/components/Insurance";
+import { seoMeta } from "~/seo";
 
 export function meta() {
-  return [
-    { title: "About Dr. Sam Elguizaoui | Orthopedic Surgeon NYC" },
-    { name: "description", content: "Dr. Sameh Elguizaoui is a fellowship-trained orthopedic surgeon in NYC specializing in Sports Medicine, Joint Preservation, and Cartilage Repair. Former NY Jets & NY Islanders team physician." },
-  ];
+  return seoMeta({
+    title: "About Dr. Sam Elguizaoui | Orthopedic Surgeon NYC",
+    description: "Dr. Sameh Elguizaoui is a fellowship-trained orthopedic surgeon in NYC specializing in Sports Medicine, Joint Preservation, and Cartilage Repair. Former NY Jets & NY Islanders team physician.",
+    path: "/about",
+  });
 }
 
 const timeline = [

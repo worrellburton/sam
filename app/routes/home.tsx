@@ -7,16 +7,14 @@ import { Insurance } from "~/components/Insurance";
 import { services } from "~/data/services";
 import { blogPosts } from "~/data/blog";
 import { SpecialtyCanvas } from "~/components/SpecialtyCanvas";
+import { seoMeta } from "~/seo";
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Sameh Elguizaoui, M.D. | Orthopedic Surgeon & Sports Medicine | NYC" },
-    {
-      name: "description",
-      content:
-        "Board-certified orthopedic surgeon Dr. Sameh Elguizaoui specializes in sports medicine, knee & shoulder surgery, and cartilage repair in NYC. 1,400+ reviews.",
-    },
-  ];
+  return seoMeta({
+    title: "Sameh Elguizaoui, M.D. | Orthopedic Surgeon & Sports Medicine | NYC",
+    description: "Board-certified orthopedic surgeon Dr. Sameh Elguizaoui specializes in sports medicine, knee & shoulder surgery, and cartilage repair in NYC. 1,400+ reviews.",
+    path: "/",
+  });
 }
 
 const tickerItems = [

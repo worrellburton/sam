@@ -2,13 +2,16 @@ import { Link, useParams } from "react-router";
 import { getConditionBySlug, conditions } from "~/data/conditions";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
+import { seoMeta } from "~/seo";
 
 export function meta({ params }: { params: { slug: string } }) {
   const condition = getConditionBySlug(params.slug);
-  return [
-    { title: `${condition?.title || "Condition"} | Dr. Sam Elguizaoui, M.D.` },
-    { name: "description", content: condition?.overview.slice(0, 160) },
-  ];
+  if (!condition) return [{ title: "Condition Not Found" }];
+  return seoMeta({
+    title: `${condition.title} | Dr. Sam Elguizaoui, M.D.`,
+    description: condition.overview.slice(0, 160),
+    path: `/conditions/${params.slug}`,
+  });
 }
 
 export default function ConditionPage() {

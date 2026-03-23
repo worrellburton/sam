@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
+import { seoMeta } from "~/seo";
 
 export function meta() {
-  return [
-    { title: "Patient Reviews | Dr. Sam Elguizaoui, M.D." },
-    { name: "description", content: "Read patient reviews for Dr. Sameh Elguizaoui. 4.8/5 stars with 1,400+ reviews." },
-  ];
+  return seoMeta({
+    title: "Patient Reviews | Dr. Sam Elguizaoui, M.D.",
+    description: "Read patient reviews for Dr. Sameh Elguizaoui. 4.8/5 stars with 1,400+ reviews across Zocdoc, Google, Healthgrades, and Vitals.",
+    path: "/reviews",
+  });
 }
 
 const platforms = [

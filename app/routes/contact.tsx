@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Locations } from "~/components/Locations";
 import { GetStarted } from "~/components/GetStarted";
+import { seoMeta } from "~/seo";
 
 export function meta() {
-  return [
-    { title: "Contact | Dr. Sam Elguizaoui, M.D." },
-    { name: "description", content: "Contact Dr. Sameh Elguizaoui's orthopedic surgery offices in Manhattan, Brooklyn, and Scarsdale." },
-  ];
+  return seoMeta({
+    title: "Contact | Dr. Sam Elguizaoui, M.D.",
+    description: "Contact Dr. Sameh Elguizaoui's orthopedic surgery offices in Manhattan, Brooklyn, and Scarsdale. Call (212) 828-3838 to schedule your appointment today.",
+    path: "/contact",
+  });
 }
 
 export default function ContactPage() {

@@ -4,6 +4,7 @@ import { conditionToBlogSlug } from "~/data/condition-blogs";
 import { SpecialtyCanvas } from "~/components/SpecialtyCanvas";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
+import { seoMeta } from "~/seo";
 
 const serviceStats: Record<string, { stat: string; label: string }[]> = {
   "sports-medicine": [
@@ -40,10 +41,12 @@ const serviceStats: Record<string, { stat: string; label: string }[]> = {
 
 export function meta({ params }: { params: { slug: string } }) {
   const service = getServiceBySlug(params.slug);
-  return [
-    { title: service ? `${service.title} | Dr. Sam Elguizaoui, M.D.` : "Service Not Found" },
-    { name: "description", content: service?.description || "" },
-  ];
+  if (!service) return [{ title: "Service Not Found" }];
+  return seoMeta({
+    title: `${service.title} | Dr. Sam Elguizaoui, M.D.`,
+    description: service.description,
+    path: `/services/${service.slug}`,
+  });
 }
 
 export default function ServicePage() {

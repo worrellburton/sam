@@ -2,12 +2,14 @@ import { Link } from "react-router";
 import { allBlogPosts } from "~/data/blog";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
+import { seoMeta } from "~/seo";
 
 export function meta() {
-  return [
-    { title: "Blog | Dr. Sam Elguizaoui, M.D." },
-    { name: "description", content: "Expert tips on joint health, recovery, and sports medicine from Dr. Elguizaoui." },
-  ];
+  return seoMeta({
+    title: "Blog | Dr. Sam Elguizaoui, M.D.",
+    description: "Expert tips on joint health, recovery, and sports medicine from Dr. Elguizaoui. Read about ACL tears, cartilage repair, PRP therapy, and more.",
+    path: "/blog",
+  });
 }
 
 export default function BlogPage() {

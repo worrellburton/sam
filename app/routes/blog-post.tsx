@@ -4,13 +4,18 @@ import { getBlogPostBySlug } from "~/data/blog";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
 import { useElevenLabs } from "~/hooks/useElevenLabs";
+import { seoMeta } from "~/seo";
 
 export function meta({ params }: { params: { slug: string } }) {
   const post = getBlogPostBySlug(params.slug);
-  return [
-    { title: post ? `${post.title} | Dr. Sam Elguizaoui` : "Post Not Found" },
-    { name: "description", content: post?.excerpt || "" },
-  ];
+  if (!post) return [{ title: "Post Not Found" }];
+  return seoMeta({
+    title: `${post.title} | Dr. Sam Elguizaoui`,
+    description: post.excerpt,
+    path: `/blog/${post.slug}`,
+    image: post.image,
+    type: "article",
+  });
 }
 
 // ── Audio Player ────────────────────────────────────────────────────

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://worrellburton.github.io/sam/sitemap.xml
+
+# Disallow admin and internal pages
+Disallow: /sam/doczoc/
+Disallow: /sam/dev
+Disallow: /sam/webgl
+Disallow: /sam/admin.html

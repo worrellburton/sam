@@ -6651,10 +6651,10 @@ img.insurance-logo:hover {
   transform: scale(1.08);
 }
 [data-theme="light"] .dz-theme-fab {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(99, 102, 241, 0.2);
-  color: #6366f1;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(99, 102, 241, 0.25);
+  color: #a5b4fc;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .dz-platform-bg {

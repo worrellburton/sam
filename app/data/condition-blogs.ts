@@ -8,6 +8,7 @@ export const conditionToBlogSlug: Record<string, string> = {
   "Tennis and golfer's elbow": "tennis-elbow-golfers-elbow-guide",
   "Stress fractures": "stress-fractures-guide",
   "Chronic joint pain": "chronic-joint-pain-guide",
+  "Loose body removal": "loose-bodies-in-joints-guide",
 };
 
 export const conditionBlogPosts: BlogPost[] = [
@@ -2093,6 +2094,332 @@ export const conditionBlogPosts: BlogPost[] = [
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
     <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert chronic joint pain treatment and regenerative medicine for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
+  </div>
+</div>
+`,
+  },
+  {
+    slug: "loose-bodies-in-joints-guide",
+    title: "Loose Bodies in Joints: When Something Doesn't Feel Right",
+    excerpt:
+      "If your knee or shoulder catches, locks, or feels like something is floating around inside — you may have a loose body. Learn what causes them, how they're diagnosed, and why arthroscopic removal is so effective.",
+    tag: "Arthroscopic Surgery",
+    date: "March 23, 2026",
+    readTime: "9 min read",
+    image:
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Active person holding their knee representing joint discomfort from loose bodies",
+    relatedService: "arthroscopic-surgery",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what-are">What Are Loose Bodies?</a></li>
+    <li><a href="#causes">What Causes Them</a></li>
+    <li><a href="#symptoms">Signs & Symptoms</a></li>
+    <li><a href="#diagnosis">How We Diagnose Loose Bodies</a></li>
+    <li><a href="#treatment">Treatment Options</a></li>
+    <li><a href="#arthroscopic">Arthroscopic Removal — How It Works</a></li>
+    <li><a href="#success">Success Rates & Outcomes</a></li>
+    <li><a href="#recovery">Recovery Timeline</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If your joint has been catching, locking, or giving you that unsettling feeling that something is moving around inside — you're not imagining it. Loose bodies are a real and treatable condition, and the relief after removal is often dramatic. Let's walk through what's happening and how we can help.</p>
+</div>
+
+<h2 id="what-are">What Are Loose Bodies?</h2>
+
+<p>Loose bodies are small fragments of bone, cartilage, or other tissue that float freely inside a joint. They can be as small as a grain of rice or as large as a marble — and even tiny fragments can cause significant symptoms when they get caught between the joint surfaces.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop&q=80" alt="Active person holding knee representing joint discomfort" loading="lazy" />
+
+<p>Think of it like a pebble in your shoe — except the "pebble" is inside your joint. When it drifts into a tight space between the bones, it can cause sudden, sharp pain, locking (where the joint gets stuck), or a catching sensation. When it floats to a roomier part of the joint, symptoms may temporarily disappear — which is why this condition can be so confusing.</p>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">95%+</span>
+    <span class="blog-stat-label">success rate for arthroscopic loose body removal</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">30-60 min</span>
+    <span class="blog-stat-label">Typical procedure time</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">2-4 wk</span>
+    <span class="blog-stat-label">Return to most daily activities</span>
+  </div>
+</div>
+
+<h2 id="causes">What Causes Loose Bodies?</h2>
+
+<p>Loose bodies can form through several different mechanisms. Understanding the cause helps guide treatment and prevent recurrence.</p>
+
+<div class="blog-chart">
+  <h4>Common Causes of Loose Bodies</h4>
+  <svg viewBox="0 0 460 310" xmlns="http://www.w3.org/2000/svg">
+    <!-- Central joint icon -->
+    <circle cx="230" cy="130" r="40" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+    <ellipse cx="220" cy="125" rx="14" ry="18" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+    <ellipse cx="240" cy="135" rx="14" ry="18" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+    <!-- Small loose body fragments -->
+    <circle cx="228" cy="128" r="3" fill="#f87171"/>
+    <circle cx="235" cy="138" r="2" fill="#f87171"/>
+
+    <!-- Cause 1: Top left -->
+    <line x1="195" y1="100" x2="100" y2="45" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="5" y="15" width="155" height="55" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+    <text x="82" y="38" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b" font-family="Inter, sans-serif">Osteoarthritis</text>
+    <text x="82" y="53" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">Worn cartilage breaks off into</text>
+    <text x="82" y="63" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">fragments — the most common cause</text>
+
+    <!-- Cause 2: Top right -->
+    <line x1="265" y1="100" x2="360" y2="45" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="300" y="15" width="155" height="55" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+    <text x="377" y="38" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af" font-family="Inter, sans-serif">Trauma / Injury</text>
+    <text x="377" y="53" text-anchor="middle" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">Impact chips a piece of bone or</text>
+    <text x="377" y="63" text-anchor="middle" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">cartilage free during a fall or twist</text>
+
+    <!-- Cause 3: Bottom left -->
+    <line x1="195" y1="160" x2="100" y2="215" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="5" y="195" width="155" height="55" rx="8" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="82" y="218" text-anchor="middle" font-size="10" font-weight="700" fill="#5b21b6" font-family="Inter, sans-serif">Osteochondritis</text>
+    <text x="82" y="229" text-anchor="middle" font-size="10" font-weight="700" fill="#5b21b6" font-family="Inter, sans-serif">Dissecans (OCD)</text>
+    <text x="82" y="243" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">Bone/cartilage separates from</text>
+
+    <!-- Cause 4: Bottom right -->
+    <line x1="265" y1="160" x2="360" y2="215" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="300" y="195" width="155" height="55" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="377" y="218" text-anchor="middle" font-size="10" font-weight="700" fill="#166534" font-family="Inter, sans-serif">Synovial</text>
+    <text x="377" y="229" text-anchor="middle" font-size="10" font-weight="700" fill="#166534" font-family="Inter, sans-serif">Chondromatosis</text>
+    <text x="377" y="243" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">Joint lining produces cartilage</text>
+
+    <text x="230" y="290" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Identifying the underlying cause is key to preventing recurrence</text>
+  </svg>
+</div>
+
+<p><strong>Osteoarthritis</strong> is the most common source — as cartilage wears down, small pieces can break off and float in the joint. <strong>Traumatic injuries</strong> (like a hard fall or sports collision) can chip fragments from bone or cartilage. <strong>Osteochondritis dissecans (OCD)</strong> is a condition where a segment of bone and its overlying cartilage separates due to reduced blood supply — more common in younger, active patients. And <strong>synovial chondromatosis</strong> is a rare condition where the joint lining itself produces multiple cartilaginous loose bodies.</p>
+
+<h2 id="symptoms">Signs & Symptoms</h2>
+
+<p>Loose bodies have a distinctive pattern of symptoms that can help your doctor identify the problem:</p>
+
+<div class="blog-takeaway">
+  <h4>Classic Signs of Loose Bodies</h4>
+  <ul>
+    <li><strong>Locking</strong> — the joint suddenly gets stuck in one position and you can't straighten or bend it until you "wiggle" it free</li>
+    <li><strong>Catching or clicking</strong> — a sharp, mechanical sensation with movement, different from the dull ache of arthritis</li>
+    <li><strong>Intermittent pain</strong> — episodes of sudden, sharp pain that come and go unpredictably</li>
+    <li><strong>Swelling</strong> — the joint may swell, especially after an episode of locking or catching</li>
+    <li><strong>Giving way</strong> — the joint may feel unstable or buckle unexpectedly</li>
+    <li><strong>Something "moving around"</strong> — some patients can actually feel or even see a lump that shifts position</li>
+  </ul>
+</div>
+
+<p>The hallmark is the <strong>intermittent, unpredictable nature</strong> of the symptoms. You might feel fine for days, then suddenly your knee locks while walking up stairs. This on-again, off-again pattern is a strong clue that a loose body is the culprit.</p>
+
+<div class="blog-expert-quote">
+  <p>Patients often come in frustrated because their symptoms are so unpredictable — one day they're fine, the next they can't straighten their knee. That inconsistency is actually very informative. It tells me something is moving around in the joint, and that's usually something we can fix quite easily.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</cite>
+</div>
+
+<h2 id="diagnosis">How We Diagnose Loose Bodies</h2>
+
+<p>Diagnosis starts with listening to your story — the pattern of symptoms is often the biggest clue. Then we confirm with imaging:</p>
+
+<ul>
+  <li><strong>X-rays</strong> — can show calcified loose bodies (bone fragments) but may miss purely cartilaginous ones</li>
+  <li><strong>MRI</strong> — excellent at detecting all types of loose bodies, including those made of soft tissue; also reveals any underlying joint damage</li>
+  <li><strong>CT scan</strong> — occasionally used to precisely locate and count loose bodies before surgery</li>
+  <li><strong>Physical exam</strong> — sometimes a loose body can be palpated (felt through the skin), particularly around the knee</li>
+</ul>
+
+<p>Dr. Elguizaoui will often obtain an MRI not only to confirm the loose body but also to evaluate the overall health of the joint — this helps plan the most effective treatment.</p>
+
+<h2 id="treatment">Treatment Options</h2>
+
+<h3>When Can We Watch and Wait?</h3>
+
+<p>If a loose body is found incidentally on imaging and isn't causing symptoms, it may not need treatment. Small fragments that sit in a joint recess and don't interfere with movement can sometimes be monitored. However, most loose bodies that cause symptoms will continue to cause problems — and may damage healthy cartilage the longer they float freely.</p>
+
+<h3>When Is Removal Recommended?</h3>
+
+<p>Surgery is recommended when loose bodies cause:</p>
+
+<ul>
+  <li>Recurrent locking or catching that limits function</li>
+  <li>Pain that interferes with daily activities or sports</li>
+  <li>Joint swelling after mechanical episodes</li>
+  <li>Risk of cartilage damage from the fragment grinding against healthy surfaces</li>
+</ul>
+
+<p>The good news: <strong>arthroscopic removal is one of the most successful and satisfying procedures in orthopedics</strong>. Patients often experience immediate, dramatic improvement.</p>
+
+<h2 id="arthroscopic">Arthroscopic Removal — How It Works</h2>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&h=400&fit=crop&q=80" alt="Modern surgical suite representing minimally invasive arthroscopic procedures" loading="lazy" />
+
+<p>Arthroscopic loose body removal is a minimally invasive outpatient procedure. Here's what to expect:</p>
+
+<div class="blog-takeaway">
+  <h4>The Procedure Step by Step</h4>
+  <ul>
+    <li><strong>Anesthesia</strong> — regional or general anesthesia; you'll be comfortable throughout</li>
+    <li><strong>Small incisions</strong> — two or three tiny incisions (about 5mm each) around the joint</li>
+    <li><strong>Camera insertion</strong> — a small camera (arthroscope) is inserted, providing a high-definition view of the entire joint</li>
+    <li><strong>Locate and remove</strong> — the loose bodies are identified and removed with specialized grasping instruments</li>
+    <li><strong>Inspect and treat</strong> — the joint is thoroughly inspected; any damaged cartilage can be smoothed, and other problems can be addressed simultaneously</li>
+    <li><strong>Closure</strong> — small adhesive strips or a single stitch to close each incision</li>
+    <li><strong>Home same day</strong> — most patients go home within 1-2 hours of the procedure</li>
+  </ul>
+</div>
+
+<div class="blog-expert-quote">
+  <p>Loose body removal is one of my favorite procedures because the results are so immediately gratifying. A patient comes in with a knee that locks unpredictably — we remove a small fragment, and that problem is solved. The relief on patients' faces when they realize the locking is gone is genuinely one of the most rewarding parts of my work.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="success">Success Rates & Outcomes</h2>
+
+<div class="blog-chart">
+  <h4>Arthroscopic Loose Body Removal — Patient Outcomes</h4>
+  <svg viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="lbBar1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#818cf8"/>
+      </linearGradient>
+      <linearGradient id="lbBar2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#4ade80"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Bars -->
+    <text x="155" y="38" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Locking Resolved</text>
+    <rect x="165" y="22" width="262" height="22" rx="4" fill="url(#lbBar2)" opacity="0.9">
+      <animate attributeName="width" from="0" to="262" dur="0.8s" fill="freeze"/>
+    </rect>
+    <text x="435" y="38" font-size="11" fill="#16a34a" font-weight="700" font-family="Inter, sans-serif">97%</text>
+
+    <text x="155" y="73" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Pain Improved</text>
+    <rect x="165" y="57" width="257" height="22" rx="4" fill="url(#lbBar2)" opacity="0.8">
+      <animate attributeName="width" from="0" to="257" dur="0.8s" fill="freeze" begin="0.1s"/>
+    </rect>
+    <text x="430" y="73" font-size="11" fill="#16a34a" font-weight="700" font-family="Inter, sans-serif">95%</text>
+
+    <text x="155" y="108" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Patient Satisfaction</text>
+    <rect x="165" y="92" width="254" height="22" rx="4" fill="url(#lbBar1)" opacity="0.85">
+      <animate attributeName="width" from="0" to="254" dur="0.8s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="427" y="108" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">94%</text>
+
+    <text x="155" y="143" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Return to Sport</text>
+    <rect x="165" y="127" width="243" height="22" rx="4" fill="url(#lbBar1)" opacity="0.75">
+      <animate attributeName="width" from="0" to="243" dur="0.8s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <text x="416" y="143" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">90%</text>
+
+    <text x="155" y="178" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Low Complication Rate</text>
+    <rect x="165" y="162" width="8" height="22" rx="4" fill="#f87171" opacity="0.7">
+      <animate attributeName="width" from="0" to="8" dur="0.8s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <text x="181" y="178" font-size="11" fill="#ef4444" font-weight="700" font-family="Inter, sans-serif">&lt;2%</text>
+
+    <text x="230" y="220" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Outcomes based on published orthopedic literature for arthroscopic loose body removal</text>
+  </svg>
+</div>
+
+<p>Arthroscopic loose body removal has one of the highest success rates of any orthopedic procedure. When locking and catching are caused by a loose fragment, removing it directly eliminates the mechanical problem. Long-term outcomes depend partly on the underlying condition — patients with minimal arthritis tend to have the best sustained results.</p>
+
+<h2 id="recovery">Recovery Timeline</h2>
+
+<div class="blog-chart">
+  <h4>What to Expect After Arthroscopic Loose Body Removal</h4>
+  <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="lbRecov" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#bfdbfe"/>
+        <stop offset="50%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#1d4ed8"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Timeline bar -->
+    <rect x="30" y="45" width="400" height="8" rx="4" fill="#e5e7eb"/>
+    <rect x="30" y="45" width="400" height="8" rx="4" fill="url(#lbRecov)" opacity="0.8">
+      <animate attributeName="width" from="0" to="400" dur="1.5s" fill="freeze"/>
+    </rect>
+
+    <!-- Phase markers -->
+    <circle cx="30" cy="49" r="7" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2"/>
+    <text x="30" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8" font-family="Inter, sans-serif">Day 1</text>
+    <text x="30" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Home same day</text>
+    <text x="30" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">ice & elevate</text>
+
+    <circle cx="130" cy="49" r="7" fill="#93c5fd" stroke="#3b82f6" stroke-width="2"/>
+    <text x="130" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8" font-family="Inter, sans-serif">Days 3-7</text>
+    <text x="130" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Walking normally,</text>
+    <text x="130" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">swelling fading</text>
+
+    <circle cx="250" cy="49" r="7" fill="#60a5fa" stroke="#3b82f6" stroke-width="2"/>
+    <text x="250" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8" font-family="Inter, sans-serif">Week 2-4</text>
+    <text x="250" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Return to desk</text>
+    <text x="250" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">work & daily life</text>
+
+    <circle cx="370" cy="49" r="7" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+    <text x="370" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#1d4ed8" font-family="Inter, sans-serif">Week 4-6</text>
+    <text x="370" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Return to sports</text>
+    <text x="370" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">& full activity</text>
+
+    <!-- Note -->
+    <text x="230" y="135" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Recovery is often faster when loose body removal is the primary procedure</text>
+    <text x="230" y="150" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">If additional work is done (cartilage repair, meniscus treatment), recovery may be longer</text>
+  </svg>
+</div>
+
+<p>Recovery from isolated loose body removal is typically fast because the procedure causes minimal tissue disruption. Most patients are walking comfortably within a few days and back to sports within 4-6 weeks. If additional procedures are performed during the same arthroscopy (such as cartilage repair or meniscus treatment), recovery may be guided by those procedures instead.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Can loose bodies go away on their own?</h3>
+<p>No. Once a fragment is free-floating in the joint, the body cannot reabsorb it. Very small fragments may settle in a recess where they don't cause symptoms, but they don't disappear. If a loose body is causing locking, catching, or pain, it will need to be removed.</p>
+
+<h3>Is the surgery painful?</h3>
+<p>Most patients are surprised by how little pain there is. The incisions are tiny (about 5mm), and the procedure is done through a fluid-filled joint, so there's minimal tissue damage. Discomfort is usually mild and manageable with ice and over-the-counter pain medication for a few days. Many patients describe the post-surgical discomfort as far less than the episodes of locking they'd been experiencing.</p>
+
+<h3>Can loose bodies come back?</h3>
+<p>It depends on the underlying cause. If the loose body resulted from a single traumatic event, recurrence is unlikely. If it's related to ongoing osteoarthritis or synovial chondromatosis, new fragments may develop over time. Dr. Elguizaoui will address the underlying condition as part of your treatment plan to minimize recurrence.</p>
+
+<h3>Can you remove loose bodies from any joint?</h3>
+<p>Arthroscopic loose body removal can be performed in the knee, shoulder, elbow, hip, and ankle. The knee is the most common location, followed by the shoulder and elbow. Dr. Elguizaoui has extensive experience with arthroscopic surgery across all of these joints.</p>
+
+<h3>How many loose bodies can there be?</h3>
+<p>It varies widely. Some patients have a single fragment, while others — particularly those with synovial chondromatosis — may have dozens. During arthroscopy, Dr. Elguizaoui systematically inspects the entire joint to ensure all fragments are found and removed.</p>
+
+<h3>Will I need physical therapy after the procedure?</h3>
+<p>For isolated loose body removal, formal physical therapy may not be necessary — simple home exercises to restore range of motion and strength are often sufficient. If additional procedures are performed (cartilage work, meniscus repair), a structured PT program will be part of your recovery plan. Dr. Elguizaoui will give you specific guidance based on what's done during your procedure.</p>
+
+<div class="blog-cta">
+  <h3>Joint Locking, Catching, or Clicking? Let's Figure It Out</h3>
+  <p>If your joint feels like something is "stuck" or "floating around inside," Dr. Elguizaoui can evaluate you, get the right imaging, and — if needed — remove the problem arthroscopically with minimal downtime. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/arthroscopic-surgery">Arthroscopic Surgery Services</a> · <a href="/blog/arthroscopic-vs-open-surgery">Arthroscopic vs. Open Surgery</a> · <a href="/blog/cartilage-damage-treatment">Cartilage Damage Treatment</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert arthroscopic loose body removal and joint treatment for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
   </div>
 </div>
 `,

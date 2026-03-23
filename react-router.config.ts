@@ -24,6 +24,7 @@ export default {
     "/blog/tennis-elbow-golfers-elbow-guide",
     "/blog/stress-fractures-guide",
     "/blog/chronic-joint-pain-guide",
+    "/blog/loose-bodies-in-joints-guide",
     // Service pages
     "/services/sports-medicine",
     "/services/arthroscopic-surgery",

@@ -433,6 +433,114 @@ function PayerLogo({ name, size = 36 }: { name: string; size?: number }) {
   );
 }
 
+// ── AI Claim Rating ─────────────────────────────────────────────
+function analyzeClaimQuality(visit: Visit) {
+  const icd = visit.codes.filter(c => c.type === "ICD-10");
+  const cpt = visit.codes.filter(c => c.type === "CPT" || c.type === "HCPCS");
+  const issues: { severity: "warn" | "info" | "pass"; text: string }[] = [];
+  let score = 10;
+
+  // Check ICD-10 codes
+  if (icd.length === 0) { score -= 3; issues.push({ severity: "warn", text: "No ICD-10 diagnosis codes — claim will be rejected" }); }
+  else if (icd.length === 1) { score -= 0.5; issues.push({ severity: "info", text: "Single ICD-10 code — consider adding secondary diagnoses for specificity" }); }
+  else { issues.push({ severity: "pass", text: `${icd.length} ICD-10 codes linked — good diagnostic specificity` }); }
+
+  // Check CPT codes
+  if (cpt.length === 0) { score -= 3; issues.push({ severity: "warn", text: "No CPT/HCPCS procedure codes — claim has no billable services" }); }
+  else { issues.push({ severity: "pass", text: `${cpt.length} CPT codes with fees attached` }); }
+
+  // Check modifiers
+  const hasModifiers = cpt.some(c => c.code.includes("-") || (c as any).modifier);
+  if (cpt.length > 1 && !hasModifiers) { score -= 1; issues.push({ severity: "info", text: "Multiple procedures without modifiers (e.g. -59, -51) — may trigger bundling edits" }); }
+  else if (cpt.length > 1) { issues.push({ severity: "pass", text: "Modifier usage detected for multi-procedure claim" }); }
+
+  // Check member ID format
+  if (!visit.memberId || visit.memberId.length < 5) { score -= 1.5; issues.push({ severity: "warn", text: "Member ID appears incomplete — verify subscriber identification" }); }
+  else { issues.push({ severity: "pass", text: "Member ID format looks valid" }); }
+
+  // Check NPI
+  if (!visit.npi || visit.npi.length !== 10) { score -= 1; issues.push({ severity: "warn", text: "Rendering provider NPI should be exactly 10 digits" }); }
+  else { issues.push({ severity: "pass", text: "Provider NPI is 10 digits" }); }
+
+  // Check prior auth
+  const hasAuth = visit.notes?.toLowerCase().includes("auth") || visit.insurance?.toLowerCase().includes("united");
+  if (!hasAuth) { score -= 0.5; issues.push({ severity: "info", text: "No prior authorization reference detected — confirm if required by payer" }); }
+  else { issues.push({ severity: "pass", text: "Prior authorization reference present" }); }
+
+  // Check fees
+  const totalFees = cpt.reduce((sum, c) => sum + (c.fee || 0), 0);
+  if (totalFees === 0) { score -= 2; issues.push({ severity: "warn", text: "Total charges are $0 — fees must be assigned to each service line" }); }
+  else { issues.push({ severity: "pass", text: `Total charges: $${totalFees.toLocaleString()} across ${cpt.length} service lines` }); }
+
+  return { score: Math.max(1, Math.min(10, Math.round(score * 10) / 10)), issues };
+}
+
+function ClaimRatingCard({ visit }: { visit: Visit }) {
+  const { score, issues } = analyzeClaimQuality(visit);
+  const scoreColor = score >= 8 ? "#22c55e" : score >= 6 ? "#fbbf24" : "#ef4444";
+  const scoreLabel = score >= 8 ? "Excellent" : score >= 6 ? "Needs Review" : "High Risk";
+
+  return (
+    <div style={{
+      background: "rgba(10,10,26,0.6)", border: "1px solid rgba(99,102,241,0.15)",
+      borderRadius: 14, padding: 22, display: "flex", flexDirection: "column", gap: 16,
+      height: "100%", boxSizing: "border-box",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        <span style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: "#818cf8" }}>AI Claim Analysis</span>
+      </div>
+
+      {/* Score ring */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+        <div style={{ position: "relative", width: 90, height: 90 }}>
+          <svg width="90" height="90" viewBox="0 0 90 90">
+            <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(148,163,184,0.1)" strokeWidth="6" />
+            <circle cx="45" cy="45" r="38" fill="none" stroke={scoreColor} strokeWidth="6"
+              strokeLinecap="round"
+              strokeDasharray={`${(score / 10) * 238.76} 238.76`}
+              transform="rotate(-90 45 45)"
+              style={{ transition: "stroke-dasharray 0.8s ease" }}
+            />
+          </svg>
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: "1.5rem", fontWeight: 800, color: scoreColor, lineHeight: 1 }}>{score}</span>
+            <span style={{ fontSize: "0.6rem", color: "#64748b", fontWeight: 600 }}>/10</span>
+          </div>
+        </div>
+        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: scoreColor }}>{scoreLabel}</span>
+      </div>
+
+      {/* Issues list */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, overflow: "auto" }}>
+        {issues.map((issue, i) => (
+          <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+            <div style={{
+              width: 18, height: 18, borderRadius: "50%", flexShrink: 0, marginTop: 1,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              background: issue.severity === "warn" ? "rgba(239,68,68,0.15)" : issue.severity === "info" ? "rgba(251,191,36,0.15)" : "rgba(34,197,94,0.15)",
+            }}>
+              {issue.severity === "pass" ? (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              ) : issue.severity === "warn" ? (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              ) : (
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              )}
+            </div>
+            <span style={{
+              fontSize: "0.72rem", lineHeight: 1.5,
+              color: issue.severity === "warn" ? "#fca5a5" : issue.severity === "info" ? "#fde68a" : "#86efac",
+            }}>{issue.text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Claim Preview Modal ──────────────────────────────────────────
 function ClaimPreviewModal({
   visit,
@@ -456,7 +564,7 @@ function ClaimPreviewModal({
     }} onClick={onClose}>
       <div style={{
         background: "#0f1729", border: "1px solid rgba(99,102,241,0.2)",
-        borderRadius: 16, padding: 28, maxWidth: 680, width: "90vw",
+        borderRadius: 16, padding: 28, maxWidth: 1060, width: "95vw",
         maxHeight: "85vh", overflow: "auto",
       }} onClick={(e) => e.stopPropagation()}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
@@ -467,6 +575,13 @@ function ClaimPreviewModal({
             background: "none", border: "none", color: "#5a5a6e", cursor: "pointer", fontSize: "1.2rem",
           }}>&times;</button>
         </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: 20, alignItems: "start" }}>
+        {/* Left: AI Rating */}
+        <ClaimRatingCard visit={visit} />
+
+        {/* Right: Claim Details */}
+        <div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
           <div style={{ background: "rgba(10,10,26,0.4)", border: "1px solid rgba(148,163,184,0.08)", borderRadius: 10, padding: 12 }}>
@@ -587,8 +702,10 @@ function ClaimPreviewModal({
             Attachments are submitted as a separate 275 transaction linked via the PWK segment&apos;s attachment control number.
           </div>
         </div>
+        </div>{/* end right column */}
+        </div>{/* end grid */}
 
-        <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+        <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 16 }}>
           <button onClick={onClose} style={{
             padding: "10px 20px", borderRadius: 10,
             border: "1px solid rgba(148,163,184,0.15)", background: "transparent",

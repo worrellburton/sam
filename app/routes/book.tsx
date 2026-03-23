@@ -390,6 +390,18 @@ export default function BookPage() {
   };
   const [activeTab, setActiveTab] = useState('highlights');
   const [confirmed, setConfirmed] = useState(false);
+  const [intakeStep, setIntakeStep] = useState(0); // 0 = not started, 1-4 = intake steps
+  const [issueText, setIssueText] = useState('');
+  const [enhancedText, setEnhancedText] = useState('');
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const [isEnhanced, setIsEnhanced] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [uploadedLicense, setUploadedLicense] = useState<string | null>(null);
+  const [uploadedInsurance, setUploadedInsurance] = useState<string | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const recordingTimerRef = useRef<any>(null);
+  const orbCanvasRef = useRef<HTMLCanvasElement>(null);
   const [dzTheme, setDzTheme] = useState<'dark' | 'light'>(() => {
     if (typeof window !== 'undefined') return (localStorage.getItem('dz-theme') as 'dark' | 'light') || 'dark';
     return 'dark';
@@ -436,8 +448,121 @@ export default function BookPage() {
   }, [currentMonth]);
 
   const handleConfirm = () => {
-    if (selectedDate && selectedSlot) setConfirmed(true);
+    if (selectedDate && selectedSlot) setIntakeStep(1);
   };
+
+  // Voice-to-text
+  const startRecording = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.onresult = (e: any) => {
+      let transcript = '';
+      for (let i = 0; i < e.results.length; i++) {
+        transcript += e.results[i][0].transcript;
+      }
+      setIssueText(prev => {
+        const base = prev.replace(/\s*\[listening\.\.\.\]\s*$/, '');
+        return base + (base ? ' ' : '') + transcript;
+      });
+    };
+    recognition.onerror = () => stopRecording();
+    recognition.onend = () => stopRecording();
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsRecording(true);
+    setRecordingTime(0);
+    recordingTimerRef.current = setInterval(() => setRecordingTime(t => t + 1), 1000);
+  };
+
+  const stopRecording = () => {
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+    setIsRecording(false);
+    clearInterval(recordingTimerRef.current);
+  };
+
+  // Enhance text (clean up typos/grammar)
+  const enhanceText = () => {
+    setIsEnhancing(true);
+    setTimeout(() => {
+      let cleaned = issueText;
+      // Basic cleanup: capitalize first letter, fix common typos
+      const fixes: Record<string, string> = {
+        'sholder': 'shoulder', 'shulder': 'shoulder', 'shoudler': 'shoulder',
+        'nee': 'knee', 'kne': 'knee', 'knne': 'knee',
+        'elbo': 'elbow', 'elbw': 'elbow',
+        'ankel': 'ankle', 'ancle': 'ankle',
+        'wirst': 'wrist', 'writs': 'wrist',
+        'pian': 'pain', 'pai': 'pain',
+        'surger': 'surgery', 'surgry': 'surgery',
+        'injur': 'injury', 'injry': 'injury',
+        'im ': "I'm ", 'i ': 'I ', 'i\'m': "I'm", 'i\'ve': "I've",
+        'dont': "don't", 'cant': "can't", 'wont': "won't",
+      };
+      Object.entries(fixes).forEach(([wrong, right]) => {
+        cleaned = cleaned.replace(new RegExp(`\\b${wrong}\\b`, 'gi'), right);
+      });
+      // Capitalize first letter of sentences
+      cleaned = cleaned.replace(/(^|[.!?]\s+)([a-z])/g, (_, pre, c) => pre + c.toUpperCase());
+      if (cleaned.length > 0 && cleaned[0] === cleaned[0].toLowerCase()) {
+        cleaned = cleaned[0].toUpperCase() + cleaned.slice(1);
+      }
+      // Add period if missing
+      if (cleaned.length > 0 && !/[.!?]$/.test(cleaned.trim())) {
+        cleaned = cleaned.trim() + '.';
+      }
+      setEnhancedText(cleaned);
+      setIsEnhancing(false);
+      setIsEnhanced(true);
+    }, 1500);
+  };
+
+  // Orb animation for Step 1
+  useEffect(() => {
+    if (intakeStep !== 1) return;
+    const canvas = orbCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let raf: number;
+    const resize = () => {
+      canvas.width = canvas.clientWidth * 2;
+      canvas.height = canvas.clientHeight * 2;
+      ctx.setTransform(2, 0, 0, 2, 0, 0);
+    };
+    resize();
+    const orbs = [
+      { x: 0.3, y: 0.4, r: 80, color: [59, 130, 246], vx: 0.3, vy: 0.2 },
+      { x: 0.7, y: 0.3, r: 70, color: [147, 51, 234], vx: -0.2, vy: 0.3 },
+      { x: 0.5, y: 0.7, r: 60, color: [6, 182, 212], vx: 0.15, vy: -0.25 },
+    ];
+    const textLen = () => (issueText.length + (enhancedText || '').length) / 2;
+    const render = (time: number) => {
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      ctx.clearRect(0, 0, w, h);
+      const intensity = Math.min(1, textLen() / 100);
+      const t = time * 0.001;
+      orbs.forEach((orb, i) => {
+        const ox = (0.5 + Math.sin(t * orb.vx + i) * 0.3) * w;
+        const oy = (0.5 + Math.cos(t * orb.vy + i * 2) * 0.3) * h;
+        const r = orb.r * (0.6 + intensity * 0.6);
+        const grad = ctx.createRadialGradient(ox, oy, 0, ox, oy, r);
+        const alpha = 0.15 + intensity * 0.25;
+        grad.addColorStop(0, `rgba(${orb.color.join(',')},${alpha})`);
+        grad.addColorStop(1, `rgba(${orb.color.join(',')},0)`);
+        ctx.beginPath();
+        ctx.arc(ox, oy, r, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      });
+      raf = requestAnimationFrame(render);
+    };
+    raf = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(raf);
+  }, [intakeStep, issueText, enhancedText]);
 
   const isToday = (d: Date) => d.toDateString() === new Date().toDateString();
   const [calHover, setCalHover] = useState(false);
@@ -476,8 +601,8 @@ export default function BookPage() {
               </svg>
               <span>DocZoc</span>
             </Link>
-            {confirmed ? (
-              <button className="dz-back-site" onClick={() => { setConfirmed(false); setSelectedDate(null); setSelectedSlot(null); }}>
+            {intakeStep > 0 ? (
+              <button className="dz-back-site" onClick={() => { if (intakeStep > 1 && !confirmed) setIntakeStep(intakeStep - 1); else { setIntakeStep(0); setConfirmed(false); } }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 Back
               </button>
@@ -725,17 +850,173 @@ export default function BookPage() {
           }}
         >
           <div className="dz-booking-card" onClick={(e) => e.stopPropagation()}>
-            {confirmed ? (
-              <div className="dz-confirmed">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <h2>Appointment Requested!</h2>
-                <p className="dz-confirmed-date">
-                  {selectedDate && `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}`} at {selectedSlot}
-                </p>
-                <p className="dz-confirmed-loc">{[...selectedLocs].map(i => locations[i].name.replace('NY Orthopedics – ', '')).join(', ')}</p>
-                <p className="dz-confirmed-note">Dr. Elguizaoui&rsquo;s office will confirm your appointment via email.</p>
-                <button className="dz-btn dz-btn-primary" onClick={() => { setConfirmed(false); setSelectedDate(null); setSelectedSlot(null); }}>Book Another</button>
-                <button className="dz-btn dz-btn-outline" style={{ marginTop: '8px' }} onClick={closeBooking}>Return to Site</button>
+            {intakeStep > 0 ? (
+              <div className="dz-intake-overlay">
+                <div className="dz-intake-progress">
+                  {[1,2,3,4].map(s => (
+                    <div key={s} className={`dz-intake-dot${intakeStep >= s ? ' active' : ''}${intakeStep === s ? ' current' : ''}`} />
+                  ))}
+                </div>
+
+                {/* Step 1: Describe Your Issue */}
+                {intakeStep === 1 && (
+                  <div className="dz-intake-step dz-intake-describe">
+                    <canvas ref={orbCanvasRef} className="dz-orb-canvas" />
+                    <div className="dz-intake-glass">
+                      <h2>Describe Your Issue</h2>
+                      <p className="dz-intake-sub">Tell us what's bothering you so Dr. Elguizaoui can prepare for your visit.</p>
+                      <div className="dz-textarea-wrap">
+                        <textarea
+                          className={`dz-intake-textarea${issueText.length > 0 ? ' typing' : ''}`}
+                          placeholder="e.g. I've been having pain in my right shoulder for about 3 weeks, especially when reaching overhead..."
+                          value={isEnhanced ? enhancedText : issueText}
+                          onChange={(e) => { setIssueText(e.target.value); setIsEnhanced(false); setEnhancedText(''); }}
+                          rows={5}
+                        />
+                        <button
+                          className={`dz-voice-btn${isRecording ? ' recording' : ''}`}
+                          onClick={isRecording ? stopRecording : startRecording}
+                          title={isRecording ? 'Stop recording' : 'Voice to text'}
+                        >
+                          {isRecording ? (
+                            <>
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                              <span className="dz-rec-timer">{Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')}</span>
+                            </>
+                          ) : (
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                          )}
+                        </button>
+                      </div>
+                      {issueText.length >= 10 && !isEnhanced && (
+                        <button className={`dz-enhance-btn${isEnhancing ? ' enhancing' : ''}`} onClick={enhanceText} disabled={isEnhancing}>
+                          {isEnhancing ? (
+                            <><div className="dz-spinner-sm" /> Enhancing...</>
+                          ) : (
+                            <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Enhance</>
+                          )}
+                        </button>
+                      )}
+                      {isEnhanced && (
+                        <button className="dz-btn dz-btn-primary dz-intake-continue" onClick={() => setIntakeStep(2)}>
+                          Continue
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 2: Good Fit Confirmation */}
+                {intakeStep === 2 && (
+                  <div className="dz-intake-step dz-intake-goodfit">
+                    <div className="dz-goodfit-check">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <h2>You're a Great Fit!</h2>
+                    <p className="dz-goodfit-desc">Based on what you've described, Dr. Elguizaoui can help. Continue with booking &mdash; we'll need your card information next.</p>
+                    <button className="dz-btn dz-btn-primary dz-intake-continue" onClick={() => setIntakeStep(3)}>
+                      Continue
+                    </button>
+                  </div>
+                )}
+
+                {/* Step 3: Upload Cards */}
+                {intakeStep === 3 && (
+                  <div className="dz-intake-step dz-intake-upload">
+                    <h2>Upload Your Cards</h2>
+                    <p className="dz-intake-sub">We need a copy of your ID and insurance card to complete booking.</p>
+                    <div className="dz-upload-zones">
+                      <label className={`dz-upload-zone${uploadedLicense ? ' uploaded' : ''}`}>
+                        <input type="file" accept="image/*,.pdf" className="dz-file-input" onChange={(e) => setUploadedLicense(e.target.files?.[0]?.name || null)} />
+                        {uploadedLicense ? (
+                          <>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span className="dz-upload-label">Driver's License</span>
+                            <span className="dz-upload-status">Uploaded</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span className="dz-upload-label">Driver's License</span>
+                            <span className="dz-upload-hint">Click or drag to upload</span>
+                          </>
+                        )}
+                      </label>
+                      <label className={`dz-upload-zone${uploadedInsurance ? ' uploaded' : ''}`}>
+                        <input type="file" accept="image/*,.pdf" className="dz-file-input" onChange={(e) => setUploadedInsurance(e.target.files?.[0]?.name || null)} />
+                        {uploadedInsurance ? (
+                          <>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span className="dz-upload-label">Insurance Card</span>
+                            <span className="dz-upload-status">Uploaded</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span className="dz-upload-label">Insurance Card</span>
+                            <span className="dz-upload-hint">Click or drag to upload</span>
+                          </>
+                        )}
+                      </label>
+                    </div>
+                    <button
+                      className="dz-btn dz-btn-primary dz-intake-continue"
+                      disabled={!uploadedLicense || !uploadedInsurance}
+                      onClick={() => setIntakeStep(4)}
+                    >
+                      Continue
+                    </button>
+                  </div>
+                )}
+
+                {/* Step 4: Summary & Book */}
+                {intakeStep === 4 && (
+                  <div className="dz-intake-step dz-intake-summary">
+                    {!confirmed ? (
+                      <>
+                        <h2>Review & Book</h2>
+                        <div className="dz-summary-card">
+                          <div className="dz-summary-row">
+                            <span className="dz-summary-label">Date & Time</span>
+                            <span>{selectedDate && `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}`} at {selectedSlot}</span>
+                          </div>
+                          <div className="dz-summary-row">
+                            <span className="dz-summary-label">Patient Type</span>
+                            <span style={{ textTransform: 'capitalize' }}>{patientType} patient</span>
+                          </div>
+                          <div className="dz-summary-row">
+                            <span className="dz-summary-label">Concern</span>
+                            <span className="dz-summary-concern">{(enhancedText || issueText).slice(0, 150)}{(enhancedText || issueText).length > 150 ? '...' : ''}</span>
+                          </div>
+                          <div className="dz-summary-row">
+                            <span className="dz-summary-label">Documents</span>
+                            <span>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> License &nbsp;
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg> Insurance
+                            </span>
+                          </div>
+                        </div>
+                        <button className="dz-btn dz-btn-book" onClick={() => setConfirmed(true)}>
+                          Book Appointment
+                        </button>
+                      </>
+                    ) : (
+                      <div className="dz-intake-booked">
+                        <div className="dz-booked-check">
+                          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <h2>Appointment Booked!</h2>
+                        <p className="dz-booked-date">
+                          {selectedDate && `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}`} at {selectedSlot}
+                        </p>
+                        <p className="dz-booked-note">Dr. Elguizaoui's office will confirm via email.</p>
+                        <button className="dz-btn dz-btn-primary" onClick={() => { setConfirmed(false); setIntakeStep(0); setSelectedDate(null); setSelectedSlot(null); setIssueText(''); setEnhancedText(''); setIsEnhanced(false); setUploadedLicense(null); setUploadedInsurance(null); }}>
+                          Done
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               <>

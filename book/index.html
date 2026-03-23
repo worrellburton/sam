@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book an Appointment | Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon</title>
+  <meta name="description" content="Schedule your appointment with Dr. Sameh Elguizaoui, board-certified orthopedic surgeon in NYC. Same-week appointments available.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { overflow-x: hidden; }
+
+    /* Top bar */
+    .book-topbar { padding: 14px 0; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; background: var(--bg); }
+    .book-topbar-inner { display: flex; align-items: center; justify-content: space-between; }
+    .book-topbar a { font-family: 'Inter', sans-serif; text-decoration: none; }
+    .book-back { font-weight: 600; font-size: 1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .book-phone { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+
+    /* ===== STAGE 1: Centered booking form ===== */
+    .book-stage { min-height: calc(100vh - 52px); display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; }
+    .book-panel { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 720px; width: 100%; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .book-panel h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 4px; }
+    .book-panel .book-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 28px; }
+
+    .book-section-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
+    .book-select { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; cursor: pointer; margin-bottom: 14px; }
+    .book-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,107,255,0.1); }
+    .book-insurance-check { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 20px; cursor: pointer; font-size: 0.9rem; color: var(--text-light); }
+    .book-insurance-check input { accent-color: var(--primary); width: 18px; height: 18px; }
+    .patient-toggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 28px; }
+    .patient-toggle-btn { padding: 12px; text-align: center; font-size: 0.9rem; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; border: none; background: transparent; color: var(--text-light); transition: all 0.2s; }
+    .patient-toggle-btn.active { background: var(--primary); color: #fff; }
+
+    /* Calendar (shared styles for both stages) */
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .cal-header h3 { font-size: 1.1rem; font-weight: 600; }
+    .cal-nav { display: flex; gap: 8px; }
+    .cal-nav-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); transition: all 0.2s; }
+    .cal-nav-btn:hover { background: var(--primary-light); color: var(--primary); }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .cal-day-header { padding: 10px 4px; text-align: center; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); background: var(--bg); border-bottom: 1px solid var(--border); }
+    .cal-day { min-height: 80px; padding: 8px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+    .cal-day:nth-child(7n) { border-right: none; }
+    .cal-day:hover { background: rgba(79,107,255,0.04); }
+    .cal-day.empty { background: var(--bg); cursor: default; opacity: 0.4; }
+    .cal-day.empty:hover { background: var(--bg); }
+    .cal-day.today .cal-date { background: var(--primary); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+    .cal-date { font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
+    .cal-event { font-size: 0.65rem; padding: 3px 6px; border-radius: 4px; color: #fff; font-weight: 500; }
+    .cal-event.green { background: #22c55e; }
+    .cal-day.selected { background: rgba(79,107,255,0.08); box-shadow: inset 0 0 0 2px var(--primary); }
+
+    /* Time slots */
+    .time-slots { margin-top: 24px; }
+    .time-slots h3 { font-size: 1rem; font-weight: 600; margin-bottom: 14px; }
+    .time-slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .time-slot { padding: 10px; text-align: center; border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; background: transparent; color: var(--text); }
+    .time-slot:hover { border-color: var(--primary); color: var(--primary); background: rgba(79,107,255,0.04); }
+    .time-slot.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .time-slot.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+    .book-confirm { margin-top: 24px; }
+    .book-confirm .btn { width: 100%; padding: 14px; font-size: 1rem; }
+    .book-footer-note { text-align: center; margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); }
+    .book-zocdoc-alt { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted); }
+    .book-zocdoc-alt a { color: var(--primary); font-weight: 500; }
+
+    /* Back button (hidden in stage 1) */
+    .cal-back-btn { display: none; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; font-family: 'Inter', sans-serif; color: var(--text-muted); cursor: pointer; margin-bottom: 20px; transition: all 0.2s; }
+    .cal-back-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* Intake overlay */
+    .intake-overlay { display:none; position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); justify-content:center; align-items:center; padding:20px; }
+    .intake-overlay.active { display:flex; }
+    .intake-modal { background:var(--bg-alt,#fff); border:1px solid var(--border); border-radius:20px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 80px rgba(0,0,0,0.15); position:relative; }
+    .intake-header { padding:32px 32px 0; text-align:center; }
+    .intake-step-indicator { display:flex; justify-content:center; gap:8px; margin-bottom:24px; }
+    .intake-step-dot { width:10px; height:10px; border-radius:50%; background:rgba(0,0,0,0.1); transition:all 0.3s; }
+    .intake-step-dot.active { background:var(--primary); transform:scale(1.2); }
+    .intake-step-dot.completed { background:#4caf50; }
+    .intake-header h2 { font-family:'Inter',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); margin-bottom:8px; }
+    .intake-header p { color:var(--text-muted); font-size:0.92rem; line-height:1.5; }
+    .intake-body { padding:24px 32px 32px; }
+    .intake-step { display:none; }
+    .intake-step.active { display:block; }
+    .intake-actions { display:flex; gap:12px; margin-top:24px; }
+    .intake-btn { flex:1; padding:14px 24px; border-radius:12px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:600; cursor:pointer; border:none; transition:all 0.2s; }
+    .intake-btn-primary { background:var(--primary); color:#fff; }
+    .intake-btn-primary:hover { filter:brightness(1.1); }
+    .intake-btn-primary:disabled { opacity:0.4; cursor:not-allowed; }
+
+    /* Liquid glass */
+    .glass-container { position:relative; border-radius:16px; overflow:hidden; min-height:200px; background:rgba(0,0,0,0.02); isolation:isolate; }
+    .glass-orb { position:absolute; border-radius:50%; filter:blur(50px); opacity:0.5; pointer-events:none; z-index:0; }
+    .glass-orb-1 { width:180px; height:180px; background:radial-gradient(circle,rgba(59,130,246,0.6),transparent 70%); top:-40px; left:-20px; animation:gf1 6s ease-in-out infinite; }
+    .glass-orb-2 { width:140px; height:140px; background:radial-gradient(circle,rgba(168,85,247,0.5),transparent 70%); bottom:-30px; right:-10px; animation:gf2 8s ease-in-out infinite; }
+    .glass-orb-3 { width:100px; height:100px; background:radial-gradient(circle,rgba(34,211,238,0.4),transparent 70%); top:50%; left:50%; transform:translate(-50%,-50%); animation:gf3 7s ease-in-out infinite; opacity:0; transition:opacity 1s; }
+    .glass-container.has-text .glass-orb-3 { opacity:0.6; }
+    .glass-container.has-text .glass-orb-1,.glass-container.has-text .glass-orb-2 { opacity:0.7; }
+    @keyframes gf1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,20px) scale(1.1)} 66%{transform:translate(-10px,30px) scale(0.95)} }
+    @keyframes gf2 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(-20px,-15px) scale(1.05)} 66%{transform:translate(15px,-25px) scale(1.1)} }
+    @keyframes gf3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-30%,-60%) scale(1.2)} }
+    .glass-pane { position:relative; z-index:1; background:rgba(255,255,255,0.5); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.6); border-radius:16px; padding:4px; margin:4px; }
+    .glass-textarea { width:100%; min-height:180px; border:none; border-radius:12px; background:transparent; color:var(--text); font-family:'Inter',sans-serif; font-size:1.05rem; padding:20px; resize:none; line-height:1.7; }
+    .glass-textarea:focus { outline:none; }
+    .glass-textarea::placeholder { color:rgba(0,0,0,0.3); font-style:italic; }
+    .glass-textarea.typing { animation:gtg 2s ease-in-out infinite; }
+    @keyframes gtg { 0%,100%{text-shadow:0 0 0 transparent} 50%{text-shadow:0 0 12px rgba(59,130,246,0.15)} }
+
+    /* Enhance button */
+    .intake-btn-enhance { display:flex; align-items:center; justify-content:center; gap:8px; flex:1; padding:14px 24px; border-radius:12px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:600; cursor:pointer; border:2px solid rgba(168,85,247,0.4); background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(59,130,246,0.1)); color:#a855f7; transition:all 0.3s; animation:ea 0.5s ease-out; }
+    .intake-btn-enhance:hover { border-color:rgba(168,85,247,0.7); background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(59,130,246,0.2)); box-shadow:0 0 20px rgba(168,85,247,0.2); }
+    .intake-btn-enhance.enhancing { pointer-events:none; animation:ep 1s ease-in-out infinite; }
+    @keyframes ea { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes ep { 0%,100%{opacity:1;box-shadow:0 0 10px rgba(168,85,247,0.2)} 50%{opacity:0.7;box-shadow:0 0 30px rgba(168,85,247,0.4)} }
+
+    /* Voice btn */
+    .intake-voice-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; margin-top:12px; border:1px dashed rgba(0,0,0,0.15); border-radius:12px; background:none; color:var(--text-muted); font-size:0.9rem; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; }
+    .intake-voice-btn:hover { border-color:var(--primary); color:var(--primary); }
+    .intake-voice-btn.recording { border-color:#ef4444; color:#ef4444; animation:pr 1.5s ease-in-out infinite; }
+    @keyframes pr { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .intake-timer { font-variant-numeric:tabular-nums; font-size:0.82rem; margin-left:4px; }
+
+    /* Good fit */
+    .goodfit-container { text-align:center; padding:24px 0; }
+    .goodfit-icon { display:inline-flex; align-items:center; justify-content:center; width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(59,130,246,0.1)); margin-bottom:20px; animation:gfp 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+    .goodfit-icon svg { color:#4ade80; }
+    @keyframes gfp { 0%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
+    .goodfit-title { font-family:'Inter',sans-serif; font-size:1.5rem; font-weight:700; color:var(--text); margin-bottom:12px; }
+    .goodfit-desc { color:var(--text-muted); font-size:0.95rem; line-height:1.6; max-width:380px; margin:0 auto; }
+
+    /* Upload zones */
+    .intake-uploads { display:flex; flex-direction:column; gap:16px; }
+    .intake-upload-zone { border:2px dashed rgba(0,0,0,0.12); border-radius:12px; padding:24px; text-align:center; cursor:pointer; transition:all 0.2s; position:relative; }
+    .intake-upload-zone:hover { border-color:var(--primary); background:rgba(59,130,246,0.05); }
+    .intake-upload-zone.uploaded { border-color:#4caf50; border-style:solid; background:rgba(76,175,80,0.05); }
+    .intake-upload-zone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .intake-upload-icon { font-size:2rem; margin-bottom:8px; }
+    .intake-upload-zone h4 { font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:600; color:var(--text); margin-bottom:4px; }
+    .intake-upload-zone p { font-size:0.82rem; color:var(--text-muted); }
+    .upload-success { display:none; color:#4caf50; font-weight:600; font-size:0.88rem; }
+    .intake-upload-zone.uploaded .upload-success { display:block; }
+    .intake-upload-zone.uploaded .upload-prompt { display:none; }
+
+    /* Summary */
+    .summary-container { display:flex; flex-direction:column; gap:1px; background:rgba(0,0,0,0.05); border-radius:14px; overflow:hidden; border:1px solid var(--border); }
+    .summary-item { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:16px 20px; background:var(--bg-alt,#fff); }
+    .summary-label { font-size:0.82rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); flex-shrink:0; min-width:90px; }
+    .summary-value { font-size:0.92rem; color:var(--text); text-align:right; line-height:1.4; }
+    .summary-concern { max-height:60px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; }
+    .intake-btn-book { flex:1; padding:16px 24px; border-radius:12px; font-family:'Inter',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; border:none; background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; box-shadow:0 4px 20px rgba(59,130,246,0.3); transition:all 0.2s; }
+    .intake-btn-book:hover { box-shadow:0 6px 28px rgba(59,130,246,0.45); transform:translateY(-1px); }
+    .intake-success-icon { font-size:3.5rem; margin-bottom:16px; }
+
+    /* ===== STAGE 2: Sidebar + Calendar layout (animated) ===== */
+    .book-stage.expanded {
+      padding: 0;
+      align-items: stretch;
+    }
+
+    .book-stage.expanded .book-panel {
+      max-width: none;
+      border-radius: 0;
+      border: none;
+      border-right: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      grid-template-rows: 1fr;
+      gap: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    /* Sidebar: booking info slides left */
+    .book-sidebar-content {
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .book-stage.expanded .book-sidebar-content {
+      background: var(--bg-alt);
+      border-right: 1px solid var(--border);
+      padding: 28px 24px;
+      overflow-y: auto;
+      max-height: calc(100vh - 52px);
+      position: sticky;
+      top: 52px;
+    }
+
+    /* Calendar: expands to fill center */
+    .book-cal-content {
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .book-stage.expanded .book-cal-content {
+      padding: 32px 48px;
+      flex: 1;
+    }
+
+    .book-stage.expanded .cal-back-btn { display: inline-flex; }
+    .book-stage.expanded .cal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+    .book-stage.expanded .cal-day { min-height: 100px; padding: 10px; }
+    .book-stage.expanded .cal-date { font-size: 0.95rem; }
+    .book-stage.expanded .cal-event { font-size: 0.72rem; padding: 4px 8px; }
+    .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(6, 1fr); }
+    .book-stage.expanded .book-zocdoc-alt { display: none; }
+
+    /* Doctor compact card (shown only in sidebar mode) */
+    .sidebar-doc { display: none; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px; }
+    .book-stage.expanded .sidebar-doc { display: block; }
+    .sidebar-doc-header { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+    .sidebar-doc-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .sidebar-doc-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .sidebar-doc-name { font-weight: 700; font-size: 0.85rem; }
+    .sidebar-doc-spec { font-size: 0.72rem; color: var(--text-muted); }
+    .sidebar-doc-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .sidebar-doc-rating .score { font-weight: 700; font-size: 0.85rem; }
+    .sidebar-doc-rating .stars { color: #f59e0b; font-size: 0.75rem; }
+    .sidebar-doc-rating .count { font-size: 0.7rem; color: var(--text-muted); text-decoration: none; }
+    .sidebar-highlight { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 0.75rem; color: var(--text-light); }
+    .sidebar-highlight-icon { width: 26px; height: 26px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--primary); }
+    .sidebar-insurance { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .sidebar-insurance p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
+    .sidebar-insurance a { font-size: 0.72rem; color: var(--primary); }
+    .sidebar-zocdoc { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); text-align: center; font-size: 0.75rem; color: var(--text-muted); }
+    .sidebar-zocdoc a { color: var(--primary); }
+
+    /* Hide titles/labels that shrink in sidebar mode */
+    .book-stage.expanded .book-panel h2 { font-size: 1.15rem; margin-bottom: 2px; }
+    .book-stage.expanded .book-panel .book-sub { font-size: 0.78rem; margin-bottom: 20px; }
+    .book-stage.expanded .book-section-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+    .book-stage.expanded .book-select { padding: 10px 14px; font-size: 0.82rem; margin-bottom: 12px; }
+    .book-stage.expanded .book-insurance-check { padding: 10px 14px; font-size: 0.82rem; margin-bottom: 14px; }
+    .book-stage.expanded .patient-toggle-btn { padding: 10px; font-size: 0.78rem; }
+    .book-stage.expanded .patient-toggle { margin-bottom: 16px; }
+
+    @media (max-width: 900px) {
+      .book-stage.expanded .book-panel { grid-template-columns: 1fr; }
+      .book-stage.expanded .book-sidebar-content { max-height: none; position: static; border-right: none; border-bottom: 1px solid var(--border); }
+      .book-stage.expanded .book-cal-content { padding: 20px 16px; }
+      .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(3, 1fr); }
+      .book-stage.expanded .cal-day { min-height: 70px; }
+    }
+    @media (max-width: 600px) {
+      .book-panel { padding: 24px 16px; }
+      .cal-day { min-height: 60px; padding: 4px; }
+      .cal-event { font-size: 0.6rem; padding: 2px 4px; }
+      .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+      .book-stage.expanded .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="book-topbar">
+    <div class="container book-topbar-inner">
+      <a href="../index.html" class="book-back">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Sam Elguizaoui, M.D.
+      </a>
+      <a href="tel:+19179059370" class="book-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +1-917-905-9370
+      </a>
+    </div>
+  </div>
+
+  <!-- Single stage container that transitions -->
+  <div class="book-stage" id="bookStage">
+    <div class="book-panel" id="bookPanel">
+
+      <!-- Sidebar content (booking details) -->
+      <div class="book-sidebar-content">
+        <h2>Book an appointment for free</h2>
+        <p class="book-sub">Schedule directly with Dr. Elguizaoui's office</p>
+
+        <p class="book-section-label">Scheduling details</p>
+        <select class="book-select" id="visitType">
+          <option>Orthopedic Consultation</option>
+          <option>Sports Injury Evaluation</option>
+          <option>Follow-up Visit</option>
+          <option>Second Opinion</option>
+          <option>Joint Pain Assessment</option>
+        </select>
+
+        <label class="book-insurance-check">
+          <input type="checkbox" checked> Insurance carrier and plan
+        </label>
+
+        <div class="patient-toggle">
+          <button class="patient-toggle-btn" id="btnNew">New patient</button>
+          <button class="patient-toggle-btn active" id="btnExisting">&#10003; Existing patient</button>
+        </div>
+
+        <p class="book-section-label">Available appointments</p>
+        <select class="book-select" id="locationSelect">
+          <option value="greenwich">NY Orthopedics &ndash; Greenwich Village (200 W 13th St, 6th Fl)</option>
+          <option value="ues">NY Orthopedics &ndash; Upper East Side (159 East 74th St)</option>
+          <option value="brooklyn">NY Orthopedics &ndash; Brooklyn Heights (161 Atlantic Ave)</option>
+        </select>
+
+        <!-- Doctor info (only visible in expanded/sidebar mode) -->
+        <div class="sidebar-doc">
+          <div class="sidebar-doc-header">
+            <div class="sidebar-doc-avatar"><img src="../header.jpg" alt="Dr. Sam Elguizaoui"></div>
+            <div>
+              <div class="sidebar-doc-name">Dr. Sam Elguizaoui, MD</div>
+              <div class="sidebar-doc-spec">Orthopedic Surgeon</div>
+            </div>
+          </div>
+          <div class="sidebar-doc-rating">
+            <span class="score">4.78</span>
+            <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <a href="../reviews.html" class="count">1,470 reviews</a>
+          </div>
+          <div class="sidebar-highlight">
+            <div class="sidebar-highlight-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
+            Patients often return
+          </div>
+          <div class="sidebar-highlight">
+            <div class="sidebar-highlight-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            91% wait less than 30 min
+          </div>
+          <div class="sidebar-highlight">
+            <div class="sidebar-highlight-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+            Accepting new patients
+          </div>
+          <div class="sidebar-insurance">
+            <p>Aetna, BlueCross BlueShield, UnitedHealthcare, Oxford</p>
+            <a href="../index.html#insurance">(200+) more in-network plans</a>
+          </div>
+          <div class="sidebar-zocdoc">
+            Also on <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Zocdoc</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar content -->
+      <div class="book-cal-content">
+        <button class="cal-back-btn" id="calBackBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back to overview
+        </button>
+
+        <div class="cal-header">
+          <h3 id="calTitle"></h3>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" id="calPrev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <button class="cal-nav-btn" id="calNext"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+
+        <!-- Time Slots -->
+        <div class="time-slots" id="timeSlots" style="display:none;">
+          <h3 id="timeSlotsTitle">Select a time</h3>
+          <div class="time-slots-grid" id="timeSlotsGrid"></div>
+        </div>
+
+        <!-- Confirm -->
+        <div class="book-confirm" id="bookConfirm" style="display:none;">
+          <button class="btn btn-primary btn-lg" id="confirmBtn" style="width:100%;padding:14px;font-size:1rem;">Confirm Appointment</button>
+        </div>
+        <p class="book-footer-note" id="footerNote" style="display:none;">By booking, you agree to our terms and privacy policy.</p>
+
+        <div class="book-zocdoc-alt">
+          You can also book through <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Zocdoc</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== Post-Booking Intake Flow ===== -->
+  <div class="intake-overlay" id="intakeOverlay">
+    <div class="intake-modal">
+      <div class="intake-header">
+        <div class="intake-step-indicator">
+          <div class="intake-step-dot active" data-step="1"></div>
+          <div class="intake-step-dot" data-step="2"></div>
+          <div class="intake-step-dot" data-step="3"></div>
+          <div class="intake-step-dot" data-step="4"></div>
+        </div>
+        <h2 id="intakeTitle">Tell Us About Your Issue</h2>
+        <p id="intakeSubtitle">Type it out or use voice-to-text. Talk for 1-2 minutes explaining what's going on.</p>
+      </div>
+      <div class="intake-body">
+        <!-- Step 1: Describe Issue — Liquid Glass -->
+        <div class="intake-step active" id="intakeStep1">
+          <div class="glass-container" id="glassContainer">
+            <div class="glass-orb glass-orb-1"></div>
+            <div class="glass-orb glass-orb-2"></div>
+            <div class="glass-orb glass-orb-3"></div>
+            <div class="glass-pane">
+              <textarea class="glass-textarea" id="intakeIssue" placeholder="Tell us what's going on..."></textarea>
+            </div>
+          </div>
+          <button class="intake-voice-btn" id="intakeVoiceBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <span id="voiceBtnText">Tap to use voice-to-text</span>
+            <span class="intake-timer" id="voiceTimer" style="display:none">0:00</span>
+          </button>
+          <div class="intake-actions">
+            <button class="intake-btn intake-btn-enhance" id="intakeEnhance" style="display:none">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7L12 16.4 5.7 21l2.3-7L2 9.4h7.6z"/></svg>
+              Enhance
+            </button>
+            <button class="intake-btn intake-btn-primary" id="intakeNext1" style="display:none">Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Good Fit -->
+        <div class="intake-step" id="intakeStep2">
+          <div class="goodfit-container">
+            <div class="goodfit-icon">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <h3 class="goodfit-title">You're a Great Fit!</h3>
+            <p class="goodfit-desc">Based on what you've described, Dr. Elguizaoui can help. Continue with booking &mdash; we'll need your card information next.</p>
+          </div>
+          <div class="intake-actions">
+            <button class="intake-btn intake-btn-primary" id="intakeNext2">Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Upload Cards -->
+        <div class="intake-step" id="intakeStep3">
+          <div class="intake-uploads">
+            <div class="intake-upload-zone" id="uploadLicense">
+              <input type="file" accept="image/*,.pdf" id="licenseInput">
+              <div class="upload-prompt">
+                <div class="intake-upload-icon">&#128179;</div>
+                <h4>Driver's License</h4>
+                <p>Take a photo or upload an image of your ID</p>
+              </div>
+              <div class="upload-success">&#10003; Driver's License uploaded</div>
+            </div>
+            <div class="intake-upload-zone" id="uploadInsurance">
+              <input type="file" accept="image/*,.pdf" id="insuranceInput">
+              <div class="upload-prompt">
+                <div class="intake-upload-icon">&#127973;</div>
+                <h4>Insurance Card</h4>
+                <p>Front of your medical insurance card</p>
+              </div>
+              <div class="upload-success">&#10003; Insurance Card uploaded</div>
+            </div>
+          </div>
+          <div class="intake-actions">
+            <button class="intake-btn intake-btn-primary" id="intakeNext3" disabled>Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Summary + Book -->
+        <div class="intake-step" id="intakeStep4">
+          <div class="summary-container">
+            <div class="summary-item">
+              <div class="summary-label">Appointment</div>
+              <div class="summary-value" id="summaryDate">—</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Patient</div>
+              <div class="summary-value" id="summaryPatient">—</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Concern</div>
+              <div class="summary-value summary-concern" id="summaryConcern">—</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Documents</div>
+              <div class="summary-value" id="summaryDocs">—</div>
+            </div>
+          </div>
+          <div class="intake-actions">
+            <button class="intake-btn intake-btn-book" id="intakeBook">Book Appointment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Elements ---
+    var bookStage = document.getElementById('bookStage');
+    var calBackBtn = document.getElementById('calBackBtn');
+    var isExpanded = false;
+
+    function expandToCalendar() {
+      if (isExpanded) return;
+      isExpanded = true;
+      bookStage.classList.add('expanded');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function collapseToOverview() {
+      isExpanded = false;
+      bookStage.classList.remove('expanded');
+      // Reset time slots and selection
+      selectedDate = null;
+      selectedSlot = null;
+      document.getElementById('timeSlots').style.display = 'none';
+      document.getElementById('bookConfirm').style.display = 'none';
+      document.getElementById('footerNote').style.display = 'none';
+      renderCalendar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    calBackBtn.addEventListener('click', collapseToOverview);
+
+    // --- Patient toggle ---
+    var btnNew = document.getElementById('btnNew');
+    var btnExisting = document.getElementById('btnExisting');
+    btnNew.addEventListener('click', function() { btnNew.classList.add('active'); btnExisting.classList.remove('active'); btnExisting.textContent = 'Existing patient'; btnNew.textContent = '\u2713 New patient'; });
+    btnExisting.addEventListener('click', function() { btnExisting.classList.add('active'); btnNew.classList.remove('active'); btnNew.textContent = 'New patient'; btnExisting.textContent = '\u2713 Existing patient'; });
+
+    // --- Calendar ---
+    var today = new Date();
+    var currentMonth = today.getMonth();
+    var currentYear = today.getFullYear();
+    var selectedDate = null;
+    var selectedSlot = null;
+
+    function getAvailability(year, month) {
+      var avail = {};
+      var daysInMonth = new Date(year, month + 1, 0).getDate();
+      for (var d = 1; d <= daysInMonth; d++) {
+        var date = new Date(year, month, d);
+        var dow = date.getDay();
+        if (dow === 1 || dow === 3 || dow === 4) {
+          if (date >= today || date.toDateString() === today.toDateString()) {
+            var slots = Math.floor(Math.random() * 20) + 10;
+            avail[d] = slots;
+          }
+        }
+      }
+      return avail;
+    }
+
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    function renderCalendar() {
+      var grid = document.getElementById('calGrid');
+      var title = document.getElementById('calTitle');
+      title.textContent = MONTHS[currentMonth] + ' ' + currentYear;
+
+      var firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      var avail = getAvailability(currentYear, currentMonth);
+
+      var html = '';
+      ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(function(d) { html += '<div class="cal-day-header">' + d + '</div>'; });
+      for (var i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+
+      for (var d = 1; d <= daysInMonth; d++) {
+        var isToday = (d === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear());
+        var isSelected = selectedDate && selectedDate.getDate() === d && selectedDate.getMonth() === currentMonth && selectedDate.getFullYear() === currentYear;
+        var cls = 'cal-day' + (isToday ? ' today' : '') + (isSelected ? ' selected' : '');
+        html += '<div class="' + cls + '" data-day="' + d + '"><div class="cal-date">' + d + '</div>';
+        if (avail[d]) html += '<div class="cal-event green">' + avail[d] + ' appts</div>';
+        html += '</div>';
+      }
+      grid.innerHTML = html;
+
+      grid.querySelectorAll('.cal-day:not(.empty)').forEach(function(cell) {
+        cell.addEventListener('click', function() {
+          var day = parseInt(this.dataset.day);
+          selectedDate = new Date(currentYear, currentMonth, day);
+          selectedSlot = null;
+
+          // Animate to expanded layout on first click
+          expandToCalendar();
+
+          renderCalendar();
+          showTimeSlots(day, avail[day] || 0);
+        });
+      });
+    }
+
+    function showTimeSlots(day, count) {
+      var container = document.getElementById('timeSlots');
+      var grid = document.getElementById('timeSlotsGrid');
+      var title = document.getElementById('timeSlotsTitle');
+      var confirm = document.getElementById('bookConfirm');
+      var note = document.getElementById('footerNote');
+
+      if (!count) {
+        container.style.display = 'block';
+        title.textContent = MONTHS[currentMonth] + ' ' + day + ' \u2014 No availability';
+        grid.innerHTML = '<p style="grid-column:1/-1;color:var(--text-muted);font-size:0.9rem;">No appointments available on this date. Please select another day.</p>';
+        confirm.style.display = 'none';
+        note.style.display = 'none';
+        return;
+      }
+
+      container.style.display = 'block';
+      title.textContent = 'Select a time \u2014 ' + MONTHS[currentMonth] + ' ' + day;
+
+      var times = ['8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM'];
+      var html = '';
+      times.forEach(function(t, i) {
+        var available = i < count && Math.random() > 0.3;
+        html += '<button class="time-slot' + (available ? '' : ' unavailable') + '" data-time="' + t + '">' + t + '</button>';
+      });
+      grid.innerHTML = html;
+
+      grid.querySelectorAll('.time-slot:not(.unavailable)').forEach(function(slot) {
+        slot.addEventListener('click', function() {
+          grid.querySelectorAll('.time-slot').forEach(function(s) { s.classList.remove('selected'); });
+          this.classList.add('selected');
+          selectedSlot = this.dataset.time;
+          confirm.style.display = 'block';
+          note.style.display = 'block';
+        });
+      });
+    }
+
+    document.getElementById('calPrev').addEventListener('click', function() {
+      currentMonth--;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      renderCalendar();
+      document.getElementById('timeSlots').style.display = 'none';
+      document.getElementById('bookConfirm').style.display = 'none';
+      document.getElementById('footerNote').style.display = 'none';
+    });
+    document.getElementById('calNext').addEventListener('click', function() {
+      currentMonth++;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      renderCalendar();
+      document.getElementById('timeSlots').style.display = 'none';
+      document.getElementById('bookConfirm').style.display = 'none';
+      document.getElementById('footerNote').style.display = 'none';
+    });
+
+    document.getElementById('confirmBtn').addEventListener('click', function() {
+      if (selectedDate && selectedSlot) {
+        openIntake();
+      }
+    });
+
+    renderCalendar();
+
+    // ===== POST-BOOKING INTAKE FLOW =====
+    (function() {
+      var overlay = document.getElementById('intakeOverlay');
+      var titleEl = document.getElementById('intakeTitle');
+      var subtitleEl = document.getElementById('intakeSubtitle');
+      var dots = document.querySelectorAll('.intake-step-dot');
+      var allSteps = document.querySelectorAll('.intake-step');
+      var textarea = document.getElementById('intakeIssue');
+      var glassContainer = document.getElementById('glassContainer');
+      var enhanceBtn = document.getElementById('intakeEnhance');
+      var next1 = document.getElementById('intakeNext1');
+      var next2 = document.getElementById('intakeNext2');
+      var next3 = document.getElementById('intakeNext3');
+      var bookBtn = document.getElementById('intakeBook');
+      var voiceBtn = document.getElementById('intakeVoiceBtn');
+      var voiceBtnText = document.getElementById('voiceBtnText');
+      var voiceTimer = document.getElementById('voiceTimer');
+      var licenseInput = document.getElementById('licenseInput');
+      var insuranceInput = document.getElementById('insuranceInput');
+      var uploadLicense = document.getElementById('uploadLicense');
+      var uploadInsurance = document.getElementById('uploadInsurance');
+
+      var recognition = null, isRecording = false, timerInterval = null, seconds = 0, enhanced = false;
+
+      var stepInfo = {
+        1: { title: 'Tell Us About Your Issue', subtitle: 'Type it out or use voice-to-text. Talk for 1-2 minutes explaining what\'s going on.' },
+        2: { title: 'You\'re a Great Fit!', subtitle: 'Dr. Elguizaoui can help with your concern.' },
+        3: { title: 'Upload Your Cards', subtitle: 'We\'ll need your driver\'s license and medical insurance card.' },
+        4: { title: 'Review & Book', subtitle: 'Confirm your details and book your appointment.' }
+      };
+
+      function goToStep(step) {
+        allSteps.forEach(function(s) { s.classList.remove('active'); });
+        document.getElementById('intakeStep' + step).classList.add('active');
+        dots.forEach(function(d, i) {
+          d.classList.remove('active', 'completed');
+          if (i + 1 === step) d.classList.add('active');
+          if (i + 1 < step) d.classList.add('completed');
+        });
+        titleEl.textContent = stepInfo[step].title;
+        subtitleEl.textContent = stepInfo[step].subtitle;
+        if (step === 4) populateSummary();
+      }
+
+      function populateSummary() {
+        var dateStr = selectedDate
+          ? MONTHS[selectedDate.getMonth()] + ' ' + selectedDate.getDate() + ', ' + selectedDate.getFullYear() + ' at ' + selectedSlot
+          : '—';
+        document.getElementById('summaryDate').textContent = dateStr;
+        var pt = document.getElementById('btnNew').classList.contains('active') ? 'New Patient' : 'Existing Patient';
+        document.getElementById('summaryPatient').textContent = pt;
+        document.getElementById('summaryConcern').textContent = textarea.value.trim() || '—';
+        var hasL = uploadLicense.classList.contains('uploaded'), hasI = uploadInsurance.classList.contains('uploaded');
+        document.getElementById('summaryDocs').textContent = (hasL ? 'License' : '') + (hasL && hasI ? ' + ' : '') + (hasI ? 'Insurance Card' : '') || '—';
+      }
+
+      // Liquid glass text input
+      textarea.addEventListener('input', function() {
+        var hasText = this.value.trim().length > 0;
+        glassContainer.classList.toggle('has-text', hasText);
+        textarea.classList.toggle('typing', hasText);
+        if (this.value.trim().length >= 10 && !enhanced) {
+          enhanceBtn.style.display = 'flex';
+        } else if (this.value.trim().length < 10) {
+          enhanceBtn.style.display = 'none';
+          next1.style.display = 'none';
+        }
+      });
+
+      // Enhance
+      enhanceBtn.addEventListener('click', function() {
+        var raw = textarea.value.trim();
+        if (!raw) return;
+        enhanceBtn.classList.add('enhancing');
+        enhanceBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7L12 16.4 5.7 21l2.3-7L2 9.4h7.6z"/></svg> Enhancing...';
+        setTimeout(function() {
+          var cleaned = enhanceText(raw);
+          textarea.style.opacity = '0';
+          setTimeout(function() {
+            textarea.value = cleaned;
+            textarea.style.opacity = '1';
+            textarea.style.transition = 'opacity 0.5s ease';
+          }, 300);
+          enhanced = true;
+          enhanceBtn.style.display = 'none';
+          next1.style.display = '';
+          next1.disabled = false;
+        }, 1500);
+      });
+
+      function enhanceText(raw) {
+        var text = raw.trim();
+        var fixes = {
+          'shoudlar': 'shoulder', 'sholder': 'shoulder', 'shouldar': 'shoulder',
+          'nee': 'knee', 'kne': 'knee', 'knne': 'knee',
+          'mu ': 'my ', 'teh ': 'the ', 'adn ': 'and ', 'hte ': 'the ',
+          'becuase': 'because', 'definately': 'definitely',
+          'i ': 'I ', 'im ': "I'm ", 'ive ': "I've ", 'cant ': "can't ",
+          'dont ': "don't ", 'doesnt ': "doesn't ", 'didnt ': "didn't ",
+          'wont ': "won't ", 'isnt ': "isn't ", 'wasnt ': "wasn't ",
+          'painfull': 'painful', 'numbnes': 'numbness',
+          'surgerey': 'surgery', 'surgury': 'surgery',
+          'injurry': 'injury', 'injery': 'injury'
+        };
+        for (var wrong in fixes) { text = text.split(wrong).join(fixes[wrong]); }
+        text = text.replace(/(^\s*|[.!?]\s+)([a-z])/g, function(m, p, c) { return p + c.toUpperCase(); });
+        if (text.length > 0) text = text[0].toUpperCase() + text.slice(1);
+        if (text.length > 0 && !/[.!?]$/.test(text)) text += '.';
+        return text;
+      }
+
+      // Navigation
+      next1.addEventListener('click', function() { goToStep(2); });
+      next2.addEventListener('click', function() { goToStep(3); });
+      next3.addEventListener('click', function() { goToStep(4); });
+      bookBtn.addEventListener('click', function() {
+        overlay.innerHTML = '<div class="intake-modal" style="text-align:center;padding:60px 40px;"><div class="intake-success-icon" style="font-size:3.5rem;margin-bottom:16px;">&#10004;&#65039;</div><h2 style="font-family:Inter,sans-serif;font-size:1.4rem;margin-bottom:8px;color:var(--text);">Appointment Booked!</h2><p style="color:var(--text-muted);font-size:0.92rem;margin-bottom:24px;">We\'ll send a confirmation to your email. See you soon!</p><a href="../index.html" class="intake-btn intake-btn-primary" style="display:inline-block;text-decoration:none;padding:14px 40px;border-radius:12px;background:var(--primary);color:#fff;font-weight:600;">Done</a></div>';
+      });
+
+      // Upload handlers
+      function checkUploads() {
+        next3.disabled = !(uploadLicense.classList.contains('uploaded') && uploadInsurance.classList.contains('uploaded'));
+      }
+      licenseInput.addEventListener('change', function() { if (this.files.length) { uploadLicense.classList.add('uploaded'); checkUploads(); } });
+      insuranceInput.addEventListener('change', function() { if (this.files.length) { uploadInsurance.classList.add('uploaded'); checkUploads(); } });
+
+      // Voice-to-text
+      function startRecording() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) { alert('Voice-to-text not supported. Please type instead.'); return; }
+        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SR();
+        recognition.continuous = true; recognition.interimResults = true; recognition.lang = 'en-US';
+        var finalT = textarea.value;
+        recognition.onresult = function(e) {
+          var interim = '';
+          for (var i = e.resultIndex; i < e.results.length; i++) {
+            if (e.results[i].isFinal) finalT += e.results[i][0].transcript + ' '; else interim += e.results[i][0].transcript;
+          }
+          textarea.value = finalT + interim;
+          textarea.dispatchEvent(new Event('input'));
+        };
+        recognition.onerror = function() { stopRecording(); };
+        recognition.onend = function() { if (isRecording) recognition.start(); };
+        recognition.start(); isRecording = true;
+        voiceBtn.classList.add('recording'); voiceBtnText.textContent = 'Recording... Tap to stop';
+        voiceTimer.style.display = 'inline'; seconds = 0;
+        timerInterval = setInterval(function() { seconds++; voiceTimer.textContent = Math.floor(seconds/60) + ':' + (seconds%60<10?'0':'') + seconds%60; }, 1000);
+      }
+      function stopRecording() {
+        if (recognition) { isRecording = false; recognition.stop(); recognition = null; }
+        voiceBtn.classList.remove('recording'); voiceBtnText.textContent = 'Tap to use voice-to-text';
+        voiceTimer.style.display = 'none'; clearInterval(timerInterval);
+      }
+      voiceBtn.addEventListener('click', function() { if (isRecording) stopRecording(); else startRecording(); });
+
+      // Open intake overlay
+      window.openIntake = function() {
+        enhanced = false;
+        textarea.value = ''; textarea.style.opacity = '1'; textarea.style.transition = '';
+        next1.style.display = 'none'; next3.disabled = true;
+        enhanceBtn.style.display = 'none'; enhanceBtn.classList.remove('enhancing');
+        enhanceBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7L12 16.4 5.7 21l2.3-7L2 9.4h7.6z"/></svg> Enhance';
+        glassContainer.classList.remove('has-text'); textarea.classList.remove('typing');
+        uploadLicense.classList.remove('uploaded'); uploadInsurance.classList.remove('uploaded');
+        licenseInput.value = ''; insuranceInput.value = '';
+        goToStep(1);
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+    })();
+  </script>
+</body>
+</html>

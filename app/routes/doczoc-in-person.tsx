@@ -342,6 +342,16 @@ export default function InPersonPage() {
                 </div>
               </>
             )}
+            {tab === "surgeries" && (
+              <div className="dz-view-toggle">
+                <button className={`dz-view-btn${viewMode === "table" ? " dz-view-active" : ""}`} onClick={() => setViewMode("table")} title="Table view">
+                  <TableIcon active={viewMode === "table"} />
+                </button>
+                <button className={`dz-view-btn${viewMode === "grid" ? " dz-view-active" : ""}`} onClick={() => setViewMode("grid")} title="Grid view">
+                  <GridIcon active={viewMode === "grid"} />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -360,11 +370,17 @@ export default function InPersonPage() {
                       const cd = formatCountdown(now, a.date, a.time, a.completed);
                       return (
                         <tr key={a.id} style={a.completed ? { opacity: 0.6 } : undefined}>
-                          <td style={{ fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" }}>{a.patient}</td>
+                          <td style={{ fontWeight: 600, whiteSpace: "nowrap" }}>{a.patient}</td>
                           <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
-                          <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" }}>{a.time}</td>
+                          <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, whiteSpace: "nowrap" }}>{a.time}</td>
                           <td><CountdownBadge text={cd.text} color={cd.color} /></td>
-                          <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc", whiteSpace: "nowrap" }}>{a.type}</span></td>
+                          <td>
+                            {a.type.toLowerCase().includes("surgery") ? (
+                              <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(239,68,68,0.12)", color: "#f87171", whiteSpace: "nowrap" }}>Surgery</span>
+                            ) : (
+                              <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc", whiteSpace: "nowrap" }}>Appointment</span>
+                            )}
+                          </td>
                           <td className="dz-col-hide-lg" style={{ color: "#94a3b8" }}>{a.location}</td>
                           <td><Badge label={a.status} /></td>
                           <td className="dz-col-hide-xl dz-col-notes" style={{ fontSize: "0.82rem", color: "#64748b" }}>{a.notes}</td>
@@ -419,59 +435,110 @@ export default function InPersonPage() {
 
         {/* Surgeries */}
         {tab === "surgeries" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            {SURGERIES.map((s) => {
-              const cd = formatCountdown(now, s.date, s.time, false);
-              return (
-                <div key={s.id} className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-                  <div style={{ padding: "18px 22px", borderBottom: "1px solid rgba(99,102,241,0.1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
-                        <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "#f1f5f9" }}>{s.procedure}</span>
-                        <Badge label={s.status} />
-                      </div>
-                      <div style={{ fontSize: "0.85rem", color: "#94a3b8" }}>{s.patient}</div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <div style={{ textAlign: "right" }}>
-                          <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#818cf8" }}>{s.date}</div>
-                          <div style={{ fontSize: "0.82rem", fontFamily: "'SF Mono', Consolas, monospace", color: "#94a3b8" }}>{s.time}</div>
+          <>
+            {viewMode === "table" ? (
+              <div className="dz-table-wrap">
+                <table className="dz-table">
+                  <thead>
+                    <tr>
+                      <th>Procedure</th>
+                      <th>Patient</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Countdown</th>
+                      <th className="dz-col-hide-lg">Facility</th>
+                      <th className="dz-col-hide-lg">Anesthesia</th>
+                      <th>CPT / ICD-10</th>
+                      <th>Readiness</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {SURGERIES.map((s) => {
+                      const cd = formatCountdown(now, s.date, s.time, false);
+                      return (
+                        <tr key={s.id}>
+                          <td style={{ fontWeight: 700, maxWidth: 220 }}>{s.procedure}</td>
+                          <td style={{ whiteSpace: "nowrap" }}>{s.patient}</td>
+                          <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{s.date}</td>
+                          <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, whiteSpace: "nowrap" }}>{s.time}</td>
+                          <td><CountdownBadge text={cd.text} color={cd.color} /></td>
+                          <td className="dz-col-hide-lg" style={{ fontSize: "0.82rem" }}>{s.facility}<br /><span style={{ fontSize: "0.72rem", color: "#64748b" }}>POS {s.pos}</span></td>
+                          <td className="dz-col-hide-lg" style={{ fontSize: "0.82rem" }}>{s.anesthesia}</td>
+                          <td>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                              {s.codes.map((code) => (
+                                <span key={code} style={{ fontSize: "0.68rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "2px 7px", borderRadius: 4, fontWeight: 600, background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{code}</span>
+                              ))}
+                            </div>
+                          </td>
+                          <td>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                              <CheckBadge ok={s.preOp} label="Pre-Op" />
+                              <CheckBadge ok={s.authObtained} label="Auth" />
+                            </div>
+                          </td>
+                          <td><Badge label={s.status} /></td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                {SURGERIES.map((s) => {
+                  const cd = formatCountdown(now, s.date, s.time, false);
+                  return (
+                    <div key={s.id} className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+                      <div style={{ padding: "18px 22px", borderBottom: "1px solid rgba(99,102,241,0.1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                            <span style={{ fontSize: "1.05rem", fontWeight: 700 }}>{s.procedure}</span>
+                            <Badge label={s.status} />
+                          </div>
+                          <div style={{ fontSize: "0.85rem", color: "#94a3b8" }}>{s.patient}</div>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
+                          <div style={{ textAlign: "right" }}>
+                            <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#818cf8" }}>{s.date}</div>
+                            <div style={{ fontSize: "0.82rem", fontFamily: "'SF Mono', Consolas, monospace", color: "#94a3b8" }}>{s.time}</div>
+                          </div>
+                          <CountdownBadge text={cd.text} color={cd.color} />
                         </div>
                       </div>
-                      <CountdownBadge text={cd.text} color={cd.color} />
-                    </div>
-                  </div>
-                  <div style={{ padding: "16px 22px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Facility</div>
-                      <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>{s.facility}</div>
-                      <div style={{ fontSize: "0.78rem", color: "#64748b" }}>POS {s.pos}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Anesthesia</div>
-                      <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>{s.anesthesia}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>CPT / ICD-10</div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                        {s.codes.map((code) => (
-                          <span key={code} style={{ fontSize: "0.72rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "2px 8px", borderRadius: 4, fontWeight: 600, background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{code}</span>
-                        ))}
+                      <div style={{ padding: "16px 22px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+                        <div>
+                          <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Facility</div>
+                          <div style={{ fontSize: "0.88rem", fontWeight: 600 }}>{s.facility}</div>
+                          <div style={{ fontSize: "0.78rem", color: "#64748b" }}>POS {s.pos}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Anesthesia</div>
+                          <div style={{ fontSize: "0.88rem", fontWeight: 600 }}>{s.anesthesia}</div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>CPT / ICD-10</div>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                            {s.codes.map((code) => (
+                              <span key={code} style={{ fontSize: "0.72rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "2px 8px", borderRadius: 4, fontWeight: 600, background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{code}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 6 }}>Readiness</div>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            <CheckBadge ok={s.preOp} label="Pre-Op Cleared" />
+                            <CheckBadge ok={s.authObtained} label="Auth Obtained" />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 6 }}>Readiness</div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                        <CheckBadge ok={s.preOp} label="Pre-Op Cleared" />
-                        <CheckBadge ok={s.authObtained} label="Auth Obtained" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
 
         {/* Reports */}

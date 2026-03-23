@@ -7063,7 +7063,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   background: #ffffff; border-color: #e2e8f0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-[data-theme="light"] .dz-rcm-col-header { border-bottom-color: #e2e8f0; }
+[data-theme="light"] .dz-rcm-col-header { border-bottom-color: #e2e8f0; background: #f1f5f9; border-color: #e2e8f0; border-bottom-color: var(--col-color, #6366f1); }
 [data-theme="light"] .dz-rcm-col-title { color: #1e293b; }
 [data-theme="light"] .dz-rcm-col-timeline { color: #94a3b8; }
 [data-theme="light"] .dz-rcm-col-body { background: transparent; }

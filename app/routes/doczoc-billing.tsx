@@ -479,6 +479,36 @@ function ClaimRatingCard({ visit }: { visit: Visit }) {
   const { score, issues } = analyzeClaimQuality(visit);
   const scoreColor = score >= 8 ? "#22c55e" : score >= 6 ? "#fbbf24" : "#ef4444";
   const scoreLabel = score >= 8 ? "Excellent" : score >= 6 ? "Needs Review" : "High Risk";
+  const [animatedScore, setAnimatedScore] = useState(0);
+  const [showItems, setShowItems] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    // Animate score counting up
+    const duration = 1200;
+    const steps = 30;
+    const increment = score / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= score) {
+        setAnimatedScore(score);
+        clearInterval(timer);
+      } else {
+        setAnimatedScore(Math.round(current * 10) / 10);
+      }
+    }, duration / steps);
+
+    // Fade in issues one by one
+    issues.forEach((_, i) => {
+      setTimeout(() => {
+        setShowItems(prev => { const next = [...prev]; next[i] = true; return next; });
+      }, 600 + i * 200);
+    });
+
+    return () => clearInterval(timer);
+  }, [score, issues.length]);
+
+  const ringProgress = (animatedScore / 10) * 238.76;
 
   return (
     <div style={{
@@ -500,23 +530,32 @@ function ClaimRatingCard({ visit }: { visit: Visit }) {
             <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(148,163,184,0.1)" strokeWidth="6" />
             <circle cx="45" cy="45" r="38" fill="none" stroke={scoreColor} strokeWidth="6"
               strokeLinecap="round"
-              strokeDasharray={`${(score / 10) * 238.76} 238.76`}
+              strokeDasharray={`${ringProgress} 238.76`}
               transform="rotate(-90 45 45)"
-              style={{ transition: "stroke-dasharray 0.8s ease" }}
+              style={{ transition: "stroke-dasharray 0.1s linear" }}
             />
           </svg>
           <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: "1.5rem", fontWeight: 800, color: scoreColor, lineHeight: 1 }}>{score}</span>
+            <span style={{ fontSize: "1.5rem", fontWeight: 800, color: scoreColor, lineHeight: 1, transition: "color 0.3s" }}>{animatedScore}</span>
             <span style={{ fontSize: "0.6rem", color: "#64748b", fontWeight: 600 }}>/10</span>
           </div>
         </div>
-        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: scoreColor }}>{scoreLabel}</span>
+        <span style={{
+          fontSize: "0.75rem", fontWeight: 700, color: scoreColor,
+          opacity: animatedScore >= score ? 1 : 0,
+          transition: "opacity 0.4s ease",
+        }}>{scoreLabel}</span>
       </div>
 
       {/* Issues list */}
       <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, overflow: "auto" }}>
         {issues.map((issue, i) => (
-          <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+          <div key={i} style={{
+            display: "flex", gap: 8, alignItems: "flex-start",
+            opacity: showItems[i] ? 1 : 0,
+            transform: showItems[i] ? "translateY(0)" : "translateY(8px)",
+            transition: "opacity 0.4s ease, transform 0.4s ease",
+          }}>
             <div style={{
               width: 18, height: 18, borderRadius: "50%", flexShrink: 0, marginTop: 1,
               display: "flex", alignItems: "center", justifyContent: "center",

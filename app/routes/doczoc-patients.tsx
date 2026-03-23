@@ -22,17 +22,16 @@ function InsuranceLogo({ name }: { name: string }) {
     : name.toLowerCase().includes("medicare") ? "medicare.gov"
     : null;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }} title={name}>
       {domain ? (
         <img
           src={`https://logo.clearbit.com/${domain}?size=40`}
           alt={name}
-          style={{ width: 20, height: 20, borderRadius: 4, objectFit: "contain" }}
+          style={{ width: 24, height: 24, borderRadius: 4, objectFit: "contain" }}
           onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; (e.target as HTMLImageElement).nextElementSibling && ((e.target as HTMLImageElement).nextElementSibling as HTMLElement).style.removeProperty("display"); }}
         />
       ) : null}
-      <span style={{ display: domain ? "none" : "flex", width: 20, height: 20, borderRadius: 4, background: brand.bg, color: brand.color, alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 800, flexShrink: 0 }}>{brand.initial}</span>
-      <span style={{ fontSize: "0.78rem" }}>{name.replace(/ PPO| HMO| Choice Plus| Open Access Plus| Student Plan| Plan F/g, "")}</span>
+      <span style={{ display: domain ? "none" : "flex", width: 24, height: 24, borderRadius: 4, background: brand.bg, color: brand.color, alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 800, flexShrink: 0 }}>{brand.initial}</span>
     </div>
   );
 }
@@ -138,10 +137,12 @@ export default function PatientsPage() {
               <thead>
                 <tr>
                   <th>Patient</th>
+                  <th>Age</th>
                   <th>Condition</th>
-                  <th className="dz-col-hide-lg">Insurance</th>
+                  <th className="dz-col-hide-lg" style={{ textAlign: "center" }}>Insurance</th>
                   <th className="dz-col-hide-lg">Phone</th>
                   <th className="dz-col-hide-xl">Email</th>
+                  <th style={{ textAlign: "center" }}>Visits</th>
                   <th>Next Appt</th>
                   <th>Status</th>
                 </tr>
@@ -150,24 +151,25 @@ export default function PatientsPage() {
                 {filtered.map((p) => (
                   <tr key={p.id} className="dz-row-clickable" onClick={() => navigate(`/doczoc/patients/${p.id}`)}>
                     <td>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <PatientInitials name={p.name} />
-                        <div>
-                          <div className="dz-table-name">{p.name}</div>
-                          <div className="dz-table-sub">Age {p.age}</div>
-                        </div>
+                        <div className="dz-table-name" style={{ fontSize: "0.78rem" }}>{p.name}</div>
                       </div>
                     </td>
-                    <td>{p.condition}</td>
+                    <td style={{ fontSize: "0.75rem", textAlign: "center" }}>{p.age}</td>
+                    <td style={{ fontSize: "0.75rem" }}>{p.condition}</td>
                     <td className="dz-col-hide-lg"><InsuranceLogo name={p.insurance} /></td>
-                    <td className="dz-col-hide-lg">{p.phone}</td>
-                    <td className="dz-col-hide-xl">{p.email}</td>
-                    <td>{p.nextAppt}</td>
+                    <td className="dz-col-hide-lg" style={{ fontSize: "0.75rem" }}>{p.phone}</td>
+                    <td className="dz-col-hide-xl" style={{ fontSize: "0.75rem" }}>{p.email}</td>
+                    <td style={{ textAlign: "center" }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", minWidth: 24, padding: "2px 6px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#818cf8" }}>{p.visits.length}</span>
+                    </td>
+                    <td style={{ fontSize: "0.75rem" }}>{p.nextAppt}</td>
                     <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={7} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No patients found</td></tr>
+                  <tr><td colSpan={9} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No patients found</td></tr>
                 )}
               </tbody>
             </table>

@@ -2,6 +2,109 @@ import { Link, useLocation } from "react-router";
 import { useState, useRef, useEffect } from "react";
 import { PlatformBg } from "~/components/PlatformBg";
 
+function SplashScreen({ onDone }: { onDone: () => void }) {
+  const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animRef = useRef<number>(0);
+
+  useEffect(() => {
+    // Particle animation on canvas
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+    ctx.scale(dpr, dpr);
+    const W = canvas.clientWidth;
+    const H = canvas.clientHeight;
+
+    const particles: { x: number; y: number; vx: number; vy: number; r: number; alpha: number; color: string }[] = [];
+    const colors = ["#6366f1", "#818cf8", "#a78bfa", "#34d399", "#22d3ee"];
+    for (let i = 0; i < 80; i++) {
+      particles.push({
+        x: W / 2 + (Math.random() - 0.5) * 40,
+        y: H / 2 + (Math.random() - 0.5) * 40,
+        vx: (Math.random() - 0.5) * 3,
+        vy: (Math.random() - 0.5) * 3,
+        r: 1.5 + Math.random() * 3,
+        alpha: 0,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
+    }
+
+    let t = 0;
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, W, H);
+      t++;
+      for (const p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.99;
+        p.vy *= 0.99;
+        p.alpha = Math.min(1, t / 30) * (1 - Math.max(0, (t - 90) / 30));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, p.alpha * 0.7);
+        ctx.fill();
+      }
+
+      // Draw connecting lines
+      ctx.globalAlpha = 0.1;
+      ctx.strokeStyle = "#818cf8";
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+      animRef.current = requestAnimationFrame(draw);
+    }
+    animRef.current = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(animRef.current);
+  }, []);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setPhase("hold"), 100);
+    const t2 = setTimeout(() => setPhase("exit"), 2200);
+    const t3 = setTimeout(() => onDone(), 2900);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [onDone]);
+
+  return (
+    <div className={`dz-splash dz-splash-${phase}`}>
+      <canvas ref={canvasRef} className="dz-splash-canvas" />
+      <div className="dz-splash-content">
+        <div className="dz-splash-logo-ring">
+          <div className="dz-splash-logo-inner">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+          </div>
+        </div>
+        <h1 className="dz-splash-title">DocZoc</h1>
+        <p className="dz-splash-subtitle">Welcome back, Dr. Elguizaoui</p>
+        <div className="dz-splash-loader">
+          <div className="dz-splash-loader-bar" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function meta() {
   return [{ title: "Dashboard | DocZoc" }];
 }
@@ -88,6 +191,10 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
               APIs
             </Link>
+            <Link to="/doczoc/reports" className="dz-user-popup-item" onClick={() => setUserMenuOpen(false)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Reports
+            </Link>
             <Link to="/doczoc/appearance" className="dz-user-popup-item" onClick={() => setUserMenuOpen(false)}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
               Appearance
@@ -165,6 +272,8 @@ export { Sidebar, ThemeToggleFab };
 export default function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
+  const location = useLocation();
+  const [showSplash, setShowSplash] = useState(() => !!(location.state as any)?.fromLogin);
 
   const stats = [
     { label: "Today's Appointments", value: "24", change: "+3", color: "#6366f1" },
@@ -184,6 +293,7 @@ export default function DashboardPage() {
 
   return (
     <div className="dz-platform">
+      {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
       <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>

@@ -7,14 +7,19 @@ export function meta() {
 }
 
 type Tab = "appointments" | "surgeries" | "reports";
+type ApptFilter = "all" | "incoming" | "completed";
+type ViewMode = "table" | "grid";
 
 const APPOINTMENTS = [
-  { id: 1, patient: "Sarah Mitchell", date: "Mar 25, 2026", time: "9:00 AM", type: "Post-Op Follow-up", location: "Manhattan", status: "Confirmed", notes: "8-week post-op rotator cuff repair" },
-  { id: 2, patient: "David Ross", date: "Mar 24, 2026", time: "10:30 AM", type: "Follow-up Consultation", location: "Manhattan", status: "Confirmed", notes: "Hip replacement discussion" },
-  { id: 3, patient: "Emily Chen", date: "Mar 26, 2026", time: "11:00 AM", type: "Follow-up — OT", location: "Manhattan", status: "Confirmed", notes: "Wrist rehab check" },
-  { id: 4, patient: "Lisa Strassberg", date: "Mar 28, 2026", time: "2:00 PM", type: "Final Follow-up", location: "Brooklyn", status: "Pending", notes: "12-week knee arthroscopy final" },
-  { id: 5, patient: "Michael Brown", date: "Apr 2, 2026", time: "9:30 AM", type: "Follow-up", location: "Manhattan", status: "Pending", notes: "Ankle sprain recheck" },
-  { id: 6, patient: "Maria Lopez", date: "Apr 1, 2026", time: "3:00 PM", type: "Post-Op Follow-up", location: "Manhattan", status: "Confirmed", notes: "6-week ACL follow-up" },
+  { id: 1, patient: "Sarah Mitchell", date: "Mar 25, 2026", time: "9:00 AM", type: "Post-Op Follow-up", location: "Manhattan", status: "Confirmed", notes: "8-week post-op rotator cuff repair", completed: false },
+  { id: 2, patient: "David Ross", date: "Mar 24, 2026", time: "10:30 AM", type: "Follow-up Consultation", location: "Manhattan", status: "Confirmed", notes: "Hip replacement discussion", completed: false },
+  { id: 3, patient: "Emily Chen", date: "Mar 26, 2026", time: "11:00 AM", type: "Follow-up — OT", location: "Manhattan", status: "Confirmed", notes: "Wrist rehab check", completed: false },
+  { id: 4, patient: "Lisa Strassberg", date: "Mar 28, 2026", time: "2:00 PM", type: "Final Follow-up", location: "Brooklyn", status: "Pending", notes: "12-week knee arthroscopy final", completed: false },
+  { id: 5, patient: "Michael Brown", date: "Apr 2, 2026", time: "9:30 AM", type: "Follow-up", location: "Manhattan", status: "Pending", notes: "Ankle sprain recheck", completed: false },
+  { id: 6, patient: "Maria Lopez", date: "Apr 1, 2026", time: "3:00 PM", type: "Post-Op Follow-up", location: "Manhattan", status: "Confirmed", notes: "6-week ACL follow-up", completed: false },
+  { id: 7, patient: "Sarah Mitchell", date: "Feb 10, 2026", time: "9:00 AM", type: "Post-Op Follow-up", location: "Manhattan", status: "Completed", notes: "4-week rotator cuff check", completed: true },
+  { id: 8, patient: "James Kim", date: "Feb 15, 2026", time: "10:00 AM", type: "Pre-Op Evaluation", location: "Manhattan", status: "Completed", notes: "ACL reconstruction pre-op", completed: true },
+  { id: 9, patient: "Emily Chen", date: "Feb 20, 2026", time: "2:30 PM", type: "Initial Consultation", location: "Manhattan", status: "Completed", notes: "Wrist pain evaluation", completed: true },
 ];
 
 const SURGERIES = [
@@ -26,6 +31,7 @@ const SURGERIES = [
 const statusColors: Record<string, { bg: string; color: string }> = {
   Confirmed: { bg: "rgba(34,197,94,0.12)", color: "#22c55e" },
   Pending: { bg: "rgba(251,191,36,0.12)", color: "#fbbf24" },
+  Completed: { bg: "rgba(99,102,241,0.12)", color: "#818cf8" },
   Scheduled: { bg: "rgba(34,197,94,0.12)", color: "#22c55e" },
   "Pending Auth": { bg: "rgba(239,68,68,0.12)", color: "#f87171" },
   Tentative: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" },
@@ -58,6 +64,22 @@ function CheckBadge({ ok, label }: { ok: boolean; label: string }) {
   );
 }
 
+function GridIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+    </svg>
+  );
+}
+
+function TableIcon({ active }: { active: boolean }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
+
 // ── Operative Report Builder ────────────────────────────────────────
 const lbl: React.CSSProperties = { fontSize: "0.72rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4, display: "block" };
 const inp: React.CSSProperties = {
@@ -73,10 +95,8 @@ function OperativeReportBuilder() {
     preOpDiagnosis: "", postOpDiagnosis: "",
     proceduresPerformed: "", anesthesiaType: "General",
     indications: "",
-    // Body
     preparation: "", incisionApproach: "", findings: "",
     operativeDetails: "", closure: "",
-    // Footer
     ebl: "", specimens: "", hardware: "",
     tourniquetTime: "", complications: "None",
     disposition: "Patient was extubated and transferred to PACU in stable condition.",
@@ -114,7 +134,6 @@ function OperativeReportBuilder() {
       </div>
 
       <div style={{ padding: "20px 22px", display: "flex", flexDirection: "column", gap: 24 }}>
-        {/* Section 1: Header */}
         <div>
           <h3 style={{ fontSize: "0.92rem", fontWeight: 700, color: "#818cf8", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(99,102,241,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", fontWeight: 800, color: "#a5b4fc" }}>1</span>
@@ -147,7 +166,6 @@ function OperativeReportBuilder() {
           </div>
         </div>
 
-        {/* Section 2: Body */}
         <div>
           <h3 style={{ fontSize: "0.92rem", fontWeight: 700, color: "#818cf8", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(99,102,241,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", fontWeight: 800, color: "#a5b4fc" }}>2</span>
@@ -162,7 +180,6 @@ function OperativeReportBuilder() {
           </div>
         </div>
 
-        {/* Section 3: Footer */}
         <div>
           <h3 style={{ fontSize: "0.92rem", fontWeight: 700, color: "#818cf8", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(99,102,241,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", fontWeight: 800, color: "#a5b4fc" }}>3</span>
@@ -192,6 +209,14 @@ export default function InPersonPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const [tab, setTab] = useState<Tab>("appointments");
+  const [apptFilter, setApptFilter] = useState<ApptFilter>("all");
+  const [viewMode, setViewMode] = useState<ViewMode>("table");
+
+  const incomingAppts = APPOINTMENTS.filter(a => !a.completed);
+  const completedAppts = APPOINTMENTS.filter(a => a.completed);
+  const filteredAppts = apptFilter === "incoming" ? incomingAppts
+    : apptFilter === "completed" ? completedAppts
+    : APPOINTMENTS;
 
   return (
     <div className="dz-platform">
@@ -203,6 +228,18 @@ export default function InPersonPage() {
             <h1>In-Person</h1>
             <p>Appointments, surgeries, and operative reports</p>
           </div>
+          {tab === "appointments" && (
+            <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <div className="dz-view-toggle">
+                <button className={`dz-view-btn${viewMode === "table" ? " dz-view-active" : ""}`} onClick={() => setViewMode("table")} title="Table view">
+                  <TableIcon active={viewMode === "table"} />
+                </button>
+                <button className={`dz-view-btn${viewMode === "grid" ? " dz-view-active" : ""}`} onClick={() => setViewMode("grid")} title="Grid view">
+                  <GridIcon active={viewMode === "grid"} />
+                </button>
+              </div>
+            </div>
+          )}
         </header>
 
         {/* Tabs */}
@@ -220,28 +257,79 @@ export default function InPersonPage() {
           </div>
         </div>
 
-        {/* Appointments */}
+        {/* Appointments sub-filter */}
         {tab === "appointments" && (
-          <div className="dz-table-wrap">
-            <table className="dz-table">
-              <thead>
-                <tr><th>Patient</th><th>Date</th><th>Time</th><th>Type</th><th>Location</th><th>Status</th><th>Notes</th></tr>
-              </thead>
-              <tbody>
-                {APPOINTMENTS.map((a) => (
-                  <tr key={a.id}>
-                    <td style={{ fontWeight: 600, color: "#f1f5f9" }}>{a.patient}</td>
-                    <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
-                    <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" }}>{a.time}</td>
-                    <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc" }}>{a.type}</span></td>
-                    <td style={{ color: "#94a3b8" }}>{a.location}</td>
-                    <td><Badge label={a.status} /></td>
-                    <td style={{ fontSize: "0.82rem", color: "#64748b", maxWidth: 200 }}>{a.notes}</td>
-                  </tr>
+          <>
+            <div className="dz-sub-filter-bar">
+              <button className={`dz-sub-filter-btn${apptFilter === "all" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("all")}>
+                All <span className="dz-sub-filter-count">{APPOINTMENTS.length}</span>
+              </button>
+              <button className={`dz-sub-filter-btn${apptFilter === "incoming" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("incoming")}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Incoming <span className="dz-sub-filter-count">{incomingAppts.length}</span>
+              </button>
+              <button className={`dz-sub-filter-btn${apptFilter === "completed" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("completed")}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Completed <span className="dz-sub-filter-count">{completedAppts.length}</span>
+              </button>
+            </div>
+
+            {viewMode === "table" ? (
+              <div className="dz-table-wrap">
+                <table className="dz-table">
+                  <thead>
+                    <tr><th>Patient</th><th>Date</th><th>Time</th><th>Type</th><th>Location</th><th>Status</th><th>Notes</th></tr>
+                  </thead>
+                  <tbody>
+                    {filteredAppts.map((a) => (
+                      <tr key={a.id} style={a.completed ? { opacity: 0.6 } : undefined}>
+                        <td style={{ fontWeight: 600, color: "#f1f5f9" }}>{a.patient}</td>
+                        <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
+                        <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" }}>{a.time}</td>
+                        <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc" }}>{a.type}</span></td>
+                        <td style={{ color: "#94a3b8" }}>{a.location}</td>
+                        <td><Badge label={a.status} /></td>
+                        <td style={{ fontSize: "0.82rem", color: "#64748b", maxWidth: 200 }}>{a.notes}</td>
+                      </tr>
+                    ))}
+                    {filteredAppts.length === 0 && (
+                      <tr><td colSpan={7} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No appointments found</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="dz-appt-grid">
+                {filteredAppts.map((a) => (
+                  <div key={a.id} className={`dz-appt-card${a.completed ? " dz-appt-completed" : ""}`}>
+                    <div className="dz-appt-card-top">
+                      <span className="dz-appt-card-name">{a.patient}</span>
+                      <Badge label={a.status} />
+                    </div>
+                    <div className="dz-appt-card-type">{a.type}</div>
+                    <div className="dz-appt-card-details">
+                      <div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <span>{a.date}</span>
+                      </div>
+                      <div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>{a.time}</span>
+                      </div>
+                      <div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <span>{a.location}</span>
+                      </div>
+                    </div>
+                    <div className="dz-appt-card-notes">{a.notes}</div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+                {filteredAppts.length === 0 && (
+                  <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 32, color: "#64748b" }}>No appointments found</div>
+                )}
+              </div>
+            )}
+          </>
         )}
 
         {/* Surgeries */}

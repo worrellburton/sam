@@ -7658,3 +7658,429 @@ img.insurance-logo:hover {
 .dz-patient-link:hover .dz-table-name {
   color: #818cf8;
 }
+
+/* ── Splash Screen ──────────────────────────────────── */
+.dz-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f1e;
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+.dz-splash-enter { opacity: 0; }
+.dz-splash-hold { opacity: 1; }
+.dz-splash-exit { opacity: 0; pointer-events: none; }
+
+.dz-splash-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dz-splash-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.dz-splash-logo-ring {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: conic-gradient(from 0deg, #6366f1, #a78bfa, #22d3ee, #34d399, #6366f1);
+  padding: 3px;
+  animation: dz-splash-spin 2.5s linear infinite, dz-splash-scale-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.dz-splash-logo-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #13132b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 60px rgba(99, 102, 241, 0.3), inset 0 0 30px rgba(99, 102, 241, 0.1);
+}
+
+.dz-splash-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #e0e7ff 0%, #818cf8 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  margin: 0;
+  animation: dz-splash-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.dz-splash-subtitle {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  margin: 0;
+  font-weight: 400;
+  animation: dz-splash-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+.dz-splash-loader {
+  width: 200px;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(99, 102, 241, 0.15);
+  overflow: hidden;
+  margin-top: 12px;
+  animation: dz-splash-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+}
+
+.dz-splash-loader-bar {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #6366f1, #a78bfa, #22d3ee);
+  animation: dz-splash-load 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+}
+
+@keyframes dz-splash-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes dz-splash-scale-in {
+  from { transform: scale(0.3) rotate(-180deg); opacity: 0; }
+  to { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes dz-splash-fade-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes dz-splash-load {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* ── View Toggle (Table/Grid) ───────────────────────── */
+.dz-view-toggle {
+  display: inline-flex;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.dz-view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 34px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dz-view-btn:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #94a3b8;
+}
+.dz-view-btn.dz-view-active {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+/* ── Patients Grid ──────────────────────────────────── */
+.dz-patients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.dz-patient-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 14px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dz-patient-card:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(15, 23, 42, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.dz-patient-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dz-patient-card-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  letter-spacing: 0.02em;
+}
+.dz-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dz-patient-card-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+.dz-patient-card-condition {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+.dz-patient-card-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+.dz-patient-card-label {
+  color: #475569;
+  font-weight: 600;
+  margin-right: 4px;
+}
+.dz-patient-card-status {
+  margin-top: 4px;
+}
+
+/* ── Reports Page ───────────────────────────────────── */
+.dz-reports-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.dz-report-filter-btn {
+  padding: 7px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  background: rgba(15, 23, 42, 0.4);
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dz-report-filter-btn:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #e2e8f0;
+}
+.dz-report-filter-btn.dz-report-filter-active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #a5b4fc;
+}
+.dz-reports-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dz-report-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 14px;
+  transition: all 0.2s;
+}
+.dz-report-card:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+  background: rgba(15, 23, 42, 0.8);
+}
+.dz-report-card-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dz-report-card-body {
+  flex: 1;
+  min-width: 0;
+}
+.dz-report-card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+.dz-report-card-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.78rem;
+}
+.dz-report-category {
+  color: #818cf8;
+  font-weight: 600;
+}
+.dz-report-date {
+  color: #64748b;
+}
+.dz-report-card-actions {
+  flex-shrink: 0;
+}
+.dz-report-download-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.08);
+  color: #818cf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dz-report-download-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+.dz-report-generating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+.dz-report-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  border-top-color: #818cf8;
+  border-radius: 50%;
+  animation: dz-splash-spin 0.8s linear infinite;
+}
+
+/* ── In-Person Sub-filter Bar ───────────────────────── */
+.dz-sub-filter-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.dz-sub-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  background: transparent;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dz-sub-filter-btn:hover {
+  color: #94a3b8;
+  border-color: rgba(99, 102, 241, 0.2);
+}
+.dz-sub-filter-btn.dz-sub-filter-active {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+}
+.dz-sub-filter-count {
+  font-size: 0.7rem;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  font-weight: 700;
+}
+
+/* ── In-Person Appointment Grid Cards ───────────────── */
+.dz-appt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.dz-appt-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 14px;
+  padding: 18px;
+  transition: all 0.2s;
+}
+.dz-appt-card:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+.dz-appt-card.dz-appt-completed {
+  opacity: 0.55;
+}
+.dz-appt-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.dz-appt-card-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+.dz-appt-card-type {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.1);
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.dz-appt-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.dz-appt-card-details > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+.dz-appt-card-notes {
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.4;
+  border-top: 1px solid rgba(99, 102, 241, 0.08);
+  padding-top: 10px;
+}

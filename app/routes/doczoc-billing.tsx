@@ -407,6 +407,32 @@ function ClaimStatusBadge({ status }: { status: ClaimRecord["status"] }) {
   );
 }
 
+// ── Payer Logo ──────────────────────────────────────────────────
+const PAYER_BRANDS: Record<string, { color: string; initial: string; bg: string }> = {
+  UnitedHealthcare: { color: "#fff", initial: "U", bg: "#002677" },
+  "UnitedHealthcare Choice Plus": { color: "#fff", initial: "U", bg: "#002677" },
+  Aetna: { color: "#fff", initial: "A", bg: "#7b2d8e" },
+  "Aetna PPO": { color: "#fff", initial: "A", bg: "#7b2d8e" },
+  Cigna: { color: "#fff", initial: "C", bg: "#e47e30" },
+  "Blue Cross Blue Shield": { color: "#fff", initial: "BC", bg: "#0075c9" },
+  Humana: { color: "#fff", initial: "H", bg: "#4fad32" },
+  Medicare: { color: "#fff", initial: "M", bg: "#003da5" },
+};
+
+function PayerLogo({ name, size = 36 }: { name: string; size?: number }) {
+  const brand = PAYER_BRANDS[name] || Object.entries(PAYER_BRANDS).find(([k]) => name.toLowerCase().includes(k.toLowerCase()))?.[1] || { color: "#fff", initial: name.charAt(0), bg: "#475569" };
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: 8, flexShrink: 0,
+      background: brand.bg, color: brand.color,
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: size * 0.35, fontWeight: 900, letterSpacing: "-0.02em",
+    }}>
+      {brand.initial}
+    </div>
+  );
+}
+
 // ── Claim Preview Modal ──────────────────────────────────────────
 function ClaimPreviewModal({
   visit,
@@ -450,8 +476,13 @@ function ClaimPreviewModal({
           </div>
           <div style={{ background: "rgba(10,10,26,0.4)", border: "1px solid rgba(148,163,184,0.08)", borderRadius: 10, padding: 12 }}>
             <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 6 }}>Payer</div>
-            <div style={{ fontSize: "0.82rem", color: "#e4e4ee", fontWeight: 600 }}>{visit.insurance}</div>
-            <div style={{ fontSize: "0.72rem", color: "#5a5a6e" }}>Payer ID: {payload.payer.payerId}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <PayerLogo name={visit.insurance} />
+              <div>
+                <div style={{ fontSize: "0.82rem", color: "#e4e4ee", fontWeight: 600 }}>{visit.insurance}</div>
+                <div style={{ fontSize: "0.72rem", color: "#5a5a6e" }}>Payer ID: {payload.payer.payerId}</div>
+              </div>
+            </div>
           </div>
         </div>
 

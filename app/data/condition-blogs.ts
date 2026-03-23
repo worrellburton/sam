@@ -9,6 +9,7 @@ export const conditionToBlogSlug: Record<string, string> = {
   "Stress fractures": "stress-fractures-guide",
   "Chronic joint pain": "chronic-joint-pain-guide",
   "Loose body removal": "loose-bodies-in-joints-guide",
+  "Synovitis treatment": "synovitis-joint-inflammation-guide",
 };
 
 export const conditionBlogPosts: BlogPost[] = [
@@ -2420,6 +2421,354 @@ export const conditionBlogPosts: BlogPost[] = [
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
     <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert arthroscopic loose body removal and joint treatment for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
+  </div>
+</div>
+`,
+  },
+  {
+    slug: "synovitis-joint-inflammation-guide",
+    title: "Synovitis: Understanding Joint Inflammation and Finding Relief",
+    excerpt:
+      "A swollen, warm, stiff joint isn't something you should ignore — or simply push through. Learn what synovitis is, what causes it, and how modern treatments can bring real, lasting relief.",
+    tag: "Arthroscopic Surgery",
+    date: "March 23, 2026",
+    readTime: "10 min read",
+    image:
+      "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Person resting a swollen joint representing synovitis and joint inflammation",
+    relatedService: "arthroscopic-surgery",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what-is">What Is Synovitis?</a></li>
+    <li><a href="#types">Types & Causes</a></li>
+    <li><a href="#symptoms">Signs & Symptoms</a></li>
+    <li><a href="#diagnosis">Getting a Diagnosis</a></li>
+    <li><a href="#treatment">Treatment Options</a></li>
+    <li><a href="#arthroscopic">Arthroscopic Synovectomy</a></li>
+    <li><a href="#response">Treatment Response Rates</a></li>
+    <li><a href="#recovery">Recovery Timeline</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If your joint has been swollen, warm, stiff, or achy for weeks — and you've been telling yourself it'll go away on its own — this page is for you. Synovitis can be frustrating and even a little scary, but it's a well-understood condition with effective treatments. You don't have to keep living with a joint that doesn't feel right.</p>
+</div>
+
+<h2 id="what-is">What Is Synovitis?</h2>
+
+<p>Every joint in your body is lined with a thin membrane called the <strong>synovium</strong>. Its job is to produce synovial fluid — the slippery liquid that lubricates and nourishes the joint. Synovitis occurs when this lining becomes inflamed, thickened, and overactive, producing too much fluid and causing swelling, pain, and stiffness.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=400&fit=crop&q=80" alt="Person resting a joint representing the discomfort of synovitis" loading="lazy" />
+
+<p>Think of it this way: the synovium is supposed to be a thin, quiet caretaker of the joint. When it becomes inflamed, it transforms into a swollen, overactive tissue that actually starts damaging the structures it was designed to protect. Left untreated, chronic synovitis can erode cartilage, weaken ligaments, and accelerate joint deterioration.</p>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">85%+</span>
+    <span class="blog-stat-label">respond well to targeted synovitis treatment</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">2-6 wk</span>
+    <span class="blog-stat-label">to see significant improvement with treatment</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">#1</span>
+    <span class="blog-stat-label">most common cause of joint swelling and effusion</span>
+  </div>
+</div>
+
+<h2 id="types">Types & Causes of Synovitis</h2>
+
+<p>Synovitis isn't a single disease — it's a response. The key to effective treatment is understanding what's triggering the inflammation.</p>
+
+<div class="blog-chart">
+  <h4>What's Causing Your Synovitis?</h4>
+  <svg viewBox="0 0 460 340" xmlns="http://www.w3.org/2000/svg">
+    <!-- Central inflammation icon -->
+    <circle cx="230" cy="135" r="44" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/>
+    <circle cx="230" cy="135" r="28" fill="#fee2e2" stroke="#f87171" stroke-width="1.5"/>
+    <!-- Inflammation waves -->
+    <circle cx="230" cy="135" r="18" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.6">
+      <animate attributeName="r" values="18;28;18" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.6;0.1;0.6" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="230" y="132" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" font-family="Inter, sans-serif">INFLAMED</text>
+    <text x="230" y="144" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b" font-family="Inter, sans-serif">SYNOVIUM</text>
+
+    <!-- Type 1: Top left -->
+    <line x1="190" y1="105" x2="105" y2="45" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="5" y="15" width="165" height="58" rx="8" fill="#fef9c3" stroke="#fde047" stroke-width="1.5"/>
+    <text x="87" y="35" text-anchor="middle" font-size="11" font-weight="700" fill="#854d0e" font-family="Inter, sans-serif">Osteoarthritis-Related</text>
+    <text x="87" y="50" text-anchor="middle" font-size="9" fill="#a16207" font-family="Inter, sans-serif">Cartilage wear triggers chronic</text>
+    <text x="87" y="62" text-anchor="middle" font-size="9" fill="#a16207" font-family="Inter, sans-serif">low-grade synovial inflammation</text>
+
+    <!-- Type 2: Top right -->
+    <line x1="270" y1="105" x2="355" y2="45" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="290" y="15" width="165" height="58" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+    <text x="372" y="35" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af" font-family="Inter, sans-serif">Autoimmune</text>
+    <text x="372" y="50" text-anchor="middle" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">Rheumatoid arthritis, lupus, or</text>
+    <text x="372" y="62" text-anchor="middle" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">psoriatic arthritis attack the lining</text>
+
+    <!-- Type 3: Bottom left -->
+    <line x1="190" y1="165" x2="105" y2="225" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="5" y="200" width="165" height="58" rx="8" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="87" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#5b21b6" font-family="Inter, sans-serif">Traumatic / Overuse</text>
+    <text x="87" y="235" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">Injury, repetitive stress, or surgery</text>
+    <text x="87" y="247" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">triggers acute synovial irritation</text>
+
+    <!-- Type 4: Bottom right -->
+    <line x1="270" y1="165" x2="355" y2="225" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="290" y="200" width="165" height="58" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="372" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="Inter, sans-serif">Crystal / Infectious</text>
+    <text x="372" y="235" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">Gout, pseudogout, or bacterial</text>
+    <text x="372" y="247" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">infection inflames the synovium</text>
+
+    <!-- Rare type: Center bottom -->
+    <line x1="230" y1="179" x2="230" y2="280" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="135" y="275" width="190" height="45" rx="8" fill="#fff7ed" stroke="#fb923c" stroke-width="1.5"/>
+    <text x="230" y="295" text-anchor="middle" font-size="11" font-weight="700" fill="#9a3412" font-family="Inter, sans-serif">PVNS / Pigmented Villonodular</text>
+    <text x="230" y="310" text-anchor="middle" font-size="9" fill="#c2410c" font-family="Inter, sans-serif">A rare benign tumor of the synovium — treatable</text>
+  </svg>
+</div>
+
+<p><strong>Osteoarthritis-related synovitis</strong> is the most common type Dr. Elguizaoui sees — the worn cartilage irritates the synovium, creating a cycle of inflammation that worsens the arthritis. <strong>Autoimmune synovitis</strong> (from rheumatoid arthritis and similar conditions) is more aggressive and requires systemic treatment. <strong>Traumatic synovitis</strong> often follows an injury or surgery and usually resolves with proper care. <strong>Crystal-related synovitis</strong> (gout) causes intense flares. And <strong>PVNS</strong> (pigmented villonodular synovitis) is a rare but important condition where the synovium itself becomes abnormal — typically requiring arthroscopic removal.</p>
+
+<h2 id="symptoms">Signs & Symptoms</h2>
+
+<div class="blog-takeaway">
+  <h4>How Synovitis Feels</h4>
+  <ul>
+    <li><strong>Swelling</strong> — the joint looks puffy or feels "full"; swelling may fluctuate but doesn't fully resolve</li>
+    <li><strong>Warmth</strong> — the skin over the joint feels warmer than surrounding areas</li>
+    <li><strong>Stiffness</strong> — especially in the morning or after sitting; takes time to "loosen up"</li>
+    <li><strong>Aching pain</strong> — a deep, diffuse ache rather than a sharp pinpoint; often worse with activity</li>
+    <li><strong>Reduced range of motion</strong> — the swelling limits how far you can bend or straighten the joint</li>
+    <li><strong>Boggy feeling</strong> — when you press around the joint, it feels soft and spongy rather than firm</li>
+  </ul>
+</div>
+
+<p>Synovitis pain tends to be a <strong>constant background ache</strong> that flares with use — different from the sharp, mechanical catching of a loose body or the sudden give-way of a ligament tear. If your joint has been swollen and stiff for more than two weeks without a clear cause, it's time to get it evaluated.</p>
+
+<div class="blog-expert-quote">
+  <p>Patients with synovitis often tell me they've been putting up with a swollen, stiff joint for months — sometimes years — because they assumed it was "just aging" or that nothing could be done. That breaks my heart, because synovitis is one of the most treatable causes of joint pain. We have excellent tools to calm the inflammation and protect the joint from further damage.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</cite>
+</div>
+
+<h2 id="diagnosis">Getting a Diagnosis</h2>
+
+<p>Diagnosing synovitis requires identifying both the inflammation and its underlying cause. Dr. Elguizaoui uses a systematic approach:</p>
+
+<ul>
+  <li><strong>Physical exam</strong> — assessing swelling patterns, warmth, range of motion, and the "boggy" quality of the synovium</li>
+  <li><strong>MRI</strong> — the gold standard; shows thickened, inflamed synovium, excess fluid, and any damage to cartilage or ligaments</li>
+  <li><strong>X-rays</strong> — evaluate bone changes and joint space narrowing</li>
+  <li><strong>Blood work</strong> — inflammatory markers (ESR, CRP), rheumatoid factor, and uric acid to identify autoimmune or crystal causes</li>
+  <li><strong>Joint aspiration</strong> — when needed, a small sample of fluid is withdrawn and analyzed for crystals, infection, or inflammatory cells</li>
+</ul>
+
+<p>Getting the diagnosis right is critical because the treatment depends entirely on the cause. Autoimmune synovitis, osteoarthritic synovitis, and infectious synovitis all require very different approaches.</p>
+
+<h2 id="treatment">Treatment Options</h2>
+
+<h3>First-Line / Conservative Treatment</h3>
+
+<div class="blog-takeaway">
+  <h4>Initial Treatment Approach</h4>
+  <ul>
+    <li><strong>Anti-inflammatory medications</strong> — NSAIDs (oral or topical) to reduce synovial inflammation and pain</li>
+    <li><strong>Activity modification</strong> — reducing aggravating activities while maintaining gentle range-of-motion exercises</li>
+    <li><strong>Ice and compression</strong> — simple but effective for managing swelling and discomfort</li>
+    <li><strong>Physical therapy</strong> — strengthening surrounding muscles, improving mechanics, and maintaining joint mobility</li>
+    <li><strong>Corticosteroid injection</strong> — a targeted injection directly into the joint for powerful, rapid anti-inflammatory relief</li>
+  </ul>
+</div>
+
+<h3>Biologic & Advanced Treatments</h3>
+
+<p>When synovitis is driven by autoimmune disease or doesn't respond to first-line care, more targeted treatments are available:</p>
+
+<ul>
+  <li><strong>Disease-modifying drugs (DMARDs)</strong> — medications like methotrexate that calm the overactive immune response (for RA and similar conditions)</li>
+  <li><strong>Biologic therapies</strong> — targeted medications that block specific inflammatory pathways (TNF inhibitors, IL-6 blockers)</li>
+  <li><strong>PRP (platelet-rich plasma)</strong> — growth factors from your own blood that can modulate inflammation and promote healing</li>
+  <li><strong>Viscosupplementation</strong> — hyaluronic acid injections that restore joint lubrication and may have anti-inflammatory effects</li>
+</ul>
+
+<p>Dr. Elguizaoui works closely with rheumatologists when autoimmune causes are identified, ensuring you receive comprehensive, coordinated care.</p>
+
+<h2 id="arthroscopic">Arthroscopic Synovectomy</h2>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&h=400&fit=crop&q=80" alt="Modern surgical suite representing minimally invasive arthroscopic procedures" loading="lazy" />
+
+<p>When synovitis is severe, recurrent, or doesn't respond adequately to medications and injections, <strong>arthroscopic synovectomy</strong> — surgical removal of the inflamed synovial tissue — can provide dramatic, lasting relief.</p>
+
+<div class="blog-takeaway">
+  <h4>Arthroscopic Synovectomy — What to Expect</h4>
+  <ul>
+    <li><strong>Minimally invasive</strong> — performed through 2-3 small incisions (about 5mm each)</li>
+    <li><strong>Outpatient procedure</strong> — you go home the same day</li>
+    <li><strong>Direct visualization</strong> — the arthroscope provides a high-definition view of the entire synovium</li>
+    <li><strong>Selective removal</strong> — diseased tissue is removed while preserving healthy structures</li>
+    <li><strong>Diagnostic opportunity</strong> — tissue samples can be sent for biopsy to confirm the diagnosis</li>
+    <li><strong>Address other issues</strong> — loose bodies, cartilage damage, or other problems can be treated simultaneously</li>
+  </ul>
+</div>
+
+<div class="blog-expert-quote">
+  <p>Arthroscopic synovectomy is especially valuable for PVNS and for patients with inflammatory arthritis who have one or two joints that remain swollen despite good systemic treatment. Removing the inflamed tissue directly can provide relief that medications alone couldn't achieve. It's also how we definitively diagnose conditions like PVNS — seeing and sampling the tissue under direct visualization.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="response">Treatment Response Rates</h2>
+
+<div class="blog-chart">
+  <h4>How Patients Respond to Synovitis Treatment</h4>
+  <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="svBar1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#4ade80"/>
+      </linearGradient>
+      <linearGradient id="svBar2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#818cf8"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Section 1: Conservative -->
+    <text x="10" y="22" font-size="12" font-weight="700" fill="#374151" font-family="Inter, sans-serif">Conservative Treatment</text>
+
+    <text x="150" y="48" text-anchor="end" font-size="10" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Cortisone Injection</text>
+    <rect x="160" y="34" width="232" height="20" rx="4" fill="url(#svBar1)" opacity="0.85">
+      <animate attributeName="width" from="0" to="232" dur="0.8s" fill="freeze"/>
+    </rect>
+    <text x="400" y="49" font-size="11" fill="#16a34a" font-weight="700" font-family="Inter, sans-serif">85%</text>
+
+    <text x="150" y="76" text-anchor="end" font-size="10" font-weight="500" fill="#374151" font-family="Inter, sans-serif">NSAIDs + PT</text>
+    <rect x="160" y="62" width="190" height="20" rx="4" fill="url(#svBar1)" opacity="0.7">
+      <animate attributeName="width" from="0" to="190" dur="0.8s" fill="freeze" begin="0.1s"/>
+    </rect>
+    <text x="358" y="77" font-size="11" fill="#16a34a" font-weight="700" font-family="Inter, sans-serif">70%</text>
+
+    <!-- Section 2: Biologic -->
+    <text x="10" y="115" font-size="12" font-weight="700" fill="#374151" font-family="Inter, sans-serif">Biologic / Advanced</text>
+
+    <text x="150" y="141" text-anchor="end" font-size="10" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Biologic Therapy (RA)</text>
+    <rect x="160" y="127" width="218" height="20" rx="4" fill="url(#svBar2)" opacity="0.85">
+      <animate attributeName="width" from="0" to="218" dur="0.8s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="386" y="142" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">80%</text>
+
+    <text x="150" y="169" text-anchor="end" font-size="10" font-weight="500" fill="#374151" font-family="Inter, sans-serif">PRP Therapy</text>
+    <rect x="160" y="155" width="197" height="20" rx="4" fill="url(#svBar2)" opacity="0.7">
+      <animate attributeName="width" from="0" to="197" dur="0.8s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <text x="365" y="170" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">72%</text>
+
+    <!-- Section 3: Surgical -->
+    <text x="10" y="208" font-size="12" font-weight="700" fill="#374151" font-family="Inter, sans-serif">Surgical</text>
+
+    <text x="150" y="234" text-anchor="end" font-size="10" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Arthroscopic Synov.</text>
+    <rect x="160" y="220" width="246" height="20" rx="4" fill="url(#svBar1)" opacity="0.9">
+      <animate attributeName="width" from="0" to="246" dur="0.8s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <text x="414" y="235" font-size="11" fill="#16a34a" font-weight="700" font-family="Inter, sans-serif">90%</text>
+
+    <text x="230" y="272" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Response rates reflect meaningful symptom improvement — based on published outcomes data</text>
+  </svg>
+</div>
+
+<p>The important takeaway: <strong>synovitis is highly treatable at every stage</strong>. Most patients respond to conservative measures. Those who don't have excellent options with biologics or arthroscopic synovectomy. The key is matching the right treatment to the right cause.</p>
+
+<h2 id="recovery">Recovery Timeline</h2>
+
+<div class="blog-chart">
+  <h4>Recovery from Arthroscopic Synovectomy</h4>
+  <svg viewBox="0 0 460 190" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="svRecov" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#fecaca"/>
+        <stop offset="33%" stop-color="#f87171"/>
+        <stop offset="66%" stop-color="#ef4444"/>
+        <stop offset="100%" stop-color="#16a34a"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Timeline bar -->
+    <rect x="30" y="45" width="400" height="8" rx="4" fill="#e5e7eb"/>
+    <rect x="30" y="45" width="400" height="8" rx="4" fill="url(#svRecov)" opacity="0.75">
+      <animate attributeName="width" from="0" to="400" dur="1.5s" fill="freeze"/>
+    </rect>
+
+    <!-- Phase markers -->
+    <circle cx="30" cy="49" r="7" fill="#fecaca" stroke="#f87171" stroke-width="2"/>
+    <text x="30" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626" font-family="Inter, sans-serif">Day 1-3</text>
+    <text x="30" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Rest, ice, elevate</text>
+    <text x="30" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">gentle ROM</text>
+
+    <circle cx="163" cy="49" r="7" fill="#fca5a5" stroke="#f87171" stroke-width="2"/>
+    <text x="163" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626" font-family="Inter, sans-serif">Week 1-2</text>
+    <text x="163" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Walking normally,</text>
+    <text x="163" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">swelling resolving</text>
+
+    <circle cx="296" cy="49" r="7" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+    <text x="296" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626" font-family="Inter, sans-serif">Week 3-6</text>
+    <text x="296" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">PT, strengthening,</text>
+    <text x="296" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">return to activities</text>
+
+    <circle cx="430" cy="49" r="7" fill="#22c55e" stroke="#16a34a" stroke-width="2"/>
+    <text x="430" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a" font-family="Inter, sans-serif">Week 6-8</text>
+    <text x="430" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Full activity &</text>
+    <text x="430" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">sports return</text>
+
+    <text x="230" y="130" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Recovery from injection-based treatments is much faster — typically 1-3 days of rest</text>
+    <text x="230" y="145" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">For non-surgical synovitis treatment, improvement develops over 2-6 weeks</text>
+  </svg>
+</div>
+
+<p>Recovery from arthroscopic synovectomy is generally smooth. The joint may actually feel better quite quickly once the inflamed tissue is removed, though some post-operative swelling is normal. Physical therapy helps restore full strength and mobility. For non-surgical treatments (injections, medications), improvement typically develops over 2-6 weeks.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Is synovitis the same as arthritis?</h3>
+<p>Not exactly. Arthritis is a broad term for joint disease, while synovitis is specifically inflammation of the joint lining. However, they're closely related — most types of arthritis (osteoarthritis, rheumatoid arthritis) involve synovitis as a key component. In fact, treating the synovitis is often the fastest way to reduce arthritis symptoms.</p>
+
+<h3>Can synovitis damage my joint permanently?</h3>
+<p>Yes, if left untreated. Chronic, persistent synovitis can erode cartilage, weaken ligaments, and accelerate joint deterioration. This is especially true with autoimmune synovitis (rheumatoid arthritis). Early treatment protects the joint from long-term damage — another reason not to ignore a joint that's been swollen for weeks.</p>
+
+<h3>How many cortisone injections can I have?</h3>
+<p>There's no absolute universal limit, but most orthopedic guidelines suggest no more than 3-4 injections per year in a single joint. Repeated cortisone can weaken cartilage and surrounding tissues over time. Dr. Elguizaoui uses cortisone judiciously and may recommend alternative treatments (PRP, synovectomy) if injections are needed too frequently.</p>
+
+<h3>Will synovitis come back after treatment?</h3>
+<p>It depends on the underlying cause. If synovitis was triggered by a one-time injury or overuse, it usually resolves completely. If it's related to an ongoing condition like osteoarthritis or rheumatoid arthritis, managing the underlying disease is key to preventing recurrence. After arthroscopic synovectomy, the synovium does regenerate — but usually in a healthier, less inflamed state.</p>
+
+<h3>Do I need to see a rheumatologist?</h3>
+<p>If your synovitis is caused by an autoimmune condition (RA, lupus, psoriatic arthritis), yes — you'll benefit from both an orthopedic surgeon and a rheumatologist. Dr. Elguizaoui works closely with rheumatologists to provide coordinated care. If the cause is mechanical (osteoarthritis, trauma, loose bodies), orthopedic management is usually sufficient.</p>
+
+<h3>What's the difference between a joint effusion and synovitis?</h3>
+<p>A joint effusion is excess fluid in the joint — it's a symptom. Synovitis (inflammation of the synovial lining) is one of the most common causes of that effusion. Other causes include infection, bleeding, or crystal deposition. An MRI can show whether the synovium itself is inflamed and thickened, confirming the diagnosis of synovitis.</p>
+
+<div class="blog-cta">
+  <h3>Swollen, Stiff Joint That Won't Settle Down?</h3>
+  <p>Dr. Elguizaoui specializes in diagnosing and treating synovitis — from targeted injections to arthroscopic synovectomy. If your joint has been swollen and painful for more than a couple of weeks, let's find out why and get you feeling better. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/arthroscopic-surgery">Arthroscopic Surgery Services</a> · <a href="/blog/chronic-joint-pain-guide">Chronic Joint Pain Guide</a> · <a href="/blog/arthroscopic-vs-open-surgery">Arthroscopic vs. Open Surgery</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert synovitis treatment and arthroscopic synovectomy for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
   </div>
 </div>
 `,

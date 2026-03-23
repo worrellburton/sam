@@ -25,6 +25,7 @@ export default {
     "/blog/stress-fractures-guide",
     "/blog/chronic-joint-pain-guide",
     "/blog/loose-bodies-in-joints-guide",
+    "/blog/synovitis-joint-inflammation-guide",
     // Service pages
     "/services/sports-medicine",
     "/services/arthroscopic-surgery",

@@ -23,6 +23,7 @@ export default {
     "/blog/rotator-cuff-tears-shoulder-instability",
     "/blog/tennis-elbow-golfers-elbow-guide",
     "/blog/stress-fractures-guide",
+    "/blog/chronic-joint-pain-guide",
     // Service pages
     "/services/sports-medicine",
     "/services/arthroscopic-surgery",

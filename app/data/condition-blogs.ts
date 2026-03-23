@@ -7,6 +7,7 @@ export const conditionToBlogSlug: Record<string, string> = {
   "Rotator cuff tears and shoulder instability": "rotator-cuff-tears-shoulder-instability",
   "Tennis and golfer's elbow": "tennis-elbow-golfers-elbow-guide",
   "Stress fractures": "stress-fractures-guide",
+  "Chronic joint pain": "chronic-joint-pain-guide",
 };
 
 export const conditionBlogPosts: BlogPost[] = [
@@ -1748,6 +1749,350 @@ export const conditionBlogPosts: BlogPost[] = [
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
     <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert stress fracture treatment for runners, athletes, and active patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
+  </div>
+</div>
+`,
+  },
+  {
+    slug: "chronic-joint-pain-guide",
+    title: "Chronic Joint Pain: You Deserve to Feel Better",
+    excerpt:
+      "Living with chronic joint pain can feel isolating — but you don't have to keep pushing through it alone. Learn about causes, modern treatments including regenerative medicine, and a compassionate approach to getting your life back.",
+    tag: "Regenerative Medicine",
+    date: "March 23, 2026",
+    readTime: "11 min read",
+    image:
+      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Person stretching outdoors representing hope for chronic joint pain relief",
+    relatedService: "regenerative-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#understanding">Understanding Chronic Joint Pain</a></li>
+    <li><a href="#causes">Common Causes</a></li>
+    <li><a href="#impact">The Real Impact on Your Life</a></li>
+    <li><a href="#diagnosis">Getting the Right Diagnosis</a></li>
+    <li><a href="#traditional">Traditional Treatment Options</a></li>
+    <li><a href="#regenerative">Regenerative Medicine: A New Frontier</a></li>
+    <li><a href="#comparison">Regenerative vs. Traditional — Side by Side</a></li>
+    <li><a href="#holistic">A Holistic Approach to Joint Health</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you're reading this, chances are you've been living with joint pain for weeks, months, or even years. Maybe you've been told to "just live with it" or to "wait until you're old enough for a replacement." You deserve better than that. Chronic pain is real, it matters, and there are more options today than ever before. Let's walk through them together.</p>
+</div>
+
+<h2 id="understanding">Understanding Chronic Joint Pain</h2>
+
+<p>Chronic joint pain is pain in one or more joints that persists for more than three months. Unlike acute pain from an injury — which serves as a warning signal — chronic pain often takes on a life of its own, affecting your sleep, your mood, your relationships, and your ability to do the things you love.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&h=400&fit=crop&q=80" alt="Person stretching outdoors representing hope for chronic joint pain relief" loading="lazy" />
+
+<p>Chronic joint pain is extraordinarily common — and yet people often suffer in silence, assuming nothing can be done or that asking for help is somehow a sign of weakness. It isn't. Seeking care for persistent pain is one of the most important things you can do for your quality of life.</p>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">54M</span>
+    <span class="blog-stat-label">Americans live with some form of arthritis</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">1 in 4</span>
+    <span class="blog-stat-label">adults report chronic joint pain</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">83%</span>
+    <span class="blog-stat-label">of PRP patients report meaningful improvement</span>
+  </div>
+</div>
+
+<h2 id="causes">Common Causes of Chronic Joint Pain</h2>
+
+<p>Chronic joint pain isn't a diagnosis — it's a symptom. The first step toward relief is understanding what's driving it.</p>
+
+<div class="blog-chart">
+  <h4>What's Behind Your Joint Pain?</h4>
+  <svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg">
+    <!-- Joint icon - central -->
+    <circle cx="230" cy="140" r="50" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+    <circle cx="230" cy="140" r="30" fill="#dcfce7" stroke="#4ade80" stroke-width="1.5"/>
+    <circle cx="230" cy="140" r="10" fill="#bbf7d0"/>
+    <text x="230" y="144" text-anchor="middle" font-size="10" font-weight="700" fill="#166534" font-family="Inter, sans-serif">JOINT</text>
+
+    <!-- Cause boxes radiating out -->
+    <line x1="180" y1="115" x2="90" y2="55" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="5" y="30" width="140" height="50" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+    <text x="75" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b" font-family="Inter, sans-serif">Osteoarthritis</text>
+    <text x="75" y="68" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">Cartilage wears away over time</text>
+
+    <line x1="280" y1="115" x2="370" y2="55" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="315" y="30" width="140" height="50" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+    <text x="385" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af" font-family="Inter, sans-serif">Inflammatory</text>
+    <text x="385" y="68" text-anchor="middle" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">RA, psoriatic, lupus arthritis</text>
+
+    <line x1="180" y1="165" x2="90" y2="225" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="5" y="200" width="140" height="50" rx="8" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="75" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#5b21b6" font-family="Inter, sans-serif">Post-Traumatic</text>
+    <text x="75" y="238" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">Old injuries causing joint wear</text>
+
+    <line x1="280" y1="165" x2="370" y2="225" stroke="#d1d5db" stroke-width="1.5"/>
+    <rect x="315" y="200" width="140" height="50" rx="8" fill="#fef9c3" stroke="#fde047" stroke-width="1.5"/>
+    <text x="385" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#854d0e" font-family="Inter, sans-serif">Tendon / Bursa</text>
+    <text x="385" y="238" text-anchor="middle" font-size="9" fill="#a16207" font-family="Inter, sans-serif">Tendinopathy, bursitis</text>
+
+    <text x="230" y="300" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">A proper diagnosis identifies the specific cause — and unlocks the right treatment</text>
+  </svg>
+</div>
+
+<p><strong>Osteoarthritis</strong> is by far the most common culprit. It occurs when the cartilage cushioning your joints gradually breaks down, leading to bone-on-bone friction, inflammation, and pain. But it's important to know: cartilage loss doesn't always mean you need a joint replacement. Many patients respond beautifully to regenerative treatments, physical therapy, and lifestyle modifications.</p>
+
+<div class="blog-expert-quote">
+  <p>When someone tells me they've had joint pain for months or years, the first thing I want them to know is: this isn't something you just have to accept. There are real options — and we often find that patients who were told "nothing can be done" actually have several paths to feeling significantly better.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</cite>
+</div>
+
+<h2 id="impact">The Real Impact on Your Life</h2>
+
+<p>Chronic joint pain isn't "just" pain. It ripples through every aspect of life:</p>
+
+<ul>
+  <li><strong>Sleep disruption</strong> — pain that wakes you at night or prevents restful sleep</li>
+  <li><strong>Activity avoidance</strong> — giving up hobbies, exercise, or social activities because of pain</li>
+  <li><strong>Emotional toll</strong> — frustration, anxiety, depression, and grief for the life you used to have</li>
+  <li><strong>Relationship strain</strong> — difficulty keeping up with family, friends, or partners</li>
+  <li><strong>Work limitations</strong> — reduced productivity or inability to perform job duties</li>
+  <li><strong>Deconditioning cycle</strong> — pain leads to less movement, which leads to weakness, which leads to more pain</li>
+</ul>
+
+<p>If any of this sounds familiar, please know: you are not alone, and your experience is valid. The goal of treatment isn't just to reduce a number on a pain scale — it's to help you get your life back.</p>
+
+<h2 id="diagnosis">Getting the Right Diagnosis</h2>
+
+<p>Effective treatment starts with understanding exactly what's causing your pain. Dr. Elguizaoui's evaluation includes:</p>
+
+<ul>
+  <li><strong>Detailed history</strong> — when the pain started, what makes it better or worse, how it affects your daily life, and what you've already tried</li>
+  <li><strong>Physical examination</strong> — assessing range of motion, stability, swelling, and tenderness</li>
+  <li><strong>Imaging</strong> — X-rays to evaluate bone and joint space; MRI when needed to assess soft tissue, cartilage, and early changes</li>
+  <li><strong>Lab work</strong> — when inflammatory or autoimmune causes are suspected</li>
+</ul>
+
+<p>The goal is not just to name your condition — it's to understand the specific mechanism driving your pain so we can target treatment precisely.</p>
+
+<h2 id="traditional">Traditional Treatment Options</h2>
+
+<p>Before exploring regenerative medicine, it's important to understand the full landscape of proven treatments:</p>
+
+<div class="blog-takeaway">
+  <h4>Established Approaches</h4>
+  <ul>
+    <li><strong>Physical therapy</strong> — strengthening muscles around the joint reduces load and pain; often the single most effective intervention</li>
+    <li><strong>Anti-inflammatory medications</strong> — NSAIDs, topical creams, and short courses of oral medications for flare-ups</li>
+    <li><strong>Corticosteroid injections</strong> — powerful anti-inflammatory relief lasting weeks to months; best used sparingly</li>
+    <li><strong>Hyaluronic acid (viscosupplementation)</strong> — gel injections that lubricate the joint and may reduce inflammation</li>
+    <li><strong>Bracing and orthotics</strong> — offloading damaged areas and improving joint mechanics</li>
+    <li><strong>Weight management</strong> — every pound lost removes 4 pounds of force from the knee joint</li>
+    <li><strong>Activity modification</strong> — switching from high-impact to joint-friendly exercise</li>
+  </ul>
+</div>
+
+<p>These treatments remain important and effective. For many patients, a thoughtful combination of physical therapy, weight management, and targeted injections provides years of relief.</p>
+
+<h2 id="regenerative">Regenerative Medicine: A New Frontier</h2>
+
+<p>Regenerative medicine represents a fundamentally different approach: instead of masking symptoms, it aims to <strong>stimulate your body's own healing response</strong> to repair damaged tissue.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&h=400&fit=crop&q=80" alt="Modern medical laboratory representing advances in regenerative medicine" loading="lazy" />
+
+<h3>Platelet-Rich Plasma (PRP) Therapy</h3>
+
+<p>PRP uses a concentrated preparation of your own blood platelets — rich in growth factors — injected directly into the affected joint. These growth factors stimulate tissue repair, reduce inflammation, and can improve joint function.</p>
+
+<ul>
+  <li>Same-day, in-office procedure (about 30 minutes)</li>
+  <li>Uses your own blood — no risk of allergic reaction</li>
+  <li>Evidence-based for knee osteoarthritis, tendon injuries, and chronic joint inflammation</li>
+  <li>Typically a series of 1-3 injections spaced weeks apart</li>
+</ul>
+
+<h3>Other Biologic Treatments</h3>
+
+<p>The field of regenerative orthopedics is growing rapidly. Dr. Elguizaoui stays current with the latest evidence-based treatments and will recommend options with genuine scientific support — not hype.</p>
+
+<div class="blog-chart">
+  <h4>Patient Satisfaction — Biologic Treatments for Joint Pain</h4>
+  <svg viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cjpBar1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#4ade80"/>
+      </linearGradient>
+      <linearGradient id="cjpBar2" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#60a5fa"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Category labels and bars -->
+    <text x="145" y="38" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Pain Reduction</text>
+    <rect x="155" y="22" width="250" height="22" rx="4" fill="url(#cjpBar1)" opacity="0.85">
+      <animate attributeName="width" from="0" to="250" dur="0.8s" fill="freeze"/>
+    </rect>
+    <text x="413" y="38" font-size="11" fill="#16a34a" font-weight="700" font-family="Inter, sans-serif">83%</text>
+
+    <text x="145" y="73" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Improved Function</text>
+    <rect x="155" y="57" width="230" height="22" rx="4" fill="url(#cjpBar1)" opacity="0.75">
+      <animate attributeName="width" from="0" to="230" dur="0.8s" fill="freeze" begin="0.1s"/>
+    </rect>
+    <text x="393" y="73" font-size="11" fill="#16a34a" font-weight="700" font-family="Inter, sans-serif">78%</text>
+
+    <text x="145" y="108" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Would Do It Again</text>
+    <rect x="155" y="92" width="260" height="22" rx="4" fill="url(#cjpBar1)" opacity="0.9">
+      <animate attributeName="width" from="0" to="260" dur="0.8s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="423" y="108" font-size="11" fill="#16a34a" font-weight="700" font-family="Inter, sans-serif">87%</text>
+
+    <text x="145" y="143" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Avoided Surgery</text>
+    <rect x="155" y="127" width="195" height="22" rx="4" fill="url(#cjpBar2)" opacity="0.8">
+      <animate attributeName="width" from="0" to="195" dur="0.8s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <text x="358" y="143" font-size="11" fill="#2563eb" font-weight="700" font-family="Inter, sans-serif">65%</text>
+
+    <text x="145" y="178" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Reduced Medications</text>
+    <rect x="155" y="162" width="215" height="22" rx="4" fill="url(#cjpBar2)" opacity="0.7">
+      <animate attributeName="width" from="0" to="215" dur="0.8s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <text x="378" y="178" font-size="11" fill="#2563eb" font-weight="700" font-family="Inter, sans-serif">72%</text>
+
+    <text x="230" y="220" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Based on published outcomes data for PRP therapy in knee osteoarthritis (multiple studies, 2019-2024)</text>
+  </svg>
+</div>
+
+<div class="blog-expert-quote">
+  <p>I'm a strong advocate for biologic treatments — but I'm honest with patients about what the evidence supports. PRP has genuine, peer-reviewed data behind it for certain conditions. My job is to match the right treatment to the right patient. Not everyone needs regenerative medicine, and not everyone needs surgery. The best treatment is the one that's right for you.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="comparison">Regenerative vs. Traditional Treatment — Side by Side</h2>
+
+<div class="blog-chart">
+  <h4>Treatment Comparison at a Glance</h4>
+  <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+    <!-- Headers -->
+    <rect x="5" y="5" width="130" height="30" rx="6" fill="#f3f4f6"/>
+    <text x="70" y="25" text-anchor="middle" font-size="11" font-weight="700" fill="#374151" font-family="Inter, sans-serif">Category</text>
+
+    <rect x="145" y="5" width="145" height="30" rx="6" fill="#dbeafe"/>
+    <text x="217" y="25" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af" font-family="Inter, sans-serif">Traditional</text>
+
+    <rect x="300" y="5" width="155" height="30" rx="6" fill="#dcfce7"/>
+    <text x="377" y="25" text-anchor="middle" font-size="11" font-weight="700" fill="#166534" font-family="Inter, sans-serif">Regenerative</text>
+
+    <!-- Row 1 -->
+    <text x="70" y="62" text-anchor="middle" font-size="10" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Goal</text>
+    <text x="217" y="62" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Manage symptoms</text>
+    <text x="377" y="62" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Stimulate tissue repair</text>
+    <line x1="5" y1="72" x2="455" y2="72" stroke="#e5e7eb" stroke-width="1"/>
+
+    <!-- Row 2 -->
+    <text x="70" y="92" text-anchor="middle" font-size="10" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Duration</text>
+    <text x="217" y="92" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Weeks to months</text>
+    <text x="377" y="92" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Months to years</text>
+    <line x1="5" y1="102" x2="455" y2="102" stroke="#e5e7eb" stroke-width="1"/>
+
+    <!-- Row 3 -->
+    <text x="70" y="122" text-anchor="middle" font-size="10" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Downtime</text>
+    <text x="217" y="122" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Minimal to none</text>
+    <text x="377" y="122" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Minimal (1-3 days)</text>
+    <line x1="5" y1="132" x2="455" y2="132" stroke="#e5e7eb" stroke-width="1"/>
+
+    <!-- Row 4 -->
+    <text x="70" y="152" text-anchor="middle" font-size="10" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Repeat Tx</text>
+    <text x="217" y="152" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Often ongoing</text>
+    <text x="377" y="152" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">1-3 sessions typical</text>
+    <line x1="5" y1="162" x2="455" y2="162" stroke="#e5e7eb" stroke-width="1"/>
+
+    <!-- Row 5 -->
+    <text x="70" y="182" text-anchor="middle" font-size="10" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Best For</text>
+    <text x="217" y="182" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Acute flares, severe OA</text>
+    <text x="377" y="182" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Mild-moderate OA, tendons</text>
+    <line x1="5" y1="192" x2="455" y2="192" stroke="#e5e7eb" stroke-width="1"/>
+
+    <!-- Row 6 -->
+    <text x="70" y="212" text-anchor="middle" font-size="10" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Insurance</text>
+    <text x="217" y="212" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Usually covered</text>
+    <text x="377" y="212" text-anchor="middle" font-size="9" fill="#4b5563" font-family="Inter, sans-serif">Often out of pocket</text>
+
+    <text x="230" y="260" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">These approaches often work best together — not as either/or choices</text>
+  </svg>
+</div>
+
+<p>The important thing to understand: <strong>these approaches are not in competition</strong>. Many patients benefit from combining traditional and regenerative treatments. Physical therapy remains the foundation of any joint pain program, and regenerative treatments can enhance and accelerate that process.</p>
+
+<h2 id="holistic">A Holistic Approach to Joint Health</h2>
+
+<p>Dr. Elguizaoui believes in treating the whole person, not just the joint. A truly effective chronic pain program addresses:</p>
+
+<div class="blog-takeaway">
+  <h4>The Five Pillars of Joint Health</h4>
+  <ul>
+    <li><strong>Movement</strong> — regular, joint-friendly exercise is medicine; strong muscles protect joints and reduce pain</li>
+    <li><strong>Nutrition</strong> — anti-inflammatory foods, adequate protein, omega-3 fatty acids, and maintaining a healthy weight</li>
+    <li><strong>Sleep</strong> — tissue repair happens during sleep; treating pain that disrupts sleep is a priority</li>
+    <li><strong>Mental health</strong> — chronic pain and depression are deeply linked; addressing one helps the other</li>
+    <li><strong>Medical treatment</strong> — the right interventions at the right time, from PT and injections to regenerative therapies</li>
+  </ul>
+</div>
+
+<div class="blog-expert-quote">
+  <p>I tell every patient with chronic joint pain the same thing: my goal is not just to treat your joint. It's to understand how this pain is affecting your life and to work with you on a plan that addresses all of it. Pain management isn't just about injections — it's about helping you live the life you want to live.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h3>When Surgery Becomes the Right Choice</h3>
+
+<p>Sometimes, despite our best efforts with conservative and regenerative treatments, the joint damage is too advanced. When that happens, Dr. Elguizaoui will be straightforward with you. Surgical options like arthroscopic debridement or, ultimately, joint replacement can be genuinely life-changing for the right patient. The key is timing — not too early, not too late.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>How do I know if my joint pain is "bad enough" to see a doctor?</h3>
+<p>If joint pain is affecting your daily life — your sleep, your ability to exercise, your work, or your mood — it's worth getting evaluated. There's no minimum threshold of suffering required. Earlier evaluation often means simpler, more effective treatment. You don't need to wait until you can barely walk.</p>
+
+<h3>Is PRP therapy right for me?</h3>
+<p>PRP works best for mild to moderate osteoarthritis, tendon injuries, and chronic inflammation. It's less effective for severe, bone-on-bone arthritis. Dr. Elguizaoui will examine your imaging and clinical picture to determine whether PRP is likely to help — and he'll be honest if it's not the right fit.</p>
+
+<h3>How long does PRP take to work?</h3>
+<p>Most patients begin noticing improvement 4-6 weeks after treatment, with full benefit developing over 2-3 months. Results typically last 6-12 months or longer. Some patients benefit from annual maintenance treatments.</p>
+
+<h3>Will insurance cover regenerative treatments?</h3>
+<p>Most insurance plans do not currently cover PRP or other biologic treatments. Dr. Elguizaoui's office can provide detailed cost information and discuss payment options during your consultation. Traditional treatments like cortisone injections, physical therapy, and viscosupplementation are typically covered.</p>
+
+<h3>Can I avoid joint replacement?</h3>
+<p>Many patients are able to delay or avoid joint replacement through a combination of physical therapy, weight management, injections, and regenerative treatments. The earlier you address joint pain, the more options you have. That said, if replacement is truly needed, modern procedures have excellent outcomes and can dramatically improve quality of life.</p>
+
+<h3>What's the difference between a cortisone shot and PRP?</h3>
+<p>Cortisone is a powerful anti-inflammatory that provides fast relief (days) but doesn't heal tissue and may weaken it over time with repeated use. PRP works more slowly (weeks) but aims to stimulate actual tissue repair. They serve different purposes and can sometimes be used at different stages of treatment.</p>
+
+<div class="blog-cta">
+  <h3>Ready to Stop Living Around Your Pain?</h3>
+  <p>Dr. Elguizaoui specializes in helping patients with chronic joint pain find real, lasting relief — whether through regenerative medicine, physical therapy, or a combined approach tailored to your life. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/regenerative-medicine">Regenerative Medicine Services</a> · <a href="/blog/prp-therapy-sports-medicine">PRP Therapy Guide</a> · <a href="/blog/protecting-joints-active-adults">Protecting Your Joints</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert chronic joint pain treatment and regenerative medicine for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
   </div>
 </div>
 `,

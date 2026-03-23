@@ -19,17 +19,42 @@ export interface StediClaimPayload {
     lastName: string;
     address: {
       address1: string;
+      address2?: string;
       city: string;
       state: string;
       postalCode: string;
     };
     taxId: string;
+    taxonomyCode: string;
+    contactInformation: {
+      name: string;
+      phoneNumber: string;
+    };
+  };
+  subscriber: {
+    memberId: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    genderCode: string;
+    address: {
+      address1: string;
+      city: string;
+      state: string;
+      postalCode: string;
+    };
+    paymentResponsibilityLevelCode: string;
+    groupNumber?: string;
   };
   claimInformation: {
     claimChargeAmount: string;
+    placeOfServiceCode: string;
     benefitsAssignmentCertificationIndicator: string;
+    releaseOfInformationCode: string;
+    patientSignatureSourceCode: string;
     claimFilingCode: string;
     claimFrequencyCode: string;
+    providerAcceptAssignmentCode: string;
     healthCareCodeInformation: {
       diagnosisCode: string;
       diagnosisTypeCode: "ABK" | "ABF";
@@ -40,23 +65,35 @@ export interface StediClaimPayload {
         procedureModifiers?: string[];
         chargeAmount: string;
         unitCount: string;
+        measurementUnit: string;
+        diagnosisCodePointers: string[];
       };
       serviceDateInformation: {
         serviceDateFrom: string;
+        serviceDateTo?: string;
       };
     }[];
-    subscriber: {
-      memberId: string;
+    claimSupplementalInformation?: {
+      attachmentReportTypeCode: string;
+      attachmentTransmissionCode: string;
+      attachmentControlNumber?: string;
     };
-    patient: {
-      firstName: string;
-      lastName: string;
-      dateOfBirth: string;
-      genderCode: string;
-    };
+  };
+  rendering?: {
+    npi: string;
+    firstName: string;
+    lastName: string;
+    taxonomyCode: string;
   };
   payer: {
     payerId: string;
+    name: string;
+    address?: {
+      address1: string;
+      city: string;
+      state: string;
+      postalCode: string;
+    };
   };
 }
 
@@ -99,14 +136,19 @@ export const PAYER_IDS: Record<string, string> = {
 export function buildClaimPayload(visit: {
   patient: string;
   dob: string;
+  sex?: "Male" | "Female";
   memberId: string;
+  groupNumber?: string;
   insurance: string;
+  patientAddress?: string;
   date: string;
   provider: string;
   npi: string;
   locationAddr: string;
   taxId: string;
-  codes: { code: string; description: string; type: string; fee?: number }[];
+  placeOfService?: string;
+  codes: { code: string; description: string; type: string; fee?: number; modifiers?: string[] }[];
+  hasOperativeReport?: boolean;
 }): StediClaimPayload {
   const icdCodes = visit.codes.filter((c) => c.type === "ICD-10");
   const cptCodes = visit.codes.filter(
@@ -133,6 +175,14 @@ export function buildClaimPayload(visit: {
   const state = stateZip[0] || "NY";
   const postalCode = (stateZip[1] || "").replace(/-/g, "");
 
+  // Parse patient address if available
+  const ptAddrParts = (visit.patientAddress || visit.locationAddr).split(",").map((s) => s.trim());
+  const ptAddress1 = ptAddrParts[0] || "";
+  const ptCity = ptAddrParts[1] || "";
+  const ptStateZip = (ptAddrParts[2] || "").split(" ");
+  const ptState = ptStateZip[0] || "NY";
+  const ptPostalCode = (ptStateZip[1] || "").replace(/-/g, "");
+
   // Parse DOB — "04/12/1991" → "19910412"
   const dobParts = visit.dob.split("/");
   const dateOfBirth =
@@ -150,6 +200,9 @@ export function buildClaimPayload(visit: {
   // Extract member ID (strip prefix like "UHC-")
   const memberId = visit.memberId.replace(/^[A-Z]+-/, "");
 
+  // Map sex to EDI gender code
+  const genderCode = visit.sex === "Male" ? "M" : visit.sex === "Female" ? "F" : "U";
+
   // Find payer ID
   const payerId =
     PAYER_IDS[visit.insurance] ||
@@ -158,19 +211,50 @@ export function buildClaimPayload(visit: {
     )?.[1] ||
     "99999";
 
-  return {
+  // Build diagnosis code pointers — each service line points to relevant diagnoses
+  const diagPointers = icdCodes.map((_, i) => String(i + 1));
+  const defaultPointers = diagPointers.length > 0 ? diagPointers.slice(0, 4) : ["1"];
+
+  // Place of service: 11 = Office, 22 = Hospital Outpatient, 24 = ASC
+  const pos = visit.placeOfService || "11";
+
+  const payload: StediClaimPayload = {
     billing: {
       npi: visit.npi,
       firstName: provFirst,
       lastName: provLast,
       address: { address1, city, state, postalCode },
       taxId: visit.taxId.replace(/-/g, ""),
+      taxonomyCode: "207X00000X", // Orthopedic Surgery
+      contactInformation: {
+        name: `${provFirst} ${provLast}`,
+        phoneNumber: "2125550100",
+      },
+    },
+    subscriber: {
+      memberId,
+      firstName,
+      lastName,
+      dateOfBirth,
+      genderCode,
+      address: {
+        address1: ptAddress1,
+        city: ptCity,
+        state: ptState,
+        postalCode: ptPostalCode,
+      },
+      paymentResponsibilityLevelCode: "P", // Primary
+      ...(visit.groupNumber ? { groupNumber: visit.groupNumber } : {}),
     },
     claimInformation: {
       claimChargeAmount: totalCharges.toFixed(2),
+      placeOfServiceCode: pos,
       benefitsAssignmentCertificationIndicator: "Y",
+      releaseOfInformationCode: "Y",
+      patientSignatureSourceCode: "P",
       claimFilingCode: "CI",
       claimFrequencyCode: "1",
+      providerAcceptAssignmentCode: "A",
       healthCareCodeInformation: icdCodes.map((c, i) => ({
         diagnosisCode: c.code.replace(/\./g, ""),
         diagnosisTypeCode: (i === 0 ? "ABK" : "ABF") as "ABK" | "ABF",
@@ -180,21 +264,39 @@ export function buildClaimPayload(visit: {
         .map((c) => ({
           professionalService: {
             procedureCode: c.code,
+            ...(c.modifiers && c.modifiers.length > 0
+              ? { procedureModifiers: c.modifiers }
+              : {}),
             chargeAmount: (c.fee || 0).toFixed(2),
             unitCount: "1",
+            measurementUnit: "UN",
+            diagnosisCodePointers: defaultPointers,
           },
           serviceDateInformation: { serviceDateFrom: serviceDate },
         })),
-      subscriber: { memberId },
-      patient: {
-        firstName,
-        lastName,
-        dateOfBirth,
-        genderCode: "U", // Would come from patient record in production
-      },
     },
-    payer: { payerId },
+    rendering: {
+      npi: visit.npi,
+      firstName: provFirst,
+      lastName: provLast,
+      taxonomyCode: "207X00000X",
+    },
+    payer: {
+      payerId,
+      name: visit.insurance,
+    },
   };
+
+  // PWK segment — flag operative report as attached/coming
+  if (visit.hasOperativeReport) {
+    payload.claimInformation.claimSupplementalInformation = {
+      attachmentReportTypeCode: "OZ", // Support data for claim
+      attachmentTransmissionCode: "EL", // Electronic
+      attachmentControlNumber: `OP-${serviceDate}-${memberId}`,
+    };
+  }
+
+  return payload;
 }
 
 // ── Submit claim to Stedi ───────────────────────────────────────────

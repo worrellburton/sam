@@ -301,14 +301,22 @@ export default function DashboardPage() {
   ];
 
   const fromLogin = !!(location.state as any)?.fromLogin;
+  const [contentReady, setContentReady] = useState(!fromLogin);
+
+  useEffect(() => {
+    if (!showSplash && !contentReady) {
+      requestAnimationFrame(() => setContentReady(true));
+    }
+  }, [showSplash, contentReady]);
+
 
   return (
     <div className={`dz-platform${!showSplash && fromLogin ? " dz-platform-cinematic" : ""}`}>
       {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
       <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
-        <header className="dz-platform-header">
+      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}${contentReady ? " dz-content-visible" : " dz-content-hidden"}`}>
+        <header className="dz-platform-header dz-fade-element" style={{ animationDelay: "0.1s" }}>
           <div>
             <h1>Dashboard</h1>
             <p>Welcome back, Dr. Elguizaoui</p>
@@ -318,7 +326,7 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div className="dz-stats-grid">
+        <div className="dz-stats-grid dz-fade-element" style={{ animationDelay: "0.25s" }}>
           {stats.map((s) => (
             <div key={s.label} className="dz-stat-card">
               <div className="dz-stat-card-label">{s.label}</div>
@@ -328,7 +336,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <div className="dz-dash-section">
+        <div className="dz-dash-section dz-fade-element" style={{ animationDelay: "0.4s" }}>
           <h2>Today's Schedule</h2>
           <div className="dz-table-wrap">
             <table className="dz-table">

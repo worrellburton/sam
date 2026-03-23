@@ -6532,12 +6532,17 @@ img.insurance-logo:hover {
 .dz-resend-btn:hover span { text-decoration: underline; }
 
 /* ===== DocZoc Platform Layout ===== */
+/* Prevent white flash between splash and platform — body inherits dark bg */
+body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-signin-page) {
+  background: #0f0f1e !important;
+}
 .dz-platform {
   display: flex;
   min-height: 100vh;
   background: #0f0f1e;
   color: #e2e8f0;
   font-family: Inter, -apple-system, sans-serif;
+  font-size: 0.875rem;
 }
 .dz-sidebar {
   width: 240px;
@@ -6586,7 +6591,7 @@ img.insurance-logo:hover {
   border-radius: 10px;
   color: #94a3b8;
   text-decoration: none;
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   font-weight: 500;
   transition: all 0.15s;
 }
@@ -6833,8 +6838,8 @@ img.insurance-logo:hover {
   justify-content: space-between;
   margin-bottom: 32px;
 }
-.dz-platform-header h1 { font-size: 1.6rem; font-weight: 800; color: #f1f5f9; margin-bottom: 4px; }
-.dz-platform-header p { font-size: 0.92rem; color: #94a3b8; line-height: 1.5; }
+.dz-platform-header h1 { font-size: 1.4rem; font-weight: 800; color: #f1f5f9; margin-bottom: 4px; }
+.dz-platform-header p { font-size: 0.82rem; color: #94a3b8; line-height: 1.5; }
 .dz-platform-header-right { display: flex; align-items: center; gap: 12px; }
 .dz-avatar {
   width: 38px; height: 38px;
@@ -6875,12 +6880,12 @@ img.insurance-logo:hover {
   transition: all 0.2s;
 }
 .dz-stat-card:hover { border-color: rgba(99, 102, 241, 0.25); }
-.dz-stat-card-label { font-size: 0.78rem; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
-.dz-stat-card-value { font-size: 1.8rem; font-weight: 800; margin-bottom: 4px; color: #f1f5f9; }
-.dz-stat-card-change { font-size: 0.78rem; }
+.dz-stat-card-label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
+.dz-stat-card-value { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; color: #f1f5f9; }
+.dz-stat-card-change { font-size: 0.72rem; }
 
 /* Table */
-.dz-dash-section h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 16px; color: #f1f5f9; }
+.dz-dash-section h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; color: #f1f5f9; }
 .dz-table-wrap {
   background: rgba(15, 23, 42, 0.45);
   border: 1px solid rgba(99, 102, 241, 0.1);
@@ -6894,8 +6899,8 @@ img.insurance-logo:hover {
 }
 .dz-table th {
   text-align: left;
-  padding: 12px 18px;
-  font-size: 0.75rem;
+  padding: 10px 16px;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #94a3b8;
   text-transform: uppercase;
@@ -6904,15 +6909,15 @@ img.insurance-logo:hover {
   background: rgba(10, 10, 26, 0.3);
 }
 .dz-table td {
-  padding: 13px 18px;
-  font-size: 0.88rem;
+  padding: 11px 16px;
+  font-size: 0.82rem;
   color: #94a3b8;
   border-bottom: 1px solid rgba(148, 163, 184, 0.05);
 }
 .dz-table tr:hover td { background: rgba(99, 102, 241, 0.04); }
 .dz-table-name { font-weight: 600; color: #f1f5f9; }
-.dz-table-sub { font-size: 0.78rem; color: #64748b; }
-.dz-table-time { font-weight: 600; color: #818cf8; font-size: 0.88rem; }
+.dz-table-sub { font-size: 0.72rem; color: #64748b; }
+.dz-table-time { font-weight: 600; color: #818cf8; font-size: 0.82rem; }
 
 /* Status badges */
 .dz-status-badge {
@@ -7873,6 +7878,16 @@ img.insurance-logo:hover {
 @keyframes dz-cinematic-in {
   from { opacity: 0; transform: scale(1.03); filter: blur(6px); }
   to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+/* Content fade-in elements */
+.dz-content-hidden .dz-fade-element { opacity: 0; }
+.dz-content-visible .dz-fade-element {
+  animation: dz-content-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes dz-content-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .dz-splash-canvas {

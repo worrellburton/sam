@@ -634,6 +634,68 @@
     </div>
   </section>
 
+  <!-- Insurance Accepted -->
+  <section class="section insurance reveal" id="insurance">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Insurance</p>
+        <h2>Accepted <span class="text-accent">Insurance Plans</span></h2>
+        <p class="section-desc">We accept most major insurance plans. Contact our office to verify your coverage.</p>
+      </div>
+      <div class="insurance-logos">
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/aetna.com" alt="Aetna" loading="lazy">
+          <span>Aetna</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/cigna.com" alt="Cigna" loading="lazy">
+          <span>Cigna</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/uhc.com" alt="UnitedHealthcare" loading="lazy">
+          <span>UnitedHealthcare</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/bcbs.com" alt="Blue Cross Blue Shield" loading="lazy">
+          <span>BCBS</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/oxfordhealth.com" alt="Oxford" loading="lazy">
+          <span>Oxford</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/empireblue.com" alt="Empire BlueCross" loading="lazy">
+          <span>Empire</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/humana.com" alt="Humana" loading="lazy">
+          <span>Humana</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/medicare.gov" alt="Medicare" loading="lazy">
+          <span>Medicare</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/1199seiubenefits.org" alt="1199SEIU" loading="lazy">
+          <span>1199SEIU</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/oscarhealth.com" alt="Oscar Health" loading="lazy">
+          <span>Oscar</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/multiplan.com" alt="MultiPlan" loading="lazy">
+          <span>MultiPlan</span>
+        </div>
+        <div class="insurance-logo-item">
+          <img src="https://logo.clearbit.com/magnacare.com" alt="MagnaCare" loading="lazy">
+          <span>MagnaCare</span>
+        </div>
+      </div>
+      <p class="insurance-note">Don't see your plan? Call us — we work with many additional carriers.</p>
+    </div>
+  </section>
+
   <!-- 7. Get Started -->
   <section class="section contact reveal" id="contact">
     <div class="container">
@@ -698,6 +760,78 @@
     </div>
   </section>
 
+  <!-- Patient Intake Flow Modal -->
+  <div class="intake-overlay" id="intakeOverlay">
+    <div class="intake-modal">
+      <button class="intake-close" id="intakeClose" aria-label="Close">&times;</button>
+
+      <div class="intake-header">
+        <div class="intake-step-indicator">
+          <div class="intake-step-dot active" data-step="1"></div>
+          <div class="intake-step-dot" data-step="2"></div>
+          <div class="intake-step-dot" data-step="3"></div>
+        </div>
+        <h2 id="intakeTitle">Tell Us About Your Issue</h2>
+        <p id="intakeSubtitle">Describe your symptoms or concerns in detail so Dr. Elguizaoui can prepare for your visit.</p>
+      </div>
+
+      <div class="intake-body">
+        <!-- Step 1: Describe Issue -->
+        <div class="intake-step active" id="intakeStep1">
+          <textarea class="intake-textarea" id="intakeIssue" placeholder="Tell us what's going on — describe your pain, when it started, what makes it worse, and how it's affecting your daily life. The more detail, the better we can help..."></textarea>
+          <button class="intake-voice-btn" id="intakeVoiceBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            <span id="voiceBtnText">Tap to use voice-to-text</span>
+            <span class="intake-timer" id="voiceTimer" style="display:none">0:00</span>
+          </button>
+          <div class="intake-actions">
+            <button class="intake-btn intake-btn-primary" id="intakeNext1" disabled>Next: Upload Documents</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Upload Documents -->
+        <div class="intake-step" id="intakeStep2">
+          <div class="intake-uploads">
+            <div class="intake-upload-zone" id="uploadLicense">
+              <input type="file" accept="image/*,.pdf" id="licenseInput">
+              <div class="upload-prompt">
+                <div class="intake-upload-icon">&#128179;</div>
+                <h4>Driver's License</h4>
+                <p>Take a photo or upload an image of your ID</p>
+              </div>
+              <div class="upload-success">&#10003; Driver's License uploaded</div>
+            </div>
+            <div class="intake-upload-zone" id="uploadInsurance">
+              <input type="file" accept="image/*,.pdf" id="insuranceInput">
+              <div class="upload-prompt">
+                <div class="intake-upload-icon">&#127973;</div>
+                <h4>Insurance Card</h4>
+                <p>Front of your medical insurance card</p>
+              </div>
+              <div class="upload-success">&#10003; Insurance Card uploaded</div>
+            </div>
+          </div>
+          <div class="intake-actions">
+            <button class="intake-btn intake-btn-secondary" id="intakeBack2">Back</button>
+            <button class="intake-btn intake-btn-primary" id="intakeNext2" disabled>Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Confirmation -->
+        <div class="intake-step" id="intakeStep3">
+          <div class="intake-success">
+            <div class="intake-success-icon">&#10004;&#65039;</div>
+            <h3>You're All Set!</h3>
+            <p>Your information has been submitted. Our team will review your details and reach out to confirm your appointment shortly.</p>
+          </div>
+          <div class="intake-actions">
+            <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="intake-btn intake-btn-primary" style="text-align:center;text-decoration:none;display:block;">Book on Zocdoc</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <canvas class="footer-canvas" id="footerCanvas"></canvas>
@@ -715,6 +849,21 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
             </a>
           </div>
+        </div>
+      </div>
+      <div class="footer-insurance">
+        <p class="footer-insurance-label">Accepted Insurance</p>
+        <div class="footer-insurance-logos">
+          <img src="https://logo.clearbit.com/aetna.com" alt="Aetna" loading="lazy">
+          <img src="https://logo.clearbit.com/cigna.com" alt="Cigna" loading="lazy">
+          <img src="https://logo.clearbit.com/uhc.com" alt="UnitedHealthcare" loading="lazy">
+          <img src="https://logo.clearbit.com/bcbs.com" alt="BCBS" loading="lazy">
+          <img src="https://logo.clearbit.com/oxfordhealth.com" alt="Oxford" loading="lazy">
+          <img src="https://logo.clearbit.com/empireblue.com" alt="Empire" loading="lazy">
+          <img src="https://logo.clearbit.com/humana.com" alt="Humana" loading="lazy">
+          <img src="https://logo.clearbit.com/medicare.gov" alt="Medicare" loading="lazy">
+          <img src="https://logo.clearbit.com/oscarhealth.com" alt="Oscar" loading="lazy">
+          <img src="https://logo.clearbit.com/multiplan.com" alt="MultiPlan" loading="lazy">
         </div>
       </div>
       <div class="footer-columns">
@@ -1045,6 +1194,175 @@
         requestAnimationFrame(frame);
       }
       frame();
+    })();
+  </script>
+
+  <script>
+    // --- Patient Intake Flow ---
+    (function() {
+      const overlay = document.getElementById('intakeOverlay');
+      const closeBtn = document.getElementById('intakeClose');
+      const title = document.getElementById('intakeTitle');
+      const subtitle = document.getElementById('intakeSubtitle');
+      const dots = document.querySelectorAll('.intake-step-dot');
+      const steps = document.querySelectorAll('.intake-step');
+      const textarea = document.getElementById('intakeIssue');
+      const next1 = document.getElementById('intakeNext1');
+      const next2 = document.getElementById('intakeNext2');
+      const back2 = document.getElementById('intakeBack2');
+      const voiceBtn = document.getElementById('intakeVoiceBtn');
+      const voiceBtnText = document.getElementById('voiceBtnText');
+      const voiceTimer = document.getElementById('voiceTimer');
+      const licenseInput = document.getElementById('licenseInput');
+      const insuranceInput = document.getElementById('insuranceInput');
+      const uploadLicense = document.getElementById('uploadLicense');
+      const uploadInsurance = document.getElementById('uploadInsurance');
+
+      let currentStep = 1;
+      let recognition = null;
+      let isRecording = false;
+      let timerInterval = null;
+      let seconds = 0;
+
+      const stepData = {
+        1: { title: 'Tell Us About Your Issue', subtitle: 'Describe your symptoms or concerns in detail — type it out or use voice-to-text. Talk for 1-2 minutes explaining what\'s going on.' },
+        2: { title: 'Upload Your Documents', subtitle: 'Please upload a photo of your driver\'s license and your medical insurance card.' },
+        3: { title: 'Submission Complete', subtitle: 'We have everything we need to get you started.' }
+      };
+
+      function goToStep(step) {
+        currentStep = step;
+        steps.forEach(s => s.classList.remove('active'));
+        document.getElementById('intakeStep' + step).classList.add('active');
+        dots.forEach((d, i) => {
+          d.classList.remove('active', 'completed');
+          if (i + 1 === step) d.classList.add('active');
+          if (i + 1 < step) d.classList.add('completed');
+        });
+        title.textContent = stepData[step].title;
+        subtitle.textContent = stepData[step].subtitle;
+      }
+
+      function openIntake() {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        goToStep(1);
+        textarea.value = '';
+        next1.disabled = true;
+        next2.disabled = true;
+        uploadLicense.classList.remove('uploaded');
+        uploadInsurance.classList.remove('uploaded');
+        licenseInput.value = '';
+        insuranceInput.value = '';
+      }
+
+      function closeIntake() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        stopRecording();
+      }
+
+      // Enable Next on step 1 when text is entered
+      textarea.addEventListener('input', function() {
+        next1.disabled = this.value.trim().length < 10;
+      });
+
+      next1.addEventListener('click', () => goToStep(2));
+      back2.addEventListener('click', () => goToStep(1));
+      next2.addEventListener('click', () => goToStep(3));
+      closeBtn.addEventListener('click', closeIntake);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeIntake();
+      });
+
+      // Upload handlers
+      function checkUploads() {
+        const both = uploadLicense.classList.contains('uploaded') && uploadInsurance.classList.contains('uploaded');
+        next2.disabled = !both;
+      }
+      licenseInput.addEventListener('change', function() {
+        if (this.files.length) {
+          uploadLicense.classList.add('uploaded');
+          checkUploads();
+        }
+      });
+      insuranceInput.addEventListener('change', function() {
+        if (this.files.length) {
+          uploadInsurance.classList.add('uploaded');
+          checkUploads();
+        }
+      });
+
+      // Voice-to-text
+      function startRecording() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+          alert('Voice-to-text is not supported in this browser. Please type your response instead.');
+          return;
+        }
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        let finalTranscript = textarea.value;
+        recognition.onresult = function(event) {
+          let interim = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript + ' ';
+            } else {
+              interim += event.results[i][0].transcript;
+            }
+          }
+          textarea.value = finalTranscript + interim;
+          next1.disabled = textarea.value.trim().length < 10;
+        };
+        recognition.onerror = function() { stopRecording(); };
+        recognition.onend = function() {
+          if (isRecording) { recognition.start(); }
+        };
+
+        recognition.start();
+        isRecording = true;
+        voiceBtn.classList.add('recording');
+        voiceBtnText.textContent = 'Recording... Tap to stop';
+        voiceTimer.style.display = 'inline';
+        seconds = 0;
+        timerInterval = setInterval(() => {
+          seconds++;
+          const m = Math.floor(seconds / 60);
+          const s = seconds % 60;
+          voiceTimer.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+        }, 1000);
+      }
+
+      function stopRecording() {
+        if (recognition) {
+          isRecording = false;
+          recognition.stop();
+          recognition = null;
+        }
+        voiceBtn.classList.remove('recording');
+        voiceBtnText.textContent = 'Tap to use voice-to-text';
+        voiceTimer.style.display = 'none';
+        clearInterval(timerInterval);
+      }
+
+      voiceBtn.addEventListener('click', () => {
+        if (isRecording) { stopRecording(); } else { startRecording(); }
+      });
+
+      // Hook into existing "Book" buttons - open intake instead of Zocdoc
+      document.querySelectorAll('.nav-btn-book, .btn-hero').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          openIntake();
+        });
+      });
+
+      // Also expose globally
+      window.openIntake = openIntake;
     })();
   </script>
 

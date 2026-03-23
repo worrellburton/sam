@@ -2067,6 +2067,407 @@ img { max-width: 100%; display: block; }
   font-size: 0.88rem;
 }
 
+/* ===== Insurance Logos Section ===== */
+.insurance-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin: 40px 0 24px;
+}
+.insurance-logo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100px;
+  text-align: center;
+}
+.insurance-logo-item img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+.insurance-logo-item:hover img {
+  transform: scale(1.1);
+}
+.insurance-logo-item span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.insurance-note {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+/* FAQ Insurance Logos */
+.faq-insurance-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px 0;
+}
+.faq-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 6px 12px 6px 6px;
+}
+[data-theme="light"] .faq-logo {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.08);
+}
+.faq-logo img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #fff;
+  padding: 2px;
+}
+.faq-logo span {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Footer Insurance Strip */
+.footer-insurance {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 24px 0;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.footer-insurance-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.footer-insurance-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  align-items: center;
+}
+.footer-insurance-logos img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.9);
+  padding: 4px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.footer-insurance-logos img:hover {
+  opacity: 1;
+}
+
+/* ===== Patient Intake Flow ===== */
+.intake-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.intake-overlay.active {
+  display: flex;
+}
+.intake-modal {
+  background: var(--card-bg, #1a1a2e);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  position: relative;
+}
+[data-theme="light"] .intake-modal {
+  background: #fff;
+  border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.15);
+}
+.intake-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.intake-close:hover {
+  background: rgba(255,255,255,0.1);
+}
+.intake-header {
+  padding: 32px 32px 0;
+  text-align: center;
+}
+.intake-step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.intake-step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+[data-theme="light"] .intake-step-dot {
+  background: rgba(0,0,0,0.1);
+}
+.intake-step-dot.active {
+  background: var(--primary);
+  transform: scale(1.2);
+}
+.intake-step-dot.completed {
+  background: var(--accent, #4caf50);
+}
+.intake-header h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.intake-header p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.intake-body {
+  padding: 24px 32px 32px;
+}
+.intake-step {
+  display: none;
+}
+.intake-step.active {
+  display: block;
+}
+
+/* Step 1: Describe your issue */
+.intake-textarea {
+  width: 100%;
+  min-height: 160px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  padding: 16px;
+  resize: vertical;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+[data-theme="light"] .intake-textarea {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.12);
+}
+.intake-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.intake-textarea::placeholder {
+  color: var(--text-muted);
+}
+.intake-voice-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: 1px dashed rgba(255,255,255,0.2);
+  border-radius: 12px;
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+[data-theme="light"] .intake-voice-btn {
+  border-color: rgba(0,0,0,0.15);
+}
+.intake-voice-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.intake-voice-btn.recording {
+  border-color: #ef4444;
+  color: #ef4444;
+  animation: pulse-recording 1.5s ease-in-out infinite;
+}
+@keyframes pulse-recording {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.intake-timer {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  margin-left: 4px;
+}
+
+/* Step 2: Upload documents */
+.intake-uploads {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.intake-upload-zone {
+  border: 2px dashed rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+[data-theme="light"] .intake-upload-zone {
+  border-color: rgba(0,0,0,0.12);
+}
+.intake-upload-zone:hover {
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, 0.05);
+}
+.intake-upload-zone.uploaded {
+  border-color: #4caf50;
+  border-style: solid;
+  background: rgba(76, 175, 80, 0.05);
+}
+.intake-upload-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.intake-upload-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+.intake-upload-zone h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.intake-upload-zone p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.intake-upload-zone .upload-success {
+  display: none;
+  color: #4caf50;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.intake-upload-zone.uploaded .upload-success {
+  display: block;
+}
+.intake-upload-zone.uploaded .upload-prompt {
+  display: none;
+}
+
+/* Navigation buttons */
+.intake-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+.intake-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+.intake-btn-secondary {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+}
+[data-theme="light"] .intake-btn-secondary {
+  background: rgba(0,0,0,0.05);
+}
+.intake-btn-secondary:hover {
+  background: rgba(255,255,255,0.15);
+}
+.intake-btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.intake-btn-primary:hover {
+  filter: brightness(1.1);
+}
+.intake-btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Step 3: Confirmation */
+.intake-success {
+  text-align: center;
+  padding: 20px 0;
+}
+.intake-success-icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+}
+.intake-success h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.intake-success p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
   .hero-content { flex-direction: column; align-items: flex-start; }
@@ -2082,6 +2483,8 @@ img { max-width: 100%; display: block; }
   .service-grid { grid-template-columns: 1fr; gap: 40px; }
   .blog-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-columns { grid-template-columns: repeat(2, 1fr); }
+  .insurance-logos { gap: 20px; }
+  .insurance-logo-item { width: 85px; }
 }
 
 @media (max-width: 768px) {
@@ -2285,6 +2688,19 @@ img { max-width: 100%; display: block; }
   .location-map { height: 200px; }
   .location-label { padding: 14px 18px; }
   .location-label span { font-size: 0.9rem; }
+
+  /* Insurance mobile */
+  .insurance-logos { gap: 16px; }
+  .insurance-logo-item { width: 75px; }
+  .insurance-logo-item img { width: 48px; height: 48px; }
+  .faq-insurance-logos { gap: 10px; }
+  .footer-insurance-logos img { width: 28px; height: 28px; }
+
+  /* Intake modal mobile */
+  .intake-modal { border-radius: 16px; }
+  .intake-header { padding: 24px 20px 0; }
+  .intake-body { padding: 20px; }
+  .intake-header h2 { font-size: 1.2rem; }
 
   /* Footer mobile */
   .footer { min-height: auto; }

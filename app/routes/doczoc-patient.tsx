@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useCallback } from "react";
 import { Link, useParams } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
@@ -309,60 +309,204 @@ export default function PatientDetailPage() {
           </div>
         </div>
 
-        {/* Appointment Quick View */}
-        <div style={{
-          display: "grid", gridTemplateColumns: "1fr 1fr",
-          gap: 16, marginBottom: 24,
-        }}>
-          <div className="dz-card" style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: 10, display: "flex",
-              alignItems: "center", justifyContent: "center",
-              background: "rgba(99,102,241,0.12)", color: "#818cf8", flexShrink: 0,
-            }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-            </div>
-            <div>
-              <div style={{ fontSize: "0.7rem", color: "#5a5a6e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Last Visit</div>
-              <div style={{ fontSize: "1rem", fontWeight: 700, color: "#e4e4ee" }}>{patient.lastVisit}</div>
-            </div>
-          </div>
-          <div className="dz-card" style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: 10, display: "flex",
-              alignItems: "center", justifyContent: "center",
-              background: patient.nextAppt === "-" ? "rgba(148,163,184,0.12)" : "rgba(34,197,94,0.12)",
-              color: patient.nextAppt === "-" ? "#94a3b8" : "#22c55e", flexShrink: 0,
-            }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-              </svg>
-            </div>
-            <div>
-              <div style={{ fontSize: "0.7rem", color: "#5a5a6e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Next Appointment</div>
-              <div style={{ fontSize: "1rem", fontWeight: 700, color: "#e4e4ee" }}>
-                {patient.nextAppt === "-" ? "None scheduled" : patient.nextAppt}
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Invoices — collapsible, default collapsed */}
+        <InvoicesSection patient={patient} />
 
-        {/* Invoices */}
-        <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
-          <div style={{
-            padding: "16px 20px", borderBottom: "1px solid rgba(99,102,241,0.1)",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="3" width="20" height="18" rx="2" /><line x1="2" y1="7" x2="22" y2="7" /><line x1="2" y1="11" x2="22" y2="11" />
-              </svg>
-              <span className="dz-text-primary" style={{ fontWeight: 700, fontSize: "0.88rem" }}>Invoices</span>
-            </div>
-            <span className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>{patient.invoices.length} invoices</span>
-          </div>
+        {/* Documents — unified section with drag-and-drop */}
+        <DocumentsSection patient={patient} />
+
+        {/* Timeline — collapsible, default collapsed */}
+        <TimelineSection events={allTimelineEvents} />
+      </main>
+    </div>
+  );
+}
+
+// ── Generate Invoice PDF ────────────────────────────────────────────
+function generateInvoicePDF(inv: Patient["invoices"][0], patient: Patient) {
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Invoice ${inv.id} — ${patient.name}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: letter; margin: 0.6in; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 9.5pt; color: #1a1a2e; line-height: 1.45; padding: 0.6in; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #6366f1; }
+  .header-left h1 { font-size: 18pt; font-weight: 800; color: #6366f1; margin-bottom: 2px; }
+  .header-left p { font-size: 8.5pt; color: #64748b; }
+  .header-right { text-align: right; font-size: 8.5pt; color: #475569; }
+  .header-right .inv-id { font-size: 13pt; font-weight: 700; color: #1a1a2e; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .info-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; }
+  .info-box h3 { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6366f1; margin-bottom: 8px; }
+  .info-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+  .info-label { color: #64748b; font-size: 8.5pt; }
+  .info-value { font-weight: 600; font-size: 8.5pt; color: #1e293b; }
+  .section { margin-bottom: 18px; }
+  .section h2 { font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6366f1; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+  table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+  th { background: #f1f5f9; text-align: left; padding: 7px 10px; font-weight: 700; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; border-bottom: 1px solid #e2e8f0; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+  .money { font-family: 'SF Mono', Consolas, monospace; font-weight: 600; text-align: right; }
+  .total-row td { border-top: 2px solid #1e293b; font-weight: 800; font-size: 10pt; background: #f8fafc; }
+  .status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 8pt; font-weight: 700; }
+  .status-paid { background: #d1fae5; color: #059669; }
+  .status-pending { background: #fef3c7; color: #d97706; }
+  .status-overdue { background: #fee2e2; color: #dc2626; }
+  .status-processing { background: #e0e7ff; color: #4f46e5; }
+  .footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 7.5pt; color: #94a3b8; }
+  @media print { body { padding: 0; } }
+</style></head><body>
+  <div class="header">
+    <div class="header-left">
+      <h1>DocZoc</h1>
+      <p>Orthopedic Surgery & Sports Medicine</p>
+      <p>1155 Park Avenue, New York, NY 10128</p>
+    </div>
+    <div class="header-right">
+      <div class="inv-id">${inv.id}</div>
+      <p>Date: ${inv.date}</p>
+      <p>Status: <span class="status status-${inv.status.toLowerCase().replace(/ /g, "-")}">${inv.status}</span></p>
+      ${inv.claimId ? `<p>Claim: ${inv.claimId}</p>` : ""}
+    </div>
+  </div>
+  <div class="info-grid">
+    <div class="info-box">
+      <h3>Patient Information</h3>
+      <div class="info-row"><span class="info-label">Name</span><span class="info-value">${patient.name}</span></div>
+      <div class="info-row"><span class="info-label">DOB</span><span class="info-value">${patient.dob}</span></div>
+      <div class="info-row"><span class="info-label">Member ID</span><span class="info-value">${patient.memberId}</span></div>
+    </div>
+    <div class="info-box">
+      <h3>Insurance</h3>
+      <div class="info-row"><span class="info-label">Plan</span><span class="info-value">${patient.insurance}</span></div>
+      <div class="info-row"><span class="info-label">Group</span><span class="info-value">${patient.groupNumber}</span></div>
+      <div class="info-row"><span class="info-label">Provider</span><span class="info-value">${patient.provider}</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <h2>Invoice Details</h2>
+    <table>
+      <thead><tr><th>Description</th><th style="text-align:right">Charged</th><th style="text-align:right">Insurance Paid</th><th style="text-align:right">Deductible</th><th style="text-align:right">Copay</th><th style="text-align:right">Patient Owes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>${inv.description}</td>
+          <td class="money">$${inv.totalCharged.toFixed(2)}</td>
+          <td class="money" style="color:#059669">$${inv.insurancePaid.toFixed(2)}</td>
+          <td class="money">$${inv.deductibleApplied.toFixed(2)}</td>
+          <td class="money">$${inv.copay.toFixed(2)}</td>
+          <td class="money" style="font-weight:800">$${inv.patientOwes.toFixed(2)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">
+    <span>DocZoc Medical Billing &middot; 1155 Park Avenue, New York, NY 10128</span>
+    <span>Phone: (212) 828-3838</span>
+  </div>
+</body></html>`;
+
+  const win = window.open("", "_blank");
+  if (!win) return;
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => win.print(), 400);
+}
+
+// ── Generate Insurance Card PDF ────────────────────────────────────
+function generateInsuranceCardPDF(patient: Patient) {
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Insurance Card — ${patient.name}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @page { size: landscape; margin: 0.5in; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; padding: 0.5in; display: flex; flex-direction: column; gap: 24px; }
+  .card { width: 500px; border: 2px solid #6366f1; border-radius: 12px; padding: 24px; background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%); }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #c7d2fe; }
+  .card-header h2 { font-size: 14pt; color: #4f46e5; }
+  .card-header .type { font-size: 8pt; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+  .row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .label { font-size: 8pt; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .value { font-size: 10pt; color: #1e293b; font-weight: 700; }
+  .back { margin-top: 12px; }
+  @media print { body { padding: 0; } }
+</style></head><body>
+  <div class="card">
+    <div class="card-header">
+      <h2>${patient.insurance}</h2>
+      <span class="type">Front of Card</span>
+    </div>
+    <div class="row"><span class="label">Member Name</span><span class="value">${patient.name}</span></div>
+    <div class="row"><span class="label">Member ID</span><span class="value">${patient.memberId}</span></div>
+    <div class="row"><span class="label">Group Number</span><span class="value">${patient.groupNumber}</span></div>
+    <div class="row"><span class="label">Plan Type</span><span class="value">PPO</span></div>
+    <div class="row"><span class="label">Effective Date</span><span class="value">Jan 01, 2026</span></div>
+  </div>
+  <div class="card back">
+    <div class="card-header">
+      <h2>${patient.insurance}</h2>
+      <span class="type">Back of Card</span>
+    </div>
+    <div class="row"><span class="label">Copay — Office Visit</span><span class="value">$40.00</span></div>
+    <div class="row"><span class="label">Copay — Specialist</span><span class="value">$60.00</span></div>
+    <div class="row"><span class="label">Deductible</span><span class="value">$1,500.00</span></div>
+    <div class="row"><span class="label">Out-of-Pocket Max</span><span class="value">$6,000.00</span></div>
+    <div class="row"><span class="label">Claims Address</span><span class="value">P.O. Box 981106, El Paso, TX 79998</span></div>
+    <div class="row"><span class="label">Customer Service</span><span class="value">1-800-555-0199</span></div>
+  </div>
+</body></html>`;
+
+  const win = window.open("", "_blank");
+  if (!win) return;
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => win.print(), 400);
+}
+
+// ── Collapsible Section Header ─────────────────────────────────────
+function CollapsibleHeader({ title, icon, count, countLabel, open, onToggle }: {
+  title: string; icon: React.ReactNode; count: number; countLabel: string;
+  open: boolean; onToggle: () => void;
+}) {
+  return (
+    <button
+      onClick={onToggle}
+      style={{
+        padding: "16px 20px", borderBottom: open ? "1px solid rgba(99,102,241,0.1)" : "none",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        width: "100%", background: "none", border: "none", cursor: "pointer",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        {icon}
+        <span className="dz-text-primary" style={{ fontWeight: 700, fontSize: "0.88rem" }}>{title}</span>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <span className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>{count} {countLabel}</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
+    </button>
+  );
+}
+
+// ── Invoices Section ───────────────────────────────────────────────
+function InvoicesSection({ patient }: { patient: Patient }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
+      <CollapsibleHeader
+        title="Invoices"
+        icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="18" rx="2" /><line x1="2" y1="7" x2="22" y2="7" /><line x1="2" y1="11" x2="22" y2="11" /></svg>}
+        count={patient.invoices.length}
+        countLabel="invoices"
+        open={open}
+        onToggle={() => setOpen(!open)}
+      />
+      {open && (
+        <>
           <div className="dz-table-wrap">
             <table className="dz-table" style={{ margin: 0 }}>
               <thead>
@@ -389,8 +533,8 @@ export default function PatientDetailPage() {
                   };
                   const isc = invStatusColors[inv.status] || invStatusColors.Pending;
                   return (
-                    <tr key={inv.id}>
-                      <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.75rem", fontWeight: 600 }}>{inv.id}</td>
+                    <tr key={inv.id} onClick={() => generateInvoicePDF(inv, patient)} style={{ cursor: "pointer" }} title={`Click to view ${inv.id} PDF`}>
+                      <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.75rem", fontWeight: 600, color: "#818cf8" }}>{inv.id}</td>
                       <td style={{ whiteSpace: "nowrap", fontSize: "0.82rem" }}>{inv.date}</td>
                       <td style={{ fontSize: "0.82rem", maxWidth: 260 }}>{inv.description}</td>
                       <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", fontWeight: 600 }}>${inv.totalCharged.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
@@ -400,20 +544,17 @@ export default function PatientDetailPage() {
                       <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", fontWeight: 700 }}>${inv.patientOwes.toLocaleString("en-US", { minimumFractionDigits: 2 })}</td>
                       <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.7rem", fontWeight: 700, background: isc.bg, color: isc.color, whiteSpace: "nowrap" }}>{inv.status}</span></td>
                       <td style={{ textAlign: "center" }}>
-                        <button
-                          style={{
-                            display: "inline-flex", alignItems: "center", gap: 4,
-                            padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.2)",
-                            background: "rgba(99,102,241,0.08)", color: "#818cf8",
-                            fontSize: "0.7rem", fontWeight: 700, cursor: "pointer",
-                          }}
-                          title={`Download ${inv.id}.pdf`}
-                        >
+                        <span style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
+                          padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.2)",
+                          background: "rgba(99,102,241,0.08)", color: "#818cf8",
+                          fontSize: "0.7rem", fontWeight: 700,
+                        }}>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
                           </svg>
                           PDF
-                        </button>
+                        </span>
                       </td>
                     </tr>
                   );
@@ -445,117 +586,261 @@ export default function PatientDetailPage() {
               </div>
             </div>
           </div>
-        </div>
+        </>
+      )}
+    </div>
+  );
+}
 
-        {/* Patient Journey Timeline */}
-        <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-          <div style={{
-            padding: "16px 20px", borderBottom: "1px solid rgba(99,102,241,0.1)",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-              </svg>
-              <span className="dz-text-primary" style={{ fontWeight: 700, fontSize: "0.88rem" }}>Patient Journey</span>
-            </div>
-            <span className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>
-              {allTimelineEvents.length} events
-            </span>
-          </div>
+// ── Documents Section ──────────────────────────────────────────────
+function DocumentsSection({ patient }: { patient: Patient }) {
+  const [open, setOpen] = useState(true);
+  const [dragOver, setDragOver] = useState(false);
+  const [uploadedDocs, setUploadedDocs] = useState<{ name: string; size: string; date: string }[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-          <div style={{ padding: "0 20px 20px" }}>
-            {allTimelineEvents.map((event, i) => {
-              const isLast = i === allTimelineEvents.length - 1;
-              return (
-                <div
-                  key={i}
-                  style={{
-                    position: "relative",
-                    paddingLeft: 36,
-                    paddingTop: 20,
-                  }}
-                >
-                  {/* Timeline line */}
-                  {!isLast && (
-                    <div style={{
-                      position: "absolute", left: 11, top: 40, bottom: -20,
-                      width: 2, background: "rgba(99,102,241,0.12)",
-                    }} />
-                  )}
-                  {/* Timeline icon */}
-                  <div style={{
-                    position: "absolute", left: 0, top: 22,
-                    width: 24, height: 24, borderRadius: "50%",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    background: event.iconBg, color: event.iconColor,
-                  }}>
-                    {event.icon}
-                  </div>
+  const builtInDocs = [
+    { name: "Insurance Card", type: "insurance", icon: "card", color: "#6366f1", onClick: () => generateInsuranceCardPDF(patient) },
+    ...patient.invoices.map((inv) => ({
+      name: `Invoice ${inv.id}`, type: "invoice", icon: "invoice", color: inv.status === "Paid" ? "#22c55e" : inv.status === "Overdue" ? "#f87171" : "#fbbf24",
+      onClick: () => generateInvoicePDF(inv, patient),
+    })),
+    ...(patient.aobSigned ? [{ name: "Assignment of Benefits", type: "signature", icon: "sig", color: "#22c55e", onClick: () => {} }] : []),
+    ...(patient.roiSigned ? [{ name: "Release of Information", type: "signature", icon: "sig", color: "#22c55e", onClick: () => {} }] : []),
+  ];
 
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: "0.76rem", color: "#818cf8", fontWeight: 700, whiteSpace: "nowrap" }}>
-                      {event.date}
-                    </span>
-                    <span style={{
-                      fontSize: "0.7rem", padding: "2px 8px", borderRadius: 4,
-                      background: event.badgeBg, color: event.badgeColor, fontWeight: 700,
-                      whiteSpace: "nowrap",
-                    }}>
-                      {event.badge}
-                    </span>
-                  </div>
+  const totalDocs = builtInDocs.length + uploadedDocs.length;
 
-                  {event.linkTo ? (
-                    <Link to={event.linkTo} style={{ textDecoration: "none" }}>
-                      <p className="dz-text-secondary" style={{
-                        fontSize: "0.82rem", lineHeight: 1.55, margin: "0 0 4px",
-                        cursor: "pointer",
-                      }}>
-                        {event.description}
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 6, verticalAlign: "middle" }}>
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
-                        </svg>
-                      </p>
-                    </Link>
-                  ) : (
-                    <p className="dz-text-secondary" style={{ fontSize: "0.82rem", lineHeight: 1.55, margin: "0 0 4px" }}>
-                      {event.description}
-                    </p>
-                  )}
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const files = Array.from(e.dataTransfer.files);
+    const newDocs = files.map((f) => ({
+      name: f.name,
+      size: f.size < 1024 * 1024 ? `${(f.size / 1024).toFixed(0)} KB` : `${(f.size / (1024 * 1024)).toFixed(1)} MB`,
+      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+    }));
+    setUploadedDocs((prev) => [...prev, ...newDocs]);
+  }, []);
 
-                  {event.amount !== undefined && (
-                    <span style={{
-                      fontSize: "0.75rem", fontFamily: "'SF Mono', Consolas, monospace",
-                      fontWeight: 700, color: event.amountColor || "#22c55e",
-                    }}>
-                      {event.amount}
-                    </span>
-                  )}
+  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const newDocs = files.map((f) => ({
+      name: f.name,
+      size: f.size < 1024 * 1024 ? `${(f.size / 1024).toFixed(0)} KB` : `${(f.size / (1024 * 1024)).toFixed(1)} MB`,
+      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+    }));
+    setUploadedDocs((prev) => [...prev, ...newDocs]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }, []);
 
-                  {event.codes && event.codes.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 4 }}>
-                      {event.codes.map((code) => (
-                        <span
-                          key={code}
-                          style={{
-                            fontSize: "0.68rem", fontFamily: "'SF Mono', Consolas, monospace",
-                            padding: "2px 7px", borderRadius: 4, fontWeight: 600,
-                            background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
-                            color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
-                          }}
-                        >
-                          {code}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+  const docIcon = (type: string) => {
+    if (type === "card") return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>;
+    if (type === "invoice") return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>;
+    if (type === "sig") return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>;
+    return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>;
+  };
+
+  return (
+    <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
+      <CollapsibleHeader
+        title="Documents"
+        icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>}
+        count={totalDocs}
+        countLabel="documents"
+        open={open}
+        onToggle={() => setOpen(!open)}
+      />
+      {open && (
+        <div style={{ padding: "16px 20px" }}>
+          {/* Document grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10, marginBottom: 16 }}>
+            {builtInDocs.map((doc, i) => (
+              <button
+                key={i}
+                onClick={doc.onClick}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "12px 14px",
+                  borderRadius: 10, border: "1px solid rgba(99,102,241,0.12)",
+                  background: "rgba(99,102,241,0.04)", cursor: "pointer",
+                  textAlign: "left", width: "100%",
+                  transition: "all 0.15s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(99,102,241,0.3)"; e.currentTarget.style.background = "rgba(99,102,241,0.08)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(99,102,241,0.12)"; e.currentTarget.style.background = "rgba(99,102,241,0.04)"; }}
+                title={`View ${doc.name} PDF`}
+              >
+                <div style={{
+                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  background: `${doc.color}18`, color: doc.color,
+                }}>
+                  {docIcon(doc.icon)}
                 </div>
-              );
-            })}
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
+                  <div style={{ fontSize: "0.68rem", color: "#64748b", textTransform: "uppercase" }}>PDF</div>
+                </div>
+              </button>
+            ))}
+            {uploadedDocs.map((doc, i) => (
+              <div
+                key={`upload-${i}`}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "12px 14px",
+                  borderRadius: 10, border: "1px solid rgba(99,102,241,0.12)",
+                  background: "rgba(99,102,241,0.04)",
+                }}
+              >
+                <div style={{
+                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "rgba(167,139,250,0.15)", color: "#a78bfa",
+                }}>
+                  {docIcon("file")}
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
+                  <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{doc.size} &middot; {doc.date}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Drag-and-drop zone */}
+          <div
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              border: `2px dashed ${dragOver ? "#818cf8" : "rgba(99,102,241,0.2)"}`,
+              borderRadius: 10, padding: "24px 20px", textAlign: "center",
+              cursor: "pointer", transition: "all 0.2s",
+              background: dragOver ? "rgba(99,102,241,0.08)" : "transparent",
+            }}
+          >
+            <input ref={fileInputRef} type="file" multiple onChange={handleFileInput} style={{ display: "none" }} />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={dragOver ? "#818cf8" : "#64748b"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 8 }}>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <div style={{ fontSize: "0.82rem", fontWeight: 600, color: dragOver ? "#818cf8" : "#94a3b8" }}>
+              Drag & drop files here or click to upload
+            </div>
+            <div style={{ fontSize: "0.72rem", color: "#64748b", marginTop: 4 }}>
+              PDF, images, or documents
+            </div>
           </div>
         </div>
-      </main>
+      )}
+    </div>
+  );
+}
+
+// ── Timeline Section ───────────────────────────────────────────────
+function TimelineSection({ events }: { events: TimelineEvent[] }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+      <CollapsibleHeader
+        title="Timeline"
+        icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>}
+        count={events.length}
+        countLabel="events"
+        open={open}
+        onToggle={() => setOpen(!open)}
+      />
+      {open && (
+        <div style={{ padding: "0 20px 20px" }}>
+          {events.map((event, i) => {
+            const isLast = i === events.length - 1;
+            return (
+              <div
+                key={i}
+                style={{
+                  position: "relative",
+                  paddingLeft: 36,
+                  paddingTop: 20,
+                }}
+              >
+                {!isLast && (
+                  <div style={{
+                    position: "absolute", left: 11, top: 40, bottom: -20,
+                    width: 2, background: "rgba(99,102,241,0.12)",
+                  }} />
+                )}
+                <div style={{
+                  position: "absolute", left: 0, top: 22,
+                  width: 24, height: 24, borderRadius: "50%",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  background: event.iconBg, color: event.iconColor,
+                }}>
+                  {event.icon}
+                </div>
+
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 4, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: "0.76rem", color: "#818cf8", fontWeight: 700, whiteSpace: "nowrap" }}>
+                    {event.date}
+                  </span>
+                  <span style={{
+                    fontSize: "0.7rem", padding: "2px 8px", borderRadius: 4,
+                    background: event.badgeBg, color: event.badgeColor, fontWeight: 700,
+                    whiteSpace: "nowrap",
+                  }}>
+                    {event.badge}
+                  </span>
+                </div>
+
+                {event.linkTo ? (
+                  <Link to={event.linkTo} style={{ textDecoration: "none" }}>
+                    <p className="dz-text-secondary" style={{
+                      fontSize: "0.82rem", lineHeight: 1.55, margin: "0 0 4px",
+                      cursor: "pointer",
+                    }}>
+                      {event.description}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 6, verticalAlign: "middle" }}>
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </p>
+                  </Link>
+                ) : (
+                  <p className="dz-text-secondary" style={{ fontSize: "0.82rem", lineHeight: 1.55, margin: "0 0 4px" }}>
+                    {event.description}
+                  </p>
+                )}
+
+                {event.amount !== undefined && (
+                  <span style={{
+                    fontSize: "0.75rem", fontFamily: "'SF Mono', Consolas, monospace",
+                    fontWeight: 700, color: event.amountColor || "#22c55e",
+                  }}>
+                    {event.amount}
+                  </span>
+                )}
+
+                {event.codes && event.codes.length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 4 }}>
+                    {event.codes.map((code) => (
+                      <span
+                        key={code}
+                        style={{
+                          fontSize: "0.68rem", fontFamily: "'SF Mono', Consolas, monospace",
+                          padding: "2px 7px", borderRadius: 4, fontWeight: 600,
+                          background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
+                          color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
+                        }}
+                      >
+                        {code}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

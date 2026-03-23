@@ -2468,6 +2468,202 @@ img { max-width: 100%; display: block; }
   line-height: 1.5;
 }
 
+/* ===== Calendar Picker ===== */
+.intake-calendar {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 20px;
+}
+[data-theme="light"] .intake-calendar {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.08);
+}
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.cal-month {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+}
+.cal-nav {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.cal-nav:hover {
+  background: rgba(255,255,255,0.1);
+}
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.cal-weekdays span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 4px 0;
+}
+.cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.15s;
+}
+.cal-day:hover:not(.cal-day-disabled):not(.cal-day-past) {
+  background: rgba(59, 130, 246, 0.15);
+}
+.cal-day.cal-day-selected {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+}
+.cal-day.cal-day-today {
+  border: 2px solid var(--primary);
+}
+.cal-day.cal-day-disabled,
+.cal-day.cal-day-past {
+  color: rgba(255,255,255,0.15);
+  cursor: default;
+}
+[data-theme="light"] .cal-day.cal-day-disabled,
+[data-theme="light"] .cal-day.cal-day-past {
+  color: rgba(0,0,0,0.2);
+}
+.cal-day.cal-day-empty {
+  cursor: default;
+}
+
+/* Time Slots */
+.intake-time-slots {
+  margin-top: 16px;
+}
+.time-slots-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.time-slot {
+  padding: 10px 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  background: none;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+[data-theme="light"] .time-slot {
+  border-color: rgba(0,0,0,0.1);
+}
+.time-slot:hover {
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, 0.08);
+}
+.time-slot.selected {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* ===== Patient Type Selector ===== */
+.intake-patient-type {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.patient-type-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+[data-theme="light"] .patient-type-btn {
+  border-color: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.02);
+}
+.patient-type-btn:hover {
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, 0.06);
+}
+.patient-type-btn.selected {
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, 0.1);
+}
+.patient-type-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.patient-type-icon svg {
+  color: var(--primary);
+}
+.patient-type-label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.patient-type-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
   .hero-content { flex-direction: column; align-items: flex-start; }

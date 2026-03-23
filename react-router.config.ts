@@ -22,6 +22,7 @@ export default {
     "/blog/meniscus-tears-cartilage-injuries",
     "/blog/rotator-cuff-tears-shoulder-instability",
     "/blog/tennis-elbow-golfers-elbow-guide",
+    "/blog/stress-fractures-guide",
     // Service pages
     "/services/sports-medicine",
     "/services/arthroscopic-surgery",

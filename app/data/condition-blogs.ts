@@ -6,6 +6,7 @@ export const conditionToBlogSlug: Record<string, string> = {
   "Meniscus tears and cartilage injuries": "meniscus-tears-cartilage-injuries",
   "Rotator cuff tears and shoulder instability": "rotator-cuff-tears-shoulder-instability",
   "Tennis and golfer's elbow": "tennis-elbow-golfers-elbow-guide",
+  "Stress fractures": "stress-fractures-guide",
 };
 
 export const conditionBlogPosts: BlogPost[] = [
@@ -1388,6 +1389,365 @@ export const conditionBlogPosts: BlogPost[] = [
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
     <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert tennis elbow treatment and golfer's elbow care for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
+  </div>
+</div>
+`,
+  },
+  {
+    slug: "stress-fractures-guide",
+    title: "Stress Fractures: When Your Body Asks You to Slow Down",
+    excerpt:
+      "A stress fracture doesn't mean your running days are over — it means your body needs the right care to come back stronger. Learn about causes, diagnosis, treatment, and prevention from a sports medicine specialist in NYC.",
+    tag: "Sports Medicine",
+    date: "March 23, 2026",
+    readTime: "10 min read",
+    image:
+      "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Runner on a trail representing stress fracture risk in athletes",
+    relatedService: "sports-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what-is">What Is a Stress Fracture?</a></li>
+    <li><a href="#causes">Causes & Risk Factors</a></li>
+    <li><a href="#locations">Where Stress Fractures Happen</a></li>
+    <li><a href="#symptoms">Signs & Symptoms</a></li>
+    <li><a href="#diagnosis">How We Diagnose Stress Fractures</a></li>
+    <li><a href="#treatment">Treatment Options</a></li>
+    <li><a href="#recovery">Recovery Timeline</a></li>
+    <li><a href="#prevention">Prevention Strategies</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you're dealing with a stress fracture — or worried you might have one — take a breath. This is your body's way of asking for help, not a sign of weakness. Stress fractures are incredibly common among active people, and with the right care, most patients make a full recovery and return to the activities they love. You're in good hands.</p>
+</div>
+
+<h2 id="what-is">What Is a Stress Fracture?</h2>
+
+<p>A stress fracture is a tiny crack in a bone caused by repetitive force or overuse — not a single traumatic event. Think of it like bending a paperclip back and forth: the metal doesn't break the first time, but eventually the repeated stress causes it to fail. Bones work the same way when they're subjected to more load than they can repair.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800&h=400&fit=crop&q=80" alt="Runner on trail representing stress fracture risk in active athletes" loading="lazy" />
+
+<p>Unlike acute fractures from a fall or collision, stress fractures develop gradually. They're especially common in runners, dancers, military recruits, and anyone who has recently increased their training intensity. The good news: caught early, most stress fractures heal completely with conservative treatment.</p>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">20%</span>
+    <span class="blog-stat-label">of all sports medicine visits are for stress fractures</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">95%</span>
+    <span class="blog-stat-label">heal fully with proper rest and treatment</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">6-8 wk</span>
+    <span class="blog-stat-label">Typical healing time for most stress fractures</span>
+  </div>
+</div>
+
+<h2 id="causes">Causes & Risk Factors</h2>
+
+<p>Stress fractures happen when the rate of bone breakdown exceeds the rate of bone repair. Several factors can tip this balance:</p>
+
+<div class="blog-chart">
+  <h4>Key Risk Factors</h4>
+  <svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">
+    <!-- Risk factor boxes -->
+    <rect x="10" y="15" width="215" height="55" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+    <text x="25" y="38" font-size="12" font-weight="700" fill="#991b1b" font-family="Inter, sans-serif">Training Errors</text>
+    <text x="25" y="55" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">Too much, too fast — sudden increases in mileage,</text>
+    <text x="25" y="65" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">intensity, or training volume without adequate rest.</text>
+
+    <rect x="240" y="15" width="215" height="55" rx="8" fill="#fef9c3" stroke="#fde047" stroke-width="1.5"/>
+    <text x="255" y="38" font-size="12" font-weight="700" fill="#854d0e" font-family="Inter, sans-serif">Nutritional Deficits</text>
+    <text x="255" y="55" font-size="9" fill="#a16207" font-family="Inter, sans-serif">Low calcium, vitamin D deficiency, or inadequate</text>
+    <text x="255" y="65" font-size="9" fill="#a16207" font-family="Inter, sans-serif">caloric intake (RED-S / relative energy deficiency).</text>
+
+    <rect x="10" y="85" width="215" height="55" rx="8" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="25" y="108" font-size="12" font-weight="700" fill="#5b21b6" font-family="Inter, sans-serif">Biomechanical Issues</text>
+    <text x="25" y="125" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">Flat feet, high arches, leg length discrepancy, or</text>
+    <text x="25" y="135" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">poor running mechanics that concentrate force.</text>
+
+    <rect x="240" y="85" width="215" height="55" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+    <text x="255" y="108" font-size="12" font-weight="700" fill="#1e40af" font-family="Inter, sans-serif">Hormonal Factors</text>
+    <text x="255" y="125" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">Menstrual irregularities, low estrogen levels,</text>
+    <text x="255" y="135" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">and the female athlete triad increase risk.</text>
+
+    <rect x="10" y="155" width="215" height="55" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="25" y="178" font-size="12" font-weight="700" fill="#166534" font-family="Inter, sans-serif">Equipment & Surface</text>
+    <text x="25" y="195" font-size="9" fill="#15803d" font-family="Inter, sans-serif">Worn-out shoes, switching to harder running</text>
+    <text x="25" y="205" font-size="9" fill="#15803d" font-family="Inter, sans-serif">surfaces, or inappropriate footwear for your gait.</text>
+
+    <rect x="240" y="155" width="215" height="55" rx="8" fill="#fff7ed" stroke="#fb923c" stroke-width="1.5"/>
+    <text x="255" y="178" font-size="12" font-weight="700" fill="#9a3412" font-family="Inter, sans-serif">Prior History</text>
+    <text x="255" y="195" font-size="9" fill="#c2410c" font-family="Inter, sans-serif">Having had one stress fracture increases your</text>
+    <text x="255" y="205" font-size="9" fill="#c2410c" font-family="Inter, sans-serif">risk of another — but prevention can break the cycle.</text>
+
+    <text x="230" y="248" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Most stress fractures result from a combination of factors — not just one</text>
+  </svg>
+</div>
+
+<div class="blog-expert-quote">
+  <p>The most common story I hear is, "I was training for a race and increased my mileage too quickly." Stress fractures are almost always a sign that the body was asked to do more than it was prepared for. The good news is that with proper planning and recovery, most patients can return to their full training — and many come back stronger.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</cite>
+</div>
+
+<h2 id="locations">Where Stress Fractures Happen</h2>
+
+<p>Stress fractures can occur in any bone that bears repetitive load, but some locations are far more common than others. The location often tells us about the activity that caused it.</p>
+
+<div class="blog-chart">
+  <h4>Most Common Stress Fracture Locations</h4>
+  <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sfBar1" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#818cf8"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Bars with labels -->
+    <text x="120" y="35" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Metatarsals (foot)</text>
+    <rect x="130" y="20" width="280" height="22" rx="4" fill="url(#sfBar1)" opacity="0.9">
+      <animate attributeName="width" from="0" to="280" dur="0.8s" fill="freeze"/>
+    </rect>
+    <text x="418" y="36" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">37%</text>
+
+    <text x="120" y="70" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Tibia (shin)</text>
+    <rect x="130" y="55" width="240" height="22" rx="4" fill="url(#sfBar1)" opacity="0.8">
+      <animate attributeName="width" from="0" to="240" dur="0.8s" fill="freeze" begin="0.1s"/>
+    </rect>
+    <text x="378" y="71" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">25%</text>
+
+    <text x="120" y="105" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Navicular (foot)</text>
+    <rect x="130" y="90" width="120" height="22" rx="4" fill="url(#sfBar1)" opacity="0.7">
+      <animate attributeName="width" from="0" to="120" dur="0.8s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="258" y="106" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">14%</text>
+
+    <text x="120" y="140" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Fibula (lower leg)</text>
+    <rect x="130" y="125" width="95" height="22" rx="4" fill="url(#sfBar1)" opacity="0.65">
+      <animate attributeName="width" from="0" to="95" dur="0.8s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <text x="233" y="141" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">10%</text>
+
+    <text x="120" y="175" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Femur (thigh)</text>
+    <rect x="130" y="160" width="55" height="22" rx="4" fill="url(#sfBar1)" opacity="0.55">
+      <animate attributeName="width" from="0" to="55" dur="0.8s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <text x="193" y="176" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">7%</text>
+
+    <text x="120" y="210" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Pelvis / Sacrum</text>
+    <rect x="130" y="195" width="45" height="22" rx="4" fill="url(#sfBar1)" opacity="0.45">
+      <animate attributeName="width" from="0" to="45" dur="0.8s" fill="freeze" begin="0.5s"/>
+    </rect>
+    <text x="183" y="211" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">5%</text>
+
+    <text x="120" y="245" text-anchor="end" font-size="11" font-weight="500" fill="#374151" font-family="Inter, sans-serif">Other</text>
+    <rect x="130" y="230" width="15" height="22" rx="4" fill="url(#sfBar1)" opacity="0.35">
+      <animate attributeName="width" from="0" to="15" dur="0.8s" fill="freeze" begin="0.6s"/>
+    </rect>
+    <text x="153" y="246" font-size="11" fill="#6366f1" font-weight="700" font-family="Inter, sans-serif">2%</text>
+
+    <text x="230" y="275" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Lower extremity bones account for over 95% of all stress fractures (source: ACSM)</text>
+  </svg>
+</div>
+
+<p>Some locations are considered "high risk" — meaning they heal more slowly or have a greater chance of complications. Navicular fractures, femoral neck fractures, and anterior tibial fractures fall into this category and require especially careful management.</p>
+
+<h2 id="symptoms">Signs & Symptoms</h2>
+
+<p>Stress fractures often start subtly and worsen over time. Recognizing them early makes a significant difference in recovery.</p>
+
+<div class="blog-takeaway">
+  <h4>Warning Signs of a Stress Fracture</h4>
+  <ul>
+    <li><strong>Localized pain during activity</strong> — that improves with rest but returns when you resume</li>
+    <li><strong>Pain that gets progressively worse</strong> — over days or weeks, not suddenly</li>
+    <li><strong>Tenderness to touch</strong> — a specific spot on the bone that hurts when you press on it</li>
+    <li><strong>Swelling</strong> — mild swelling over the top of the foot, shin, or affected area</li>
+    <li><strong>Pain at rest or at night</strong> — a sign the fracture may be more advanced</li>
+    <li><strong>The "hop test"</strong> — pain when hopping on the affected leg (a common clinical sign)</li>
+  </ul>
+</div>
+
+<p>The hallmark of a stress fracture is <strong>pain that started during or after activity and has been getting worse</strong>. If you've been pushing through pain like this for days or weeks, it's time to get it evaluated — continuing to train on a stress fracture can turn a simple crack into a complete break.</p>
+
+<h2 id="diagnosis">How We Diagnose Stress Fractures</h2>
+
+<p>Stress fractures can be tricky to diagnose because they often don't show up on initial X-rays. Dr. Elguizaoui uses a thorough approach:</p>
+
+<ul>
+  <li><strong>Physical exam</strong> — palpation of the painful area, hop test, and assessment of biomechanics</li>
+  <li><strong>X-rays</strong> — taken first, though early stress fractures may not be visible for 2-3 weeks</li>
+  <li><strong>MRI</strong> — the gold standard for stress fracture diagnosis; can detect bone stress reactions even before a fracture develops</li>
+  <li><strong>Bone scan</strong> — occasionally used when MRI isn't available</li>
+</ul>
+
+<div class="blog-expert-quote">
+  <p>I always tell patients: don't ignore bone pain that's getting worse. An MRI can show us a stress reaction before it becomes a fracture — and treating a stress reaction is much simpler than treating a complete break. Early diagnosis is genuinely protective.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="treatment">Treatment Options</h2>
+
+<p>The cornerstone of stress fracture treatment is <strong>protecting the bone while it heals</strong>. The specific approach depends on the location and severity.</p>
+
+<h3>Low-Risk Stress Fractures</h3>
+
+<p>Most stress fractures are considered "low risk" and heal well with conservative care:</p>
+
+<div class="blog-takeaway">
+  <h4>Conservative Treatment Plan</h4>
+  <ul>
+    <li><strong>Relative rest</strong> — stop the activity that caused the fracture; switch to non-impact exercise (swimming, cycling)</li>
+    <li><strong>Protected weight-bearing</strong> — a walking boot or stiff-soled shoe for 4-8 weeks depending on location</li>
+    <li><strong>Gradual return to activity</strong> — a structured "return to run" program once pain-free</li>
+    <li><strong>Nutritional optimization</strong> — calcium, vitamin D, and adequate caloric intake</li>
+    <li><strong>Physical therapy</strong> — address muscle weakness, flexibility, and biomechanical issues</li>
+    <li><strong>Bone stimulator</strong> — in some cases, a device that uses ultrasound to promote healing</li>
+  </ul>
+</div>
+
+<h3>High-Risk Stress Fractures</h3>
+
+<p>Some locations — navicular, femoral neck, anterior tibia, fifth metatarsal — are considered "high risk" because of poor blood supply or high mechanical stress. These may require:</p>
+
+<ul>
+  <li><strong>Strict non-weight-bearing</strong> — crutches for several weeks</li>
+  <li><strong>Surgical fixation</strong> — a screw or pin to stabilize the bone and promote healing</li>
+  <li><strong>Extended recovery</strong> — 3-6 months before return to full activity</li>
+</ul>
+
+<p>Dr. Elguizaoui will explain exactly which category your fracture falls into and what your specific treatment plan looks like.</p>
+
+<h2 id="recovery">Recovery Timeline</h2>
+
+<div class="blog-chart">
+  <h4>Stress Fracture Recovery — What to Expect</h4>
+  <svg viewBox="0 0 460 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sfRecov" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#ddd6fe"/>
+        <stop offset="50%" stop-color="#8b5cf6"/>
+        <stop offset="100%" stop-color="#6d28d9"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Timeline bar -->
+    <rect x="30" y="45" width="400" height="8" rx="4" fill="#e5e7eb"/>
+    <rect x="30" y="45" width="400" height="8" rx="4" fill="url(#sfRecov)" opacity="0.8">
+      <animate attributeName="width" from="0" to="400" dur="1.5s" fill="freeze"/>
+    </rect>
+
+    <!-- Phase markers -->
+    <circle cx="30" cy="49" r="7" fill="#ddd6fe" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="30" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">Week 0</text>
+    <text x="30" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Diagnosis &</text>
+    <text x="30" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">boot/rest</text>
+
+    <circle cx="130" cy="49" r="7" fill="#c4b5fd" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="130" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">Week 2-4</text>
+    <text x="130" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Pain subsides,</text>
+    <text x="130" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">pool/bike OK</text>
+
+    <circle cx="230" cy="49" r="7" fill="#a78bfa" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="230" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">Week 6-8</text>
+    <text x="230" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Walking pain-free,</text>
+    <text x="230" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">begin walk/jog</text>
+
+    <circle cx="330" cy="49" r="7" fill="#8b5cf6" stroke="#6d28d9" stroke-width="2"/>
+    <text x="330" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">Week 8-12</text>
+    <text x="330" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Gradual return</text>
+    <text x="330" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">to running</text>
+
+    <circle cx="430" cy="49" r="7" fill="#7c3aed" stroke="#6d28d9" stroke-width="2"/>
+    <text x="430" y="28" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">Week 12+</text>
+    <text x="430" y="78" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Full activity &</text>
+    <text x="430" y="90" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">sport return</text>
+
+    <!-- Low vs high risk comparison -->
+    <text x="15" y="130" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Low-risk</text>
+    <rect x="100" y="118" width="180" height="20" rx="4" fill="#8b5cf6" opacity="0.7">
+      <animate attributeName="width" from="0" to="180" dur="0.8s" fill="freeze"/>
+    </rect>
+    <text x="288" y="133" font-size="10" fill="#6d28d9" font-weight="600" font-family="Inter, sans-serif">6-8 weeks</text>
+
+    <text x="15" y="160" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">High-risk</text>
+    <rect x="100" y="148" width="320" height="20" rx="4" fill="#a78bfa" opacity="0.7">
+      <animate attributeName="width" from="0" to="320" dur="1s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="428" y="163" font-size="10" fill="#6d28d9" font-weight="600" font-family="Inter, sans-serif">3-6 mo</text>
+
+    <text x="230" y="200" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Timelines are approximate — Dr. Elguizaoui uses imaging and symptoms to guide return to activity</text>
+  </svg>
+</div>
+
+<p>The most important rule of stress fracture recovery: <strong>no pain with activity</strong>. If it hurts, it's too soon. Dr. Elguizaoui uses a structured "return to run" protocol that gradually increases load over several weeks, ensuring the bone is truly ready.</p>
+
+<h2 id="prevention">Prevention Strategies</h2>
+
+<p>The best stress fracture is the one you never get. Here's how to protect yourself:</p>
+
+<div class="blog-takeaway">
+  <h4>How to Prevent Stress Fractures</h4>
+  <ul>
+    <li><strong>Follow the 10% rule</strong> — increase weekly mileage or training volume by no more than 10% per week</li>
+    <li><strong>Fuel your training</strong> — eat enough calories to support your activity level, with adequate calcium (1000-1300mg/day) and vitamin D (1000-2000 IU/day)</li>
+    <li><strong>Replace shoes regularly</strong> — running shoes lose shock absorption after 300-500 miles</li>
+    <li><strong>Cross-train</strong> — mix high-impact and low-impact activities to give bones recovery time</li>
+    <li><strong>Strength train</strong> — stronger muscles absorb more force, reducing stress on bones</li>
+    <li><strong>Listen to your body</strong> — pain during a run that goes away after is a warning sign; pain that gets worse is a red flag</li>
+    <li><strong>Get screened</strong> — if you've had a stress fracture before, a bone density test and nutritional assessment can identify modifiable risk factors</li>
+  </ul>
+</div>
+
+<div class="blog-expert-quote">
+  <p>Prevention is the most powerful tool we have. When I treat a stress fracture, I don't just heal the bone — I look at the whole picture: training habits, nutrition, biomechanics, and footwear. My goal is to get you back to running and make sure this doesn't happen again.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Can I still exercise with a stress fracture?</h3>
+<p>Yes — but not the activity that caused it. You'll need to stop running or impact activities, but you can usually swim, bike, or use an elliptical (as long as it's pain-free). Staying active during recovery is important for both your physical and mental health. Dr. Elguizaoui will help you design a cross-training plan.</p>
+
+<h3>Do I need an MRI, or is an X-ray enough?</h3>
+<p>X-rays are a good starting point, but they often miss early stress fractures — up to 70% of stress fractures are invisible on initial X-rays. An MRI is the gold standard because it can detect bone stress reactions even before a crack develops. If your clinical exam is suspicious, Dr. Elguizaoui will likely recommend an MRI for a definitive answer.</p>
+
+<h3>How do I know when it's safe to run again?</h3>
+<p>You should be completely pain-free with walking and daily activities for at least 1-2 weeks before beginning a gradual return-to-run program. Dr. Elguizaoui uses a structured protocol — typically starting with walk/jog intervals and progressing over 4-6 weeks. Follow-up imaging may be used to confirm healing.</p>
+
+<h3>Will I get another stress fracture?</h3>
+<p>Having one stress fracture does increase your risk, but it's not inevitable. Addressing the root cause — whether it's training errors, nutritional deficits, biomechanics, or equipment — significantly reduces recurrence. Many patients never have another one once the underlying factors are corrected.</p>
+
+<h3>Is a stress fracture the same as shin splints?</h3>
+<p>No, though they can feel similar. Shin splints (medial tibial stress syndrome) involve inflammation along the shinbone and typically cause diffuse, aching pain along a broader area. A tibial stress fracture causes a more focal, pinpoint pain. An MRI can distinguish between the two. If "shin splints" aren't improving after 2-3 weeks of rest, it's worth getting evaluated for a stress fracture.</p>
+
+<h3>Do stress fractures require surgery?</h3>
+<p>The vast majority do not. Most stress fractures heal with rest, a boot or brace, and gradual return to activity. Surgery is only needed for certain high-risk locations (like the navicular or femoral neck) or fractures that haven't healed after adequate conservative treatment. Dr. Elguizaoui will only recommend surgery when it genuinely leads to a better outcome.</p>
+
+<div class="blog-cta">
+  <h3>Bone Pain That Won't Quit? Let's Find Out What's Going On</h3>
+  <p>If you're an athlete or active person dealing with worsening bone pain, Dr. Elguizaoui can provide a clear diagnosis and a recovery plan that gets you back to doing what you love — safely and completely. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/blog/protecting-joints-active-adults">Protecting Your Joints</a> · <a href="/blog/acl-tear-recovery">ACL Tear Recovery</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert stress fracture treatment for runners, athletes, and active patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
   </div>
 </div>
 `,

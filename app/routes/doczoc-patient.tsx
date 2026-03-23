@@ -194,6 +194,9 @@ export default function PatientDetailPage() {
           </div>
         </header>
 
+        {/* Surgeries — animated liquid glass hero button */}
+        <SurgeriesButton patient={patient} />
+
         {/* Patient Details — collapsible */}
         <PatientDetailsSection patient={patient} />
 
@@ -209,6 +212,178 @@ export default function PatientDetailPage() {
         {/* Consent & Signatures — at the bottom */}
         <ConsentSection patient={patient} />
       </main>
+    </div>
+  );
+}
+
+// ── Surgeries Button (animated liquid glass) ───────────────────────
+function SurgeriesButton({ patient }: { patient: Patient }) {
+  const surgeries = patient.visits.filter(v => v.type.toLowerCase().includes("surgery"));
+  const [expanded, setExpanded] = useState(false);
+
+  if (surgeries.length === 0) return null;
+
+  const latest = surgeries[0];
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="dz-surgery-btn"
+        style={{
+          width: "100%", border: "none", cursor: "pointer", textAlign: "left",
+          position: "relative", overflow: "hidden",
+          borderRadius: 16, padding: "24px 28px",
+          background: "linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(168,85,247,0.12) 40%, rgba(99,102,241,0.1) 100%)",
+          backdropFilter: "blur(20px)",
+          isolation: "isolate",
+        }}
+      >
+        {/* Animated border glow */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: 16, padding: 1,
+          background: "linear-gradient(135deg, #ef4444, #a855f7, #6366f1, #ec4899, #ef4444)",
+          backgroundSize: "300% 300%",
+          animation: "dz-surgery-border 4s ease infinite",
+          WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          WebkitMaskComposite: "xor" as any,
+          maskComposite: "exclude",
+          pointerEvents: "none",
+          zIndex: 1,
+        }} />
+
+        {/* Shimmer sweep */}
+        <div style={{
+          position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%",
+          background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)",
+          animation: "dz-surgery-shimmer 3s ease-in-out infinite",
+          pointerEvents: "none",
+          zIndex: 2,
+        }} />
+
+        {/* Floating glow orbs */}
+        <div style={{
+          position: "absolute", top: -20, right: 60, width: 80, height: 80,
+          borderRadius: "50%", background: "radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%)",
+          animation: "dz-surgery-float 6s ease-in-out infinite",
+          pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute", bottom: -10, left: "30%", width: 60, height: 60,
+          borderRadius: "50%", background: "radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 70%)",
+          animation: "dz-surgery-float 5s ease-in-out infinite 1s",
+          pointerEvents: "none",
+        }} />
+
+        {/* Content */}
+        <div style={{ position: "relative", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            {/* Pulsing icon */}
+            <div style={{
+              width: 48, height: 48, borderRadius: 14, flexShrink: 0,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              background: "linear-gradient(135deg, rgba(239,68,68,0.2), rgba(168,85,247,0.2))",
+              border: "1px solid rgba(239,68,68,0.2)",
+              animation: "dz-surgery-pulse 2s ease-in-out infinite",
+            }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <div>
+              <div style={{
+                fontSize: "1rem", fontWeight: 800, color: "#f1f5f9",
+                display: "flex", alignItems: "center", gap: 8,
+              }}>
+                Surgeries
+                <span style={{
+                  fontSize: "0.68rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20,
+                  background: "linear-gradient(135deg, rgba(239,68,68,0.25), rgba(168,85,247,0.25))",
+                  color: "#f87171",
+                }}>
+                  {surgeries.length}
+                </span>
+              </div>
+              <div style={{ fontSize: "0.82rem", color: "#94a3b8", marginTop: 2 }}>
+                {latest.type} &middot; {latest.date}
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Link
+              to="/doczoc/in-person"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 16px", borderRadius: 10,
+                background: "linear-gradient(135deg, #ef4444, #a855f7)",
+                color: "#fff", fontSize: "0.78rem", fontWeight: 700,
+                textDecoration: "none",
+                boxShadow: "0 0 20px rgba(239,68,68,0.3), 0 0 40px rgba(168,85,247,0.15)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; e.currentTarget.style.boxShadow = "0 0 30px rgba(239,68,68,0.5), 0 0 60px rgba(168,85,247,0.25)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = "0 0 20px rgba(239,68,68,0.3), 0 0 40px rgba(168,85,247,0.15)"; }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+              </svg>
+              Operative Report
+            </Link>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transition: "transform 0.2s", transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}>
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </div>
+      </button>
+
+      {/* Expanded surgery details */}
+      {expanded && (
+        <div style={{
+          marginTop: -8, padding: "24px 28px 20px",
+          borderRadius: "0 0 16px 16px",
+          background: "rgba(15,23,42,0.5)",
+          border: "1px solid rgba(239,68,68,0.1)",
+          borderTop: "none",
+          backdropFilter: "blur(12px)",
+        }}>
+          {surgeries.map((s, i) => (
+            <div key={i} style={{
+              display: "flex", gap: 14, alignItems: "flex-start",
+              padding: "12px 0",
+              borderBottom: i < surgeries.length - 1 ? "1px solid rgba(99,102,241,0.08)" : "none",
+            }}>
+              <div style={{
+                width: 8, height: 8, borderRadius: "50%", marginTop: 6, flexShrink: 0,
+                background: "linear-gradient(135deg, #ef4444, #a855f7)",
+                boxShadow: "0 0 8px rgba(239,68,68,0.4)",
+              }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 4 }}>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f1f5f9" }}>{s.type}</span>
+                  <span style={{ fontSize: "0.75rem", color: "#818cf8", fontWeight: 600 }}>{s.date}</span>
+                </div>
+                <p style={{ fontSize: "0.78rem", color: "#94a3b8", lineHeight: 1.5, margin: 0 }}>{s.notes}</p>
+                {s.codes.length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 6 }}>
+                    {s.codes.map((code) => (
+                      <span key={code} style={{
+                        fontSize: "0.68rem", fontFamily: "'SF Mono', Consolas, monospace",
+                        padding: "2px 7px", borderRadius: 4, fontWeight: 600,
+                        background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
+                        color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
+                      }}>
+                        {code}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

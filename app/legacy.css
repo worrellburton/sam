@@ -8232,6 +8232,30 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+/* Surgery button animations */
+@keyframes dz-surgery-border {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes dz-surgery-shimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+@keyframes dz-surgery-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-12px) scale(1.1); opacity: 1; }
+}
+@keyframes dz-surgery-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+  50% { box-shadow: 0 0 16px 4px rgba(239,68,68,0.15); }
+}
+.dz-surgery-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(239,68,68,0.12), 0 0 60px rgba(168,85,247,0.08);
+}
+.dz-surgery-btn { transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 .dz-glass-card,
 .dz-stat-card,
 .dz-card,

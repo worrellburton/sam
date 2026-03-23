@@ -131,7 +131,23 @@ const PIPELINE_STAGES = [
 ];
 
 function CashPipeline() {
-  const maxVal = PIPELINE_STAGES[0].value;
+  const [stages, setStages] = useState(PIPELINE_STAGES);
+  const maxVal = stages[0]?.value || 1;
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
+  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+
+  const handleDragStart = (idx: number) => { dragItem.current = idx; setDraggingIdx(idx); };
+  const handleDragEnter = (idx: number) => { dragOverItem.current = idx; };
+  const handleDragEnd = () => {
+    if (dragItem.current !== null && dragOverItem.current !== null) {
+      const copy = [...stages];
+      const dragged = copy.splice(dragItem.current, 1)[0];
+      copy.splice(dragOverItem.current, 0, dragged);
+      setStages(copy);
+    }
+    dragItem.current = null; dragOverItem.current = null; setDraggingIdx(null);
+  };
 
   return (
     <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
@@ -148,13 +164,26 @@ function CashPipeline() {
         <span style={{ fontSize: "0.78rem", color: "#64748b", fontWeight: 600 }}>Last 90 days</span>
       </div>
       <div style={{ padding: "20px 22px" }}>
-        {/* Funnel bars */}
+        {/* Funnel bars — draggable */}
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {PIPELINE_STAGES.map((stage, i) => {
+          {stages.map((stage, i) => {
             const pct = (stage.value / maxVal) * 100;
-            const isNeg = stage.label === "Denied";
             return (
-              <div key={stage.label} style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div
+                key={stage.label}
+                draggable
+                onDragStart={() => handleDragStart(i)}
+                onDragEnter={() => handleDragEnter(i)}
+                onDragEnd={handleDragEnd}
+                onDragOver={(e) => e.preventDefault()}
+                style={{
+                  display: "flex", alignItems: "center", gap: 14, cursor: "grab",
+                  opacity: draggingIdx === i ? 0.4 : 1,
+                  transition: "opacity 0.15s, transform 0.15s",
+                  transform: draggingIdx === i ? "scale(0.98)" : "scale(1)",
+                  borderRadius: 6, padding: "2px 0",
+                }}
+              >
                 <div style={{ width: 130, flexShrink: 0, textAlign: "right" }}>
                   <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#94a3b8" }}>{stage.label}</div>
                 </div>
@@ -176,7 +205,7 @@ function CashPipeline() {
                         fontFamily: "'SF Mono', Consolas, monospace",
                         whiteSpace: "nowrap",
                       }}>
-                        ${(stage.value / 1000).toFixed(stage.value >= 10000 ? 1 : 1)}K
+                        ${(stage.value / 1000).toFixed(1)}K
                       </span>
                     </div>
                   </div>
@@ -189,14 +218,14 @@ function CashPipeline() {
                     {stage.count} claims
                   </span>
                 </div>
-                {i < PIPELINE_STAGES.length - 1 && i !== 3 && (
+                {i < stages.length - 1 && i !== 3 && (
                   <div style={{ width: 40, flexShrink: 0, textAlign: "center" }}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3d3f4a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="6 9 12 15 18 9"/>
                     </svg>
                   </div>
                 )}
-                {(i === 3 || i === PIPELINE_STAGES.length - 1) && <div style={{ width: 40, flexShrink: 0 }} />}
+                {(i === 3 || i === stages.length - 1) && <div style={{ width: 40, flexShrink: 0 }} />}
               </div>
             );
           })}

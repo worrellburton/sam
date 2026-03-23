@@ -17,6 +17,7 @@ interface Claim {
   payer: string;
   payerColor: string;
   payerInitial: string;
+  payerDomain: string;
   step: Step;
 }
 
@@ -156,10 +157,34 @@ const STEP_INFO: Record<Step, { fullTitle: string; description: string; whatHapp
 };
 
 const INITIAL_CLAIMS: Claim[] = [
-  { id: 1, patient: "James Kim", procedure: "ACL Reconstruction", cpt: "29888", amount: "$8,450.00", payer: "Aetna", payerColor: "#7b2d8e", payerInitial: "A", step: 1 },
-  { id: 2, patient: "Sarah Mitchell", procedure: "Rotator Cuff Repair", cpt: "29827", amount: "$6,200.00", payer: "UnitedHealthcare", payerColor: "#002677", payerInitial: "U", step: 2 },
-  { id: 3, patient: "David Ross", procedure: "Total Hip Arthroplasty", cpt: "27130", amount: "$14,800.00", payer: "Blue Cross", payerColor: "#0075c9", payerInitial: "BC", step: 1 },
+  { id: 1, patient: "James Kim", procedure: "ACL Reconstruction", cpt: "29888", amount: "$8,450.00", payer: "Aetna", payerColor: "#7b2d8e", payerInitial: "A", payerDomain: "aetna.com", step: 1 },
+  { id: 2, patient: "Sarah Mitchell", procedure: "Rotator Cuff Repair", cpt: "29827", amount: "$6,200.00", payer: "UnitedHealthcare", payerColor: "#002677", payerInitial: "U", payerDomain: "uhc.com", step: 2 },
+  { id: 3, patient: "David Ross", procedure: "Total Hip Arthroplasty", cpt: "27130", amount: "$14,800.00", payer: "Blue Cross", payerColor: "#0075c9", payerInitial: "BC", payerDomain: "bcbs.com", step: 1 },
 ];
+
+function PayerLogo({ domain, color, initial, size = 22 }: { domain: string; color: string; initial: string; size?: number }) {
+  const [imgError, setImgError] = useState(false);
+  const logoUrl = `https://logo.clearbit.com/${domain}?size=${size * 2}`;
+
+  if (imgError) {
+    return (
+      <span className="dz-rcm-payer-logo" style={{ background: color, width: size, height: size, fontSize: size * 0.45 }}>
+        {initial}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={logoUrl}
+      alt={domain}
+      width={size}
+      height={size}
+      style={{ borderRadius: 4, flexShrink: 0 }}
+      onError={() => setImgError(true)}
+    />
+  );
+}
 
 function StepInfoModal({ stepId, onClose, onNavigate }: { stepId: Step; onClose: () => void; onNavigate: (s: Step) => void }) {
   const col = COLUMNS.find(c => c.id === stepId)!;
@@ -342,7 +367,7 @@ export default function RcmPage() {
                       <div className="dz-rcm-claim-meta">
                         <span className="dz-rcm-claim-cpt">CPT {claim.cpt}</span>
                         <span className="dz-rcm-claim-payer" style={{ borderLeft: `3px solid ${claim.payerColor}` }}>
-                          <span className="dz-rcm-payer-logo" style={{ background: claim.payerColor }}>{claim.payerInitial}</span>
+                          <PayerLogo domain={claim.payerDomain} color={claim.payerColor} initial={claim.payerInitial} />
                           {claim.payer}
                         </span>
                       </div>

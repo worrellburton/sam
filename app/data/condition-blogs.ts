@@ -10,6 +10,7 @@ export const conditionToBlogSlug: Record<string, string> = {
   "Chronic joint pain": "chronic-joint-pain-guide",
   "Loose body removal": "loose-bodies-in-joints-guide",
   "Synovitis treatment": "synovitis-joint-inflammation-guide",
+  "Ankle sprains and instability": "ankle-sprains-chronic-instability-guide",
 };
 
 export const conditionBlogPosts: BlogPost[] = [

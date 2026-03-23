@@ -8357,12 +8357,28 @@ img.insurance-logo:hover {
   color: #60a5fa;
 }
 .dz-rcm-claim-payer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.65rem;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 3px 8px 3px 0;
+  border-radius: 6px;
+  background: rgba(148, 163, 184, 0.08);
+  color: #cbd5e1;
+}
+.dz-rcm-payer-logo {
+  width: 20px;
+  height: 20px;
   border-radius: 4px;
-  background: rgba(148, 163, 184, 0.1);
-  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
 }
 .dz-rcm-claim-actions {
   display: flex;

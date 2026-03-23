@@ -455,6 +455,74 @@ function ClaimPreviewModal({
           </div>
         </div>
 
+        {/* Attachments Section */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 8 }}>
+            Attachments (275 Transaction)
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {/* Operative Report */}
+            <div style={{
+              display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
+              background: "rgba(10,10,26,0.4)", border: "1px solid rgba(34,197,94,0.15)",
+              borderRadius: 10,
+            }}>
+              <div style={{
+                width: 40, height: 40, borderRadius: 10,
+                background: "rgba(239,68,68,0.12)", color: "#ef4444",
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#e4e4ee" }}>Operative_Report_{visit.patient.replace(/\s/g, "_")}.pdf</div>
+                <div style={{ fontSize: "0.68rem", color: "#5a5a6e" }}>Operative Report &middot; PWK01: OZ &middot; 245 KB</div>
+              </div>
+              <span style={{ padding: "3px 10px", borderRadius: 6, fontSize: "0.65rem", fontWeight: 700, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>Ready</span>
+            </div>
+
+            {/* Pre-Op Clearance */}
+            <div style={{
+              display: "flex", alignItems: "center", gap: 12, padding: "12px 14px",
+              background: "rgba(10,10,26,0.4)", border: "1px solid rgba(148,163,184,0.08)",
+              borderRadius: 10,
+            }}>
+              <div style={{
+                width: 40, height: 40, borderRadius: 10,
+                background: "rgba(99,102,241,0.12)", color: "#818cf8",
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#e4e4ee" }}>Prior_Authorization_{visit.memberId.replace(/[^a-zA-Z0-9]/g, "")}.pdf</div>
+                <div style={{ fontSize: "0.68rem", color: "#5a5a6e" }}>Prior Auth Letter &middot; PWK01: I5 &middot; 82 KB</div>
+              </div>
+              <span style={{ padding: "3px 10px", borderRadius: 6, fontSize: "0.65rem", fontWeight: 700, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>Ready</span>
+            </div>
+
+            {/* Add attachment button */}
+            <button style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              padding: "10px", borderRadius: 10,
+              border: "1px dashed rgba(99,102,241,0.2)", background: "transparent",
+              color: "#5a5a6e", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer",
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Attachment
+            </button>
+          </div>
+          <div style={{ fontSize: "0.65rem", color: "#475569", marginTop: 6, lineHeight: 1.5 }}>
+            Attachments are submitted as a separate 275 transaction linked via the PWK segment&apos;s attachment control number.
+          </div>
+        </div>
+
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 6 }}>
             Stedi JSON Payload

@@ -7506,6 +7506,63 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 }
 .dz-cal-sidebar-panel h3 { font-size: 0.95rem; font-weight: 600; color: #e4e4ee; margin-bottom: 14px; }
 .dz-cal-no-appts { font-size: 0.82rem; color: #5a5a6e; }
+
+/* ── Calendar Add Appointment ──────────────────────── */
+.dz-cal-add-trigger {
+  display: flex; align-items: center; gap: 6px; width: 100%;
+  margin-top: 14px; padding: 10px 14px; border-radius: 10px;
+  border: 1px dashed rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.05);
+  color: #818cf8; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; justify-content: center;
+}
+.dz-cal-add-trigger:hover { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.4); }
+
+.dz-cal-add-form {
+  margin-top: 14px; padding: 16px; border-radius: 12px;
+  background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(99, 102, 241, 0.15);
+}
+.dz-cal-add-title {
+  font-size: 0.85rem; font-weight: 700; color: #a5b4fc; margin: 0 0 14px;
+}
+.dz-cal-add-fields { display: flex; flex-direction: column; gap: 10px; }
+.dz-cal-add-row { display: flex; gap: 10px; }
+.dz-cal-add-label {
+  display: block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em; color: #64748b; margin-bottom: 4px;
+}
+.dz-cal-add-input {
+  width: 100%; padding: 8px 12px; border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(10, 10, 26, 0.6); color: #e2e8f0; font-size: 0.82rem;
+  box-sizing: border-box; font-family: inherit;
+}
+.dz-cal-add-input:focus { outline: none; border-color: #818cf8; }
+.dz-cal-add-actions {
+  display: flex; gap: 8px; margin-top: 14px; justify-content: flex-end;
+}
+.dz-cal-add-cancel {
+  padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.15);
+  background: transparent; color: #94a3b8; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+}
+.dz-cal-add-cancel:hover { color: #e2e8f0; border-color: rgba(148, 163, 184, 0.3); }
+.dz-cal-add-save {
+  display: flex; align-items: center; gap: 5px;
+  padding: 7px 16px; border-radius: 8px; border: none;
+  background: #6366f1; color: #fff; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+  transition: background 0.15s;
+}
+.dz-cal-add-save:hover { background: #4f46e5; }
+.dz-cal-add-save:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Light mode */
+[data-theme="light"] .dz-cal-add-trigger { border-color: #c7d2fe; background: rgba(99, 102, 241, 0.04); color: #4f46e5; }
+[data-theme="light"] .dz-cal-add-trigger:hover { background: rgba(99, 102, 241, 0.08); border-color: #818cf8; }
+[data-theme="light"] .dz-cal-add-form { background: #f8fafc; border-color: #e2e8f0; }
+[data-theme="light"] .dz-cal-add-title { color: #4f46e5; }
+[data-theme="light"] .dz-cal-add-input { background: #fff; border-color: #e2e8f0; color: #1e293b; }
+[data-theme="light"] .dz-cal-add-cancel { border-color: #e2e8f0; color: #64748b; }
+[data-theme="light"] .dz-cal-add-cancel:hover { color: #334155; }
 .dz-cal-appt-list { display: flex; flex-direction: column; gap: 10px; }
 .dz-cal-appt-item {
   display: flex;

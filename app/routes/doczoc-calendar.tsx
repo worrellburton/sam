@@ -1,7 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { locations } from "~/data/locations";
+import { PATIENTS } from "~/data/patients";
 
 export function meta() {
   return [{ title: "Calendar | DocZoc" }];
@@ -42,6 +43,17 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [selectedLoc, setSelectedLoc] = useState<string>("all");
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newAppt, setNewAppt] = useState({ patient: "", time: "9:00 AM", type: "Consultation", location: "manhattan" });
+  const [savedAppts, setSavedAppts] = useState<{ date: string; patient: string; time: string; type: string; location: string }[]>([]);
+
+  const handleAddAppt = useCallback(() => {
+    if (!selectedDate || !newAppt.patient) return;
+    const dateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
+    setSavedAppts(prev => [...prev, { date: dateKey, ...newAppt }]);
+    setNewAppt({ patient: "", time: "9:00 AM", type: "Consultation", location: "manhattan" });
+    setShowAddForm(false);
+  }, [selectedDate, newAppt]);
 
   const weeks = useMemo(() => {
     const first = new Date(year, month, 1);
@@ -62,6 +74,8 @@ export default function CalendarPage() {
   const nextMonth = () => { if (month === 11) { setMonth(0); setYear(year + 1); } else setMonth(month + 1); };
 
   const todayStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  const selectedDateKey = selectedDate ? `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}` : "";
+  const userAppts = savedAppts.filter(a => a.date === selectedDateKey);
   const selectedAppts = selectedDate ? getAppts(selectedDate, selectedLoc === "all" ? undefined : selectedLoc) : [];
 
   function handleDateClick(date: Date) {
@@ -82,12 +96,18 @@ export default function CalendarPage() {
           <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <button
               className="dz-add-btn"
-              onClick={() => setPanelOpen(!panelOpen)}
+              onClick={() => {
+                if (!selectedDate) {
+                  setSelectedDate(now);
+                }
+                setPanelOpen(true);
+                setShowAddForm(true);
+              }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09"/>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              Set Up Calendar
+              New Appointment
             </button>
           </div>
         </header>
@@ -171,21 +191,106 @@ export default function CalendarPage() {
 
             <div style={{ padding: "0 20px 20px" }}>
               {selectedDate ? (
-                selectedAppts.length > 0 ? (
-                  <div className="dz-cal-appt-list">
-                    {selectedAppts.map((a, i) => (
-                      <div key={i} className="dz-cal-appt-item">
-                        <div className="dz-cal-appt-dot" style={{ background: a.type.color }} />
-                        <div className="dz-cal-appt-detail">
-                          <div className="dz-cal-appt-patient">{a.patient}</div>
-                          <div className="dz-cal-appt-meta">{a.time} &middot; {a.type.label}</div>
+                <>
+                  {(selectedAppts.length > 0 || userAppts.length > 0) ? (
+                    <div className="dz-cal-appt-list">
+                      {selectedAppts.map((a, i) => (
+                        <div key={`gen-${i}`} className="dz-cal-appt-item">
+                          <div className="dz-cal-appt-dot" style={{ background: a.type.color }} />
+                          <div className="dz-cal-appt-detail">
+                            <div className="dz-cal-appt-patient">{a.patient}</div>
+                            <div className="dz-cal-appt-meta">{a.time} &middot; {a.type.label}</div>
+                          </div>
+                        </div>
+                      ))}
+                      {userAppts.map((a, i) => {
+                        const typeObj = APPT_TYPES.find(t => t.label === a.type) || APPT_TYPES[0];
+                        return (
+                          <div key={`user-${i}`} className="dz-cal-appt-item">
+                            <div className="dz-cal-appt-dot" style={{ background: typeObj.color }} />
+                            <div className="dz-cal-appt-detail">
+                              <div className="dz-cal-appt-patient">{a.patient}</div>
+                              <div className="dz-cal-appt-meta">{a.time} &middot; {a.type}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="dz-cal-no-appts">No appointments scheduled</p>
+                  )}
+
+                  {/* Add appointment form */}
+                  {showAddForm ? (
+                    <div className="dz-cal-add-form">
+                      <h4 className="dz-cal-add-title">New Appointment</h4>
+                      <div className="dz-cal-add-fields">
+                        <div>
+                          <label className="dz-cal-add-label">Patient</label>
+                          <select
+                            className="dz-cal-add-input"
+                            value={newAppt.patient}
+                            onChange={e => setNewAppt(prev => ({ ...prev, patient: e.target.value }))}
+                          >
+                            <option value="">Select patient...</option>
+                            {PATIENTS.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
+                          </select>
+                        </div>
+                        <div className="dz-cal-add-row">
+                          <div style={{ flex: 1 }}>
+                            <label className="dz-cal-add-label">Time</label>
+                            <select
+                              className="dz-cal-add-input"
+                              value={newAppt.time}
+                              onChange={e => setNewAppt(prev => ({ ...prev, time: e.target.value }))}
+                            >
+                              {["8:00 AM","8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM"].map(t => (
+                                <option key={t} value={t}>{t}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <label className="dz-cal-add-label">Type</label>
+                            <select
+                              className="dz-cal-add-input"
+                              value={newAppt.type}
+                              onChange={e => setNewAppt(prev => ({ ...prev, type: e.target.value }))}
+                            >
+                              {APPT_TYPES.map(t => <option key={t.label} value={t.label}>{t.label}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="dz-cal-add-label">Location</label>
+                          <select
+                            className="dz-cal-add-input"
+                            value={newAppt.location}
+                            onChange={e => setNewAppt(prev => ({ ...prev, location: e.target.value }))}
+                          >
+                            {locations.map(loc => <option key={loc.id} value={loc.id}>{loc.label}</option>)}
+                          </select>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="dz-cal-no-appts">No appointments scheduled</p>
-                )
+                      <div className="dz-cal-add-actions">
+                        <button className="dz-cal-add-cancel" onClick={() => setShowAddForm(false)}>Cancel</button>
+                        <button className="dz-cal-add-save" onClick={handleAddAppt} disabled={!newAppt.patient}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      className="dz-cal-add-trigger"
+                      onClick={() => setShowAddForm(true)}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                      Add Appointment
+                    </button>
+                  )}
+                </>
               ) : (
                 <p className="dz-cal-no-appts">Click a date on the calendar</p>
               )}

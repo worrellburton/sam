@@ -486,6 +486,40 @@ function ClaimPreviewModal({
           </div>
         </div>
 
+        {/* Stedi JSON Payload — shown first */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 6 }}>
+            Stedi JSON Payload
+          </div>
+          <div style={{
+            position: "relative", background: "rgba(10,10,26,0.5)",
+            border: "1px solid rgba(148,163,184,0.08)", borderRadius: 10,
+            padding: 14, maxHeight: 300, overflow: "auto",
+          }}>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              style={{
+                position: "absolute", top: 8, right: 8,
+                background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)",
+                borderRadius: 6, padding: "4px 10px", fontSize: "0.68rem",
+                color: "#a5b4fc", cursor: "pointer", fontWeight: 600,
+              }}
+            >
+              {copied ? "Copied!" : "Copy"}
+            </button>
+            <pre style={{
+              fontSize: "0.72rem", color: "#8b8ba0", fontFamily: "'SF Mono', Consolas, monospace",
+              whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0,
+            }}>
+              {JSON.stringify(payload, null, 2)}
+            </pre>
+          </div>
+        </div>
+
         {/* Attachments Section */}
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 8 }}>
@@ -551,39 +585,6 @@ function ClaimPreviewModal({
           </div>
           <div style={{ fontSize: "0.65rem", color: "#475569", marginTop: 6, lineHeight: 1.5 }}>
             Attachments are submitted as a separate 275 transaction linked via the PWK segment&apos;s attachment control number.
-          </div>
-        </div>
-
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ fontSize: "0.65rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", marginBottom: 6 }}>
-            Stedi JSON Payload
-          </div>
-          <div style={{
-            position: "relative", background: "rgba(10,10,26,0.5)",
-            border: "1px solid rgba(148,163,184,0.08)", borderRadius: 10,
-            padding: 14, maxHeight: 300, overflow: "auto",
-          }}>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              }}
-              style={{
-                position: "absolute", top: 8, right: 8,
-                background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)",
-                borderRadius: 6, padding: "4px 10px", fontSize: "0.68rem",
-                color: "#a5b4fc", cursor: "pointer", fontWeight: 600,
-              }}
-            >
-              {copied ? "Copied!" : "Copy"}
-            </button>
-            <pre style={{
-              fontSize: "0.72rem", color: "#8b8ba0", fontFamily: "'SF Mono', Consolas, monospace",
-              whiteSpace: "pre-wrap", wordBreak: "break-word", margin: 0,
-            }}>
-              {JSON.stringify(payload, null, 2)}
-            </pre>
           </div>
         </div>
 

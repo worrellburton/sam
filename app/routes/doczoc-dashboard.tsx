@@ -299,8 +299,10 @@ export default function DashboardPage() {
     { name: "Michael Brown", type: "Sports Injury — Ankle", time: "2:30 PM", status: "New" },
   ];
 
+  const fromLogin = !!(location.state as any)?.fromLogin;
+
   return (
-    <div className="dz-platform">
+    <div className={`dz-platform${!showSplash && fromLogin ? " dz-platform-cinematic" : ""}`}>
       {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
       <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />

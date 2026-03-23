@@ -371,6 +371,23 @@ export default function BookPage() {
   useAnimatedBackground(canvasRef, bgType);
   const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
 
+  const fiveStarPhotoReviews = useMemo(() =>
+    googleReviews.filter(r => r.rating === 5 && r.authorAttribution?.photoUri),
+    [googleReviews]
+  );
+  const [snippetIndex, setSnippetIndex] = useState(0);
+  useEffect(() => {
+    if (fiveStarPhotoReviews.length > 0) {
+      setSnippetIndex(Math.floor(Math.random() * fiveStarPhotoReviews.length));
+    }
+  }, [fiveStarPhotoReviews.length]);
+  const randomizeReview = useCallback(() => {
+    if (fiveStarPhotoReviews.length <= 1) return;
+    let next: number;
+    do { next = Math.floor(Math.random() * fiveStarPhotoReviews.length); } while (next === snippetIndex);
+    setSnippetIndex(next);
+  }, [fiveStarPhotoReviews.length, snippetIndex]);
+
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -632,9 +649,9 @@ export default function BookPage() {
                 <span className="dz-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
               </div>
               {(() => {
-                const photoReview = googleReviews.find(r => r.authorAttribution?.photoUri);
+                const photoReview = fiveStarPhotoReviews[snippetIndex];
                 return photoReview ? (
-                  <div className="dz-review-snippet">
+                  <div className="dz-review-snippet" onClick={randomizeReview} style={{ cursor: 'pointer' }} title="Click for another review">
                     <div className="dz-snippet-author">
                       <img src={photoReview.authorAttribution!.photoUri!} alt="" className="dz-snippet-avatar" />
                     </div>
@@ -1163,6 +1180,10 @@ export default function BookPage() {
                       </button>
                     </div>
 
+                    <p className="dz-upload-notice" style={{ fontSize: '0.8rem', color: '#94a3b8', textAlign: 'center', margin: '12px 0 4px', lineHeight: 1.4 }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" style={{ verticalAlign: 'middle', marginRight: '4px' }}><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+                      Driver&rsquo;s license &amp; insurance card upload required to book
+                    </p>
                     <button className="dz-btn dz-btn-confirm" onClick={handleConfirm}>
                       Continue
                     </button>

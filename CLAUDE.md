@@ -57,7 +57,7 @@ app/
 - Auto-deploys to GitHub Pages on push to `main` or `claude/**` branches
 - Build step: `npm ci && npm run build`
 - Serves from `build/client/`
-- Live URL: https://movementpurpose.github.io/sam/
+- Live URL: https://worrellburton.github.io/sam/
 - `basename: "/sam/"` configured in `react-router.config.ts`
 
 ## Development Notes

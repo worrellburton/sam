@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
+import { useCrosshairFocus, CrosshairToggle } from "~/hooks/useCrosshairFocus";
 
 export function meta() {
   return [{ title: "Insights | DocZoc" }];
@@ -529,6 +530,8 @@ export default function InsightsPage() {
   const [rangeStart, setRangeStart] = useState(Math.max(0, currentMonthIdx - 5));
   const [rangeEnd, setRangeEnd] = useState(currentMonthIdx);
 
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle } = useCrosshairFocus(new Set([2, 3]));
+
   return (
     <div className="dz-platform">
       <PlatformBg bgId={bgId} />
@@ -658,6 +661,7 @@ export default function InsightsPage() {
             <div className="dz-insight-card-header">
               <h3>Top Procedure Codes</h3>
               <span className="dz-insight-card-sub">By volume</span>
+              <CrosshairToggle active={focusMode} onClick={toggleFocus} />
             </div>
             <div className="dz-table-wrap">
               <table className="dz-table">
@@ -670,17 +674,47 @@ export default function InsightsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {TOP_CODES.map((c) => (
+                  {TOP_CODES.map((c, index) => (
                     <tr key={c.code}>
-                      <td>
+                      <td
+                        onMouseEnter={() => onCellEnter(String(index), 0)}
+                        onMouseLeave={onCellLeave}
+                        style={{
+                          ...getCellStyle(String(index), 0),
+                          transition: "opacity 0.2s ease",
+                        }}
+                      >
                         <span style={{
                           fontFamily: "'SF Mono', Consolas, monospace",
                           fontWeight: 700, color: "#818cf8", fontSize: "0.82rem",
                         }}>{c.code}</span>
                       </td>
-                      <td>{c.desc}</td>
-                      <td style={{ textAlign: "right", fontWeight: 600, color: "#e4e4ee" }}>{c.count}</td>
-                      <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e" }}>
+                      <td
+                        onMouseEnter={() => onCellEnter(String(index), 1)}
+                        onMouseLeave={onCellLeave}
+                        style={{
+                          ...getCellStyle(String(index), 1),
+                          transition: "opacity 0.2s ease",
+                        }}
+                      >{c.desc}</td>
+                      <td
+                        onMouseEnter={() => onCellEnter(String(index), 2)}
+                        onMouseLeave={onCellLeave}
+                        style={{
+                          textAlign: "right", fontWeight: 600, color: "#e4e4ee",
+                          ...getCellStyle(String(index), 2),
+                          transition: "opacity 0.2s ease",
+                        }}
+                      >{c.count}</td>
+                      <td
+                        onMouseEnter={() => onCellEnter(String(index), 3)}
+                        onMouseLeave={onCellLeave}
+                        style={{
+                          textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e",
+                          ...getCellStyle(String(index), 3),
+                          transition: "opacity 0.2s ease",
+                        }}
+                      >
                         ${c.revenue.toLocaleString()}
                       </td>
                     </tr>

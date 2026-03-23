@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
+import { useCrosshairFocus, CrosshairToggle } from "~/hooks/useCrosshairFocus";
 
 export function meta() {
   return [{ title: "In-Person | DocZoc" }];
@@ -281,6 +282,14 @@ export default function InPersonPage() {
     : apptFilter === "completed" ? completedAppts
     : APPOINTMENTS;
 
+  // Crosshair focus for appointments table — data cols: Date(1), Time(2), Countdown(3)
+  const apptDataCols = useMemo(() => new Set([1, 2, 3]), []);
+  const apptCrosshair = useCrosshairFocus(apptDataCols);
+
+  // Crosshair focus for surgeries table — data cols: Date(2), Time(3), Countdown(4), CPT/ICD-10(7)
+  const surgDataCols = useMemo(() => new Set([2, 3, 4, 7]), []);
+  const surgCrosshair = useCrosshairFocus(surgDataCols);
+
   return (
     <div className="dz-platform">
       <PlatformBg bgId={bgId} />
@@ -361,29 +370,33 @@ export default function InPersonPage() {
 
             {viewMode === "table" ? (
               <div className="dz-table-wrap">
+                <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 12px 0" }}>
+                  <CrosshairToggle active={apptCrosshair.focusMode} onClick={apptCrosshair.toggleFocus} />
+                </div>
                 <table className="dz-table">
                   <thead>
                     <tr><th>Patient</th><th>Date</th><th>Time</th><th>Countdown</th><th>Type</th><th className="dz-col-hide-lg">Location</th><th>Status</th><th className="dz-col-hide-xl dz-col-notes">Notes</th></tr>
                   </thead>
                   <tbody>
-                    {filteredAppts.map((a) => {
+                    {filteredAppts.map((a, index) => {
                       const cd = formatCountdown(now, a.date, a.time, a.completed);
+                      const rowId = String(index);
                       return (
                         <tr key={a.id} style={a.completed ? { opacity: 0.6 } : undefined}>
-                          <td style={{ fontWeight: 600, whiteSpace: "nowrap" }}>{a.patient}</td>
-                          <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
-                          <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, whiteSpace: "nowrap" }}>{a.time}</td>
-                          <td><CountdownBadge text={cd.text} color={cd.color} /></td>
-                          <td>
+                          <td {...apptCrosshair.getTdProps(rowId, 0)} style={{ ...apptCrosshair.getTdProps(rowId, 0).style, fontWeight: 600, whiteSpace: "nowrap" }}>{a.patient}</td>
+                          <td {...apptCrosshair.getTdProps(rowId, 1)} style={{ ...apptCrosshair.getTdProps(rowId, 1).style, fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
+                          <td {...apptCrosshair.getTdProps(rowId, 2)} style={{ ...apptCrosshair.getTdProps(rowId, 2).style, fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, whiteSpace: "nowrap" }}>{a.time}</td>
+                          <td {...apptCrosshair.getTdProps(rowId, 3)}><CountdownBadge text={cd.text} color={cd.color} /></td>
+                          <td {...apptCrosshair.getTdProps(rowId, 4)}>
                             {a.type.toLowerCase().includes("surgery") ? (
                               <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(239,68,68,0.12)", color: "#f87171", whiteSpace: "nowrap" }}>Surgery</span>
                             ) : (
                               <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc", whiteSpace: "nowrap" }}>Appointment</span>
                             )}
                           </td>
-                          <td className="dz-col-hide-lg" style={{ color: "#94a3b8" }}>{a.location}</td>
-                          <td><Badge label={a.status} /></td>
-                          <td className="dz-col-hide-xl dz-col-notes" style={{ fontSize: "0.82rem", color: "#64748b" }}>{a.notes}</td>
+                          <td className="dz-col-hide-lg" {...apptCrosshair.getTdProps(rowId, 5)} style={{ ...apptCrosshair.getTdProps(rowId, 5).style, color: "#94a3b8" }}>{a.location}</td>
+                          <td {...apptCrosshair.getTdProps(rowId, 6)}><Badge label={a.status} /></td>
+                          <td className="dz-col-hide-xl dz-col-notes" {...apptCrosshair.getTdProps(rowId, 7)} style={{ ...apptCrosshair.getTdProps(rowId, 7).style, fontSize: "0.82rem", color: "#64748b" }}>{a.notes}</td>
                         </tr>
                       );
                     })}
@@ -438,6 +451,9 @@ export default function InPersonPage() {
           <>
             {viewMode === "table" ? (
               <div className="dz-table-wrap">
+                <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 12px 0" }}>
+                  <CrosshairToggle active={surgCrosshair.focusMode} onClick={surgCrosshair.toggleFocus} />
+                </div>
                 <table className="dz-table">
                   <thead>
                     <tr>
@@ -454,31 +470,32 @@ export default function InPersonPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {SURGERIES.map((s) => {
+                    {SURGERIES.map((s, index) => {
                       const cd = formatCountdown(now, s.date, s.time, false);
+                      const rowId = String(index);
                       return (
                         <tr key={s.id}>
-                          <td style={{ fontWeight: 700, maxWidth: 220 }}>{s.procedure}</td>
-                          <td style={{ whiteSpace: "nowrap" }}>{s.patient}</td>
-                          <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{s.date}</td>
-                          <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, whiteSpace: "nowrap" }}>{s.time}</td>
-                          <td><CountdownBadge text={cd.text} color={cd.color} /></td>
-                          <td className="dz-col-hide-lg" style={{ fontSize: "0.82rem" }}>{s.facility}<br /><span style={{ fontSize: "0.72rem", color: "#64748b" }}>POS {s.pos}</span></td>
-                          <td className="dz-col-hide-lg" style={{ fontSize: "0.82rem" }}>{s.anesthesia}</td>
-                          <td>
+                          <td {...surgCrosshair.getTdProps(rowId, 0)} style={{ ...surgCrosshair.getTdProps(rowId, 0).style, fontWeight: 700, maxWidth: 220 }}>{s.procedure}</td>
+                          <td {...surgCrosshair.getTdProps(rowId, 1)} style={{ ...surgCrosshair.getTdProps(rowId, 1).style, whiteSpace: "nowrap" }}>{s.patient}</td>
+                          <td {...surgCrosshair.getTdProps(rowId, 2)} style={{ ...surgCrosshair.getTdProps(rowId, 2).style, fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{s.date}</td>
+                          <td {...surgCrosshair.getTdProps(rowId, 3)} style={{ ...surgCrosshair.getTdProps(rowId, 3).style, fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, whiteSpace: "nowrap" }}>{s.time}</td>
+                          <td {...surgCrosshair.getTdProps(rowId, 4)}><CountdownBadge text={cd.text} color={cd.color} /></td>
+                          <td className="dz-col-hide-lg" {...surgCrosshair.getTdProps(rowId, 5)} style={{ ...surgCrosshair.getTdProps(rowId, 5).style, fontSize: "0.82rem" }}>{s.facility}<br /><span style={{ fontSize: "0.72rem", color: "#64748b" }}>POS {s.pos}</span></td>
+                          <td className="dz-col-hide-lg" {...surgCrosshair.getTdProps(rowId, 6)} style={{ ...surgCrosshair.getTdProps(rowId, 6).style, fontSize: "0.82rem" }}>{s.anesthesia}</td>
+                          <td {...surgCrosshair.getTdProps(rowId, 7)}>
                             <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
                               {s.codes.map((code) => (
                                 <span key={code} style={{ fontSize: "0.68rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "2px 7px", borderRadius: 4, fontWeight: 600, background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{code}</span>
                               ))}
                             </div>
                           </td>
-                          <td>
+                          <td {...surgCrosshair.getTdProps(rowId, 8)}>
                             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
                               <CheckBadge ok={s.preOp} label="Pre-Op" />
                               <CheckBadge ok={s.authObtained} label="Auth" />
                             </div>
                           </td>
-                          <td><Badge label={s.status} /></td>
+                          <td {...surgCrosshair.getTdProps(rowId, 9)}><Badge label={s.status} /></td>
                         </tr>
                       );
                     })}

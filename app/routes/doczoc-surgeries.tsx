@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { PATIENTS, type Patient } from "~/data/patients";
+import { useCrosshairFocusByKey, CrosshairToggle } from "~/hooks/useCrosshairFocus";
 
 export function meta() {
   return [{ title: "Surgeries | DocZoc" }];
@@ -522,12 +523,14 @@ function SurgeryDetailView({ surgery, onBack }: { surgery: SurgeryRecord; onBack
 
 // ── Draggable Surgery Table ──────────────────────────────────────────
 type SurgColKey = "status" | "procedure" | "patient" | "date" | "codes" | "action";
+const SURG_DATA_KEYS = new Set<SurgColKey>(["date", "codes"]);
 
 function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord[]; onView: (s: SurgeryRecord) => void }) {
   const [columns, setColumns] = useState<SurgColKey[]>(["status", "procedure", "patient", "date", "codes", "action"]);
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle } = useCrosshairFocusByKey(columns, SURG_DATA_KEYS);
 
   const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
   const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };
@@ -543,53 +546,61 @@ function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord
     date: { label: "Date" }, codes: { label: "Codes" }, action: { label: "Action", style: { textAlign: "center" } },
   };
 
-  const renderCell = (s: SurgeryRecord, key: SurgColKey) => {
+  const renderCell = (s: SurgeryRecord, key: SurgColKey, colIdx: number) => {
     const sc = s.status === "completed" ? "#22c55e" : s.status === "upcoming" ? "#f59e0b" : "#818cf8";
+    const rowId = s.id;
+    const cs = getCellStyle(rowId, colIdx);
+    const h = { onMouseEnter: () => onCellEnter(rowId, colIdx), onMouseLeave: onCellLeave };
     switch (key) {
       case "status": return (
-        <td key={key}><span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: "0.68rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: `${sc}18`, color: sc, textTransform: "capitalize" }}>
+        <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}><span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: "0.68rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: `${sc}18`, color: sc, textTransform: "capitalize" }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: sc }} />{s.status.replace("-", " ")}
         </span></td>
       );
-      case "procedure": return <td key={key} style={{ fontWeight: 600, fontSize: "0.82rem" }}>{s.type}</td>;
-      case "patient": return <td key={key}><Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ color: "#a5b4fc", textDecoration: "none", fontSize: "0.82rem" }}>{s.patient.name}</Link></td>;
-      case "date": return <td key={key} style={{ fontSize: "0.82rem", whiteSpace: "nowrap" }}>{s.date}</td>;
+      case "procedure": return <td key={key} {...h} style={{ fontWeight: 600, fontSize: "0.82rem", ...cs, transition: "opacity 0.2s ease" }}>{s.type}</td>;
+      case "patient": return <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}><Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ color: "#a5b4fc", textDecoration: "none", fontSize: "0.82rem" }}>{s.patient.name}</Link></td>;
+      case "date": return <td key={key} {...h} style={{ fontSize: "0.82rem", whiteSpace: "nowrap", ...cs, transition: "opacity 0.2s ease" }}>{s.date}</td>;
       case "codes": return (
-        <td key={key}><div style={{ display: "flex", gap: 3 }}>
+        <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}><div style={{ display: "flex", gap: 3 }}>
           {s.codes.slice(0, 3).map(c => <span key={c} style={{ fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "1px 6px", borderRadius: 4, fontWeight: 600, background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{c}</span>)}
         </div></td>
       );
       case "action": return (
-        <td key={key} style={{ textAlign: "center" }}><button onClick={e => { e.stopPropagation(); onView(s); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "rgba(99,102,241,0.06)", color: "#818cf8", fontSize: "0.7rem", fontWeight: 700, cursor: "pointer" }}>View</button></td>
+        <td key={key} {...h} style={{ textAlign: "center", ...cs, transition: "opacity 0.2s ease" }}><button onClick={e => { e.stopPropagation(); onView(s); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "rgba(99,102,241,0.06)", color: "#818cf8", fontSize: "0.7rem", fontWeight: 700, cursor: "pointer" }}>View</button></td>
       );
       default: return <td key={key} />;
     }
   };
 
   return (
-    <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-      <div className="dz-table-wrap">
-        <table className="dz-table" style={{ margin: 0 }}>
-          <thead>
-            <tr>
-              {columns.map((key, i) => (
-                <th key={key} style={{ ...headers[key].style, cursor: "grab", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
-                  draggable onDragStart={() => handleDragStart(i)} onDragEnter={() => handleDragEnter(i)} onDragEnd={handleDragEnd} onDragOver={e => e.preventDefault()}>
-                  {headers[key].label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {surgeries.map(s => (
-              <tr key={s.id} onClick={() => onView(s)} style={{ cursor: "pointer" }}>
-                {columns.map(key => renderCell(s, key))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+        <CrosshairToggle active={focusMode} onClick={toggleFocus} />
       </div>
-      {surgeries.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>No surgeries found</div>}
+      <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+        <div className="dz-table-wrap">
+          <table className="dz-table" style={{ margin: 0 }}>
+            <thead>
+              <tr>
+                {columns.map((key, i) => (
+                  <th key={key} style={{ ...headers[key].style, cursor: "grab", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
+                    draggable onDragStart={() => handleDragStart(i)} onDragEnter={() => handleDragEnter(i)} onDragEnd={handleDragEnd} onDragOver={e => e.preventDefault()}>
+                    {headers[key].label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {surgeries.map(s => (
+                <tr key={s.id} onClick={() => onView(s)} style={{ cursor: "pointer" }}>
+                  {columns.map((key, i) => renderCell(s, key, i))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {surgeries.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>No surgeries found</div>}
+      </div>
     </div>
   );
 }

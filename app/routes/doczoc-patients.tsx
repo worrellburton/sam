@@ -1,8 +1,9 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { PATIENTS, type Patient } from "~/data/patients";
+import { useCrosshairFocusByKey, CrosshairToggle } from "~/hooks/useCrosshairFocus";
 
 const PAYER_BRANDS: Record<string, { color: string; initial: string; bg: string }> = {
   UnitedHealthcare: { color: "#fff", initial: "U", bg: "#002677" },
@@ -183,12 +184,14 @@ const COL_HEADERS: Record<ColKey, { label: string; className?: string; style?: R
 };
 
 const DEFAULT_COLS: ColKey[] = ["patient", "status", "nextAppt", "condition", "age", "phone", "email", "insurance", "visits"];
+const PATIENT_DATA_KEYS = new Set<ColKey>(["age", "visits"]);
 
 function DraggablePatientTable({ patients, onRowClick }: { patients: Patient[]; onRowClick: (id: number) => void }) {
   const [columns, setColumns] = useState<ColKey[]>(DEFAULT_COLS);
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle } = useCrosshairFocusByKey(columns, PATIENT_DATA_KEYS);
 
   const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
   const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };
@@ -204,67 +207,75 @@ function DraggablePatientTable({ patients, onRowClick }: { patients: Patient[]; 
     dragCol.current = null; dragOverCol.current = null; setDraggingIdx(null);
   };
 
-  const renderCell = (p: Patient, key: ColKey) => {
+  const renderCell = (p: Patient, key: ColKey, colIdx: number) => {
+    const rowId = String(p.id);
+    const cellStyle = getCellStyle(rowId, colIdx);
+    const handlers = { onMouseEnter: () => onCellEnter(rowId, colIdx), onMouseLeave: onCellLeave };
     switch (key) {
       case "patient": return (
-        <td key={key}>
+        <td key={key} {...handlers} style={{ ...cellStyle, transition: "opacity 0.2s ease" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <PatientInitials name={p.name} />
             <div className="dz-table-name" style={{ fontSize: "0.78rem" }}>{p.name}</div>
           </div>
         </td>
       );
-      case "age": return <td key={key} style={{ fontSize: "0.75rem", textAlign: "center" }}>{p.age}</td>;
-      case "condition": return <td key={key} style={{ fontSize: "0.75rem" }}>{p.condition}</td>;
-      case "insurance": return <td key={key} className="dz-col-hide-lg"><InsuranceLogo name={p.insurance} /></td>;
-      case "phone": return <td key={key} className="dz-col-hide-lg" style={{ fontSize: "0.75rem" }}>{p.phone}</td>;
-      case "email": return <td key={key} className="dz-col-hide-xl" style={{ fontSize: "0.75rem" }}>{p.email}</td>;
+      case "age": return <td key={key} {...handlers} style={{ fontSize: "0.75rem", textAlign: "center", ...cellStyle, transition: "opacity 0.2s ease" }}>{p.age}</td>;
+      case "condition": return <td key={key} {...handlers} style={{ fontSize: "0.75rem", ...cellStyle, transition: "opacity 0.2s ease" }}>{p.condition}</td>;
+      case "insurance": return <td key={key} className="dz-col-hide-lg" {...handlers} style={{ ...cellStyle, transition: "opacity 0.2s ease" }}><InsuranceLogo name={p.insurance} /></td>;
+      case "phone": return <td key={key} className="dz-col-hide-lg" {...handlers} style={{ fontSize: "0.75rem", ...cellStyle, transition: "opacity 0.2s ease" }}>{p.phone}</td>;
+      case "email": return <td key={key} className="dz-col-hide-xl" {...handlers} style={{ fontSize: "0.75rem", ...cellStyle, transition: "opacity 0.2s ease" }}>{p.email}</td>;
       case "visits": return (
-        <td key={key} style={{ textAlign: "center" }}>
+        <td key={key} {...handlers} style={{ textAlign: "center", ...cellStyle, transition: "opacity 0.2s ease" }}>
           <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", minWidth: 24, padding: "2px 6px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#818cf8" }}>{p.visits.length}</span>
         </td>
       );
-      case "nextAppt": return <td key={key} style={{ fontSize: "0.75rem" }}>{p.nextAppt}</td>;
-      case "status": return <td key={key}><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>;
+      case "nextAppt": return <td key={key} {...handlers} style={{ fontSize: "0.75rem", ...cellStyle, transition: "opacity 0.2s ease" }}>{p.nextAppt}</td>;
+      case "status": return <td key={key} {...handlers} style={{ ...cellStyle, transition: "opacity 0.2s ease" }}><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>;
       default: return <td key={key} />;
     }
   };
 
   return (
-    <div className="dz-table-wrap">
-      <table className="dz-table">
-        <thead>
-          <tr>
-            {columns.map((key, i) => {
-              const h = COL_HEADERS[key];
-              return (
-                <th
-                  key={key}
-                  className={h.className}
-                  style={{ ...h.style, cursor: "grab", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
-                  draggable
-                  onDragStart={() => handleDragStart(i)}
-                  onDragEnter={() => handleDragEnter(i)}
-                  onDragEnd={handleDragEnd}
-                  onDragOver={(e) => e.preventDefault()}
-                >
-                  {h.label}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {patients.map((p) => (
-            <tr key={p.id} className="dz-row-clickable" onClick={() => onRowClick(p.id)}>
-              {columns.map(key => renderCell(p, key))}
+    <div>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+        <CrosshairToggle active={focusMode} onClick={toggleFocus} />
+      </div>
+      <div className="dz-table-wrap">
+        <table className="dz-table">
+          <thead>
+            <tr>
+              {columns.map((key, i) => {
+                const h = COL_HEADERS[key];
+                return (
+                  <th
+                    key={key}
+                    className={h.className}
+                    style={{ ...h.style, cursor: "grab", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
+                    draggable
+                    onDragStart={() => handleDragStart(i)}
+                    onDragEnter={() => handleDragEnter(i)}
+                    onDragEnd={handleDragEnd}
+                    onDragOver={(e) => e.preventDefault()}
+                  >
+                    {h.label}
+                  </th>
+                );
+              })}
             </tr>
-          ))}
-          {patients.length === 0 && (
-            <tr><td colSpan={columns.length} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No patients found</td></tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {patients.map((p) => (
+              <tr key={p.id} className="dz-row-clickable" onClick={() => onRowClick(p.id)}>
+                {columns.map((key, i) => renderCell(p, key, i))}
+              </tr>
+            ))}
+            {patients.length === 0 && (
+              <tr><td colSpan={columns.length} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No patients found</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

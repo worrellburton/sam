@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
+import { useCrosshairFocus, CrosshairToggle } from "~/hooks/useCrosshairFocus";
 
 export function meta() {
   return [{ title: "Clients | DocZoc" }];
@@ -188,28 +189,37 @@ function CreativeThumb({ creative }: { creative: Creative }) {
 
 // ── Products Tab ────────────────────────────────────────────────────
 function ProductsTab({ view }: { view: "grid" | "list" }) {
+  const productDataCols = useMemo(() => new Set([2]), []);
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle } = useCrosshairFocus(productDataCols);
+
   if (view === "list") {
     return (
       <div className="dz-table-wrap">
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
+        </div>
         <table className="dz-table">
           <thead>
             <tr><th>Product</th><th>Type</th><th>Price</th><th>Status</th><th>Description</th></tr>
           </thead>
           <tbody>
-            {PRODUCTS.map((p) => (
+            {PRODUCTS.map((p, index) => {
+              const rowId = String(index);
+              return (
               <tr key={p.id}>
-                <td style={{ fontWeight: 600, color: "#e4e4ee" }}>
+                <td onMouseEnter={() => onCellEnter(rowId, 0)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 0), fontWeight: 600, color: "#e4e4ee" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div style={{ width: 8, height: 8, borderRadius: "50%", background: p.color, flexShrink: 0 }} />
                     {p.name}
                   </div>
                 </td>
-                <td><Badge label={p.type} /></td>
-                <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e" }}>{p.price}</td>
-                <td><Badge label={p.status} /></td>
-                <td style={{ color: "#5a5a6e", fontSize: "0.78rem" }}>{p.description}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 1)} onMouseLeave={onCellLeave} style={getCellStyle(rowId, 1)}><Badge label={p.type} /></td>
+                <td onMouseEnter={() => onCellEnter(rowId, 2)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 2), fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e" }}>{p.price}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 3)} onMouseLeave={onCellLeave} style={getCellStyle(rowId, 3)}><Badge label={p.status} /></td>
+                <td onMouseEnter={() => onCellEnter(rowId, 4)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 4), color: "#5a5a6e", fontSize: "0.78rem" }}>{p.description}</td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -246,28 +256,37 @@ function ProductsTab({ view }: { view: "grid" | "list" }) {
 
 // ── Campaigns Tab ───────────────────────────────────────────────────
 function CampaignsTab({ view, onNewCampaign }: { view: "grid" | "list"; onNewCampaign: () => void }) {
+  const campaignDataCols = useMemo(() => new Set([3, 4, 5]), []);
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle } = useCrosshairFocus(campaignDataCols);
+
   if (view === "list") {
     return (
       <div className="dz-table-wrap">
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
+        </div>
         <table className="dz-table">
           <thead>
             <tr><th>Campaign</th><th>Creative</th><th>Audience</th><th style={{ textAlign: "right" }}>Reach</th><th style={{ textAlign: "right" }}>Conv.</th><th style={{ textAlign: "right" }}>Spent</th><th>Status</th></tr>
           </thead>
           <tbody>
-            {CAMPAIGNS.map((c) => (
+            {CAMPAIGNS.map((c, index) => {
+              const rowId = String(index);
+              return (
               <tr key={c.id}>
-                <td>
+                <td onMouseEnter={() => onCellEnter(rowId, 0)} onMouseLeave={onCellLeave} style={getCellStyle(rowId, 0)}>
                   <div style={{ fontWeight: 600, color: "#e4e4ee" }}>{c.name}</div>
                   {c.startDate && <div style={{ fontSize: "0.68rem", color: "#5a5a6e" }}>{c.startDate}</div>}
                 </td>
-                <td style={{ color: c.creative ? "#8b8ba0" : "#3d3f4a", fontSize: "0.78rem" }}>{c.creative || "—"}</td>
-                <td style={{ color: c.audience ? "#8b8ba0" : "#3d3f4a", fontSize: "0.78rem" }}>{c.audience || "—"}</td>
-                <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#e4e4ee" }}>{c.reach > 0 ? c.reach.toLocaleString() : "—"}</td>
-                <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#818cf8" }}>{c.conversions > 0 ? c.conversions : "—"}</td>
-                <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e" }}>{c.spent !== "$0" ? c.spent : "—"}</td>
-                <td><Badge label={c.status} /></td>
+                <td onMouseEnter={() => onCellEnter(rowId, 1)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 1), color: c.creative ? "#8b8ba0" : "#3d3f4a", fontSize: "0.78rem" }}>{c.creative || "—"}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 2)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 2), color: c.audience ? "#8b8ba0" : "#3d3f4a", fontSize: "0.78rem" }}>{c.audience || "—"}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 3)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 3), textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#e4e4ee" }}>{c.reach > 0 ? c.reach.toLocaleString() : "—"}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 4)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 4), textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#818cf8" }}>{c.conversions > 0 ? c.conversions : "—"}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 5)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 5), textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e" }}>{c.spent !== "$0" ? c.spent : "—"}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 6)} onMouseLeave={onCellLeave} style={getCellStyle(rowId, 6)}><Badge label={c.status} /></td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -366,24 +385,33 @@ function CreativeTab({ view }: { view: "grid" | "list" }) {
 
 // ── Audience Tab ────────────────────────────────────────────────────
 function AudienceTab({ view }: { view: "grid" | "list" }) {
+  const audienceDataCols = useMemo(() => new Set([2]), []);
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle } = useCrosshairFocus(audienceDataCols);
+
   if (view === "list") {
     return (
       <div className="dz-table-wrap">
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
+        </div>
         <table className="dz-table">
           <thead>
             <tr><th>Audience</th><th>Type</th><th style={{ textAlign: "right" }}>Size</th><th>Source</th><th>Status</th><th>Updated</th></tr>
           </thead>
           <tbody>
-            {AUDIENCES.map((a) => (
+            {AUDIENCES.map((a, index) => {
+              const rowId = String(index);
+              return (
               <tr key={a.id}>
-                <td style={{ fontWeight: 600, color: "#e4e4ee" }}>{a.name}</td>
-                <td><Badge label={a.type} /></td>
-                <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#818cf8" }}>{a.size.toLocaleString()}</td>
-                <td style={{ color: "#8b8ba0", fontSize: "0.78rem" }}>{a.source}</td>
-                <td><Badge label={a.status} /></td>
-                <td style={{ color: "#5a5a6e", fontSize: "0.78rem" }}>{a.lastUpdated}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 0)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 0), fontWeight: 600, color: "#e4e4ee" }}>{a.name}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 1)} onMouseLeave={onCellLeave} style={getCellStyle(rowId, 1)}><Badge label={a.type} /></td>
+                <td onMouseEnter={() => onCellEnter(rowId, 2)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 2), textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#818cf8" }}>{a.size.toLocaleString()}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 3)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 3), color: "#8b8ba0", fontSize: "0.78rem" }}>{a.source}</td>
+                <td onMouseEnter={() => onCellEnter(rowId, 4)} onMouseLeave={onCellLeave} style={getCellStyle(rowId, 4)}><Badge label={a.status} /></td>
+                <td onMouseEnter={() => onCellEnter(rowId, 5)} onMouseLeave={onCellLeave} style={{ ...getCellStyle(rowId, 5), color: "#5a5a6e", fontSize: "0.78rem" }}>{a.lastUpdated}</td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>

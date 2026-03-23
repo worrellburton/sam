@@ -5,6 +5,7 @@ import { useApiStatus, useICD10Search } from "~/hooks/useApiStatus";
 import type { ApiStatus } from "~/hooks/useApiStatus";
 import { useStediClaims, buildClaimPayload } from "~/hooks/useStedi";
 import type { ClaimRecord } from "~/hooks/useStedi";
+import { useCrosshairFocus, CrosshairToggle } from "~/hooks/useCrosshairFocus";
 
 export function meta() {
   return [{ title: "Billing & Claims | DocZoc" }];
@@ -785,6 +786,8 @@ export default function BillingPage() {
   const [showClaimPreview, setShowClaimPreview] = useState(false);
   const { statuses, refresh } = useApiStatus();
   const { claims, submitting, submitClaim } = useStediClaims();
+  const claimsCrosshair = useCrosshairFocus(new Set([3]));
+  const cptCrosshair = useCrosshairFocus(new Set([3]));
 
   const icdCodes = selectedVisit?.codes.filter((c) => c.type === "ICD-10") || [];
   const cptCodes = selectedVisit?.codes.filter((c) => c.type === "CPT" || c.type === "HCPCS") || [];
@@ -868,9 +871,12 @@ export default function BillingPage() {
               </div>
             ) : (
               <div>
-                <div className="dz-billing-section-label" style={{ marginBottom: 16 }}>
-                  Submitted Claims
-                  <span className="dz-billing-code-count">{claims.length}</span>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                  <div className="dz-billing-section-label" style={{ marginBottom: 0 }}>
+                    Submitted Claims
+                    <span className="dz-billing-code-count">{claims.length}</span>
+                  </div>
+                  <CrosshairToggle active={claimsCrosshair.focusMode} onClick={claimsCrosshair.toggleFocus} />
                 </div>
                 <div className="dz-table-wrap">
                   <table className="dz-table">
@@ -885,18 +891,42 @@ export default function BillingPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {claims.map((claim) => (
+                      {claims.map((claim, rowIdx) => (
                         <tr key={claim.id}>
-                          <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.78rem", color: "#818cf8", fontWeight: 600 }}>
+                          <td
+                            onMouseEnter={() => claimsCrosshair.onCellEnter(claim.id, 0)}
+                            onMouseLeave={claimsCrosshair.onCellLeave}
+                            style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.78rem", color: "#818cf8", fontWeight: 600, ...claimsCrosshair.getCellStyle(claim.id, 0), transition: "opacity 0.2s ease" }}
+                          >
                             {claim.id}
                           </td>
-                          <td style={{ fontWeight: 600, color: "#e4e4ee" }}>{claim.patient}</td>
-                          <td style={{ color: "#8b8ba0" }}>{claim.payer}</td>
-                          <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e" }}>
+                          <td
+                            onMouseEnter={() => claimsCrosshair.onCellEnter(claim.id, 1)}
+                            onMouseLeave={claimsCrosshair.onCellLeave}
+                            style={{ fontWeight: 600, color: "#e4e4ee", ...claimsCrosshair.getCellStyle(claim.id, 1), transition: "opacity 0.2s ease" }}
+                          >{claim.patient}</td>
+                          <td
+                            onMouseEnter={() => claimsCrosshair.onCellEnter(claim.id, 2)}
+                            onMouseLeave={claimsCrosshair.onCellLeave}
+                            style={{ color: "#8b8ba0", ...claimsCrosshair.getCellStyle(claim.id, 2), transition: "opacity 0.2s ease" }}
+                          >{claim.payer}</td>
+                          <td
+                            onMouseEnter={() => claimsCrosshair.onCellEnter(claim.id, 3)}
+                            onMouseLeave={claimsCrosshair.onCellLeave}
+                            style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#22c55e", ...claimsCrosshair.getCellStyle(claim.id, 3), transition: "opacity 0.2s ease" }}
+                          >
                             ${claim.totalCharge.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                           </td>
-                          <td><ClaimStatusBadge status={claim.status} /></td>
-                          <td style={{ fontSize: "0.75rem", color: "#5a5a6e" }}>
+                          <td
+                            onMouseEnter={() => claimsCrosshair.onCellEnter(claim.id, 4)}
+                            onMouseLeave={claimsCrosshair.onCellLeave}
+                            style={{ ...claimsCrosshair.getCellStyle(claim.id, 4), transition: "opacity 0.2s ease" }}
+                          ><ClaimStatusBadge status={claim.status} /></td>
+                          <td
+                            onMouseEnter={() => claimsCrosshair.onCellEnter(claim.id, 5)}
+                            onMouseLeave={claimsCrosshair.onCellLeave}
+                            style={{ fontSize: "0.75rem", color: "#5a5a6e", ...claimsCrosshair.getCellStyle(claim.id, 5), transition: "opacity 0.2s ease" }}
+                          >
                             {claim.submittedAt ? new Date(claim.submittedAt).toLocaleString() : "—"}
                           </td>
                         </tr>
@@ -1036,9 +1066,12 @@ export default function BillingPage() {
 
                 {/* CPT / HCPCS Codes */}
                 <div className="dz-billing-codes-section">
-                  <div className="dz-billing-section-label">
-                    CPT / HCPCS Codes
-                    <span className="dz-billing-code-count">{cptCodes.length}</span>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div className="dz-billing-section-label">
+                      CPT / HCPCS Codes
+                      <span className="dz-billing-code-count">{cptCodes.length}</span>
+                    </div>
+                    <CrosshairToggle active={cptCrosshair.focusMode} onClick={cptCrosshair.toggleFocus} />
                   </div>
                   <div className="dz-table-wrap">
                     <table className="dz-table">
@@ -1051,12 +1084,28 @@ export default function BillingPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {cptCodes.map((c) => (
+                        {cptCodes.map((c, rowIdx) => (
                           <tr key={c.code}>
-                            <td><span className={`dz-billing-code-badge ${c.type === "HCPCS" ? "hcpcs" : "cpt"}`}>{c.code}</span></td>
-                            <td>{c.description}</td>
-                            <td><span className="dz-billing-type-tag">{c.type}</span></td>
-                            <td style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#e4e4ee" }}>
+                            <td
+                              onMouseEnter={() => cptCrosshair.onCellEnter(c.code, 0)}
+                              onMouseLeave={cptCrosshair.onCellLeave}
+                              style={{ ...cptCrosshair.getCellStyle(c.code, 0), transition: "opacity 0.2s ease" }}
+                            ><span className={`dz-billing-code-badge ${c.type === "HCPCS" ? "hcpcs" : "cpt"}`}>{c.code}</span></td>
+                            <td
+                              onMouseEnter={() => cptCrosshair.onCellEnter(c.code, 1)}
+                              onMouseLeave={cptCrosshair.onCellLeave}
+                              style={{ ...cptCrosshair.getCellStyle(c.code, 1), transition: "opacity 0.2s ease" }}
+                            >{c.description}</td>
+                            <td
+                              onMouseEnter={() => cptCrosshair.onCellEnter(c.code, 2)}
+                              onMouseLeave={cptCrosshair.onCellLeave}
+                              style={{ ...cptCrosshair.getCellStyle(c.code, 2), transition: "opacity 0.2s ease" }}
+                            ><span className="dz-billing-type-tag">{c.type}</span></td>
+                            <td
+                              onMouseEnter={() => cptCrosshair.onCellEnter(c.code, 3)}
+                              onMouseLeave={cptCrosshair.onCellLeave}
+                              style={{ textAlign: "right", fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#e4e4ee", ...cptCrosshair.getCellStyle(c.code, 3), transition: "opacity 0.2s ease" }}
+                            >
                               {c.fee ? `$${c.fee.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "—"}
                             </td>
                           </tr>

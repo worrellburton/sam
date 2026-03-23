@@ -6812,6 +6812,173 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* ===== DocZoc Platform — Light Mode ===== */
+[data-theme="light"] body:has(.dz-platform),
+[data-theme="light"] body:has(.dz-splash) {
+  background: #f5f7fa !important;
+}
+[data-theme="light"] .dz-platform {
+  background: #f5f7fa;
+  color: #1e293b;
+}
+[data-theme="light"] .dz-sidebar {
+  background: #ffffff;
+  border-right-color: #e2e8f0;
+}
+[data-theme="light"] .dz-sidebar-logo .dz-logo-text { color: #1e293b !important; }
+[data-theme="light"] .dz-sidebar-link { color: #64748b; }
+[data-theme="light"] .dz-sidebar-link:hover { background: rgba(99, 102, 241, 0.06); color: #334155; }
+[data-theme="light"] .dz-sidebar-link.active { background: rgba(99, 102, 241, 0.1); color: #4f46e5; }
+[data-theme="light"] .dz-sidebar-bottom { border-top-color: #e2e8f0; }
+[data-theme="light"] .dz-user-btn { color: #334155; }
+[data-theme="light"] .dz-user-name { color: #1e293b !important; }
+[data-theme="light"] .dz-user-role { color: #94a3b8 !important; }
+[data-theme="light"] .dz-avatar-sm { background: #e0e7ff !important; color: #4f46e5 !important; }
+[data-theme="light"] .dz-user-popup {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+[data-theme="light"] .dz-user-popup-item { color: #475569; }
+[data-theme="light"] .dz-user-popup-item:hover { background: rgba(99, 102, 241, 0.06); color: #4f46e5; }
+[data-theme="light"] .dz-user-popup-divider { border-color: #e2e8f0; }
+[data-theme="light"] .dz-popup-section-label { color: #94a3b8; }
+[data-theme="light"] .dz-user-popup-logout { color: #ef4444; }
+
+/* Platform main area */
+[data-theme="light"] .dz-platform-main { background: transparent; }
+[data-theme="light"] .dz-platform-header h1 { color: #1e293b; }
+[data-theme="light"] .dz-platform-header p { color: #64748b; }
+[data-theme="light"] .dz-avatar { background: #e0e7ff !important; color: #4f46e5 !important; border-color: #c7d2fe !important; }
+
+/* Stat cards */
+[data-theme="light"] .dz-stat-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .dz-stat-card:hover { border-color: #c7d2fe; }
+[data-theme="light"] .dz-stat-card-label { color: #64748b; }
+[data-theme="light"] .dz-stat-card-value { color: #1e293b; }
+
+/* Tables */
+[data-theme="light"] .dz-table-wrap {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .dz-table th {
+  background: #f8fafc;
+  color: #64748b;
+  border-bottom-color: #e2e8f0;
+}
+[data-theme="light"] .dz-table td {
+  color: #475569;
+  border-bottom-color: #f1f5f9;
+}
+[data-theme="light"] .dz-table tr:hover td { background: rgba(99, 102, 241, 0.03); }
+[data-theme="light"] .dz-table-name { color: #1e293b; }
+[data-theme="light"] .dz-table-sub { color: #94a3b8; }
+[data-theme="light"] .dz-table-time { color: #4f46e5; }
+
+/* Section headings */
+[data-theme="light"] .dz-dash-section h2 { color: #1e293b; }
+
+/* Status badges */
+[data-theme="light"] .dz-status-confirmed { background: rgba(34, 197, 94, 0.08); color: #16a34a; }
+[data-theme="light"] .dz-status-new { background: rgba(99, 102, 241, 0.08); color: #4f46e5; }
+[data-theme="light"] .dz-status-pending { background: rgba(245, 158, 11, 0.08); color: #d97706; }
+[data-theme="light"] .dz-status-active { background: rgba(34, 197, 94, 0.08); color: #16a34a; }
+[data-theme="light"] .dz-status-inactive { background: rgba(148, 163, 184, 0.08); color: #64748b; }
+[data-theme="light"] .dz-status-discharged { background: rgba(148, 163, 184, 0.08); color: #64748b; }
+
+/* Search input */
+[data-theme="light"] .dz-search-input {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+[data-theme="light"] .dz-search-input::placeholder { color: #94a3b8; }
+[data-theme="light"] .dz-search-input:focus { border-color: #818cf8; }
+
+/* View toggle */
+[data-theme="light"] .dz-view-toggle {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+[data-theme="light"] .dz-view-btn { color: #94a3b8; }
+[data-theme="light"] .dz-view-btn:hover { background: #f1f5f9; color: #475569; }
+[data-theme="light"] .dz-view-btn.dz-view-active { background: rgba(99, 102, 241, 0.1); color: #4f46e5; }
+
+/* Tab controls */
+[data-theme="light"] .dz-insight-period-tabs {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+[data-theme="light"] .dz-insight-period-btn { color: #64748b; }
+[data-theme="light"] .dz-insight-period-btn:hover { color: #334155; }
+[data-theme="light"] .dz-insight-period-btn.active { background: rgba(99, 102, 241, 0.1); color: #4f46e5; }
+[data-theme="light"] .dz-tab-count { background: rgba(99, 102, 241, 0.1); color: #4f46e5; }
+
+/* Sub-filter buttons */
+[data-theme="light"] .dz-sub-filter-btn {
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+[data-theme="light"] .dz-sub-filter-btn:hover { color: #334155; border-color: #c7d2fe; }
+[data-theme="light"] .dz-sub-filter-btn.dz-sub-filter-active {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: #818cf8;
+  color: #4f46e5;
+}
+[data-theme="light"] .dz-sub-filter-count { background: rgba(99, 102, 241, 0.1); color: #4f46e5; }
+
+/* Cards */
+[data-theme="light"] .dz-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .dz-card:hover { border-color: #c7d2fe; }
+
+/* Patient cards (grid view) */
+[data-theme="light"] .dz-patient-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .dz-patient-card:hover { border-color: #c7d2fe; }
+[data-theme="light"] .dz-patient-card-name { color: #1e293b; }
+[data-theme="light"] .dz-patient-card-condition { color: #64748b; }
+[data-theme="light"] .dz-patient-card-label { color: #94a3b8; }
+[data-theme="light"] .dz-patient-card-avatar { background: #e0e7ff; color: #4f46e5; }
+
+/* Appointment cards (grid view) */
+[data-theme="light"] .dz-appt-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .dz-appt-card:hover { border-color: #c7d2fe; }
+[data-theme="light"] .dz-appt-card-name { color: #1e293b; }
+[data-theme="light"] .dz-appt-card-type { color: #64748b; }
+[data-theme="light"] .dz-appt-card-details { color: #475569; }
+[data-theme="light"] .dz-appt-card-notes { color: #94a3b8; }
+
+/* Add button */
+[data-theme="light"] .dz-add-btn {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: #c7d2fe;
+  color: #4f46e5;
+}
+[data-theme="light"] .dz-add-btn:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #818cf8;
+}
+
+/* Platform background */
+[data-theme="light"] .dz-platform-bg { opacity: 0.04; }
+
 .dz-platform-bg {
   position: fixed;
   inset: 0;
@@ -8199,11 +8366,22 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   animation: dz-splash-spin 0.8s linear infinite;
 }
 
+/* ── Toolbar Row (tabs left, filters + view right) ──── */
+.dz-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.dz-toolbar-left { display: flex; align-items: center; }
+.dz-toolbar-right { display: flex; align-items: center; gap: 10px; }
+
 /* ── In-Person Sub-filter Bar ───────────────────────── */
 .dz-sub-filter-bar {
   display: flex;
   gap: 6px;
-  margin-bottom: 16px;
 }
 .dz-sub-filter-btn {
   display: inline-flex;

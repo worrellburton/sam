@@ -293,8 +293,45 @@ export default function InPersonPage() {
           </div>
           <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
             {tab === "appointments" && (
+              <AddButton label="New Appointment" to="/doczoc/calendar" />
+            )}
+            {tab === "surgeries" && (
+              <AddButton label="New Surgery" to="/doczoc/calendar" />
+            )}
+          </div>
+        </header>
+
+        {/* Tabs + sub-filter + view toggle — single toolbar row */}
+        <div className="dz-toolbar-row">
+          <div className="dz-toolbar-left">
+            <div className="dz-insight-period-tabs" style={{ display: "inline-flex" }}>
+              <button className={`dz-insight-period-btn${tab === "appointments" ? " active" : ""}`} onClick={() => setTab("appointments")}>
+                Appointments<span className="dz-tab-count">{APPOINTMENTS.length}</span>
+              </button>
+              <button className={`dz-insight-period-btn${tab === "surgeries" ? " active" : ""}`} onClick={() => setTab("surgeries")}>
+                Surgeries<span className="dz-tab-count">{SURGERIES.length}</span>
+              </button>
+              <button className={`dz-insight-period-btn${tab === "reports" ? " active" : ""}`} onClick={() => setTab("reports")}>
+                Reports
+              </button>
+            </div>
+          </div>
+          <div className="dz-toolbar-right">
+            {tab === "appointments" && (
               <>
-                <AddButton label="New Appointment" to="/doczoc/calendar" />
+                <div className="dz-sub-filter-bar">
+                  <button className={`dz-sub-filter-btn${apptFilter === "all" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("all")}>
+                    All <span className="dz-sub-filter-count">{APPOINTMENTS.length}</span>
+                  </button>
+                  <button className={`dz-sub-filter-btn${apptFilter === "incoming" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("incoming")}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Incoming <span className="dz-sub-filter-count">{incomingAppts.length}</span>
+                  </button>
+                  <button className={`dz-sub-filter-btn${apptFilter === "completed" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("completed")}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Completed <span className="dz-sub-filter-count">{completedAppts.length}</span>
+                  </button>
+                </div>
                 <div className="dz-view-toggle">
                   <button className={`dz-view-btn${viewMode === "table" ? " dz-view-active" : ""}`} onClick={() => setViewMode("table")} title="Table view">
                     <TableIcon active={viewMode === "table"} />
@@ -305,43 +342,12 @@ export default function InPersonPage() {
                 </div>
               </>
             )}
-            {tab === "surgeries" && (
-              <AddButton label="New Surgery" to="/doczoc/calendar" />
-            )}
-          </div>
-        </header>
-
-        {/* Tabs */}
-        <div style={{ marginBottom: 20 }}>
-          <div className="dz-insight-period-tabs" style={{ display: "inline-flex" }}>
-            <button className={`dz-insight-period-btn${tab === "appointments" ? " active" : ""}`} onClick={() => setTab("appointments")}>
-              Appointments<span className="dz-tab-count">{APPOINTMENTS.length}</span>
-            </button>
-            <button className={`dz-insight-period-btn${tab === "surgeries" ? " active" : ""}`} onClick={() => setTab("surgeries")}>
-              Surgeries<span className="dz-tab-count">{SURGERIES.length}</span>
-            </button>
-            <button className={`dz-insight-period-btn${tab === "reports" ? " active" : ""}`} onClick={() => setTab("reports")}>
-              Reports
-            </button>
           </div>
         </div>
 
-        {/* Appointments sub-filter */}
+        {/* Appointments */}
         {tab === "appointments" && (
           <>
-            <div className="dz-sub-filter-bar">
-              <button className={`dz-sub-filter-btn${apptFilter === "all" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("all")}>
-                All <span className="dz-sub-filter-count">{APPOINTMENTS.length}</span>
-              </button>
-              <button className={`dz-sub-filter-btn${apptFilter === "incoming" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("incoming")}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Incoming <span className="dz-sub-filter-count">{incomingAppts.length}</span>
-              </button>
-              <button className={`dz-sub-filter-btn${apptFilter === "completed" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("completed")}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                Completed <span className="dz-sub-filter-count">{completedAppts.length}</span>
-              </button>
-            </div>
 
             {viewMode === "table" ? (
               <div className="dz-table-wrap">

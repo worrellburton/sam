@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
-import { PATIENTS } from "~/data/patients";
+import { PATIENTS, type Patient } from "~/data/patients";
 
 const PAYER_BRANDS: Record<string, { color: string; initial: string; bg: string }> = {
   UnitedHealthcare: { color: "#fff", initial: "U", bg: "#002677" },
@@ -135,48 +135,7 @@ export default function PatientsPage() {
         </div>
 
         {view === "table" ? (
-          <div className="dz-table-wrap">
-            <table className="dz-table">
-              <thead>
-                <tr>
-                  <th>Patient</th>
-                  <th>Age</th>
-                  <th>Condition</th>
-                  <th className="dz-col-hide-lg" style={{ textAlign: "center" }}>Insurance</th>
-                  <th className="dz-col-hide-lg">Phone</th>
-                  <th className="dz-col-hide-xl">Email</th>
-                  <th style={{ textAlign: "center" }}>Visits</th>
-                  <th>Next Appt</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((p) => (
-                  <tr key={p.id} className="dz-row-clickable" onClick={() => navigate(`/doczoc/patients/${p.id}`)}>
-                    <td>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <PatientInitials name={p.name} />
-                        <div className="dz-table-name" style={{ fontSize: "0.78rem" }}>{p.name}</div>
-                      </div>
-                    </td>
-                    <td style={{ fontSize: "0.75rem", textAlign: "center" }}>{p.age}</td>
-                    <td style={{ fontSize: "0.75rem" }}>{p.condition}</td>
-                    <td className="dz-col-hide-lg"><InsuranceLogo name={p.insurance} /></td>
-                    <td className="dz-col-hide-lg" style={{ fontSize: "0.75rem" }}>{p.phone}</td>
-                    <td className="dz-col-hide-xl" style={{ fontSize: "0.75rem" }}>{p.email}</td>
-                    <td style={{ textAlign: "center" }}>
-                      <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", minWidth: 24, padding: "2px 6px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#818cf8" }}>{p.visits.length}</span>
-                    </td>
-                    <td style={{ fontSize: "0.75rem" }}>{p.nextAppt}</td>
-                    <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
-                  </tr>
-                ))}
-                {filtered.length === 0 && (
-                  <tr><td colSpan={9} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No patients found</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <DraggablePatientTable patients={filtered} onRowClick={(id) => navigate(`/doczoc/patients/${id}`)} />
         ) : (
           <div className="dz-patients-grid">
             {filtered.map((p) => (
@@ -204,6 +163,108 @@ export default function PatientsPage() {
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+// ── Draggable Patient Table ──────────────────────────────────────────
+type ColKey = "patient" | "status" | "nextAppt" | "condition" | "age" | "phone" | "email" | "insurance" | "visits";
+
+const COL_HEADERS: Record<ColKey, { label: string; className?: string; style?: React.CSSProperties }> = {
+  patient: { label: "Patient" },
+  status: { label: "Status" },
+  nextAppt: { label: "Next Appt" },
+  condition: { label: "Condition" },
+  age: { label: "Age" },
+  phone: { label: "Phone", className: "dz-col-hide-lg" },
+  email: { label: "Email", className: "dz-col-hide-xl" },
+  insurance: { label: "Insurance", className: "dz-col-hide-lg", style: { textAlign: "center" } },
+  visits: { label: "Visits", style: { textAlign: "center" } },
+};
+
+const DEFAULT_COLS: ColKey[] = ["patient", "status", "nextAppt", "condition", "age", "phone", "email", "insurance", "visits"];
+
+function DraggablePatientTable({ patients, onRowClick }: { patients: Patient[]; onRowClick: (id: number) => void }) {
+  const [columns, setColumns] = useState<ColKey[]>(DEFAULT_COLS);
+  const dragCol = useRef<number | null>(null);
+  const dragOverCol = useRef<number | null>(null);
+  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+
+  const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
+  const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };
+  const handleDragEnd = () => {
+    if (dragCol.current !== null && dragOverCol.current !== null && dragCol.current !== dragOverCol.current) {
+      setColumns(prev => {
+        const copy = [...prev];
+        const dragged = copy.splice(dragCol.current!, 1)[0];
+        copy.splice(dragOverCol.current!, 0, dragged);
+        return copy;
+      });
+    }
+    dragCol.current = null; dragOverCol.current = null; setDraggingIdx(null);
+  };
+
+  const renderCell = (p: Patient, key: ColKey) => {
+    switch (key) {
+      case "patient": return (
+        <td key={key}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <PatientInitials name={p.name} />
+            <div className="dz-table-name" style={{ fontSize: "0.78rem" }}>{p.name}</div>
+          </div>
+        </td>
+      );
+      case "age": return <td key={key} style={{ fontSize: "0.75rem", textAlign: "center" }}>{p.age}</td>;
+      case "condition": return <td key={key} style={{ fontSize: "0.75rem" }}>{p.condition}</td>;
+      case "insurance": return <td key={key} className="dz-col-hide-lg"><InsuranceLogo name={p.insurance} /></td>;
+      case "phone": return <td key={key} className="dz-col-hide-lg" style={{ fontSize: "0.75rem" }}>{p.phone}</td>;
+      case "email": return <td key={key} className="dz-col-hide-xl" style={{ fontSize: "0.75rem" }}>{p.email}</td>;
+      case "visits": return (
+        <td key={key} style={{ textAlign: "center" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", minWidth: 24, padding: "2px 6px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#818cf8" }}>{p.visits.length}</span>
+        </td>
+      );
+      case "nextAppt": return <td key={key} style={{ fontSize: "0.75rem" }}>{p.nextAppt}</td>;
+      case "status": return <td key={key}><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>;
+      default: return <td key={key} />;
+    }
+  };
+
+  return (
+    <div className="dz-table-wrap">
+      <table className="dz-table">
+        <thead>
+          <tr>
+            {columns.map((key, i) => {
+              const h = COL_HEADERS[key];
+              return (
+                <th
+                  key={key}
+                  className={h.className}
+                  style={{ ...h.style, cursor: "grab", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
+                  draggable
+                  onDragStart={() => handleDragStart(i)}
+                  onDragEnter={() => handleDragEnter(i)}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={(e) => e.preventDefault()}
+                >
+                  {h.label}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {patients.map((p) => (
+            <tr key={p.id} className="dz-row-clickable" onClick={() => onRowClick(p.id)}>
+              {columns.map(key => renderCell(p, key))}
+            </tr>
+          ))}
+          {patients.length === 0 && (
+            <tr><td colSpan={columns.length} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No patients found</td></tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { Link } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
@@ -270,67 +270,7 @@ export default function SurgeriesPage() {
 
             {/* Table View */}
             {view === "table" ? (
-              <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-                <div className="dz-table-wrap">
-                  <table className="dz-table" style={{ margin: 0 }}>
-                    <thead>
-                      <tr>
-                        <th>Status</th>
-                        <th>Procedure</th>
-                        <th>Patient</th>
-                        <th>Date</th>
-                        <th>Codes</th>
-                        <th style={{ textAlign: "center" }}>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filtered.map(s => {
-                        const statusColor = s.status === "completed" ? "#22c55e" : s.status === "upcoming" ? "#f59e0b" : "#818cf8";
-                        return (
-                          <tr key={s.id} onClick={() => openDetail(s)} style={{ cursor: "pointer" }}>
-                            <td>
-                              <span style={{
-                                display: "inline-flex", alignItems: "center", gap: 5,
-                                fontSize: "0.68rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
-                                background: `${statusColor}18`, color: statusColor, textTransform: "capitalize",
-                              }}>
-                                <span style={{ width: 6, height: 6, borderRadius: "50%", background: statusColor }} />
-                                {s.status.replace("-", " ")}
-                              </span>
-                            </td>
-                            <td style={{ fontWeight: 600, fontSize: "0.82rem" }}>{s.type}</td>
-                            <td>
-                              <Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ color: "#a5b4fc", textDecoration: "none", fontSize: "0.82rem" }}>
-                                {s.patient.name}
-                              </Link>
-                            </td>
-                            <td style={{ fontSize: "0.82rem", whiteSpace: "nowrap" }}>{s.date}</td>
-                            <td>
-                              <div style={{ display: "flex", gap: 3 }}>
-                                {s.codes.slice(0, 3).map(c => (
-                                  <span key={c} style={{
-                                    fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
-                                    padding: "1px 6px", borderRadius: 4, fontWeight: 600,
-                                    background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
-                                    color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
-                                  }}>{c}</span>
-                                ))}
-                              </div>
-                            </td>
-                            <td style={{ textAlign: "center" }}>
-                              <button onClick={(e) => { e.stopPropagation(); openDetail(s); }} style={{
-                                padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)",
-                                background: "rgba(99,102,241,0.06)", color: "#818cf8", fontSize: "0.7rem", fontWeight: 700, cursor: "pointer",
-                              }}>View</button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-                {filtered.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>No surgeries found</div>}
-              </div>
+              <DraggableSurgeryTable surgeries={filtered} onView={openDetail} />
             ) : (
               /* List/Card View */
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12 }}>
@@ -576,6 +516,80 @@ function SurgeryDetailView({ surgery, onBack }: { surgery: SurgeryRecord; onBack
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ── Draggable Surgery Table ──────────────────────────────────────────
+type SurgColKey = "status" | "procedure" | "patient" | "date" | "codes" | "action";
+
+function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord[]; onView: (s: SurgeryRecord) => void }) {
+  const [columns, setColumns] = useState<SurgColKey[]>(["status", "procedure", "patient", "date", "codes", "action"]);
+  const dragCol = useRef<number | null>(null);
+  const dragOverCol = useRef<number | null>(null);
+  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+
+  const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
+  const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };
+  const handleDragEnd = () => {
+    if (dragCol.current !== null && dragOverCol.current !== null && dragCol.current !== dragOverCol.current) {
+      setColumns(prev => { const c = [...prev]; const d = c.splice(dragCol.current!, 1)[0]; c.splice(dragOverCol.current!, 0, d); return c; });
+    }
+    dragCol.current = null; dragOverCol.current = null; setDraggingIdx(null);
+  };
+
+  const headers: Record<SurgColKey, { label: string; style?: React.CSSProperties }> = {
+    status: { label: "Status" }, procedure: { label: "Procedure" }, patient: { label: "Patient" },
+    date: { label: "Date" }, codes: { label: "Codes" }, action: { label: "Action", style: { textAlign: "center" } },
+  };
+
+  const renderCell = (s: SurgeryRecord, key: SurgColKey) => {
+    const sc = s.status === "completed" ? "#22c55e" : s.status === "upcoming" ? "#f59e0b" : "#818cf8";
+    switch (key) {
+      case "status": return (
+        <td key={key}><span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: "0.68rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: `${sc}18`, color: sc, textTransform: "capitalize" }}>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: sc }} />{s.status.replace("-", " ")}
+        </span></td>
+      );
+      case "procedure": return <td key={key} style={{ fontWeight: 600, fontSize: "0.82rem" }}>{s.type}</td>;
+      case "patient": return <td key={key}><Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ color: "#a5b4fc", textDecoration: "none", fontSize: "0.82rem" }}>{s.patient.name}</Link></td>;
+      case "date": return <td key={key} style={{ fontSize: "0.82rem", whiteSpace: "nowrap" }}>{s.date}</td>;
+      case "codes": return (
+        <td key={key}><div style={{ display: "flex", gap: 3 }}>
+          {s.codes.slice(0, 3).map(c => <span key={c} style={{ fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "1px 6px", borderRadius: 4, fontWeight: 600, background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{c}</span>)}
+        </div></td>
+      );
+      case "action": return (
+        <td key={key} style={{ textAlign: "center" }}><button onClick={e => { e.stopPropagation(); onView(s); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "rgba(99,102,241,0.06)", color: "#818cf8", fontSize: "0.7rem", fontWeight: 700, cursor: "pointer" }}>View</button></td>
+      );
+      default: return <td key={key} />;
+    }
+  };
+
+  return (
+    <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+      <div className="dz-table-wrap">
+        <table className="dz-table" style={{ margin: 0 }}>
+          <thead>
+            <tr>
+              {columns.map((key, i) => (
+                <th key={key} style={{ ...headers[key].style, cursor: "grab", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
+                  draggable onDragStart={() => handleDragStart(i)} onDragEnter={() => handleDragEnter(i)} onDragEnd={handleDragEnd} onDragOver={e => e.preventDefault()}>
+                  {headers[key].label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {surgeries.map(s => (
+              <tr key={s.id} onClick={() => onView(s)} style={{ cursor: "pointer" }}>
+                {columns.map(key => renderCell(s, key))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {surgeries.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>No surgeries found</div>}
     </div>
   );
 }

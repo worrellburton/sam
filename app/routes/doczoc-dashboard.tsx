@@ -157,6 +157,7 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
   ];
 
   return (
+    <>
     <aside className={`dz-sidebar${collapsed ? " dz-sidebar-collapsed" : ""}`}>
       <div className="dz-sidebar-top">
         <Link to="/doczoc" className="dz-sidebar-logo">
@@ -222,6 +223,8 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
         </button>
       </div>
     </aside>
+    <ThemeToggleFab />
+    </>
   );
 }
 
@@ -258,14 +261,6 @@ function ThemeToggleFab() {
     </button>
   );
 }
-
-// Inject the FAB into every platform page via Sidebar
-const SidebarWithFab = ({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) => (
-  <>
-    <Sidebar collapsed={collapsed} onToggle={onToggle} />
-    <ThemeToggleFab />
-  </>
-);
 
 export { Sidebar, ThemeToggleFab };
 

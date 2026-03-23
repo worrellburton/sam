@@ -14,10 +14,26 @@ export interface Patient {
   subscriberName?: string;
   subscriberDob?: string;
   subscriberRelationship?: string;
+  emergencyContact?: string;
+  emergencyPhone?: string;
+  primaryLanguage?: string;
+  copayAmount?: string;
+  deductible?: string;
+  priorAuthExpiration?: string;
+  smokingStatus?: string;
+  bmi?: string;
+  bloodType?: string;
+  implantedDevices?: string;
   aobSigned: boolean;
   aobDate?: string;
   roiSigned: boolean;
   roiDate?: string;
+  hipaaSigned?: boolean;
+  hipaaDate?: string;
+  financialSigned?: boolean;
+  financialDate?: string;
+  surgicalConsentSigned?: boolean;
+  surgicalConsentDate?: string;
   lastVisit: string;
   nextAppt: string;
   condition: string;
@@ -69,12 +85,27 @@ export const PATIENTS: Patient[] = [
     memberId: "AET-551298437",
     groupNumber: "GRP-88421",
     priorAuth: "AUTH-2026-00447",
+    priorAuthExpiration: "Aug 4, 2026",
+    emergencyContact: "Michael Mitchell",
+    emergencyPhone: "(917) 555-0188",
+    primaryLanguage: "English",
+    copayAmount: "40.00",
+    deductible: "$1,500 ($1,513.50 met)",
+    smokingStatus: "Never",
+    bmi: "23.4",
+    bloodType: "O+",
     subscriberName: "Sarah Mitchell",
     subscriberRelationship: "Self",
     aobSigned: true,
     aobDate: "Dec 18, 2025",
     roiSigned: true,
     roiDate: "Dec 18, 2025",
+    hipaaSigned: true,
+    hipaaDate: "Dec 18, 2025",
+    financialSigned: true,
+    financialDate: "Dec 18, 2025",
+    surgicalConsentSigned: true,
+    surgicalConsentDate: "Feb 2, 2026",
     lastVisit: "Mar 18, 2026",
     nextAppt: "Mar 25, 2026",
     condition: "Rotator Cuff Tear",

@@ -151,7 +151,7 @@ export default function PatientDetailPage() {
       <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
-        {/* Header */}
+        {/* Header with avatar */}
         <header className="dz-platform-header">
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <Link
@@ -168,146 +168,34 @@ export default function PatientDetailPage() {
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </Link>
+            <div style={{
+              width: 52, height: 52, borderRadius: "50%", flexShrink: 0,
+              background: `linear-gradient(135deg, ${sc.color}22, ${sc.color}44)`,
+              border: `2px solid ${sc.color}44`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "1.1rem", fontWeight: 800, color: sc.color,
+            }}>
+              {patient.name.split(" ").map(n => n[0]).join("")}
+            </div>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <h1 style={{ margin: 0 }}>{patient.name}</h1>
                 <span style={{
                   display: "inline-block", padding: "3px 10px", borderRadius: 6,
-                  fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase",
-                  letterSpacing: "0.05em", background: sc.bg, color: sc.color,
+                  fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.05em", background: sc.bg, color: sc.color,
                 }}>
                   {patient.status}
                 </span>
               </div>
               <p style={{ margin: 0, marginTop: 2, color: "#8a8a9a", fontSize: "0.82rem" }}>
-                {patient.condition} &middot; {patient.age} years old
+                {patient.condition} &middot; {patient.age} years old &middot; {patient.dob}
               </p>
             </div>
           </div>
         </header>
 
-        {/* Info Cards */}
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: 16, marginBottom: 24,
-        }}>
-          {/* Demographics */}
-          <div className="dz-card">
-            <div className="dz-card-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-              </svg>
-              Demographics
-            </div>
-            <InfoRow label="Date of Birth" value={patient.dob} />
-            <InfoRow label="Sex" value={patient.sex} />
-            <InfoRow label="Phone" value={patient.phone} />
-            <InfoRow label="Email" value={patient.email} />
-            <InfoRow label="Address" value={patient.address} />
-          </div>
-
-          {/* Insurance */}
-          <div className="dz-card">
-            <div className="dz-card-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" />
-              </svg>
-              Insurance
-            </div>
-            <InfoRow label="Plan" value={patient.insurance} />
-            <InfoRow label="Member ID" value={patient.memberId} />
-            <InfoRow label="Group Number" value={patient.groupNumber} />
-            {patient.priorAuth && <InfoRow label="Prior Auth #" value={patient.priorAuth} />}
-            <InfoRow label="Provider" value={patient.provider} />
-            <InfoRow label="Referred By" value={patient.referredBy} />
-            {/* Subscriber */}
-            {patient.subscriberRelationship && patient.subscriberRelationship !== "Self" && (
-              <>
-                <div style={{ borderTop: "1px solid rgba(99,102,241,0.1)", margin: "8px 0 4px" }} />
-                <InfoRow label="Subscriber" value={patient.subscriberName || "—"} />
-                {patient.subscriberDob && <InfoRow label="Subscriber DOB" value={patient.subscriberDob} />}
-                <InfoRow label="Relationship" value={patient.subscriberRelationship} />
-              </>
-            )}
-          </div>
-
-          {/* Signatures on File */}
-          <div className="dz-card">
-            <div className="dz-card-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
-              </svg>
-              Signatures on File
-            </div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0" }}>
-              <span style={{ fontSize: "0.78rem", color: "#94a3b8", fontWeight: 600 }}>Assignment of Benefits</span>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                {patient.aobSigned ? (
-                  <>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      Signed
-                    </span>
-                    {patient.aobDate && <span style={{ fontSize: "0.72rem", color: "#64748b" }}>{patient.aobDate}</span>}
-                  </>
-                ) : (
-                  <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>
-                    Missing
-                  </span>
-                )}
-              </div>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0" }}>
-              <span style={{ fontSize: "0.78rem", color: "#94a3b8", fontWeight: 600 }}>Release of Information</span>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                {patient.roiSigned ? (
-                  <>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                      Signed
-                    </span>
-                    {patient.roiDate && <span style={{ fontSize: "0.72rem", color: "#64748b" }}>{patient.roiDate}</span>}
-                  </>
-                ) : (
-                  <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>
-                    Missing
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Medical */}
-          <div className="dz-card">
-            <div className="dz-card-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-              Medical Info
-            </div>
-            <InfoRow
-              label="Allergies"
-              value={patient.allergies.length > 0 ? patient.allergies.join(", ") : "None reported"}
-              warn={patient.allergies.length > 0}
-            />
-            <div style={{ marginTop: 8 }}>
-              <div style={{ fontSize: "0.7rem", color: "#5a5a6e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>
-                Medications
-              </div>
-              {patient.medications.length > 0 ? (
-                <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-                  {patient.medications.map((med) => (
-                    <li key={med} style={{ fontSize: "0.82rem", color: "#c4c4d4", padding: "2px 0" }}>
-                      {med}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <span style={{ fontSize: "0.82rem", color: "#5a5a6e" }}>None</span>
-              )}
-            </div>
-          </div>
-        </div>
+        {/* Patient Details — collapsible */}
+        <PatientDetailsSection patient={patient} />
 
         {/* Invoices — collapsible, default collapsed */}
         <InvoicesSection patient={patient} />
@@ -317,7 +205,217 @@ export default function PatientDetailPage() {
 
         {/* Timeline — collapsible, default collapsed */}
         <TimelineSection events={allTimelineEvents} />
+
+        {/* Consent & Signatures — at the bottom */}
+        <ConsentSection patient={patient} />
       </main>
+    </div>
+  );
+}
+
+// ── Patient Details Section (collapsible) ──────────────────────────
+function PatientDetailsSection({ patient }: { patient: Patient }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
+      <CollapsibleHeader
+        title="Patient Details"
+        icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>}
+        count={3}
+        countLabel="sections"
+        open={open}
+        onToggle={() => setOpen(!open)}
+      />
+      {open && (
+        <div style={{ padding: "16px 20px" }}>
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: 16,
+          }}>
+            {/* Demographics */}
+            <CopyableCard title="Demographics" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>}
+              copyText={`${patient.name}\nDOB: ${patient.dob}\nSex: ${patient.sex}\nPhone: ${patient.phone}\nEmail: ${patient.email}\nAddress: ${patient.address}`}>
+              <InfoRow label="Date of Birth" value={patient.dob} />
+              <InfoRow label="Sex" value={patient.sex} />
+              <InfoRow label="Phone" value={patient.phone} />
+              <InfoRow label="Email" value={patient.email} />
+              <InfoRow label="Address" value={patient.address} />
+              {patient.emergencyContact && (
+                <>
+                  <div style={{ borderTop: "1px solid rgba(99,102,241,0.1)", margin: "8px 0 4px" }} />
+                  <InfoRow label="Emergency Contact" value={patient.emergencyContact} />
+                  {patient.emergencyPhone && <InfoRow label="Emergency Phone" value={patient.emergencyPhone} />}
+                </>
+              )}
+              {patient.primaryLanguage && <InfoRow label="Language" value={patient.primaryLanguage} />}
+            </CopyableCard>
+
+            {/* Insurance */}
+            <CopyableCard title="Insurance" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>}
+              copyText={`Plan: ${patient.insurance}\nMember ID: ${patient.memberId}\nGroup: ${patient.groupNumber}${patient.priorAuth ? `\nPrior Auth: ${patient.priorAuth}` : ""}`}>
+              <InfoRow label="Plan" value={patient.insurance} />
+              <InfoRow label="Member ID" value={patient.memberId} />
+              <InfoRow label="Group Number" value={patient.groupNumber} />
+              {patient.priorAuth && <InfoRow label="Prior Auth #" value={patient.priorAuth} />}
+              {patient.priorAuthExpiration && <InfoRow label="Auth Expires" value={patient.priorAuthExpiration} />}
+              <InfoRow label="Provider" value={patient.provider} />
+              <InfoRow label="Referred By" value={patient.referredBy} />
+              {patient.copayAmount && <InfoRow label="Copay" value={`$${patient.copayAmount}`} />}
+              {patient.deductible && <InfoRow label="Deductible" value={patient.deductible} />}
+              {patient.subscriberRelationship && patient.subscriberRelationship !== "Self" && (
+                <>
+                  <div style={{ borderTop: "1px solid rgba(99,102,241,0.1)", margin: "8px 0 4px" }} />
+                  <InfoRow label="Subscriber" value={patient.subscriberName || "—"} />
+                  {patient.subscriberDob && <InfoRow label="Subscriber DOB" value={patient.subscriberDob} />}
+                  <InfoRow label="Relationship" value={patient.subscriberRelationship} />
+                </>
+              )}
+              <div style={{ borderTop: "1px solid rgba(99,102,241,0.1)", margin: "8px 0 4px" }} />
+              <button
+                onClick={() => generateInsuranceCardPDF(patient)}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "6px 12px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.2)",
+                  background: "rgba(99,102,241,0.08)", color: "#818cf8",
+                  fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", marginTop: 4,
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" />
+                </svg>
+                View Insurance Card PDF
+              </button>
+            </CopyableCard>
+
+            {/* Medical History */}
+            <CopyableCard title="Medical History" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>}
+              copyText={`Allergies: ${patient.allergies.length > 0 ? patient.allergies.join(", ") : "None"}\nMedications: ${patient.medications.length > 0 ? patient.medications.join(", ") : "None"}`}>
+              <InfoRow
+                label="Allergies"
+                value={patient.allergies.length > 0 ? patient.allergies.join(", ") : "None reported"}
+                warn={patient.allergies.length > 0}
+              />
+              {patient.smokingStatus && <InfoRow label="Smoking" value={patient.smokingStatus} warn={patient.smokingStatus !== "Never"} />}
+              {patient.bmi && <InfoRow label="BMI" value={patient.bmi} />}
+              {patient.bloodType && <InfoRow label="Blood Type" value={patient.bloodType} />}
+              {patient.implantedDevices && <InfoRow label="Implants" value={patient.implantedDevices} />}
+              <div style={{ marginTop: 8 }}>
+                <div style={{ fontSize: "0.75rem", color: "#5a5a6e", fontWeight: 600, marginBottom: 4 }}>
+                  Medications
+                </div>
+                {patient.medications.length > 0 ? (
+                  <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+                    {patient.medications.map((med) => (
+                      <li key={med} style={{ fontSize: "0.82rem", color: "#c4c4d4", padding: "2px 0" }}>
+                        {med}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span style={{ fontSize: "0.82rem", color: "#5a5a6e" }}>None</span>
+                )}
+              </div>
+            </CopyableCard>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Consent & Signatures Section (at bottom) ───────────────────────
+function ConsentSection({ patient }: { patient: Patient }) {
+  const [open, setOpen] = useState(false);
+
+  const totalSigned = [patient.aobSigned, patient.roiSigned, patient.hipaaSigned, patient.financialSigned, patient.surgicalConsentSigned].filter(Boolean).length;
+
+  return (
+    <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginTop: 24 }}>
+      <CollapsibleHeader
+        title="Consent & Signatures"
+        icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>}
+        count={totalSigned}
+        countLabel={`of 5 signed`}
+        open={open}
+        onToggle={() => setOpen(!open)}
+      />
+      {open && (
+        <div style={{ padding: "16px 20px" }}>
+          <SignatureRow label="Assignment of Benefits" signed={patient.aobSigned} date={patient.aobDate} />
+          <SignatureRow label="Release of Information" signed={patient.roiSigned} date={patient.roiDate} />
+          <SignatureRow label="HIPAA Privacy Notice" signed={patient.hipaaSigned ?? false} date={patient.hipaaDate} />
+          <SignatureRow label="Financial Responsibility" signed={patient.financialSigned ?? false} date={patient.financialDate} />
+          <SignatureRow label="Surgical Consent" signed={patient.surgicalConsentSigned ?? false} date={patient.surgicalConsentDate} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Copyable Card Wrapper ──────────────────────────────────────────
+function CopyableCard({ title, icon, copyText, children }: {
+  title: string; icon: React.ReactNode; copyText: string; children: React.ReactNode;
+}) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(copyText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+  return (
+    <div className="dz-card dz-card-copyable" style={{ position: "relative" }}>
+      <div className="dz-card-title" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {icon}
+          {title}
+        </div>
+        <button
+          onClick={handleCopy}
+          className="dz-copy-btn"
+          title="Copy card info"
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            width: 26, height: 26, borderRadius: 6, border: "none",
+            background: copied ? "rgba(34,197,94,0.15)" : "rgba(99,102,241,0.1)",
+            color: copied ? "#22c55e" : "#818cf8",
+            cursor: "pointer", opacity: 0, transition: "opacity 0.15s",
+          }}
+        >
+          {copied ? (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          ) : (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          )}
+        </button>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Signature Row ──────────────────────────────────────────────────
+function SignatureRow({ label, signed, date }: { label: string; signed: boolean; date?: string }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0" }}>
+      <span style={{ fontSize: "0.78rem", color: "#94a3b8", fontWeight: 600 }}>{label}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        {signed ? (
+          <>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Signed
+            </span>
+            {date && <span style={{ fontSize: "0.72rem", color: "#64748b" }}>{date}</span>}
+          </>
+        ) : (
+          <span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>
+            Missing
+          </span>
+        )}
+      </div>
     </div>
   );
 }
@@ -568,19 +666,19 @@ function InvoicesSection({ patient }: { patient: Patient }) {
             display: "flex", justifyContent: "flex-end", gap: 32, flexWrap: "wrap",
           }}>
             <div style={{ textAlign: "right" }}>
-              <div className="dz-text-muted" style={{ fontSize: "0.68rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Total Charged</div>
+              <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Total Charged</div>
               <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace" }}>
                 ${patient.invoices.reduce((s, i) => s + i.totalCharged, 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div className="dz-text-muted" style={{ fontSize: "0.68rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Insurance Paid</div>
+              <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Insurance Paid</div>
               <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace", color: "#22c55e" }}>
                 ${patient.invoices.reduce((s, i) => s + i.insurancePaid, 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div className="dz-text-muted" style={{ fontSize: "0.68rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Patient Owes</div>
+              <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Patient Owes</div>
               <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace", color: "#f59e0b" }}>
                 ${patient.invoices.reduce((s, i) => s + i.patientOwes, 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
@@ -679,7 +777,7 @@ function DocumentsSection({ patient }: { patient: Patient }) {
                 </div>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
-                  <div style={{ fontSize: "0.68rem", color: "#64748b", textTransform: "uppercase" }}>PDF</div>
+                  <div style={{ fontSize: "0.68rem", color: "#64748b" }}>PDF</div>
                 </div>
               </button>
             ))}
@@ -848,7 +946,7 @@ function TimelineSection({ events }: { events: TimelineEvent[] }) {
 function InfoRow({ label, value, warn }: { label: string; value: string; warn?: boolean }) {
   return (
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "4px 0" }}>
-      <span style={{ fontSize: "0.72rem", color: "#5a5a6e", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+      <span style={{ fontSize: "0.75rem", color: "#5a5a6e", fontWeight: 600 }}>
         {label}
       </span>
       <span style={{

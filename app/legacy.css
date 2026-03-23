@@ -8330,15 +8330,16 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: #a5b4fc;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   margin-bottom: 14px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(99, 102, 241, 0.1);
 }
+
+/* Copy button: visible on card hover */
+.dz-card-copyable:hover .dz-copy-btn { opacity: 1 !important; }
 .dz-patient-link {
   text-decoration: none;
   color: inherit;

@@ -8223,137 +8223,188 @@ img.insurance-logo:hover {
   color: #a5b4fc;
 }
 
-/* ── RCM Pipeline ───────────────────────────────────── */
-.dz-rcm-pipeline {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 24px;
+/* ── RCM Pipeline (Kanban Board) ─────────────────────── */
+.dz-rcm-board {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  min-height: calc(100vh - 200px);
   overflow-x: auto;
-  padding-bottom: 4px;
 }
-.dz-rcm-step {
+.dz-rcm-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+.dz-rcm-col-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border-radius: 12px;
+  gap: 8px;
+  padding: 12px 10px;
+  border-radius: 12px 12px 0 0;
   border: 1px solid rgba(99, 102, 241, 0.1);
-  background: rgba(15, 23, 42, 0.4);
-  cursor: pointer;
-  transition: all 0.2s;
-  flex-shrink: 0;
-  min-width: 0;
+  border-bottom: 2px solid var(--col-color, #6366f1);
+  background: rgba(15, 23, 42, 0.6);
 }
-.dz-rcm-step:hover {
-  border-color: var(--step-color, #6366f1);
-  background: rgba(15, 23, 42, 0.7);
-}
-.dz-rcm-step.dz-rcm-step-active {
-  border-color: var(--step-color, #6366f1);
-  background: color-mix(in srgb, var(--step-color, #6366f1) 12%, transparent);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--step-color, #6366f1) 15%, transparent);
-}
-.dz-rcm-step-num {
-  width: 30px;
-  height: 30px;
+.dz-rcm-col-num {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--step-color, #6366f1) 15%, transparent);
-  color: var(--step-color, #6366f1);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 800;
   flex-shrink: 0;
 }
-.dz-rcm-step-active .dz-rcm-step-num {
-  background: var(--step-color, #6366f1);
-  color: #fff;
-}
-.dz-rcm-step-info {
-  min-width: 0;
-}
-.dz-rcm-step-title {
-  font-size: 0.78rem;
+.dz-rcm-col-info { min-width: 0; flex: 1; }
+.dz-rcm-col-title {
+  font-size: 0.72rem;
   font-weight: 700;
   color: #e2e8f0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.dz-rcm-step-timeline {
-  font-size: 0.68rem;
+.dz-rcm-col-timeline {
+  font-size: 0.62rem;
   color: #64748b;
   font-weight: 600;
 }
-.dz-rcm-step-arrow {
-  color: #475569;
-  flex-shrink: 0;
-  margin-left: -4px;
-  margin-right: -8px;
-}
-.dz-rcm-detail {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(99, 102, 241, 0.1);
-  border-radius: 16px;
-  overflow: hidden;
-}
-.dz-rcm-detail-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-}
-.dz-rcm-detail-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.dz-rcm-timeline-badge {
-  margin-left: auto;
-  padding: 5px 14px;
+.dz-rcm-col-count {
+  padding: 2px 8px;
   border-radius: 10px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  white-space: nowrap;
+  font-size: 0.68rem;
+  font-weight: 800;
+  flex-shrink: 0;
 }
-.dz-rcm-detail-body {
-  padding: 24px;
+.dz-rcm-col-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 6px;
+  background: rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(99, 102, 241, 0.06);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  min-height: 200px;
 }
-.dz-rcm-detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+.dz-rcm-claim-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  border-radius: 10px;
+  padding: 12px;
+  transition: all 0.2s;
 }
-.dz-rcm-info-card {
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(99, 102, 241, 0.08);
-  border-radius: 12px;
-  padding: 16px;
+.dz-rcm-claim-card:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
 }
-.dz-rcm-info-label {
-  font-size: 0.7rem;
+.dz-rcm-claim-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.dz-rcm-claim-id {
+  font-size: 0.65rem;
   font-weight: 700;
   color: #818cf8;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+.dz-rcm-claim-amount {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #22c55e;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+.dz-rcm-claim-patient {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 2px;
+}
+.dz-rcm-claim-procedure {
+  font-size: 0.75rem;
+  color: #94a3b8;
   margin-bottom: 8px;
 }
-.dz-rcm-info-text {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  line-height: 1.6;
-  margin: 0;
+.dz-rcm-claim-meta {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
-.dz-rcm-item {
+.dz-rcm-claim-cpt {
+  font-size: 0.65rem;
+  font-family: 'SF Mono', Consolas, monospace;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(37, 99, 235, 0.12);
+  color: #60a5fa;
+}
+.dz-rcm-claim-payer {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+}
+.dz-rcm-claim-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(99, 102, 241, 0.06);
-  border-radius: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(99, 102, 241, 0.08);
+}
+.dz-rcm-move-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.06);
+  color: #818cf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dz-rcm-move-btn:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+.dz-rcm-move-btn:disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+.dz-rcm-step-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.dz-rcm-empty {
+  text-align: center;
+  padding: 24px 8px;
+  font-size: 0.75rem;
+  color: #475569;
+  font-style: italic;
+}
+.dz-rcm-claim-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+.dz-rcm-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: background 0.3s;
 }

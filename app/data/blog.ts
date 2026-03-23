@@ -302,42 +302,258 @@ export const blogPosts: BlogPost[] = [
       "A comprehensive guide to ACL reconstruction recovery, from the first week through return to sports.",
     tag: "Recovery",
     date: "February 24, 2026",
-    readTime: "7 min read",
+    readTime: "9 min read",
     image:
-      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=600&fit=crop&q=80",
     imageAlt: "Athlete performing rehabilitation exercises",
-    content: `
-## ACL Tear Recovery Timeline
+    relatedService: "sports-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what-is">What Is the ACL?</a></li>
+    <li><a href="#surgery">ACL Reconstruction Surgery</a></li>
+    <li><a href="#timeline">Recovery Timeline</a></li>
+    <li><a href="#stats">By the Numbers</a></li>
+    <li><a href="#keys">Keys to a Successful Recovery</a></li>
+    <li><a href="#graft">Graft Options</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
 
-ACL reconstruction is one of the most common orthopedic surgeries, especially among athletes. Understanding what to expect during recovery helps you prepare mentally and physically for the journey ahead.
+<div class="blog-kindness">
+  <p>Tearing your ACL can feel overwhelming — whether it happened on the field, on the slopes, or during everyday activity. If you're facing surgery or already recovering, know that the road ahead is well-traveled and full of hope. Thousands of patients return to the activities they love, and we'll be with you every step of the way.</p>
+</div>
 
-### Week 1-2: Immediate Post-Surgery
+<h2 id="what-is">What Is the ACL?</h2>
 
-The first two weeks focus on managing pain and swelling. You'll use crutches and a knee brace, and begin gentle range-of-motion exercises. Ice and elevation are your best friends during this phase.
+<p>The anterior cruciate ligament (ACL) is one of four major ligaments in your knee. It runs diagonally through the center of the joint, connecting your thighbone (femur) to your shinbone (tibia). Its primary job is to prevent the tibia from sliding forward and to provide rotational stability during cutting, pivoting, and landing.</p>
 
-### Weeks 2-6: Early Rehabilitation
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&h=400&fit=crop&q=80" alt="Athlete performing rehabilitation exercises after knee surgery" loading="lazy" />
 
-Physical therapy begins in earnest. The goals are restoring full range of motion, reducing swelling, and beginning to rebuild quadriceps strength. Most patients can return to desk work within 1-2 weeks.
+<p>When the ACL tears — often during a sudden twist, pivot, or landing — the knee loses much of its stability. Most complete ACL tears don't heal on their own because of limited blood supply, which is why reconstruction surgery is often recommended, especially for active individuals.</p>
 
-### Months 2-4: Strengthening Phase
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">200K+</span>
+    <span class="blog-stat-label">ACL injuries per year in the U.S.</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">90%+</span>
+    <span class="blog-stat-label">Success rate for ACL reconstruction</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">6-9 mo</span>
+    <span class="blog-stat-label">Typical return-to-sport timeline</span>
+  </div>
+</div>
 
-This is when real progress happens. You'll work on building leg strength, improving balance, and beginning sport-specific movements. Swimming and cycling are typically introduced during this phase.
+<h2 id="surgery">ACL Reconstruction Surgery</h2>
 
-### Months 4-6: Advanced Training
+<p>ACL reconstruction replaces the torn ligament with a graft — tissue that serves as scaffolding for a new ligament to grow. The surgery is performed arthroscopically through small incisions, which means less pain, less scarring, and a faster start to rehab.</p>
 
-Jogging is usually cleared around month 4. Agility drills, cutting movements, and sport-specific training ramp up. Your surgeon and physical therapist will monitor your progress closely.
+<div class="blog-expert-quote">
+  <p>I tell every patient: ACL reconstruction isn't about getting you through surgery — it's about building a knee that's strong, stable, and ready for everything you want to do. The surgery is one day. The recovery is a journey we plan together from the very beginning.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
 
-### Months 6-9: Return to Sport
+<h2 id="timeline">Recovery Timeline</h2>
 
-Most athletes can return to competitive sports between 6-9 months after surgery, depending on the sport and individual recovery. Dr. Elguizaoui uses objective criteria — not just time — to determine when you're ready.
+<p>Every recovery is unique, but understanding the general roadmap helps you prepare mentally and physically for the journey ahead. Here's what most patients can expect:</p>
 
-### Keys to Successful Recovery
+<div class="blog-chart">
+  <h4>ACL Recovery Phases</h4>
+  <svg viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg">
+    <!-- Labels -->
+    <text x="10" y="45" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Weeks 1-2</text>
+    <text x="10" y="85" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Weeks 2-6</text>
+    <text x="10" y="125" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Months 2-4</text>
+    <text x="10" y="165" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Months 4-6</text>
+    <text x="10" y="205" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Months 6-9</text>
 
-- **Follow your PT program** — consistency is everything
-- **Don't rush** — returning too early increases re-injury risk
-- **Stay positive** — mental health is part of recovery
-- **Communicate** — tell your surgeon about any concerns
-    `,
+    <!-- Bars -->
+    <rect x="100" y="30" width="60" height="24" rx="4" fill="#6366f1" opacity="0.7">
+      <animate attributeName="width" from="0" to="60" dur="0.6s" fill="freeze"/>
+    </rect>
+    <text x="168" y="47" font-size="10" fill="#6366f1" font-weight="600" font-family="Inter, sans-serif">Pain & swelling mgmt</text>
+
+    <rect x="100" y="70" width="120" height="24" rx="4" fill="#818cf8" opacity="0.75">
+      <animate attributeName="width" from="0" to="120" dur="0.7s" fill="freeze" begin="0.1s"/>
+    </rect>
+    <text x="228" y="87" font-size="10" fill="#818cf8" font-weight="600" font-family="Inter, sans-serif">Range of motion & early PT</text>
+
+    <rect x="100" y="110" width="200" height="24" rx="4" fill="#a78bfa" opacity="0.8">
+      <animate attributeName="width" from="0" to="200" dur="0.8s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="308" y="127" font-size="10" fill="#a78bfa" font-weight="600" font-family="Inter, sans-serif">Strengthening</text>
+
+    <rect x="100" y="150" width="280" height="24" rx="4" fill="#c4b5fd" opacity="0.85">
+      <animate attributeName="width" from="0" to="280" dur="0.9s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <text x="388" y="167" font-size="10" fill="#8b5cf6" font-weight="600" font-family="Inter, sans-serif">Agility</text>
+
+    <rect x="100" y="190" width="340" height="24" rx="4" fill="#ddd6fe" opacity="0.9">
+      <animate attributeName="width" from="0" to="340" dur="1s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <text x="332" y="207" font-size="10" fill="#7c3aed" font-weight="700" font-family="Inter, sans-serif">Return to sport</text>
+
+    <text x="230" y="248" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Dr. Elguizaoui uses objective criteria — not just time — to clear return to sport</text>
+  </svg>
+</div>
+
+<h3>Weeks 1-2: Immediate Post-Surgery</h3>
+
+<p>The first two weeks focus on managing pain and swelling. You'll use crutches and a knee brace, and begin gentle range-of-motion exercises. Ice and elevation are your best friends during this phase.</p>
+
+<div class="blog-takeaway">
+  <h4>Week 1-2 Goals</h4>
+  <ul>
+    <li><strong>Control swelling</strong> — ice, elevation, and compression</li>
+    <li><strong>Protect the graft</strong> — use your brace and crutches as directed</li>
+    <li><strong>Restore extension</strong> — work toward fully straightening the knee</li>
+    <li><strong>Activate the quad</strong> — gentle straight-leg raises and quad sets</li>
+  </ul>
+</div>
+
+<h3>Weeks 2-6: Early Rehabilitation</h3>
+
+<p>Physical therapy begins in earnest. The goals are restoring full range of motion, reducing swelling, and beginning to rebuild quadriceps strength. Most patients can return to desk work within 1-2 weeks of surgery.</p>
+
+<h3>Months 2-4: Strengthening Phase</h3>
+
+<p>This is when real progress happens. You'll work on building leg strength, improving balance, and beginning sport-specific movements. Swimming and cycling are typically introduced during this phase. Many patients feel a turning point here — the knee starts feeling like "your knee" again.</p>
+
+<h3>Months 4-6: Advanced Training</h3>
+
+<p>Jogging is usually cleared around month 4. Agility drills, cutting movements, and sport-specific training ramp up. Your surgeon and physical therapist will monitor your progress closely with objective strength testing.</p>
+
+<h3>Months 6-9: Return to Sport</h3>
+
+<p>Most athletes can return to competitive sports between 6-9 months after surgery, depending on the sport and individual recovery. Dr. Elguizaoui uses objective criteria — not just time — to determine when you're ready, including strength symmetry testing and functional assessments.</p>
+
+<h2 id="stats">By the Numbers</h2>
+
+<div class="blog-chart">
+  <h4>ACL Reconstruction — Patient Outcomes</h4>
+  <svg viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="aclGood" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#16a34a"/>
+      </linearGradient>
+      <linearGradient id="aclGreat" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#4f46e5"/>
+      </linearGradient>
+    </defs>
+    <!-- Grid lines -->
+    <line x1="100" y1="40" x2="420" y2="40" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="80" x2="420" y2="80" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="120" x2="420" y2="120" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="160" x2="420" y2="160" stroke="#e5e7eb" stroke-width="0.5"/>
+    <!-- Y axis labels -->
+    <text x="90" y="44" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">100%</text>
+    <text x="90" y="84" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">75%</text>
+    <text x="90" y="124" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">50%</text>
+    <text x="90" y="164" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">25%</text>
+    <!-- Bars -->
+    <rect x="120" y="44" width="65" height="156" rx="6" fill="url(#aclGood)" opacity="0.9">
+      <animate attributeName="height" from="0" to="156" dur="1s" fill="freeze"/>
+      <animate attributeName="y" from="200" to="44" dur="1s" fill="freeze"/>
+    </rect>
+    <rect x="220" y="52" width="65" height="148" rx="6" fill="url(#aclGreat)" opacity="0.9">
+      <animate attributeName="height" from="0" to="148" dur="1s" fill="freeze" begin="0.2s"/>
+      <animate attributeName="y" from="200" to="52" dur="1s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <rect x="320" y="56" width="65" height="144" rx="6" fill="url(#aclGood)" opacity="0.9">
+      <animate attributeName="height" from="0" to="144" dur="1s" fill="freeze" begin="0.4s"/>
+      <animate attributeName="y" from="200" to="56" dur="1s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <!-- Labels -->
+    <text x="152" y="218" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Knee</text>
+    <text x="152" y="230" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">stability</text>
+    <text x="252" y="218" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Return to</text>
+    <text x="252" y="230" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">sport</text>
+    <text x="352" y="218" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Patient</text>
+    <text x="352" y="230" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">satisfaction</text>
+    <!-- Values -->
+    <text x="152" y="39" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a" font-family="Inter, sans-serif">97%</text>
+    <text x="252" y="47" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">90%</text>
+    <text x="352" y="51" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a" font-family="Inter, sans-serif">90%</text>
+  </svg>
+  <p class="blog-chart-caption">Modern ACL reconstruction with proper rehabilitation produces excellent outcomes (source: AAOS, AJSM)</p>
+</div>
+
+<h2 id="keys">Keys to a Successful Recovery</h2>
+
+<div class="blog-takeaway">
+  <h4>Your Recovery Game Plan</h4>
+  <ul>
+    <li><strong>Follow your PT program</strong> — consistency is everything; your therapist is your most important partner</li>
+    <li><strong>Don't rush milestones</strong> — returning too early increases re-injury risk significantly</li>
+    <li><strong>Stay positive</strong> — mental health is a real part of recovery; setbacks are normal</li>
+    <li><strong>Communicate openly</strong> — tell your surgeon about any pain, swelling, or concerns</li>
+    <li><strong>Trust the process</strong> — months 2-3 can feel slow, but your graft is healing and remodeling</li>
+    <li><strong>Strengthen both legs</strong> — symmetry is one of the most important return-to-sport criteria</li>
+  </ul>
+</div>
+
+<div class="blog-expert-quote">
+  <p>The graft is strongest on day one and weakest around 6-8 weeks as it undergoes remodeling. That's why we protect it early and build strength progressively. Patience during this phase is what sets the stage for a full return to sport.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="graft">Graft Options: Which Is Right for You?</h2>
+
+<p>One of the most important decisions in ACL reconstruction is graft choice. Dr. Elguizaoui discusses the pros and cons of each option with every patient:</p>
+
+<ul>
+  <li><strong>Patellar tendon autograft</strong> — often considered the "gold standard" for young athletes; strong bone-to-bone healing</li>
+  <li><strong>Hamstring tendon autograft</strong> — less anterior knee pain; excellent for many activity levels</li>
+  <li><strong>Quadriceps tendon autograft</strong> — gaining popularity for its strength and versatility</li>
+  <li><strong>Allograft (donor tissue)</strong> — no donor-site pain; may be preferred for older or less active patients</li>
+</ul>
+
+<p>The best graft depends on your age, activity level, sport, and anatomy. There's no one-size-fits-all answer — and that's exactly why a personalized consultation matters.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>How soon after my ACL tear should I have surgery?</h3>
+<p>Most surgeons recommend waiting until swelling subsides and range of motion is restored — typically 2-4 weeks after injury. This "prehab" period actually leads to better surgical outcomes. Dr. Elguizaoui will guide you on the optimal timing for your situation.</p>
+
+<h3>Will my knee ever be "normal" again?</h3>
+<p>Most patients report their knee feels stable and strong after full recovery. Studies show over 90% of patients return to their pre-injury activity level. Some patients say their knee feels even better than before because of the strength they build during rehab.</p>
+
+<h3>Can I re-tear my ACL?</h3>
+<p>Re-tear rates are approximately 5-8% within the first two years. Completing your full rehabilitation program and meeting objective return-to-sport criteria significantly reduces this risk. That's why Dr. Elguizaoui uses strength testing and functional assessments — not just calendar time — before clearing you.</p>
+
+<h3>How long until I can drive?</h3>
+<p>If your left knee was operated on and you drive an automatic, you may be able to drive within 1-2 weeks. For right knee surgery, most patients can drive at 4-6 weeks once they're off narcotic pain medication and have adequate quad control to brake safely.</p>
+
+<h3>Do I really need surgery, or can I rehab without it?</h3>
+<p>Some patients — particularly those who are less active or don't participate in cutting/pivoting sports — may do well with rehabilitation alone. However, for athletes and active individuals, reconstruction provides the stability needed for high-demand activities. Dr. Elguizaoui will discuss both options honestly.</p>
+
+<div class="blog-cta">
+  <h3>Ready to Get Back in the Game?</h3>
+  <p>Whether you've just torn your ACL or you're exploring your options, Dr. Elguizaoui and his team will guide you through every phase — from diagnosis through return to sport. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/services/shoulder-knee-surgery">Shoulder & Knee Surgery</a> · <a href="/blog/meniscus-tears-cartilage-injuries">Meniscus Tears & Cartilage Injuries</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui brings compassionate, world-class orthopedic care to patients throughout the NYC metropolitan area.</p>
+  </div>
+</div>
+`,
   },
   {
     slug: "prp-therapy-sports-medicine",

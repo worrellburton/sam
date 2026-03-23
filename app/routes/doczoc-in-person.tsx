@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 
@@ -36,6 +37,56 @@ const statusColors: Record<string, { bg: string; color: string }> = {
   "Pending Auth": { bg: "rgba(239,68,68,0.12)", color: "#f87171" },
   Tentative: { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" },
 };
+
+function parseDateTime(dateStr: string, timeStr: string): Date {
+  return new Date(`${dateStr} ${timeStr}`);
+}
+
+function useCountdown() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  return now;
+}
+
+function formatCountdown(now: Date, dateStr: string, timeStr: string, completed: boolean): { text: string; color: string; past: boolean } {
+  if (completed) return { text: "Done", color: "#818cf8", past: true };
+  const target = parseDateTime(dateStr, timeStr);
+  const diff = target.getTime() - now.getTime();
+  if (diff < 0) return { text: "Past", color: "#64748b", past: true };
+
+  const mins = Math.floor(diff / 60_000);
+  const hours = Math.floor(mins / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    const remHours = hours % 24;
+    return { text: `${days}d ${remHours}h`, color: days <= 2 ? "#fbbf24" : "#22c55e", past: false };
+  }
+  if (hours > 0) {
+    const remMins = mins % 60;
+    return { text: `${hours}h ${remMins}m`, color: hours <= 2 ? "#f59e0b" : "#fbbf24", past: false };
+  }
+  return { text: `${mins}m`, color: "#ef4444", past: false };
+}
+
+function CountdownBadge({ text, color }: { text: string; color: string }) {
+  return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: 4,
+      padding: "4px 10px", borderRadius: 8, fontSize: "0.75rem", fontWeight: 700,
+      fontFamily: "'SF Mono', Consolas, monospace",
+      background: `${color}18`, color,
+    }}>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+      {text}
+    </span>
+  );
+}
 
 function Badge({ label }: { label: string }) {
   const c = statusColors[label] || { bg: "rgba(148,163,184,0.12)", color: "#94a3b8" };
@@ -77,6 +128,17 @@ function TableIcon({ active }: { active: boolean }) {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={active ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
     </svg>
+  );
+}
+
+function AddButton({ label, to }: { label: string; to: string }) {
+  return (
+    <Link to={to} className="dz-add-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      {label}
+    </Link>
   );
 }
 
@@ -211,6 +273,7 @@ export default function InPersonPage() {
   const [tab, setTab] = useState<Tab>("appointments");
   const [apptFilter, setApptFilter] = useState<ApptFilter>("all");
   const [viewMode, setViewMode] = useState<ViewMode>("table");
+  const now = useCountdown();
 
   const incomingAppts = APPOINTMENTS.filter(a => !a.completed);
   const completedAppts = APPOINTMENTS.filter(a => a.completed);
@@ -228,18 +291,24 @@ export default function InPersonPage() {
             <h1>In-Person</h1>
             <p>Appointments, surgeries, and operative reports</p>
           </div>
-          {tab === "appointments" && (
-            <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <div className="dz-view-toggle">
-                <button className={`dz-view-btn${viewMode === "table" ? " dz-view-active" : ""}`} onClick={() => setViewMode("table")} title="Table view">
-                  <TableIcon active={viewMode === "table"} />
-                </button>
-                <button className={`dz-view-btn${viewMode === "grid" ? " dz-view-active" : ""}`} onClick={() => setViewMode("grid")} title="Grid view">
-                  <GridIcon active={viewMode === "grid"} />
-                </button>
-              </div>
-            </div>
-          )}
+          <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            {tab === "appointments" && (
+              <>
+                <AddButton label="New Appointment" to="/doczoc/calendar" />
+                <div className="dz-view-toggle">
+                  <button className={`dz-view-btn${viewMode === "table" ? " dz-view-active" : ""}`} onClick={() => setViewMode("table")} title="Table view">
+                    <TableIcon active={viewMode === "table"} />
+                  </button>
+                  <button className={`dz-view-btn${viewMode === "grid" ? " dz-view-active" : ""}`} onClick={() => setViewMode("grid")} title="Grid view">
+                    <GridIcon active={viewMode === "grid"} />
+                  </button>
+                </div>
+              </>
+            )}
+            {tab === "surgeries" && (
+              <AddButton label="New Surgery" to="/doczoc/calendar" />
+            )}
+          </div>
         </header>
 
         {/* Tabs */}
@@ -278,52 +347,62 @@ export default function InPersonPage() {
               <div className="dz-table-wrap">
                 <table className="dz-table">
                   <thead>
-                    <tr><th>Patient</th><th>Date</th><th>Time</th><th>Type</th><th>Location</th><th>Status</th><th>Notes</th></tr>
+                    <tr><th>Patient</th><th>Date</th><th>Time</th><th>Countdown</th><th>Type</th><th>Location</th><th>Status</th><th>Notes</th></tr>
                   </thead>
                   <tbody>
-                    {filteredAppts.map((a) => (
-                      <tr key={a.id} style={a.completed ? { opacity: 0.6 } : undefined}>
-                        <td style={{ fontWeight: 600, color: "#f1f5f9" }}>{a.patient}</td>
-                        <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
-                        <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" }}>{a.time}</td>
-                        <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc" }}>{a.type}</span></td>
-                        <td style={{ color: "#94a3b8" }}>{a.location}</td>
-                        <td><Badge label={a.status} /></td>
-                        <td style={{ fontSize: "0.82rem", color: "#64748b", maxWidth: 200 }}>{a.notes}</td>
-                      </tr>
-                    ))}
+                    {filteredAppts.map((a) => {
+                      const cd = formatCountdown(now, a.date, a.time, a.completed);
+                      return (
+                        <tr key={a.id} style={a.completed ? { opacity: 0.6 } : undefined}>
+                          <td style={{ fontWeight: 600, color: "#f1f5f9" }}>{a.patient}</td>
+                          <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
+                          <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" }}>{a.time}</td>
+                          <td><CountdownBadge text={cd.text} color={cd.color} /></td>
+                          <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc" }}>{a.type}</span></td>
+                          <td style={{ color: "#94a3b8" }}>{a.location}</td>
+                          <td><Badge label={a.status} /></td>
+                          <td style={{ fontSize: "0.82rem", color: "#64748b", maxWidth: 200 }}>{a.notes}</td>
+                        </tr>
+                      );
+                    })}
                     {filteredAppts.length === 0 && (
-                      <tr><td colSpan={7} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No appointments found</td></tr>
+                      <tr><td colSpan={8} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No appointments found</td></tr>
                     )}
                   </tbody>
                 </table>
               </div>
             ) : (
               <div className="dz-appt-grid">
-                {filteredAppts.map((a) => (
-                  <div key={a.id} className={`dz-appt-card${a.completed ? " dz-appt-completed" : ""}`}>
-                    <div className="dz-appt-card-top">
-                      <span className="dz-appt-card-name">{a.patient}</span>
-                      <Badge label={a.status} />
+                {filteredAppts.map((a) => {
+                  const cd = formatCountdown(now, a.date, a.time, a.completed);
+                  return (
+                    <div key={a.id} className={`dz-appt-card${a.completed ? " dz-appt-completed" : ""}`}>
+                      <div className="dz-appt-card-top">
+                        <span className="dz-appt-card-name">{a.patient}</span>
+                        <Badge label={a.status} />
+                      </div>
+                      <div className="dz-appt-card-type">{a.type}</div>
+                      <div style={{ marginBottom: 8 }}>
+                        <CountdownBadge text={cd.text} color={cd.color} />
+                      </div>
+                      <div className="dz-appt-card-details">
+                        <div>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                          <span>{a.date}</span>
+                        </div>
+                        <div>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                          <span>{a.time}</span>
+                        </div>
+                        <div>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                          <span>{a.location}</span>
+                        </div>
+                      </div>
+                      <div className="dz-appt-card-notes">{a.notes}</div>
                     </div>
-                    <div className="dz-appt-card-type">{a.type}</div>
-                    <div className="dz-appt-card-details">
-                      <div>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        <span>{a.date}</span>
-                      </div>
-                      <div>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        <span>{a.time}</span>
-                      </div>
-                      <div>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        <span>{a.location}</span>
-                      </div>
-                    </div>
-                    <div className="dz-appt-card-notes">{a.notes}</div>
-                  </div>
-                ))}
+                  );
+                })}
                 {filteredAppts.length === 0 && (
                   <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 32, color: "#64748b" }}>No appointments found</div>
                 )}
@@ -335,49 +414,57 @@ export default function InPersonPage() {
         {/* Surgeries */}
         {tab === "surgeries" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            {SURGERIES.map((s) => (
-              <div key={s.id} className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-                <div style={{ padding: "18px 22px", borderBottom: "1px solid rgba(99,102,241,0.1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
-                      <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "#f1f5f9" }}>{s.procedure}</span>
-                      <Badge label={s.status} />
+            {SURGERIES.map((s) => {
+              const cd = formatCountdown(now, s.date, s.time, false);
+              return (
+                <div key={s.id} className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+                  <div style={{ padding: "18px 22px", borderBottom: "1px solid rgba(99,102,241,0.1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+                        <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "#f1f5f9" }}>{s.procedure}</span>
+                        <Badge label={s.status} />
+                      </div>
+                      <div style={{ fontSize: "0.85rem", color: "#94a3b8" }}>{s.patient}</div>
                     </div>
-                    <div style={{ fontSize: "0.85rem", color: "#94a3b8" }}>{s.patient}</div>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ textAlign: "right" }}>
+                          <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#818cf8" }}>{s.date}</div>
+                          <div style={{ fontSize: "0.82rem", fontFamily: "'SF Mono', Consolas, monospace", color: "#94a3b8" }}>{s.time}</div>
+                        </div>
+                      </div>
+                      <CountdownBadge text={cd.text} color={cd.color} />
+                    </div>
                   </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#818cf8" }}>{s.date}</div>
-                    <div style={{ fontSize: "0.82rem", fontFamily: "'SF Mono', Consolas, monospace", color: "#94a3b8" }}>{s.time}</div>
+                  <div style={{ padding: "16px 22px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+                    <div>
+                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Facility</div>
+                      <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>{s.facility}</div>
+                      <div style={{ fontSize: "0.78rem", color: "#64748b" }}>POS {s.pos}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Anesthesia</div>
+                      <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>{s.anesthesia}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>CPT / ICD-10</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                        {s.codes.map((code) => (
+                          <span key={code} style={{ fontSize: "0.72rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "2px 8px", borderRadius: 4, fontWeight: 600, background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{code}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 6 }}>Readiness</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        <CheckBadge ok={s.preOp} label="Pre-Op Cleared" />
+                        <CheckBadge ok={s.authObtained} label="Auth Obtained" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div style={{ padding: "16px 22px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-                  <div>
-                    <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Facility</div>
-                    <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>{s.facility}</div>
-                    <div style={{ fontSize: "0.78rem", color: "#64748b" }}>POS {s.pos}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Anesthesia</div>
-                    <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>{s.anesthesia}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>CPT / ICD-10</div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                      {s.codes.map((code) => (
-                        <span key={code} style={{ fontSize: "0.72rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "2px 8px", borderRadius: 4, fontWeight: 600, background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{code}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 6 }}>Readiness</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      <CheckBadge ok={s.preOp} label="Pre-Op Cleared" />
-                      <CheckBadge ok={s.authObtained} label="Auth Obtained" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

@@ -6391,6 +6391,7 @@ img.insurance-logo:hover {
 }
 .dz-sidebar {
   width: 240px;
+  height: 100vh;
   background: #0a0a1a;
   border-right: 1px solid rgba(99, 102, 241, 0.12);
   display: flex;
@@ -6398,6 +6399,8 @@ img.insurance-logo:hover {
   padding: 16px 12px;
   transition: width 0.25s ease;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
 }
 .dz-sidebar-collapsed { width: 68px; }
 .dz-sidebar-top {
@@ -6424,7 +6427,7 @@ img.insurance-logo:hover {
   transition: all 0.2s;
 }
 .dz-sidebar-toggle:hover { color: #e2e8f0; border-color: rgba(99, 102, 241, 0.4); }
-.dz-sidebar-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.dz-sidebar-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; min-height: 0; }
 .dz-sidebar-link {
   display: flex;
   align-items: center;
@@ -8392,6 +8395,21 @@ img.insurance-logo:hover {
 .dz-rcm-step-label {
   font-size: 0.68rem;
   font-weight: 700;
+}
+.dz-rcm-claim-card[draggable] {
+  cursor: grab;
+}
+.dz-rcm-claim-card[draggable]:active {
+  cursor: grabbing;
+}
+.dz-rcm-dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+}
+.dz-rcm-drop-target {
+  background: rgba(99, 102, 241, 0.08) !important;
+  border-color: rgba(99, 102, 241, 0.25) !important;
+  box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.06);
 }
 .dz-rcm-empty {
   text-align: center;

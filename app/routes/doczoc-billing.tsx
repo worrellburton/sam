@@ -574,7 +574,7 @@ export default function BillingPage() {
             <h1>Billing & Claims</h1>
             <p>Review visits, submit claims to insurance, and generate bills</p>
           </div>
-          <ApiStatusBar statuses={statuses} onRefresh={refresh} />
+          {/* API status moved to popup menu */}
         </header>
 
         {/* Tabs */}

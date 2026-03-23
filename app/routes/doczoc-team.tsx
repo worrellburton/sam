@@ -21,14 +21,10 @@ interface TeamMember {
 
 const TEAM: TeamMember[] = [
   { id: 1, name: "Dr. Sameh Elguizaoui", initials: "SE", role: "Physician", specialty: "Orthopedic Surgery & Sports Medicine", email: "s.elguizaoui@doczoc.com", phone: "(212) 555-0100", status: "Active", schedule: "Mon–Fri", location: "Manhattan" },
-  { id: 2, name: "Maddie", initials: "MR", role: "Nurse", specialty: "Orthopedic Nursing", email: "m.reynolds@doczoc.com", phone: "(212) 555-0102", status: "Active", schedule: "Mon–Fri", location: "Manhattan" },
-  { id: 3, name: "Rachel Torres", initials: "RT", role: "Physician Assistant", specialty: "Surgical Assist & Pre/Post-Op", email: "r.torres@doczoc.com", phone: "(212) 555-0103", status: "Active", schedule: "Mon–Thu", location: "Manhattan" },
-  { id: 4, name: "David Park", initials: "DP", role: "Medical Biller", specialty: "RCM & Claims Processing", email: "d.park@doczoc.com", phone: "(212) 555-0104", status: "Active", schedule: "Mon–Fri", location: "Manhattan" },
-  { id: 5, name: "Lisa Chen", initials: "LC", role: "Front Desk Coordinator", specialty: "Scheduling & Patient Intake", email: "l.chen@doczoc.com", phone: "(718) 555-0105", status: "Active", schedule: "Mon–Fri", location: "Brooklyn" },
-  { id: 6, name: "James Wright", initials: "JW", role: "Physical Therapist", specialty: "Sports Rehabilitation", email: "j.wright@doczoc.com", phone: "(914) 555-0106", status: "Part-Time", schedule: "Tue, Thu", location: "Scarsdale" },
+  { id: 2, name: "Maddie", initials: "MA", role: "Nurse", specialty: "Orthopedic Nursing", email: "maddie@doczoc.com", phone: "(212) 555-0102", status: "Active", schedule: "Mon–Fri", location: "Manhattan" },
 ];
 
-const ROLES = ["All", "Physician", "Nurse", "Physician Assistant", "Medical Biller", "Front Desk Coordinator", "Physical Therapist"];
+const ROLES = ["All", "Physician", "Nurse"];
 
 function statusColor(status: string) {
   switch (status) {
@@ -75,6 +71,12 @@ export default function TeamPage() {
             <p>{TEAM.length} team members</p>
           </div>
           <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <button className="dz-add-btn" onClick={() => {}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Team Member
+            </button>
             <div className="dz-view-toggle">
               <button className={`dz-view-btn${view === "list" ? " dz-view-active" : ""}`} onClick={() => setView("list")} title="List view">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={view === "list" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -255,6 +255,8 @@ export default function RcmPage() {
   const { bgId } = useDzPrefs();
   const [claims, setClaims] = useState<Claim[]>(INITIAL_CLAIMS);
   const [infoStep, setInfoStep] = useState<Step | null>(null);
+  const [dragId, setDragId] = useState<number | null>(null);
+  const [dragOver, setDragOver] = useState<Step | null>(null);
 
   function moveClaim(claimId: number, direction: "next" | "prev") {
     setClaims(prev => prev.map(c => {
@@ -262,6 +264,13 @@ export default function RcmPage() {
       const newStep = direction === "next" ? Math.min(6, c.step + 1) : Math.max(1, c.step - 1);
       return { ...c, step: newStep as Step };
     }));
+  }
+
+  function dropClaim(targetStep: Step) {
+    if (dragId === null) return;
+    setClaims(prev => prev.map(c => c.id === dragId ? { ...c, step: targetStep } : c));
+    setDragId(null);
+    setDragOver(null);
   }
 
   return (
@@ -308,9 +317,20 @@ export default function RcmPage() {
                   <span className="dz-rcm-col-count" style={{ background: `${col.color}20`, color: col.color }}>{colClaims.length}</span>
                 </div>
 
-                <div className="dz-rcm-col-body">
+                <div
+                  className={`dz-rcm-col-body${dragOver === col.id ? " dz-rcm-drop-target" : ""}`}
+                  onDragOver={e => { e.preventDefault(); setDragOver(col.id); }}
+                  onDragLeave={() => setDragOver(null)}
+                  onDrop={e => { e.preventDefault(); dropClaim(col.id); }}
+                >
                   {colClaims.map(claim => (
-                    <div key={claim.id} className="dz-rcm-claim-card">
+                    <div
+                      key={claim.id}
+                      className={`dz-rcm-claim-card${dragId === claim.id ? " dz-rcm-dragging" : ""}`}
+                      draggable
+                      onDragStart={() => setDragId(claim.id)}
+                      onDragEnd={() => { setDragId(null); setDragOver(null); }}
+                    >
                       <div className="dz-rcm-claim-top">
                         <span className="dz-rcm-claim-id">Claim #{claim.id}</span>
                         <span className="dz-rcm-claim-amount">{claim.amount}</span>

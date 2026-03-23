@@ -7238,6 +7238,9 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   border-bottom: 1px solid rgba(148, 163, 184, 0.05);
 }
 .dz-table tr:hover td { background: rgba(99, 102, 241, 0.04); }
+.dz-row-clickable { cursor: pointer; }
+.dz-row-clickable:hover td { background: rgba(99, 102, 241, 0.06) !important; }
+[data-theme="light"] .dz-row-clickable:hover td { background: rgba(99, 102, 241, 0.04) !important; }
 .dz-table-name { font-weight: 600; color: #f1f5f9; white-space: nowrap; }
 .dz-table-sub { font-size: 0.72rem; color: #64748b; }
 .dz-table-time { font-weight: 600; color: #818cf8; font-size: 0.82rem; white-space: nowrap; }

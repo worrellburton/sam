@@ -1,8 +1,55 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { PATIENTS } from "~/data/patients";
+
+const PAYER_BRANDS: Record<string, { color: string; initial: string; bg: string }> = {
+  UnitedHealthcare: { color: "#fff", initial: "U", bg: "#002677" },
+  Aetna: { color: "#fff", initial: "A", bg: "#7b2d8e" },
+  Cigna: { color: "#fff", initial: "C", bg: "#e47e30" },
+  "Blue Cross Blue Shield": { color: "#fff", initial: "BC", bg: "#0075c9" },
+  Medicare: { color: "#fff", initial: "M", bg: "#003da5" },
+};
+
+function InsuranceLogo({ name }: { name: string }) {
+  const brand = Object.entries(PAYER_BRANDS).find(([k]) => name.toLowerCase().includes(k.toLowerCase()))?.[1]
+    || { color: "#fff", initial: name.charAt(0), bg: "#475569" };
+  const domain = name.toLowerCase().includes("united") ? "uhc.com"
+    : name.toLowerCase().includes("aetna") ? "aetna.com"
+    : name.toLowerCase().includes("cigna") ? "cigna.com"
+    : name.toLowerCase().includes("blue cross") ? "bcbs.com"
+    : name.toLowerCase().includes("medicare") ? "medicare.gov"
+    : null;
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      {domain ? (
+        <img
+          src={`https://logo.clearbit.com/${domain}?size=40`}
+          alt={name}
+          style={{ width: 20, height: 20, borderRadius: 4, objectFit: "contain" }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; (e.target as HTMLImageElement).nextElementSibling && ((e.target as HTMLImageElement).nextElementSibling as HTMLElement).style.removeProperty("display"); }}
+        />
+      ) : null}
+      <span style={{ display: domain ? "none" : "flex", width: 20, height: 20, borderRadius: 4, background: brand.bg, color: brand.color, alignItems: "center", justifyContent: "center", fontSize: "0.55rem", fontWeight: 800, flexShrink: 0 }}>{brand.initial}</span>
+      <span style={{ fontSize: "0.78rem" }}>{name.replace(/ PPO| HMO| Choice Plus| Open Access Plus| Student Plan| Plan F/g, "")}</span>
+    </div>
+  );
+}
+
+function PatientInitials({ name }: { name: string }) {
+  const initials = name.split(" ").map(n => n[0]).join("").slice(0, 2);
+  const colors = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#ec4899", "#14b8a6"];
+  const idx = name.charCodeAt(0) % colors.length;
+  return (
+    <div style={{
+      width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+      background: `${colors[idx]}18`, color: colors[idx],
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: "0.7rem", fontWeight: 700,
+    }}>{initials}</div>
+  );
+}
 
 export function meta() {
   return [{ title: "Patients | DocZoc" }];
@@ -38,6 +85,7 @@ export default function PatientsPage() {
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"table" | "grid">("table");
   const { bgId } = useDzPrefs();
+  const navigate = useNavigate();
 
   const filtered = PATIENTS.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -54,34 +102,34 @@ export default function PatientsPage() {
             <h1>Patients</h1>
             <p>{PATIENTS.length} total patients</p>
           </div>
-          <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <div className="dz-view-toggle">
-              <button
-                className={`dz-view-btn${view === "table" ? " dz-view-active" : ""}`}
-                onClick={() => setView("table")}
-                title="Table view"
-              >
-                <TableIcon active={view === "table"} />
-              </button>
-              <button
-                className={`dz-view-btn${view === "grid" ? " dz-view-active" : ""}`}
-                onClick={() => setView("grid")}
-                title="Grid view"
-              >
-                <GridIcon active={view === "grid"} />
-              </button>
-            </div>
-          </div>
         </header>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+        {/* Search + view toggle in one row */}
+        <div className="dz-toolbar-row">
           <input
             type="text"
             placeholder="Search patients..."
             className="dz-search-input"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            style={{ maxWidth: 260 }}
           />
+          <div className="dz-view-toggle">
+            <button
+              className={`dz-view-btn${view === "table" ? " dz-view-active" : ""}`}
+              onClick={() => setView("table")}
+              title="Table view"
+            >
+              <TableIcon active={view === "table"} />
+            </button>
+            <button
+              className={`dz-view-btn${view === "grid" ? " dz-view-active" : ""}`}
+              onClick={() => setView("grid")}
+              title="Grid view"
+            >
+              <GridIcon active={view === "grid"} />
+            </button>
+          </div>
         </div>
 
         {view === "table" ? (
@@ -89,30 +137,31 @@ export default function PatientsPage() {
             <table className="dz-table">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Age</th>
+                  <th>Patient</th>
                   <th>Condition</th>
-                  <th>Contact</th>
-                  <th>Last Visit</th>
+                  <th className="dz-col-hide-lg">Insurance</th>
+                  <th className="dz-col-hide-lg">Phone</th>
+                  <th className="dz-col-hide-xl">Email</th>
                   <th>Next Appt</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((p) => (
-                  <tr key={p.id}>
+                  <tr key={p.id} className="dz-row-clickable" onClick={() => navigate(`/doczoc/patients/${p.id}`)}>
                     <td>
-                      <Link to={`/doczoc/patients/${p.id}`} className="dz-patient-link">
-                        <div className="dz-table-name">{p.name}</div>
-                      </Link>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <PatientInitials name={p.name} />
+                        <div>
+                          <div className="dz-table-name">{p.name}</div>
+                          <div className="dz-table-sub">Age {p.age}</div>
+                        </div>
+                      </div>
                     </td>
-                    <td>{p.age}</td>
                     <td>{p.condition}</td>
-                    <td>
-                      <div className="dz-table-sub">{p.phone}</div>
-                      <div className="dz-table-sub">{p.email}</div>
-                    </td>
-                    <td>{p.lastVisit}</td>
+                    <td className="dz-col-hide-lg"><InsuranceLogo name={p.insurance} /></td>
+                    <td className="dz-col-hide-lg">{p.phone}</td>
+                    <td className="dz-col-hide-xl">{p.email}</td>
                     <td>{p.nextAppt}</td>
                     <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
                   </tr>

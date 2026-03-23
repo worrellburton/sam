@@ -7017,64 +7017,115 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 [data-theme="light"] .dz-loc-chip:hover { border-color: #818cf8; color: #4f46e5; }
 [data-theme="light"] .dz-loc-chip.active { background: rgba(99, 102, 241, 0.1); border-color: #818cf8; color: #4f46e5; }
 
-/* Billing & Claims — light mode */
-[data-theme="light"] .dz-billing-card,
-[data-theme="light"] .dz-visit-card {
-  background: #ffffff;
-  border-color: #e2e8f0;
+/* ── Billing & Claims — light mode ─────────────────── */
+[data-theme="light"] .dz-billing-layout { background: transparent; }
+[data-theme="light"] .dz-billing-list {
+  background: #ffffff; border-color: #e2e8f0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-[data-theme="light"] .dz-visit-card:hover { border-color: #c7d2fe; }
+[data-theme="light"] .dz-billing-list-header { color: #1e293b; border-bottom-color: #e2e8f0; }
+[data-theme="light"] .dz-billing-list-header span { color: #64748b; }
+[data-theme="light"] .dz-billing-visit { border-bottom-color: #f1f5f9; }
+[data-theme="light"] .dz-billing-visit:hover { background: rgba(99, 102, 241, 0.04); }
+[data-theme="light"] .dz-billing-visit.active { background: rgba(99, 102, 241, 0.08); }
+[data-theme="light"] .dz-billing-visit-name { color: #1e293b; }
+[data-theme="light"] .dz-billing-visit-meta { color: #64748b; }
+[data-theme="light"] .dz-billing-visit-proc { color: #94a3b8; }
+[data-theme="light"] .dz-billing-detail {
+  background: #ffffff; border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .dz-billing-detail-header h2 { color: #1e293b; }
+[data-theme="light"] .dz-billing-detail-header p { color: #64748b; }
+[data-theme="light"] .dz-billing-pdf-btn { border-color: #e2e8f0; color: #64748b; }
+[data-theme="light"] .dz-billing-pdf-btn:hover { border-color: #818cf8; color: #4f46e5; }
+[data-theme="light"] .dz-billing-info-card {
+  background: #f8fafc; border-color: #e2e8f0;
+}
+[data-theme="light"] .dz-billing-info-label { color: #64748b; }
+[data-theme="light"] .dz-billing-info-value { color: #1e293b; }
+[data-theme="light"] .dz-billing-dx { background: #f8fafc; border-color: #e2e8f0; }
+[data-theme="light"] .dz-billing-dx p { color: #475569; }
+[data-theme="light"] .dz-billing-section-label { color: #64748b; }
+[data-theme="light"] .dz-billing-code-count { color: #94a3b8; }
+[data-theme="light"] .dz-billing-code-row { background: #f8fafc; border-color: #e2e8f0; }
+[data-theme="light"] .dz-billing-code-desc { color: #475569; }
+[data-theme="light"] .dz-billing-type-tag { color: #64748b; background: rgba(99,102,241,0.06); }
+[data-theme="light"] .dz-billing-notes { background: #f8fafc; border-color: #e2e8f0; }
+[data-theme="light"] .dz-billing-notes p { color: #475569; }
+[data-theme="light"] .dz-billing-empty { background: #ffffff; border-color: #e2e8f0; }
 [data-theme="light"] .dz-billing-empty h3 { color: #334155; }
 [data-theme="light"] .dz-billing-empty p { color: #64748b; }
 
-/* RCM Pipeline — light mode */
-[data-theme="light"] .dz-rcm-col {
-  background: #ffffff;
-  border-color: #e2e8f0;
+/* ── RCM Pipeline — light mode ────────────────────── */
+[data-theme="light"] .dz-rcm-board { background: transparent; }
+[data-theme="light"] .dz-rcm-column {
+  background: #ffffff; border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-[data-theme="light"] .dz-rcm-col-header { color: #334155; border-bottom-color: #e2e8f0; }
-[data-theme="light"] .dz-rcm-card {
-  background: #f8fafc;
-  border-color: #e2e8f0;
+[data-theme="light"] .dz-rcm-col-header { border-bottom-color: #e2e8f0; }
+[data-theme="light"] .dz-rcm-col-title { color: #1e293b; }
+[data-theme="light"] .dz-rcm-col-timeline { color: #94a3b8; }
+[data-theme="light"] .dz-rcm-col-body { background: transparent; }
+[data-theme="light"] .dz-rcm-claim-card {
+  background: #f8fafc; border-color: #e2e8f0;
 }
-[data-theme="light"] .dz-rcm-card:hover { border-color: #c7d2fe; }
-[data-theme="light"] .dz-rcm-patient { color: #1e293b; }
-[data-theme="light"] .dz-rcm-procedure { color: #64748b; }
-[data-theme="light"] .dz-rcm-payer-name { color: #475569; }
+[data-theme="light"] .dz-rcm-claim-card:hover { border-color: #c7d2fe; background: #fff; }
+[data-theme="light"] .dz-rcm-claim-id { color: #4f46e5; }
+[data-theme="light"] .dz-rcm-claim-amount { color: #1e293b; }
+[data-theme="light"] .dz-rcm-claim-patient { color: #1e293b; }
+[data-theme="light"] .dz-rcm-claim-procedure { color: #64748b; }
+[data-theme="light"] .dz-rcm-claim-payer { color: #475569; }
+[data-theme="light"] .dz-rcm-move-btn { border-color: #e2e8f0; color: #64748b; }
+[data-theme="light"] .dz-rcm-move-btn:hover:not(:disabled) { border-color: #818cf8; color: #4f46e5; }
+[data-theme="light"] .dz-rcm-step-label { color: #94a3b8; }
+[data-theme="light"] .dz-rcm-empty { color: #94a3b8; }
 
-/* Team — light mode */
+/* ── Team — light mode ────────────────────────────── */
 [data-theme="light"] .dz-team-card {
-  background: #ffffff;
-  border-color: #e2e8f0;
+  background: #ffffff; border-color: #e2e8f0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 [data-theme="light"] .dz-team-card:hover { border-color: #c7d2fe; }
-[data-theme="light"] .dz-team-name { color: #1e293b; }
-[data-theme="light"] .dz-team-role { color: #4f46e5; }
-[data-theme="light"] .dz-team-meta { color: #64748b; }
+[data-theme="light"] .dz-team-card-top { background: #f8fafc; border-bottom-color: #e2e8f0; }
+[data-theme="light"] .dz-team-card-name { color: #1e293b; }
+[data-theme="light"] .dz-team-card-role { color: #4f46e5; }
+[data-theme="light"] .dz-team-card-specialty { color: #475569; }
+[data-theme="light"] .dz-team-card-details { color: #64748b; }
+[data-theme="light"] .dz-team-card-contact { color: #64748b; }
 
-/* Reports — light mode */
+/* ── Reports — light mode ─────────────────────────── */
 [data-theme="light"] .dz-report-card {
-  background: #ffffff;
-  border-color: #e2e8f0;
+  background: #ffffff; border-color: #e2e8f0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 [data-theme="light"] .dz-report-card:hover { border-color: #c7d2fe; }
-[data-theme="light"] .dz-report-name { color: #1e293b; }
-[data-theme="light"] .dz-report-tag { color: #4f46e5; }
+[data-theme="light"] .dz-report-card-title { color: #1e293b; }
+[data-theme="light"] .dz-report-card-meta { color: #64748b; }
+[data-theme="light"] .dz-report-card-icon { background: rgba(99,102,241,0.08); }
 
-/* Insights — light mode (cash pipeline, KPIs) */
+/* ── Insights — light mode ────────────────────────── */
 [data-theme="light"] .dz-insight-kpi {
-  background: #ffffff;
-  border-color: #e2e8f0;
+  background: #ffffff; border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 [data-theme="light"] .dz-insight-kpi-label { color: #64748b; }
+[data-theme="light"] .dz-insight-kpi-value { color: #1e293b; }
+[data-theme="light"] .dz-insight-card {
+  background: #ffffff; border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .dz-insight-card-header h3 { color: #1e293b; }
+[data-theme="light"] .dz-insight-card-sub { color: #64748b; }
+[data-theme="light"] .dz-insight-bar-label { color: #64748b; }
+[data-theme="light"] .dz-insight-bar-value { color: #475569; }
+[data-theme="light"] .dz-insight-legend-label { color: #64748b; }
+[data-theme="light"] .dz-insight-legend-val { color: #1e293b; }
+[data-theme="light"] .dz-insight-payer-name { color: #475569; }
 
-/* Generic dark-bg elements → light mode */
+/* ── Generic card/dark-bg → light mode ────────────── */
 [data-theme="light"] .dz-card {
-  background: #ffffff !important;
-  border-color: #e2e8f0 !important;
+  background: #ffffff !important; border-color: #e2e8f0 !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 [data-theme="light"] .dz-card:hover { border-color: #c7d2fe !important; }

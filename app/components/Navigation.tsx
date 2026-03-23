@@ -36,7 +36,7 @@ export function Navigation() {
     }, 150);
   }, []);
 
-  const isHome = location.pathname === "/" || location.pathname === "/sammd/" || location.pathname === "/sammd";
+  const isHome = location.pathname === "/" || location.pathname === "/sam/" || location.pathname === "/sam";
   const isScrolled = scrollY > 50;
   const isHidden = direction === "down" && scrollY > 200;
 
@@ -179,7 +179,7 @@ export function Navigation() {
                   <div className="mega-cta-card">
                     <h4>Ready to get started?</h4>
                     <p>Book a consultation with Dr. Elguizaoui today.</p>
-                    <a href="/sammd/book" className="btn btn-primary btn-block">
+                    <a href="/sam/book" className="btn btn-primary btn-block">
                       Book Now
                     </a>
                     <a href="tel:+19179059370" className="mega-phone">

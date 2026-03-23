@@ -245,7 +245,7 @@ export default function Home() {
     <>
       {/* Hero */}
       <header className="hero" id="hero">
-        <img className="hero-bg-img loaded" src="/sammd/header.jpg" alt="" aria-hidden="true" />
+        <img className="hero-bg-img loaded" src="/sam/header.jpg" alt="" aria-hidden="true" />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <div className="hero-text">
@@ -290,8 +290,8 @@ export default function Home() {
           <div className="about-layout">
             <div className="about-photo" ref={aboutPhotoRef}>
               <picture>
-                <source srcSet="/sammd/header.webp" type="image/webp" />
-                <img src="/sammd/header.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" loading="lazy" width="1200" height="669" />
+                <source srcSet="/sam/header.webp" type="image/webp" />
+                <img src="/sam/header.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" loading="lazy" width="1200" height="669" />
               </picture>
             </div>
             <div className="about-right">
@@ -359,7 +359,7 @@ export default function Home() {
                   loop
                   playsInline
                   preload="none"
-                  onMouseEnter={(e) => { const v = e.currentTarget; v.src = "/sammd/test.mp4"; v.play().then(() => v.classList.add("loaded")).catch(() => {}); }}
+                  onMouseEnter={(e) => { const v = e.currentTarget; v.src = "/sam/test.mp4"; v.play().then(() => v.classList.add("loaded")).catch(() => {}); }}
                   onMouseLeave={(e) => { const v = e.currentTarget; v.classList.remove("loaded"); v.pause(); }}
                 />
                 <div className="specialty-overlay"></div>

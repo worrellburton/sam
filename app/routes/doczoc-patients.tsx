@@ -71,15 +71,18 @@ export default function PatientsPage() {
                 <GridIcon active={view === "grid"} />
               </button>
             </div>
-            <input
-              type="text"
-              placeholder="Search patients..."
-              className="dz-search-input"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
           </div>
         </header>
+
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <input
+            type="text"
+            placeholder="Search patients..."
+            className="dz-search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
 
         {view === "table" ? (
           <div className="dz-table-wrap">

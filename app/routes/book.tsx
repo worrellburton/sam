@@ -631,7 +631,7 @@ export default function BookPage() {
           <div className="dz-doctor-card">
             <div className="dz-doctor-header">
               <div className="dz-avatar">
-                <img src="/sammd/header.jpg" alt="Dr. Sam Elguizaoui" />
+                <img src="/sam/header.jpg" alt="Dr. Sam Elguizaoui" />
               </div>
               <div className="dz-doctor-info">
                 <span className="dz-badge">

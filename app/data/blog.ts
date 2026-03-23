@@ -562,44 +562,292 @@ export const blogPosts: BlogPost[] = [
       "Platelet-rich plasma therapy is revolutionizing how we treat sports injuries. Learn how this regenerative treatment works.",
     tag: "Regenerative Medicine",
     date: "January 28, 2026",
-    readTime: "6 min read",
+    readTime: "9 min read",
     image:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200&h=600&fit=crop&q=80",
     imageAlt: "PRP therapy injection for sports injury",
-    content: `
-## What Is PRP Therapy?
+    relatedService: "sports-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what-is">What Is PRP Therapy?</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#conditions">Conditions Treated with PRP</a></li>
+    <li><a href="#stats">By the Numbers</a></li>
+    <li><a href="#benefits">Benefits Over Traditional Treatments</a></li>
+    <li><a href="#what-to-expect">What to Expect</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
 
-Platelet-rich plasma (PRP) therapy uses a concentration of your own platelets to accelerate healing of injured tendons, ligaments, muscles, and joints. It's a form of regenerative medicine that harnesses your body's natural healing ability.
+<div class="blog-kindness">
+  <p>If you've been living with chronic pain from a tendon injury, arthritis, or a nagging sports injury that just won't heal, you may feel like your only options are surgery or just "dealing with it." PRP therapy offers a third path — one that works with your body's own biology to promote real healing. Let's explore what it is and whether it might be right for you.</p>
+</div>
 
-### How It Works
+<h2 id="what-is">What Is PRP Therapy?</h2>
 
-A small amount of blood is drawn and placed in a centrifuge to separate the platelets from other blood components. The concentrated platelet-rich plasma is then injected directly into the injured area under ultrasound guidance.
+<p>Platelet-rich plasma (PRP) therapy uses a concentration of your own platelets to accelerate healing of injured tendons, ligaments, muscles, and joints. It's a form of regenerative medicine that harnesses your body's natural healing ability — no synthetic drugs, no foreign materials.</p>
 
-### Conditions Treated with PRP
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&h=400&fit=crop&q=80" alt="Doctor preparing PRP injection for a patient" loading="lazy" />
 
-- **Tendinitis** — Tennis elbow, Achilles tendinitis, patellar tendinitis
-- **Mild to moderate osteoarthritis** — Especially knee arthritis
-- **Ligament sprains** — Partial tears and chronic sprains
-- **Muscle injuries** — Hamstring strains, calf tears
-- **Plantar fasciitis** — Chronic heel pain
+<p>Platelets are best known for their role in clotting, but they also contain hundreds of growth factors — proteins that are essential for tissue repair. When concentrated and delivered directly to an injury site, these growth factors can jump-start and accelerate the healing process.</p>
 
-### Benefits Over Traditional Treatments
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">5-10x</span>
+    <span class="blog-stat-label">Platelet concentration vs. normal blood</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">30 min</span>
+    <span class="blog-stat-label">In-office procedure time</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">80%+</span>
+    <span class="blog-stat-label">Patient improvement rate for tendinopathy</span>
+  </div>
+</div>
 
-PRP offers several advantages over cortisone injections and other traditional treatments:
+<h2 id="how-it-works">How It Works</h2>
 
-1. **Uses your own biology** — no risk of allergic reaction
-2. **Promotes actual healing** — not just symptom relief
-3. **Minimal downtime** — most patients return to normal activities within days
-4. **Can delay or avoid surgery** — especially for mild arthritis
+<p>The PRP process is straightforward and performed right in the office:</p>
 
-### What to Expect
+<div class="blog-chart">
+  <h4>The PRP Process — Step by Step</h4>
+  <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Step boxes -->
+    <rect x="10" y="30" width="100" height="90" rx="10" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="60" y="55" text-anchor="middle" font-size="22" font-weight="700" fill="#6d28d9" font-family="Inter, sans-serif">1</text>
+    <text x="60" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#5b21b6" font-family="Inter, sans-serif">Blood Draw</text>
+    <text x="60" y="90" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">Small sample</text>
+    <text x="60" y="102" text-anchor="middle" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">from your arm</text>
 
-The procedure takes about 30 minutes in the office. You may experience mild soreness at the injection site for a few days. Most patients notice improvement within 2-6 weeks, with full benefits at 3 months.
+    <rect x="125" y="30" width="100" height="90" rx="10" fill="#e0e7ff" stroke="#818cf8" stroke-width="1.5"/>
+    <text x="175" y="55" text-anchor="middle" font-size="22" font-weight="700" fill="#4338ca" font-family="Inter, sans-serif">2</text>
+    <text x="175" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#4338ca" font-family="Inter, sans-serif">Centrifuge</text>
+    <text x="175" y="90" text-anchor="middle" font-size="9" fill="#6366f1" font-family="Inter, sans-serif">Spins to separate</text>
+    <text x="175" y="102" text-anchor="middle" font-size="9" fill="#6366f1" font-family="Inter, sans-serif">& concentrate</text>
 
-### Is PRP Right for You?
+    <rect x="240" y="30" width="100" height="90" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+    <text x="290" y="55" text-anchor="middle" font-size="22" font-weight="700" fill="#2563eb" font-family="Inter, sans-serif">3</text>
+    <text x="290" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#2563eb" font-family="Inter, sans-serif">Preparation</text>
+    <text x="290" y="90" text-anchor="middle" font-size="9" fill="#3b82f6" font-family="Inter, sans-serif">PRP isolated</text>
+    <text x="290" y="102" text-anchor="middle" font-size="9" fill="#3b82f6" font-family="Inter, sans-serif">& activated</text>
 
-PRP is not a one-size-fits-all solution, but for the right patient and the right condition, it can be remarkably effective. Dr. Elguizaoui evaluates each patient individually to determine if PRP is the best treatment option.
-    `,
+    <rect x="355" y="30" width="100" height="90" rx="10" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="405" y="55" text-anchor="middle" font-size="22" font-weight="700" fill="#166534" font-family="Inter, sans-serif">4</text>
+    <text x="405" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#166534" font-family="Inter, sans-serif">Injection</text>
+    <text x="405" y="90" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">Ultrasound-guided</text>
+    <text x="405" y="102" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">precision delivery</text>
+
+    <!-- Arrows -->
+    <path d="M112 75 L123 75" stroke="#9ca3af" stroke-width="1.5" fill="none"/>
+    <path d="M227 75 L238 75" stroke="#9ca3af" stroke-width="1.5" fill="none"/>
+    <path d="M342 75 L353 75" stroke="#9ca3af" stroke-width="1.5" fill="none"/>
+
+    <text x="230" y="155" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif" font-style="italic">The entire process takes about 30 minutes — no general anesthesia, no hospital stay</text>
+  </svg>
+</div>
+
+<p>Dr. Elguizaoui uses ultrasound guidance for every PRP injection, ensuring the concentrated platelets are delivered precisely to the damaged tissue. This image-guided approach improves accuracy and outcomes compared to "blind" injections.</p>
+
+<div class="blog-expert-quote">
+  <p>What I love about PRP is that we're working with your body, not against it. We're concentrating your own healing factors and delivering them exactly where they're needed most. For the right conditions, it can be a game-changer.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="conditions">Conditions Treated with PRP</h2>
+
+<p>PRP therapy has shown strong results for a range of musculoskeletal conditions. Here are the most common:</p>
+
+<div class="blog-takeaway">
+  <h4>Conditions That Respond Well to PRP</h4>
+  <ul>
+    <li><strong>Tennis elbow & golfer's elbow</strong> — one of the best-studied applications of PRP</li>
+    <li><strong>Achilles tendinitis</strong> — chronic tendon pain that hasn't responded to rest</li>
+    <li><strong>Patellar tendinitis (jumper's knee)</strong> — common in athletes who run and jump</li>
+    <li><strong>Mild to moderate knee osteoarthritis</strong> — can reduce pain and improve function</li>
+    <li><strong>Rotator cuff tendinitis</strong> — partial tears and chronic inflammation</li>
+    <li><strong>Hamstring & muscle injuries</strong> — can accelerate return to activity</li>
+    <li><strong>Plantar fasciitis</strong> — chronic heel pain that won't resolve</li>
+    <li><strong>Ligament sprains</strong> — partial tears and chronic sprains</li>
+  </ul>
+</div>
+
+<h2 id="stats">By the Numbers</h2>
+
+<div class="blog-chart">
+  <h4>PRP vs. Cortisone — Long-Term Outcomes</h4>
+  <svg viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="prpBar" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#8b5cf6"/>
+        <stop offset="100%" stop-color="#6d28d9"/>
+      </linearGradient>
+      <linearGradient id="cortBar" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#d97706"/>
+      </linearGradient>
+    </defs>
+    <!-- Grid lines -->
+    <line x1="100" y1="40" x2="420" y2="40" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="80" x2="420" y2="80" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="120" x2="420" y2="120" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="160" x2="420" y2="160" stroke="#e5e7eb" stroke-width="0.5"/>
+    <!-- Y axis labels -->
+    <text x="90" y="44" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">100%</text>
+    <text x="90" y="84" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">75%</text>
+    <text x="90" y="124" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">50%</text>
+    <text x="90" y="164" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">25%</text>
+    <!-- PRP bars -->
+    <rect x="115" y="52" width="55" height="148" rx="6" fill="url(#prpBar)" opacity="0.9">
+      <animate attributeName="height" from="0" to="148" dur="1s" fill="freeze"/>
+      <animate attributeName="y" from="200" to="52" dur="1s" fill="freeze"/>
+    </rect>
+    <rect x="245" y="48" width="55" height="152" rx="6" fill="url(#prpBar)" opacity="0.9">
+      <animate attributeName="height" from="0" to="152" dur="1s" fill="freeze" begin="0.2s"/>
+      <animate attributeName="y" from="200" to="48" dur="1s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <!-- Cortisone bars -->
+    <rect x="180" y="120" width="55" height="80" rx="6" fill="url(#cortBar)" opacity="0.9">
+      <animate attributeName="height" from="0" to="80" dur="1s" fill="freeze" begin="0.3s"/>
+      <animate attributeName="y" from="200" to="120" dur="1s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <rect x="310" y="80" width="55" height="120" rx="6" fill="url(#cortBar)" opacity="0.9">
+      <animate attributeName="height" from="0" to="120" dur="1s" fill="freeze" begin="0.5s"/>
+      <animate attributeName="y" from="200" to="80" dur="1s" fill="freeze" begin="0.5s"/>
+    </rect>
+    <!-- Labels -->
+    <text x="142" y="218" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Pain relief</text>
+    <text x="142" y="230" text-anchor="middle" font-size="10" fill="#8b5cf6" font-weight="600" font-family="Inter, sans-serif">PRP (1 yr)</text>
+    <text x="207" y="218" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Pain relief</text>
+    <text x="207" y="230" text-anchor="middle" font-size="10" fill="#d97706" font-weight="600" font-family="Inter, sans-serif">Cortisone (1 yr)</text>
+    <text x="272" y="218" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Tissue healing</text>
+    <text x="272" y="230" text-anchor="middle" font-size="10" fill="#8b5cf6" font-weight="600" font-family="Inter, sans-serif">PRP</text>
+    <text x="337" y="218" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Tissue healing</text>
+    <text x="337" y="230" text-anchor="middle" font-size="10" fill="#d97706" font-weight="600" font-family="Inter, sans-serif">Cortisone</text>
+    <!-- Values -->
+    <text x="142" y="47" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9" font-family="Inter, sans-serif">84%</text>
+    <text x="207" y="115" text-anchor="middle" font-size="13" font-weight="700" fill="#d97706" font-family="Inter, sans-serif">50%</text>
+    <text x="272" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="#6d28d9" font-family="Inter, sans-serif">Yes</text>
+    <text x="337" y="75" text-anchor="middle" font-size="13" font-weight="700" fill="#d97706" font-family="Inter, sans-serif">No</text>
+  </svg>
+  <p class="blog-chart-caption">PRP promotes actual tissue healing while cortisone provides temporary relief — studies show PRP outperforms cortisone at 1 year for tendinopathy (source: AJSM, JBJS)</p>
+</div>
+
+<h2 id="benefits">Benefits Over Traditional Treatments</h2>
+
+<p>PRP offers several important advantages over cortisone injections and other traditional treatments:</p>
+
+<div class="blog-takeaway">
+  <h4>Why Patients Choose PRP</h4>
+  <ul>
+    <li><strong>Uses your own biology</strong> — no risk of allergic reaction or rejection</li>
+    <li><strong>Promotes actual healing</strong> — stimulates tissue repair, not just symptom relief</li>
+    <li><strong>Minimal downtime</strong> — most patients return to normal activities within days</li>
+    <li><strong>Can delay or avoid surgery</strong> — especially for mild arthritis and partial tears</li>
+    <li><strong>No tissue damage</strong> — unlike cortisone, which can weaken tendons with repeated use</li>
+    <li><strong>Long-lasting results</strong> — benefits often improve over months and can last years</li>
+  </ul>
+</div>
+
+<p>It's worth noting that cortisone still has its place — for acute inflammation or when quick relief is needed before starting rehab. But for chronic conditions where long-term healing is the goal, PRP is increasingly the preferred choice.</p>
+
+<div class="blog-expert-quote">
+  <p>I've seen PRP transform outcomes for patients with chronic tennis elbow, knee arthritis, and rotator cuff tendinitis who had been struggling for months. It's not magic — it's biology, applied precisely where it's needed. And for the right patient, the results speak for themselves.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="what-to-expect">What to Expect During & After Your PRP Treatment</h2>
+
+<p>The procedure takes about 30 minutes in the office. Here's what the experience looks like:</p>
+
+<ul>
+  <li><strong>Before</strong> — Avoid anti-inflammatory medications (ibuprofen, naproxen) for 5-7 days prior, as they can interfere with platelet function</li>
+  <li><strong>During</strong> — A small blood sample is drawn, processed in a centrifuge, and the PRP is injected under ultrasound guidance. Most patients describe mild pressure but no significant pain</li>
+  <li><strong>After</strong> — Mild soreness at the injection site is normal for a few days. Avoid anti-inflammatories; Tylenol is fine for discomfort</li>
+</ul>
+
+<div class="blog-chart">
+  <h4>PRP Results Timeline</h4>
+  <svg viewBox="0 0 460 160" xmlns="http://www.w3.org/2000/svg">
+    <!-- Timeline bar -->
+    <rect x="30" y="50" width="400" height="8" rx="4" fill="#e5e7eb"/>
+    <rect x="30" y="50" width="400" height="8" rx="4" fill="url(#prpTimeline)" opacity="0.8">
+      <animate attributeName="width" from="0" to="400" dur="1.5s" fill="freeze"/>
+    </rect>
+    <defs>
+      <linearGradient id="prpTimeline" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#ddd6fe"/>
+        <stop offset="50%" stop-color="#8b5cf6"/>
+        <stop offset="100%" stop-color="#6d28d9"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Markers -->
+    <circle cx="30" cy="54" r="6" fill="#ddd6fe" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="30" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">Day 1</text>
+    <text x="30" y="80" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Mild soreness</text>
+
+    <circle cx="130" cy="54" r="6" fill="#c4b5fd" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="130" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">2 weeks</text>
+    <text x="130" y="80" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Initial improvement</text>
+
+    <circle cx="263" cy="54" r="6" fill="#a78bfa" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="263" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">6 weeks</text>
+    <text x="263" y="80" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Significant relief</text>
+
+    <circle cx="430" cy="54" r="6" fill="#7c3aed" stroke="#6d28d9" stroke-width="2"/>
+    <text x="430" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="#6d28d9" font-family="Inter, sans-serif">3 months</text>
+    <text x="430" y="80" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Full benefit</text>
+
+    <text x="230" y="120" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">Most patients notice meaningful improvement within 2-6 weeks</text>
+  </svg>
+</div>
+
+<p>Some patients experience significant improvement after a single injection. Others may benefit from a series of 2-3 injections spaced several weeks apart. Dr. Elguizaoui will recommend a treatment plan based on your specific condition and response.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Is PRP covered by insurance?</h3>
+<p>Most insurance plans do not yet cover PRP therapy, as it's still considered investigational by many insurers despite growing clinical evidence. Our office can discuss costs and payment options with you upfront so there are no surprises.</p>
+
+<h3>How many injections will I need?</h3>
+<p>Many patients see improvement with a single injection. For more chronic conditions or osteoarthritis, a series of 2-3 injections may be recommended. Dr. Elguizaoui will evaluate your response and adjust the plan accordingly.</p>
+
+<h3>Does PRP hurt?</h3>
+<p>Most patients describe mild discomfort during the injection — similar to any other injection. The area may be sore for a few days afterward, but this is actually a sign that the inflammatory healing response is working. Significant pain is uncommon.</p>
+
+<h3>Can I exercise after PRP?</h3>
+<p>You'll typically rest the treated area for 48-72 hours. Light activity usually resumes within a few days, with a gradual return to full activity over 2-4 weeks. Avoid anti-inflammatory medications during recovery as they can interfere with the healing process.</p>
+
+<h3>How does PRP compare to stem cell therapy?</h3>
+<p>PRP and stem cell therapy are both forms of regenerative medicine but work differently. PRP concentrates growth factors from your blood to stimulate healing. Stem cell therapy uses cells that can differentiate into new tissue. Dr. Elguizaoui can discuss which approach — or combination — is best for your situation.</p>
+
+<h3>Is PRP right for everyone?</h3>
+<p>PRP is not a one-size-fits-all solution. It works best for specific conditions and specific patients. Factors like your age, overall health, severity of the condition, and treatment goals all play a role. Dr. Elguizaoui evaluates each patient individually and will tell you honestly whether PRP is your best option.</p>
+
+<div class="blog-cta">
+  <h3>Curious If PRP Could Help You?</h3>
+  <p>Dr. Elguizaoui will evaluate your condition and give you an honest answer about whether PRP therapy is the right fit — with no pressure and no obligation. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/blog/meniscus-tears-cartilage-injuries">Meniscus Tears & Cartilage Injuries</a> · <a href="/blog/cartilage-damage-treatment">Cartilage Damage Treatment</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui brings compassionate, world-class orthopedic care to patients throughout the NYC metropolitan area.</p>
+  </div>
+</div>
+`,
   },
   {
     slug: "arthroscopic-vs-open-surgery",

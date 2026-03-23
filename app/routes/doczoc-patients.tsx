@@ -89,6 +89,7 @@ export default function PatientsPage() {
                   <th>Name</th>
                   <th>Age</th>
                   <th>Condition</th>
+                  <th>Contact</th>
                   <th>Last Visit</th>
                   <th>Next Appt</th>
                   <th>Status</th>
@@ -100,18 +101,21 @@ export default function PatientsPage() {
                     <td>
                       <Link to={`/doczoc/patients/${p.id}`} className="dz-patient-link">
                         <div className="dz-table-name">{p.name}</div>
-                        <div className="dz-table-sub">{p.email}</div>
                       </Link>
                     </td>
                     <td>{p.age}</td>
                     <td>{p.condition}</td>
+                    <td>
+                      <div className="dz-table-sub">{p.phone}</div>
+                      <div className="dz-table-sub">{p.email}</div>
+                    </td>
                     <td>{p.lastVisit}</td>
                     <td>{p.nextAppt}</td>
                     <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={6} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No patients found</td></tr>
+                  <tr><td colSpan={7} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No patients found</td></tr>
                 )}
               </tbody>
             </table>

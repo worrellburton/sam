@@ -8226,6 +8226,106 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   padding: 20px;
   backdrop-filter: blur(8px);
 }
+
+/* ── Liquid Glass Glow ──────────────────────────────────────────── */
+@keyframes dz-glass-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.dz-glass-card,
+.dz-stat-card,
+.dz-card,
+.dz-insight-kpi,
+.dz-insight-card {
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 15px rgba(99, 102, 241, 0.06),
+    0 0 30px rgba(99, 102, 241, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dz-glass-card::before,
+.dz-stat-card::before,
+.dz-insight-kpi::before,
+.dz-insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.3) 30%,
+    rgba(167, 139, 250, 0.5) 50%,
+    rgba(99, 102, 241, 0.3) 70%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: dz-glass-shimmer 4s ease-in-out infinite;
+  z-index: 1;
+}
+.dz-glass-card:hover,
+.dz-stat-card:hover,
+.dz-card:hover,
+.dz-insight-kpi:hover,
+.dz-insight-card:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+  box-shadow:
+    0 0 20px rgba(99, 102, 241, 0.1),
+    0 0 40px rgba(99, 102, 241, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Drag handle */
+.dz-drag-handle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.dz-stat-card:hover .dz-drag-handle { opacity: 1; }
+.dz-dragging {
+  opacity: 0.5;
+  transform: scale(0.97);
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* Light mode glass */
+[data-theme="light"] .dz-glass-card,
+[data-theme="light"] .dz-stat-card,
+[data-theme="light"] .dz-insight-kpi,
+[data-theme="light"] .dz-insight-card {
+  box-shadow:
+    0 0 15px rgba(99, 102, 241, 0.04),
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+[data-theme="light"] .dz-glass-card::before,
+[data-theme="light"] .dz-stat-card::before,
+[data-theme="light"] .dz-insight-kpi::before,
+[data-theme="light"] .dz-insight-card::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.15) 30%,
+    rgba(167, 139, 250, 0.3) 50%,
+    rgba(99, 102, 241, 0.15) 70%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: dz-glass-shimmer 4s ease-in-out infinite;
+}
+[data-theme="light"] .dz-glass-card:hover,
+[data-theme="light"] .dz-stat-card:hover,
+[data-theme="light"] .dz-card:hover,
+[data-theme="light"] .dz-insight-kpi:hover,
+[data-theme="light"] .dz-insight-card:hover {
+  box-shadow:
+    0 0 20px rgba(99, 102, 241, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
 .dz-card-title {
   display: flex;
   align-items: center;

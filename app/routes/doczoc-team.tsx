@@ -40,39 +40,41 @@ export default function TeamPage() {
               </svg>
               Add Team Member
             </button>
-            <div className="dz-view-toggle">
-              <button className={`dz-view-btn${view === "list" ? " dz-view-active" : ""}`} onClick={() => setView("list")} title="List view">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={view === "list" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-              </button>
-              <button className={`dz-view-btn${view === "grid" ? " dz-view-active" : ""}`} onClick={() => setView("grid")} title="Grid view">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={view === "grid" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
-                </svg>
-              </button>
-            </div>
           </div>
         </header>
 
-        <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
-          <div className="dz-reports-filters" style={{ marginBottom: 0 }}>
-            {ROLES.map(r => (
-              <button
-                key={r}
-                className={`dz-report-filter-btn${roleFilter === r ? " dz-report-filter-active" : ""}`}
-                onClick={() => setRoleFilter(r)}
-              >{r}</button>
-            ))}
+        <div className="dz-toolbar-row">
+          <div className="dz-toolbar-left" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            <div className="dz-reports-filters" style={{ marginBottom: 0 }}>
+              {ROLES.map(r => (
+                <button
+                  key={r}
+                  className={`dz-report-filter-btn${roleFilter === r ? " dz-report-filter-active" : ""}`}
+                  onClick={() => setRoleFilter(r)}
+                >{r}</button>
+              ))}
+            </div>
+            <input
+              type="text"
+              placeholder="Search team..."
+              className="dz-search-input"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{ maxWidth: 220 }}
+            />
           </div>
-          <input
-            type="text"
-            placeholder="Search team..."
-            className="dz-search-input"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{ marginLeft: "auto" }}
-          />
+          <div className="dz-view-toggle">
+            <button className={`dz-view-btn${view === "list" ? " dz-view-active" : ""}`} onClick={() => setView("list")} title="List view">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={view === "list" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+            <button className={`dz-view-btn${view === "grid" ? " dz-view-active" : ""}`} onClick={() => setView("grid")} title="Grid view">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={view === "grid" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {view === "grid" ? (

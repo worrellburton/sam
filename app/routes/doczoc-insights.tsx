@@ -425,6 +425,71 @@ const PAYER_MIX = [
   { payer: "Self-Pay", patients: 8, pct: 6 },
 ];
 
+const STAT_ITEMS = [
+  { id: "appts", label: "Today's Appointments", value: "24", change: "+3", color: "#6366f1" },
+  { id: "newpat", label: "New Patients (Week)", value: "18", change: "+5", color: "#22c55e" },
+  { id: "show", label: "Show Rate", value: "96%", change: "+2%", color: "#a78bfa" },
+  { id: "reviews", label: "Pending Reviews", value: "7", change: "-2", color: "#f59e0b" },
+];
+
+function DraggableStats() {
+  const [items, setItems] = useState(STAT_ITEMS);
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
+  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+
+  const handleDragStart = (idx: number) => {
+    dragItem.current = idx;
+    setDraggingIdx(idx);
+  };
+
+  const handleDragEnter = (idx: number) => {
+    dragOverItem.current = idx;
+  };
+
+  const handleDragEnd = () => {
+    if (dragItem.current === null || dragOverItem.current === null) {
+      setDraggingIdx(null);
+      return;
+    }
+    const copy = [...items];
+    const dragged = copy.splice(dragItem.current, 1)[0];
+    copy.splice(dragOverItem.current, 0, dragged);
+    setItems(copy);
+    dragItem.current = null;
+    dragOverItem.current = null;
+    setDraggingIdx(null);
+  };
+
+  return (
+    <div className="dz-stats-grid">
+      {items.map((s, i) => (
+        <div
+          key={s.id}
+          className={`dz-stat-card dz-glass-card${draggingIdx === i ? " dz-dragging" : ""}`}
+          draggable
+          onDragStart={() => handleDragStart(i)}
+          onDragEnter={() => handleDragEnter(i)}
+          onDragEnd={handleDragEnd}
+          onDragOver={(e) => e.preventDefault()}
+          style={{ cursor: "grab" }}
+        >
+          <div className="dz-drag-handle">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.3">
+              <circle cx="9" cy="5" r="1"/><circle cx="15" cy="5" r="1"/>
+              <circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/>
+              <circle cx="9" cy="19" r="1"/><circle cx="15" cy="19" r="1"/>
+            </svg>
+          </div>
+          <div className="dz-stat-card-label">{s.label}</div>
+          <div className="dz-stat-card-value" style={{ color: s.color }}>{s.value}</div>
+          <div className="dz-stat-card-change" style={{ color: "#22c55e" }}>{s.change} from last week</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function InsightsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
@@ -450,21 +515,8 @@ export default function InsightsPage() {
         {/* Cash Pipeline */}
         <CashPipeline />
 
-        {/* Quick Stats */}
-        <div className="dz-stats-grid">
-          {[
-            { label: "Today's Appointments", value: "24", change: "+3", color: "#6366f1" },
-            { label: "New Patients (Week)", value: "18", change: "+5", color: "#22c55e" },
-            { label: "Show Rate", value: "96%", change: "+2%", color: "#a78bfa" },
-            { label: "Pending Reviews", value: "7", change: "-2", color: "#f59e0b" },
-          ].map((s) => (
-            <div key={s.label} className="dz-stat-card">
-              <div className="dz-stat-card-label">{s.label}</div>
-              <div className="dz-stat-card-value" style={{ color: s.color }}>{s.value}</div>
-              <div className="dz-stat-card-change" style={{ color: "#22c55e" }}>{s.change} from last week</div>
-            </div>
-          ))}
-        </div>
+        {/* Quick Stats — Drag & Drop */}
+        <DraggableStats />
 
         {/* Today's Schedule */}
         <div className="dz-dash-section" style={{ marginBottom: 24 }}>

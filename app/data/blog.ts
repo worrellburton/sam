@@ -1139,40 +1139,331 @@ export const blogPosts: BlogPost[] = [
       "Cartilage damage doesn't have to mean the end of an active lifestyle. Explore the latest treatment options.",
     tag: "Joint Health",
     date: "December 15, 2025",
-    readTime: "6 min read",
+    readTime: "9 min read",
     image:
-      "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200&h=600&fit=crop&q=80",
     imageAlt: "X-ray of knee joint showing cartilage",
-    content: `
-## Understanding Cartilage Damage
+    relatedService: "sports-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what-is">What Is Articular Cartilage?</a></li>
+    <li><a href="#causes">Common Causes of Cartilage Damage</a></li>
+    <li><a href="#grades">Cartilage Damage Grades</a></li>
+    <li><a href="#symptoms">Signs & Symptoms</a></li>
+    <li><a href="#stats">By the Numbers</a></li>
+    <li><a href="#non-surgical">Non-Surgical Treatment Options</a></li>
+    <li><a href="#surgical">Surgical Treatment Options</a></li>
+    <li><a href="#expertise">Dr. Elguizaoui's Expertise</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
 
-Articular cartilage is the smooth, white tissue that covers the ends of bones where they form joints. When this cartilage is damaged — through injury, wear, or disease — it can cause pain, swelling, and limited function.
+<div class="blog-kindness">
+  <p>Being told you have cartilage damage can feel scary — especially if you're worried it means the end of the activities you love. The good news is that cartilage repair has advanced tremendously in recent years, and there are more options than ever to help you heal and stay active. Let's walk through what's happening in your joint and what we can do about it.</p>
+</div>
 
-### Common Causes
+<h2 id="what-is">What Is Articular Cartilage?</h2>
 
-- **Acute injury** — Sports injuries, falls, and trauma
-- **Repetitive stress** — Overuse from athletics or occupation
-- **Aging** — Natural wear over time
-- **Genetic factors** — Some people are predisposed to cartilage problems
+<p>Articular cartilage is the smooth, glassy-white tissue that covers the ends of bones where they form joints. It's remarkably slick — its surface has less friction than ice on ice — allowing your bones to glide past each other effortlessly with every movement.</p>
 
-### Modern Treatment Options
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&h=400&fit=crop&q=80" alt="Concept image of knee joint and cartilage health" loading="lazy" />
 
-#### Non-Surgical Options
-- Physical therapy and activity modification
-- Anti-inflammatory medications
-- PRP (platelet-rich plasma) injections
-- Hyaluronic acid injections
+<p>When this cartilage is damaged — through injury, wear, or disease — the normally smooth surface becomes rough or develops holes. This leads to pain, swelling, catching, and limited function. Unlike bone, cartilage has very limited blood supply, which means it doesn't heal well on its own.</p>
 
-#### Surgical Options
-- **Microfracture** — Stimulating new cartilage growth
-- **OATS/Mosaicplasty** — Transplanting cartilage plugs
-- **ACI** — Autologous chondrocyte implantation
-- **Osteochondral allograft** — Using donor cartilage tissue
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">60%</span>
+    <span class="blog-stat-label">of knee arthroscopies reveal cartilage damage</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">0%</span>
+    <span class="blog-stat-label">blood supply in most cartilage — why it doesn't self-heal</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">2-5mm</span>
+    <span class="blog-stat-label">Thickness of healthy articular cartilage</span>
+  </div>
+</div>
 
-### Dr. Elguizaoui's Expertise
+<h2 id="causes">Common Causes of Cartilage Damage</h2>
 
-Dr. Elguizaoui completed an international traveling fellowship focused specifically on cartilage repair techniques at leading centers in Switzerland, the Netherlands, and Italy. This specialized training gives him access to the most advanced cartilage restoration procedures available.
-    `,
+<div class="blog-takeaway">
+  <h4>What Damages Cartilage?</h4>
+  <ul>
+    <li><strong>Acute injury</strong> — a sports collision, fall, or twist that impacts the joint surface directly</li>
+    <li><strong>Repetitive stress</strong> — years of running, jumping, or physical labor that wears the surface down</li>
+    <li><strong>Associated injuries</strong> — ACL tears, meniscus tears, and dislocations often damage cartilage too</li>
+    <li><strong>Aging</strong> — natural wear over decades, especially in weight-bearing joints</li>
+    <li><strong>Alignment issues</strong> — bowlegs or knock-knees that concentrate force on one area</li>
+    <li><strong>Genetic factors</strong> — some people are predisposed to earlier cartilage breakdown</li>
+    <li><strong>Obesity</strong> — excess weight multiplies the force on joint surfaces with every step</li>
+  </ul>
+</div>
+
+<p>The encouraging reality is that regardless of the cause, modern medicine offers a range of treatments — from simple injections to advanced surgical restoration — that can reduce pain, improve function, and protect the joint for years to come.</p>
+
+<div class="blog-expert-quote">
+  <p>Cartilage damage used to be considered a one-way street toward joint replacement. That's simply not true anymore. With the techniques available today — many of which I trained in specifically during my fellowship in Europe — we can repair, restore, and even regenerate cartilage in ways that weren't possible a decade ago.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="grades">Cartilage Damage Grades</h2>
+
+<p>Cartilage damage is classified on a scale from Grade I (mild) to Grade IV (severe). Understanding your grade helps determine the right treatment approach.</p>
+
+<div class="blog-chart">
+  <h4>Cartilage Damage Classification</h4>
+  <svg viewBox="0 0 460 180" xmlns="http://www.w3.org/2000/svg">
+    <!-- Grade boxes -->
+    <rect x="10" y="20" width="100" height="90" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="60" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#166534" font-family="Inter, sans-serif">Grade I</text>
+    <text x="60" y="66" text-anchor="middle" font-size="10" fill="#166534" font-family="Inter, sans-serif">Softening</text>
+    <text x="60" y="82" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">Often heals with</text>
+    <text x="60" y="94" text-anchor="middle" font-size="9" fill="#15803d" font-family="Inter, sans-serif">rest & therapy</text>
+
+    <rect x="125" y="20" width="100" height="90" rx="8" fill="#fef9c3" stroke="#fde047" stroke-width="1.5"/>
+    <text x="175" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#854d0e" font-family="Inter, sans-serif">Grade II</text>
+    <text x="175" y="66" text-anchor="middle" font-size="10" fill="#854d0e" font-family="Inter, sans-serif">Partial thickness</text>
+    <text x="175" y="82" text-anchor="middle" font-size="9" fill="#a16207" font-family="Inter, sans-serif">May respond to</text>
+    <text x="175" y="94" text-anchor="middle" font-size="9" fill="#a16207" font-family="Inter, sans-serif">PRP or biologics</text>
+
+    <rect x="240" y="20" width="100" height="90" rx="8" fill="#fed7aa" stroke="#fb923c" stroke-width="1.5"/>
+    <text x="290" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#9a3412" font-family="Inter, sans-serif">Grade III</text>
+    <text x="290" y="66" text-anchor="middle" font-size="10" fill="#9a3412" font-family="Inter, sans-serif">Full thickness</text>
+    <text x="290" y="82" text-anchor="middle" font-size="9" fill="#c2410c" font-family="Inter, sans-serif">Microfracture or</text>
+    <text x="290" y="94" text-anchor="middle" font-size="9" fill="#c2410c" font-family="Inter, sans-serif">cartilage repair</text>
+
+    <rect x="355" y="20" width="100" height="90" rx="8" fill="#fecaca" stroke="#f87171" stroke-width="1.5"/>
+    <text x="405" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b" font-family="Inter, sans-serif">Grade IV</text>
+    <text x="405" y="66" text-anchor="middle" font-size="10" fill="#991b1b" font-family="Inter, sans-serif">Bone exposed</text>
+    <text x="405" y="82" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">Cartilage transplant</text>
+    <text x="405" y="94" text-anchor="middle" font-size="9" fill="#b91c1c" font-family="Inter, sans-serif">or restoration</text>
+
+    <!-- Arrows -->
+    <path d="M112 65 L123 65" stroke="#9ca3af" stroke-width="1.5" fill="none"/>
+    <path d="M227 65 L238 65" stroke="#9ca3af" stroke-width="1.5" fill="none"/>
+    <path d="M342 65 L353 65" stroke="#9ca3af" stroke-width="1.5" fill="none"/>
+
+    <text x="230" y="150" text-anchor="middle" font-size="11" fill="#6b7280" font-family="Inter, sans-serif" font-style="italic">Earlier detection = more treatment options = better outcomes</text>
+  </svg>
+</div>
+
+<h2 id="symptoms">Signs & Symptoms of Cartilage Damage</h2>
+
+<p>Cartilage damage doesn't always cause obvious symptoms right away. The signs can develop gradually and may be confused with other knee problems. Here's what to watch for:</p>
+
+<div class="blog-takeaway">
+  <h4>Common Symptoms</h4>
+  <ul>
+    <li><strong>Pain with activity</strong> — especially stairs, squatting, or prolonged walking</li>
+    <li><strong>Swelling</strong> — often after activity, sometimes developing overnight</li>
+    <li><strong>Catching or locking</strong> — the joint gets stuck or feels like something is in the way</li>
+    <li><strong>Grinding or crunching</strong> — a sensation (or sound) when bending the joint</li>
+    <li><strong>Stiffness</strong> — particularly after sitting for a long time</li>
+    <li><strong>Giving way</strong> — the joint feels unstable or weak during certain movements</li>
+  </ul>
+</div>
+
+<p>If you're experiencing any of these symptoms, an evaluation can identify exactly what's going on. The earlier cartilage damage is detected, the more treatment options are available.</p>
+
+<h2 id="stats">By the Numbers</h2>
+
+<div class="blog-chart">
+  <h4>Cartilage Repair — Patient Outcomes by Technique</h4>
+  <svg viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cartGood" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#16a34a"/>
+      </linearGradient>
+      <linearGradient id="cartGreat" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#4f46e5"/>
+      </linearGradient>
+    </defs>
+    <!-- Grid lines -->
+    <line x1="100" y1="40" x2="420" y2="40" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="80" x2="420" y2="80" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="120" x2="420" y2="120" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="100" y1="160" x2="420" y2="160" stroke="#e5e7eb" stroke-width="0.5"/>
+    <!-- Y axis labels -->
+    <text x="90" y="44" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">100%</text>
+    <text x="90" y="84" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">75%</text>
+    <text x="90" y="124" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">50%</text>
+    <text x="90" y="164" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">25%</text>
+    <!-- Bars -->
+    <rect x="115" y="56" width="55" height="144" rx="6" fill="url(#cartGreat)" opacity="0.9">
+      <animate attributeName="height" from="0" to="144" dur="1s" fill="freeze"/>
+      <animate attributeName="y" from="200" to="56" dur="1s" fill="freeze"/>
+    </rect>
+    <rect x="190" y="48" width="55" height="152" rx="6" fill="url(#cartGood)" opacity="0.9">
+      <animate attributeName="height" from="0" to="152" dur="1s" fill="freeze" begin="0.15s"/>
+      <animate attributeName="y" from="200" to="48" dur="1s" fill="freeze" begin="0.15s"/>
+    </rect>
+    <rect x="265" y="52" width="55" height="148" rx="6" fill="url(#cartGreat)" opacity="0.9">
+      <animate attributeName="height" from="0" to="148" dur="1s" fill="freeze" begin="0.3s"/>
+      <animate attributeName="y" from="200" to="52" dur="1s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <rect x="340" y="44" width="55" height="156" rx="6" fill="url(#cartGood)" opacity="0.9">
+      <animate attributeName="height" from="0" to="156" dur="1s" fill="freeze" begin="0.45s"/>
+      <animate attributeName="y" from="200" to="44" dur="1s" fill="freeze" begin="0.45s"/>
+    </rect>
+    <!-- Labels -->
+    <text x="142" y="218" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Micro-</text>
+    <text x="142" y="230" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">fracture</text>
+    <text x="217" y="218" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">OATS/</text>
+    <text x="217" y="230" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Mosaicplasty</text>
+    <text x="292" y="224" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">ACI</text>
+    <text x="367" y="218" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Osteochondral</text>
+    <text x="367" y="230" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">allograft</text>
+    <!-- Values -->
+    <text x="142" y="51" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">85%</text>
+    <text x="217" y="43" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a" font-family="Inter, sans-serif">90%</text>
+    <text x="292" y="47" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">88%</text>
+    <text x="367" y="39" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a" font-family="Inter, sans-serif">92%</text>
+  </svg>
+  <p class="blog-chart-caption">Good-to-excellent patient satisfaction rates at 5 years for modern cartilage repair techniques (source: AJSM, Cartilage Journal)</p>
+</div>
+
+<h2 id="non-surgical">Non-Surgical Treatment Options</h2>
+
+<p>Many patients with cartilage damage — especially earlier grades — can find significant relief with non-surgical approaches:</p>
+
+<ul>
+  <li><strong>Physical therapy</strong> — strengthening the muscles around the joint to reduce stress on damaged cartilage</li>
+  <li><strong>Activity modification</strong> — adjusting exercise to lower-impact activities like swimming or cycling</li>
+  <li><strong>Anti-inflammatory medications</strong> — reducing pain and swelling to improve function</li>
+  <li><strong>PRP injections</strong> — your own concentrated platelets to stimulate healing and reduce inflammation</li>
+  <li><strong>Hyaluronic acid injections</strong> — restoring joint lubrication to reduce friction and pain</li>
+  <li><strong>Bracing & orthotics</strong> — offloading the damaged area of the joint</li>
+</ul>
+
+<div class="blog-expert-quote">
+  <p>I always start with the least invasive option that has a real chance of helping. For many patients, a combination of targeted physical therapy and biologic injections like PRP can make a dramatic difference — without surgery. When surgery is needed, the goal is to preserve and restore, not replace.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="surgical">Surgical Treatment Options</h2>
+
+<p>When conservative treatment isn't enough, several surgical techniques can repair or restore damaged cartilage. The right procedure depends on the size, location, and grade of the damage, as well as your age and activity level.</p>
+
+<div class="blog-chart">
+  <h4>Surgical Options at a Glance</h4>
+  <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+    <!-- Microfracture -->
+    <rect x="10" y="15" width="215" height="55" rx="8" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="25" y="38" font-size="12" font-weight="700" fill="#5b21b6" font-family="Inter, sans-serif">Microfracture</text>
+    <text x="25" y="55" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">Tiny holes in bone stimulate new cartilage growth.</text>
+    <text x="25" y="65" font-size="9" fill="#7c3aed" font-family="Inter, sans-serif">Best for small defects. 6-8 week recovery.</text>
+
+    <!-- OATS -->
+    <rect x="240" y="15" width="215" height="55" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="255" y="38" font-size="12" font-weight="700" fill="#166534" font-family="Inter, sans-serif">OATS / Mosaicplasty</text>
+    <text x="255" y="55" font-size="9" fill="#15803d" font-family="Inter, sans-serif">Healthy cartilage plugs transplanted from a</text>
+    <text x="255" y="65" font-size="9" fill="#15803d" font-family="Inter, sans-serif">non-weight-bearing area. Best for mid-size defects.</text>
+
+    <!-- ACI -->
+    <rect x="10" y="85" width="215" height="55" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+    <text x="25" y="108" font-size="12" font-weight="700" fill="#1e40af" font-family="Inter, sans-serif">ACI (Cell Implantation)</text>
+    <text x="25" y="125" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">Your own cartilage cells grown in a lab, then</text>
+    <text x="25" y="135" font-size="9" fill="#2563eb" font-family="Inter, sans-serif">implanted back. Two-stage procedure.</text>
+
+    <!-- Allograft -->
+    <rect x="240" y="85" width="215" height="55" rx="8" fill="#fef9c3" stroke="#fde047" stroke-width="1.5"/>
+    <text x="255" y="108" font-size="12" font-weight="700" fill="#854d0e" font-family="Inter, sans-serif">Osteochondral Allograft</text>
+    <text x="255" y="125" font-size="9" fill="#a16207" font-family="Inter, sans-serif">Donor cartilage and bone transplanted for</text>
+    <text x="255" y="135" font-size="9" fill="#a16207" font-family="Inter, sans-serif">large defects. Excellent long-term results.</text>
+
+    <!-- Recovery comparison -->
+    <text x="10" y="175" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Recovery Timeline:</text>
+
+    <text x="10" y="200" font-size="10" fill="#374151" font-family="Inter, sans-serif">Microfracture</text>
+    <rect x="120" y="190" width="100" height="16" rx="3" fill="#a78bfa" opacity="0.8">
+      <animate attributeName="width" from="0" to="100" dur="0.7s" fill="freeze"/>
+    </rect>
+    <text x="228" y="203" font-size="10" fill="#6d28d9" font-weight="600" font-family="Inter, sans-serif">3-4 months</text>
+
+    <text x="10" y="222" font-size="10" fill="#374151" font-family="Inter, sans-serif">OATS</text>
+    <rect x="120" y="212" width="140" height="16" rx="3" fill="#86efac" opacity="0.8">
+      <animate attributeName="width" from="0" to="140" dur="0.8s" fill="freeze" begin="0.1s"/>
+    </rect>
+    <text x="268" y="225" font-size="10" fill="#16a34a" font-weight="600" font-family="Inter, sans-serif">4-6 months</text>
+
+    <text x="10" y="244" font-size="10" fill="#374151" font-family="Inter, sans-serif">ACI / Allograft</text>
+    <rect x="120" y="234" width="220" height="16" rx="3" fill="#60a5fa" opacity="0.8">
+      <animate attributeName="width" from="0" to="220" dur="0.9s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="348" y="247" font-size="10" fill="#2563eb" font-weight="600" font-family="Inter, sans-serif">6-12 months</text>
+
+    <text x="230" y="275" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">More complex repairs take longer but can restore larger areas of cartilage</text>
+  </svg>
+</div>
+
+<h2 id="expertise">Dr. Elguizaoui's Cartilage Repair Expertise</h2>
+
+<p>Dr. Elguizaoui completed an international traveling fellowship focused specifically on cartilage repair techniques at leading centers across Europe:</p>
+
+<ul>
+  <li><strong>Switzerland</strong> — advanced cartilage transplantation and restoration</li>
+  <li><strong>The Netherlands</strong> — cutting-edge research in biologic cartilage repair</li>
+  <li><strong>Italy</strong> — pioneering techniques in regenerative joint medicine</li>
+</ul>
+
+<p>This specialized training — combined with his experience as team physician for the New York Jets and New York Islanders — gives him access to the most advanced cartilage restoration procedures available. He brings a level of expertise in this area that few orthopedic surgeons in the region can match.</p>
+
+<div class="blog-takeaway">
+  <h4>Why Cartilage Expertise Matters</h4>
+  <ul>
+    <li><strong>Technique selection</strong> — the right procedure for the right defect makes all the difference</li>
+    <li><strong>Preservation mindset</strong> — saving your natural joint is always the priority</li>
+    <li><strong>Long-term thinking</strong> — today's repair protects your joint for decades to come</li>
+    <li><strong>Access to advanced options</strong> — techniques like ACI and allograft transplantation require specialized training</li>
+  </ul>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Can cartilage grow back on its own?</h3>
+<p>Unfortunately, articular cartilage has very limited ability to heal itself because it lacks blood supply. Small areas of damage may stabilize with rest and therapy, but significant defects typically don't regenerate without intervention. That's why surgical techniques like microfracture and ACI are so valuable — they create conditions for new cartilage to form.</p>
+
+<h3>How do I know if I have cartilage damage?</h3>
+<p>Cartilage damage is best diagnosed with an MRI, which can show the location, size, and depth of the defect. During your consultation, Dr. Elguizaoui will perform a physical exam and review imaging to give you a clear picture of what's happening inside your joint.</p>
+
+<h3>Is cartilage damage the same as arthritis?</h3>
+<p>Not exactly. Cartilage damage refers to a specific area of injury, while arthritis describes widespread cartilage loss across a joint. However, untreated cartilage damage can progress to arthritis over time — which is one of the strongest arguments for early treatment.</p>
+
+<h3>Am I too young (or too old) for cartilage repair?</h3>
+<p>Age is a factor but not a disqualifier. Younger patients generally have better healing capacity and are excellent candidates for techniques like ACI or allograft. Older patients may benefit more from microfracture, PRP, or hyaluronic acid. Dr. Elguizaoui tailors the approach to each patient's biology and goals.</p>
+
+<h3>Will I need a joint replacement eventually?</h3>
+<p>Not necessarily. The entire goal of cartilage repair is to preserve your natural joint and delay or avoid replacement. Many patients who undergo successful cartilage restoration maintain active, pain-free lives for years and even decades. Early intervention gives you the best chance of avoiding replacement.</p>
+
+<h3>Can I still exercise with cartilage damage?</h3>
+<p>Yes — but the right kind of exercise matters. Low-impact activities like swimming, cycling, and elliptical training are typically joint-friendly. High-impact activities like running or jumping may need to be modified. Dr. Elguizaoui will help you design an activity plan that keeps you moving while protecting your joint.</p>
+
+<div class="blog-cta">
+  <h3>Don't Let Cartilage Damage Sideline You</h3>
+  <p>With the right diagnosis and treatment, cartilage damage is a problem that can be solved — not just managed. Dr. Elguizaoui brings world-class cartilage repair expertise to every patient. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/blog/meniscus-tears-cartilage-injuries">Meniscus Tears & Cartilage Injuries</a> · <a href="/blog/prp-therapy-sports-medicine">PRP Therapy</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training in Switzerland, the Netherlands, and Italy. Dr. Elguizaoui brings compassionate, world-class orthopedic care to patients throughout the NYC metropolitan area.</p>
+  </div>
+</div>
+`,
   },
   {
     slug: "protecting-joints-active-adults",

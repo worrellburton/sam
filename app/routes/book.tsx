@@ -1,12 +1,14 @@
 import { Link } from "react-router";
 import { useState, useMemo, useCallback, useEffect, useRef, useContext } from "react";
 import { BookingContext } from "~/root";
+import { seoMeta } from "~/seo";
 
 export function meta() {
-  return [
-    { title: "Book an Appointment | Dr. Sam Elguizaoui, M.D. | NYC Orthopedic Surgeon" },
-    { name: "description", content: "Schedule your appointment with Dr. Sam Elguizaoui, board-certified orthopedic surgeon in NYC. Same-week appointments available." },
-  ];
+  return seoMeta({
+    title: "Book an Appointment | Dr. Sam Elguizaoui, M.D. | NYC Orthopedic Surgeon",
+    description: "Schedule your appointment with Dr. Sam Elguizaoui, board-certified orthopedic surgeon in NYC. Same-week appointments available.",
+    path: "/book",
+  });
 }
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];

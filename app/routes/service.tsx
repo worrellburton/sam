@@ -64,8 +64,22 @@ export default function ServicePage() {
 
   const stats = serviceStats[slug || ""] || [];
 
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    name: service.title,
+    description: service.description,
+    url: `https://worrellburton.github.io/sam/services/${service.slug}`,
+    provider: {
+      "@type": "Physician",
+      name: "Dr. Sameh Elguizaoui, M.D.",
+      medicalSpecialty: "Orthopedic Surgery",
+    },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
       {/* Hero: Image Left + Content Right */}
       <section className="svc-hero">
         <div className="svc-hero-visual">

@@ -141,9 +141,20 @@ function FAQItem({ faq, index }: { faq: typeof faqs[0]; index: number }) {
   );
 }
 
+const FAQ_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 export default function FAQPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }} />
       <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=1600&h=600&fit=crop&q=80')" }}>
         <div className="container">
           <p className="hero-label">Resources</p>

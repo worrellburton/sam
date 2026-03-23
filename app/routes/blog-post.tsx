@@ -153,8 +153,22 @@ export default function BlogPostPage() {
     );
   }
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.image,
+    author: { "@type": "Person", name: "Dr. Sameh Elguizaoui, M.D." },
+    publisher: { "@type": "Organization", name: "Dr. Sameh Elguizaoui, M.D." },
+    url: `https://worrellburton.github.io/sam/blog/${post.slug}`,
+    datePublished: post.date,
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://worrellburton.github.io/sam/blog/${post.slug}` },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <section className="blog-post-hero" style={{ backgroundImage: `url('${post.image}')` }}>
         <div className="container">
           <div className="blog-breadcrumb">

@@ -353,21 +353,21 @@ export default function InPersonPage() {
               <div className="dz-table-wrap">
                 <table className="dz-table">
                   <thead>
-                    <tr><th>Patient</th><th>Date</th><th>Time</th><th>Countdown</th><th>Type</th><th>Location</th><th>Status</th><th>Notes</th></tr>
+                    <tr><th>Patient</th><th>Date</th><th>Time</th><th>Countdown</th><th>Type</th><th className="dz-col-hide-lg">Location</th><th>Status</th><th className="dz-col-hide-xl dz-col-notes">Notes</th></tr>
                   </thead>
                   <tbody>
                     {filteredAppts.map((a) => {
                       const cd = formatCountdown(now, a.date, a.time, a.completed);
                       return (
                         <tr key={a.id} style={a.completed ? { opacity: 0.6 } : undefined}>
-                          <td style={{ fontWeight: 600, color: "#f1f5f9" }}>{a.patient}</td>
+                          <td style={{ fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" }}>{a.patient}</td>
                           <td style={{ fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
                           <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, color: "#f1f5f9", whiteSpace: "nowrap" }}>{a.time}</td>
                           <td><CountdownBadge text={cd.text} color={cd.color} /></td>
-                          <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc" }}>{a.type}</span></td>
-                          <td style={{ color: "#94a3b8" }}>{a.location}</td>
+                          <td><span style={{ display: "inline-block", padding: "3px 10px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 700, background: "rgba(99,102,241,0.1)", color: "#a5b4fc", whiteSpace: "nowrap" }}>{a.type}</span></td>
+                          <td className="dz-col-hide-lg" style={{ color: "#94a3b8" }}>{a.location}</td>
                           <td><Badge label={a.status} /></td>
-                          <td style={{ fontSize: "0.82rem", color: "#64748b", maxWidth: 200 }}>{a.notes}</td>
+                          <td className="dz-col-hide-xl dz-col-notes" style={{ fontSize: "0.82rem", color: "#64748b" }}>{a.notes}</td>
                         </tr>
                       );
                     })}

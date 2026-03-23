@@ -856,41 +856,281 @@ export const blogPosts: BlogPost[] = [
       "Understanding the differences between minimally invasive arthroscopic surgery and traditional open surgery.",
     tag: "Surgery",
     date: "January 10, 2026",
-    readTime: "5 min read",
+    readTime: "9 min read",
     image:
-      "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=1200&h=600&fit=crop&q=80",
     imageAlt: "Surgical procedure in operating room",
-    content: `
-## Arthroscopic vs. Open Surgery
+    relatedService: "shoulder-knee-surgery",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#overview">Arthroscopic vs. Open — An Overview</a></li>
+    <li><a href="#arthroscopic">What Is Arthroscopic Surgery?</a></li>
+    <li><a href="#open">When Is Open Surgery Preferred?</a></li>
+    <li><a href="#comparison">Side-by-Side Comparison</a></li>
+    <li><a href="#stats">By the Numbers</a></li>
+    <li><a href="#common">Common Arthroscopic Procedures</a></li>
+    <li><a href="#approach">Dr. Elguizaoui's Approach</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
 
-When surgery is recommended for a joint problem, one of the key decisions is whether an arthroscopic (minimally invasive) or open approach is best. Dr. Elguizaoui is trained in both techniques and recommends the approach that will give you the best outcome.
+<div class="blog-kindness">
+  <p>If your doctor has recommended surgery, it's natural to feel anxious — especially when you're not sure what kind of procedure you'll need. This guide is here to help you understand the difference between arthroscopic and open surgery so you can walk into your consultation feeling informed and confident.</p>
+</div>
 
-### What Is Arthroscopic Surgery?
+<h2 id="overview">Arthroscopic vs. Open — An Overview</h2>
 
-Arthroscopic surgery uses a small camera (arthroscope) inserted through tiny incisions to visualize and repair joint problems. The surgeon operates using specialized instruments through additional small incisions.
+<p>When surgery is recommended for a joint problem, one of the key decisions is whether an arthroscopic (minimally invasive) or open approach is best. Both are safe, well-established techniques — the right choice depends on your specific condition, the joint involved, and the complexity of the repair needed.</p>
 
-### Advantages of Arthroscopic Surgery
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=800&h=400&fit=crop&q=80" alt="Surgeon performing a minimally invasive procedure" loading="lazy" />
 
-- Smaller incisions (typically 5-10mm)
-- Less tissue damage
-- Less post-operative pain
-- Faster recovery
-- Lower infection risk
-- Outpatient procedure (go home same day)
+<p>Dr. Elguizaoui is trained in both techniques and recommends the approach that will give you the best outcome — not the one that's easiest or fastest for the surgeon.</p>
 
-### When Is Open Surgery Preferred?
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">5-10mm</span>
+    <span class="blog-stat-label">Typical arthroscopic incision size</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">Same day</span>
+    <span class="blog-stat-label">Most arthroscopic patients go home</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">4M+</span>
+    <span class="blog-stat-label">Arthroscopic procedures performed annually in the U.S.</span>
+  </div>
+</div>
 
-Some conditions require open surgery for the best results:
+<h2 id="arthroscopic">What Is Arthroscopic Surgery?</h2>
 
-- Complex fractures around joints
-- Some types of joint reconstruction
-- Certain cartilage transplant procedures
-- Joint replacement surgery
+<p>Arthroscopic surgery uses a small camera (arthroscope) — about the diameter of a pencil — inserted through a tiny incision to visualize the inside of a joint in high definition. The surgeon operates using specialized instruments through one or two additional small incisions.</p>
 
-### Dr. Elguizaoui's Approach
+<div class="blog-expert-quote">
+  <p>Arthroscopy gives us a view of the joint that's actually better than what we can see with the naked eye during open surgery. The camera magnifies everything, so we can identify and address problems with incredible precision — through incisions the size of a buttonhole.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
 
-Dr. Elguizaoui performs the vast majority of his procedures arthroscopically, but he never compromises patient outcomes for the sake of a smaller incision. The goal is always the best possible result for each individual patient.
-    `,
+<div class="blog-takeaway">
+  <h4>Advantages of Arthroscopic Surgery</h4>
+  <ul>
+    <li><strong>Smaller incisions</strong> — typically just 5-10mm, resulting in minimal scarring</li>
+    <li><strong>Less tissue damage</strong> — surrounding muscles and tendons are preserved</li>
+    <li><strong>Less post-operative pain</strong> — smaller wounds mean less discomfort</li>
+    <li><strong>Faster recovery</strong> — return to daily activities weeks sooner in many cases</li>
+    <li><strong>Lower infection risk</strong> — smaller incisions reduce exposure</li>
+    <li><strong>Outpatient procedure</strong> — go home the same day in most cases</li>
+    <li><strong>Better visualization</strong> — the camera provides magnified, high-definition views</li>
+  </ul>
+</div>
+
+<h2 id="open">When Is Open Surgery Preferred?</h2>
+
+<p>While arthroscopy is the preferred approach for many conditions, some situations require open surgery to achieve the best outcome. A larger incision gives the surgeon direct access to the joint, which is essential for more complex repairs.</p>
+
+<div class="blog-takeaway">
+  <h4>Conditions That May Require Open Surgery</h4>
+  <ul>
+    <li><strong>Complex fractures around joints</strong> — when bone fragments need to be precisely realigned and fixed with hardware</li>
+    <li><strong>Joint replacement surgery</strong> — total knee or hip replacements require full exposure</li>
+    <li><strong>Certain ligament reconstructions</strong> — some multi-ligament injuries need open access</li>
+    <li><strong>Large cartilage transplant procedures</strong> — osteochondral allografts and some ACI procedures</li>
+    <li><strong>Revision surgeries</strong> — correcting previous procedures may require more access</li>
+    <li><strong>Infected joints</strong> — thorough debridement sometimes requires open irrigation</li>
+  </ul>
+</div>
+
+<p>Open surgery has a longer track record and remains the gold standard for many conditions. Advances in techniques, pain management, and rehabilitation mean that recovery from open surgery has improved dramatically over the years.</p>
+
+<h2 id="comparison">Side-by-Side Comparison</h2>
+
+<div class="blog-chart">
+  <h4>Arthroscopic vs. Open Surgery</h4>
+  <svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg">
+    <!-- Header -->
+    <rect x="10" y="10" width="140" height="35" rx="6" fill="#f3f4f6"/>
+    <text x="80" y="33" text-anchor="middle" font-size="12" font-weight="700" fill="#374151" font-family="Inter, sans-serif">Factor</text>
+    <rect x="160" y="10" width="140" height="35" rx="6" fill="#ede9fe"/>
+    <text x="230" y="33" text-anchor="middle" font-size="12" font-weight="700" fill="#6d28d9" font-family="Inter, sans-serif">Arthroscopic</text>
+    <rect x="310" y="10" width="140" height="35" rx="6" fill="#dbeafe"/>
+    <text x="380" y="33" text-anchor="middle" font-size="12" font-weight="700" fill="#2563eb" font-family="Inter, sans-serif">Open</text>
+
+    <!-- Rows -->
+    <text x="80" y="72" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Incision size</text>
+    <text x="230" y="72" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Inter, sans-serif">5-10mm</text>
+    <text x="380" y="72" text-anchor="middle" font-size="11" fill="#2563eb" font-family="Inter, sans-serif">3-12 inches</text>
+    <line x1="10" y1="82" x2="450" y2="82" stroke="#e5e7eb" stroke-width="0.5"/>
+
+    <text x="80" y="105" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Hospital stay</text>
+    <text x="230" y="105" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Inter, sans-serif">Same day</text>
+    <text x="380" y="105" text-anchor="middle" font-size="11" fill="#2563eb" font-family="Inter, sans-serif">1-3 days typical</text>
+    <line x1="10" y1="115" x2="450" y2="115" stroke="#e5e7eb" stroke-width="0.5"/>
+
+    <text x="80" y="138" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Pain level</text>
+    <text x="230" y="138" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Inter, sans-serif">Mild to moderate</text>
+    <text x="380" y="138" text-anchor="middle" font-size="11" fill="#2563eb" font-family="Inter, sans-serif">Moderate to high</text>
+    <line x1="10" y1="148" x2="450" y2="148" stroke="#e5e7eb" stroke-width="0.5"/>
+
+    <text x="80" y="171" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Recovery</text>
+    <text x="230" y="171" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Inter, sans-serif">Weeks</text>
+    <text x="380" y="171" text-anchor="middle" font-size="11" fill="#2563eb" font-family="Inter, sans-serif">Weeks to months</text>
+    <line x1="10" y1="181" x2="450" y2="181" stroke="#e5e7eb" stroke-width="0.5"/>
+
+    <text x="80" y="204" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Scarring</text>
+    <text x="230" y="204" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Inter, sans-serif">Minimal</text>
+    <text x="380" y="204" text-anchor="middle" font-size="11" fill="#2563eb" font-family="Inter, sans-serif">Visible scar</text>
+    <line x1="10" y1="214" x2="450" y2="214" stroke="#e5e7eb" stroke-width="0.5"/>
+
+    <text x="80" y="237" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Visualization</text>
+    <text x="230" y="237" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Inter, sans-serif">HD camera</text>
+    <text x="380" y="237" text-anchor="middle" font-size="11" fill="#2563eb" font-family="Inter, sans-serif">Direct view</text>
+    <line x1="10" y1="247" x2="450" y2="247" stroke="#e5e7eb" stroke-width="0.5"/>
+
+    <text x="80" y="270" text-anchor="middle" font-size="11" fill="#374151" font-family="Inter, sans-serif">Infection risk</text>
+    <text x="230" y="270" text-anchor="middle" font-size="11" fill="#6d28d9" font-family="Inter, sans-serif">Lower</text>
+    <text x="380" y="270" text-anchor="middle" font-size="11" fill="#2563eb" font-family="Inter, sans-serif">Slightly higher</text>
+
+    <text x="230" y="305" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="Inter, sans-serif" font-style="italic">The best approach is the one that gives you the best outcome — not the smallest scar</text>
+  </svg>
+</div>
+
+<h2 id="stats">By the Numbers</h2>
+
+<div class="blog-chart">
+  <h4>Recovery Timeline — Arthroscopic vs. Open</h4>
+  <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="arthroBar" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#8b5cf6"/>
+        <stop offset="100%" stop-color="#6d28d9"/>
+      </linearGradient>
+      <linearGradient id="openBar" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Labels -->
+    <text x="10" y="55" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Return to</text>
+    <text x="10" y="68" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">desk work</text>
+    <text x="10" y="115" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Return to</text>
+    <text x="10" y="128" font-size="11" font-weight="600" fill="#374151" font-family="Inter, sans-serif">full activity</text>
+
+    <!-- Arthroscopic bars -->
+    <rect x="100" y="42" width="80" height="20" rx="4" fill="url(#arthroBar)" opacity="0.9">
+      <animate attributeName="width" from="0" to="80" dur="0.8s" fill="freeze"/>
+    </rect>
+    <text x="188" y="57" font-size="10" fill="#6d28d9" font-weight="600" font-family="Inter, sans-serif">1-3 days</text>
+
+    <rect x="100" y="100" width="160" height="20" rx="4" fill="url(#arthroBar)" opacity="0.9">
+      <animate attributeName="width" from="0" to="160" dur="0.8s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <text x="268" y="115" font-size="10" fill="#6d28d9" font-weight="600" font-family="Inter, sans-serif">2-6 weeks</text>
+
+    <!-- Open bars -->
+    <rect x="100" y="65" width="160" height="20" rx="4" fill="url(#openBar)" opacity="0.9">
+      <animate attributeName="width" from="0" to="160" dur="0.8s" fill="freeze" begin="0.1s"/>
+    </rect>
+    <text x="268" y="80" font-size="10" fill="#2563eb" font-weight="600" font-family="Inter, sans-serif">1-3 weeks</text>
+
+    <rect x="100" y="123" width="300" height="20" rx="4" fill="url(#openBar)" opacity="0.9">
+      <animate attributeName="width" from="0" to="300" dur="0.8s" fill="freeze" begin="0.3s"/>
+    </rect>
+    <text x="408" y="138" font-size="10" fill="#2563eb" font-weight="600" font-family="Inter, sans-serif">3-6 mo</text>
+
+    <!-- Legend -->
+    <rect x="140" y="165" width="12" height="12" rx="2" fill="#6d28d9"/>
+    <text x="158" y="176" font-size="10" fill="#374151" font-family="Inter, sans-serif">Arthroscopic</text>
+    <rect x="250" y="165" width="12" height="12" rx="2" fill="#2563eb"/>
+    <text x="268" y="176" font-size="10" fill="#374151" font-family="Inter, sans-serif">Open</text>
+  </svg>
+  <p class="blog-chart-caption">Recovery timelines are approximate and vary by procedure and individual. Arthroscopic procedures generally allow faster return to activity.</p>
+</div>
+
+<h2 id="common">Common Arthroscopic Procedures</h2>
+
+<p>Dr. Elguizaoui performs a wide range of arthroscopic procedures across the knee, shoulder, and other joints:</p>
+
+<ul>
+  <li><strong>Meniscus repair or trimming</strong> — the most common arthroscopic knee procedure</li>
+  <li><strong>ACL reconstruction</strong> — rebuilding the torn ligament through small incisions</li>
+  <li><strong>Rotator cuff repair</strong> — reattaching torn shoulder tendons</li>
+  <li><strong>Labral repair</strong> — fixing torn cartilage in the shoulder or hip</li>
+  <li><strong>Loose body removal</strong> — extracting cartilage fragments floating in the joint</li>
+  <li><strong>Cartilage restoration</strong> — microfracture and other repair techniques</li>
+  <li><strong>Synovectomy</strong> — removing inflamed tissue from arthritic joints</li>
+</ul>
+
+<div class="blog-expert-quote">
+  <p>I perform the vast majority of my procedures arthroscopically, but I never compromise a patient's outcome for the sake of a smaller incision. The goal is always the best possible result — and sometimes that means an open approach is the right call. I'll always explain why.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="approach">Dr. Elguizaoui's Approach</h2>
+
+<p>Every surgical plan is individualized. During your consultation, Dr. Elguizaoui will:</p>
+
+<ul>
+  <li>Review your imaging and physical exam findings</li>
+  <li>Explain which approach is recommended and <strong>why</strong></li>
+  <li>Walk you through what to expect before, during, and after surgery</li>
+  <li>Answer every question — no question is too small</li>
+  <li>Discuss your recovery timeline and rehabilitation plan</li>
+</ul>
+
+<div class="blog-takeaway">
+  <h4>What to Ask Your Surgeon</h4>
+  <ul>
+    <li><strong>"Is this procedure arthroscopic or open?"</strong> — understand which approach is planned</li>
+    <li><strong>"Why this approach?"</strong> — your surgeon should be able to explain clearly</li>
+    <li><strong>"What's the recovery timeline?"</strong> — so you can plan work, childcare, etc.</li>
+    <li><strong>"Will I go home the same day?"</strong> — most arthroscopic cases are outpatient</li>
+    <li><strong>"What are the risks?"</strong> — every surgery carries risk; knowing them is empowering</li>
+  </ul>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Is arthroscopic surgery safer than open surgery?</h3>
+<p>Both approaches are safe when performed by an experienced surgeon. Arthroscopic surgery generally carries a lower risk of infection and less post-operative pain due to smaller incisions, but the complication rates for both are low. The choice should be based on which approach gives you the best outcome for your specific condition.</p>
+
+<h3>How long does arthroscopic surgery take?</h3>
+<p>Most arthroscopic procedures take 30-90 minutes, depending on the complexity. You'll be in the surgical center for a few hours total, including preparation and recovery from anesthesia. Most patients go home the same day.</p>
+
+<h3>Will I be asleep during arthroscopic surgery?</h3>
+<p>It depends on the procedure and your preference. Many arthroscopic surgeries use regional anesthesia (a nerve block) combined with sedation, so you're comfortable but not under full general anesthesia. Dr. Elguizaoui and the anesthesiologist will discuss the best option for you.</p>
+
+<h3>How much pain should I expect after arthroscopic surgery?</h3>
+<p>Most patients describe post-arthroscopic pain as manageable — significantly less than open surgery. Ice, elevation, and over-the-counter pain medication are often sufficient after the first day or two. Dr. Elguizaoui uses multimodal pain management to keep you as comfortable as possible.</p>
+
+<h3>Can any joint problem be treated arthroscopically?</h3>
+<p>Not every condition can be addressed arthroscopically. Complex fractures, joint replacements, and some revision surgeries require open access. Advances in technology continue to expand what's possible through small incisions, and Dr. Elguizaoui stays at the forefront of these developments.</p>
+
+<h3>How do I know if my surgeon is experienced in arthroscopy?</h3>
+<p>Ask about their training, fellowship experience, and how many arthroscopic procedures they perform each year. Fellowship-trained sports medicine surgeons like Dr. Elguizaoui have extensive specialized training in arthroscopic techniques.</p>
+
+<div class="blog-cta">
+  <h3>Need Surgery? Let's Talk About Your Options</h3>
+  <p>Dr. Elguizaoui will explain exactly which approach is best for your condition, why, and what your recovery will look like — so you can make an informed decision with confidence. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/shoulder-knee-surgery">Shoulder & Knee Surgery</a> · <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/blog/acl-tear-recovery">ACL Tear Recovery</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui brings compassionate, world-class orthopedic care to patients throughout the NYC metropolitan area.</p>
+  </div>
+</div>
+`,
   },
   {
     slug: "cartilage-damage-treatment",

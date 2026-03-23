@@ -27,6 +27,7 @@ export default [
   route("doczoc/reports", "routes/doczoc-reports.tsx"),
   route("doczoc/rcm", "routes/doczoc-rcm.tsx"),
   route("doczoc/team", "routes/doczoc-team.tsx"),
+  route("doczoc/team/:id", "routes/doczoc-team-member.tsx"),
   route("dev", "routes/dev.tsx"),
   route("webgl", "routes/webgl.tsx"),
 ] satisfies RouteConfig;

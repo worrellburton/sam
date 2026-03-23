@@ -4341,6 +4341,22 @@ img.insurance-logo:hover {
     opacity: 1;
     pointer-events: auto;
   }
+
+  /* Mobile 768px — layout fixes */
+  .hero-rating-card { min-width: auto; max-width: 100%; }
+  .about-layout { gap: 30px; }
+  .about-photo { position: static; }
+  .specialties-grid { grid-template-columns: 1fr; }
+  .google-review-card { flex: 0 0 calc(100% - 10px); }
+  .blog-grid, .blog-home-grid { grid-template-columns: 1fr; }
+  .svc-hero { grid-template-columns: 1fr; min-height: auto; }
+  .svc-hero-content { padding: 60px 24px 40px; }
+  .svc-hero-visual { height: 240px; }
+  .svc-hero-content h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+  .svc-conditions-row { grid-template-columns: 1fr; }
+  .platform-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .credentials-timeline { padding-left: 20px; }
+  .mega-menu-inner { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
@@ -4361,6 +4377,11 @@ img.insurance-logo:hover {
   .specialty-card .specialty-img, .specialty-card .specialty-canvas { height: 220px; }
   .contact-content { gap: 24px; }
   .footer-columns { grid-template-columns: 1fr; gap: 20px; }
+  .platform-cards-grid { grid-template-columns: 1fr; }
+  .about-layout { gap: 20px; }
+  .credentials-timeline { padding-left: 12px; }
+  .svc-hero-content { padding: 40px 16px 30px; }
+  .blog-post-hero { padding: 100px 0 50px; }
 }
 
 /* ===== Blog Post Page ===== */
@@ -5288,6 +5309,113 @@ img.insurance-logo:hover {
 .dz-confirmed-loc { font-size: 0.88rem; color: #6b6b80; margin: 0 0 16px; }
 .dz-confirmed-note { font-size: 0.85rem; color: #4a4a5e; margin: 0 0 24px; }
 
+/* === Intake Overlay === */
+.dz-intake { padding: 16px 0; }
+
+/* Step indicator bar */
+.dz-intake-steps-bar { display: flex; justify-content: center; gap: 24px; margin-bottom: 28px; }
+.dz-intake-step-dot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.dz-intake-step-dot span { font-size: 0.7rem; color: #6b6b80; text-transform: uppercase; letter-spacing: 0.05em; }
+.dz-intake-dot-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; border: 2px solid #3a3a50; color: #6b6b80; background: transparent; transition: all 0.3s ease; }
+.dz-intake-step-dot.active .dz-intake-dot-circle { border-color: #6366f1; color: #fff; background: #6366f1; box-shadow: 0 0 12px rgba(99,102,241,0.4); }
+.dz-intake-step-dot.active span { color: #818cf8; }
+.dz-intake-step-dot.completed .dz-intake-dot-circle { border-color: #22c55e; background: #22c55e; color: #fff; }
+.dz-intake-step-dot.completed span { color: #22c55e; }
+
+/* Step 1: Describe Issue — Glass Pane */
+.dz-intake-describe { position: relative; }
+.dz-glass-pane { position: relative; border-radius: 16px; overflow: hidden; padding: 28px 24px; background: rgba(255,255,255,0.04); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); }
+.dz-glass-content { position: relative; z-index: 2; }
+.dz-glass-content h3 { font-size: 1.2rem; margin: 0 0 6px; color: #e4e4ee; }
+.dz-glass-content > p { font-size: 0.85rem; color: #6b6b80; margin: 0 0 16px; }
+
+/* Floating orbs */
+.dz-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.3; z-index: 0; transition: opacity 0.8s ease, transform 0.8s ease; }
+.dz-orb-blue { width: 140px; height: 140px; background: #3b82f6; top: -30px; left: -20px; animation: dz-orb-float1 6s ease-in-out infinite; }
+.dz-orb-purple { width: 120px; height: 120px; background: #8b5cf6; bottom: -20px; right: 20px; animation: dz-orb-float2 7s ease-in-out infinite; }
+.dz-orb-cyan { width: 100px; height: 100px; background: #06b6d4; top: 50%; left: 60%; animation: dz-orb-float3 5s ease-in-out infinite; }
+.dz-orb.intense { opacity: 0.6; transform: scale(1.3); }
+@keyframes dz-orb-float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 20px); } }
+@keyframes dz-orb-float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, -30px); } }
+@keyframes dz-orb-float3 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-15px, 25px); } }
+
+/* Concern textarea */
+.dz-concern-wrap { position: relative; border-radius: 12px; overflow: hidden; transition: box-shadow 0.3s ease; }
+.dz-concern-wrap.has-text { box-shadow: 0 0 20px rgba(99,102,241,0.15); }
+.dz-concern-wrap.enhancing { animation: dz-enhance-fade 1.5s ease-in-out; }
+@keyframes dz-enhance-fade { 0% { opacity: 1; } 40% { opacity: 0.3; } 60% { opacity: 0.3; } 100% { opacity: 1; } }
+.dz-concern-input { width: 100%; min-height: 120px; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; background: rgba(0,0,0,0.2); color: #e4e4ee; font-size: 0.95rem; line-height: 1.6; resize: vertical; font-family: inherit; transition: border-color 0.3s, box-shadow 0.3s; }
+.dz-concern-input:focus { outline: none; border-color: #6366f1; }
+.dz-concern-wrap.has-text .dz-concern-input { text-shadow: 0 0 8px rgba(129,140,248,0.3); }
+.dz-concern-wrap.enhanced .dz-concern-input { border-color: #22c55e; text-shadow: 0 0 8px rgba(34,197,94,0.2); }
+
+/* Voice & Enhance buttons */
+.dz-concern-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.dz-voice-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #a5a5b8; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+.dz-voice-btn:hover { border-color: #6366f1; color: #818cf8; }
+.dz-voice-btn.recording { border-color: #ef4444; color: #ef4444; background: rgba(239,68,68,0.1); }
+.dz-rec-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; animation: dz-rec-blink 1s ease-in-out infinite; }
+@keyframes dz-rec-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.dz-enhance-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; border: 2px solid transparent; background: linear-gradient(rgba(30,30,50,1), rgba(30,30,50,1)) padding-box, linear-gradient(135deg, #8b5cf6, #6366f1, #a78bfa) border-box; color: #c4b5fd; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.dz-enhance-btn:hover:not(:disabled) { box-shadow: 0 0 16px rgba(139,92,246,0.3); color: #e9d5ff; }
+.dz-enhance-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.dz-spinner-sm { width: 14px; height: 14px; border: 2px solid rgba(139,92,246,0.3); border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.dz-intake-continue { margin-top: 20px; width: 100%; }
+
+/* Step 2: Good Fit */
+.dz-intake-fit { text-align: center; padding: 32px 0; }
+.dz-fit-check-anim { margin-bottom: 20px; animation: dz-fit-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@keyframes dz-fit-pop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.dz-fit-checkmark { display: inline-block; }
+.dz-fit-title { font-size: 1.5rem; color: #e4e4ee; margin: 0 0 12px; animation: dz-fade-up 0.5s ease 0.3s both; }
+.dz-fit-desc { font-size: 0.92rem; color: #6b6b80; line-height: 1.6; margin: 0 0 24px; max-width: 400px; margin-left: auto; margin-right: auto; animation: dz-fade-up 0.5s ease 0.5s both; }
+@keyframes dz-fade-up { 0% { transform: translateY(12px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+/* Step 3: Upload Cards */
+.dz-intake-upload h3 { font-size: 1.2rem; color: #e4e4ee; margin: 0 0 6px; }
+.dz-intake-upload > p { font-size: 0.85rem; color: #6b6b80; margin: 0 0 20px; }
+.dz-upload-zones { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+.dz-upload-zone { display: flex; align-items: center; justify-content: center; min-height: 100px; border: 2px dashed rgba(255,255,255,0.12); border-radius: 12px; cursor: pointer; transition: all 0.3s; background: rgba(255,255,255,0.02); padding: 16px; }
+.dz-upload-zone:hover { border-color: #6366f1; background: rgba(99,102,241,0.05); }
+.dz-upload-zone.uploaded { border-color: #22c55e; border-style: solid; background: rgba(34,197,94,0.05); }
+.dz-upload-placeholder { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #6b6b80; }
+.dz-upload-placeholder span { font-size: 0.9rem; font-weight: 600; }
+.dz-upload-hint { font-size: 0.75rem !important; font-weight: 400 !important; color: #4a4a5e !important; }
+.dz-upload-done { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.dz-upload-done span { font-size: 0.82rem; color: #a5a5b8; word-break: break-all; text-align: center; }
+.dz-upload-status { color: #22c55e !important; font-weight: 600; text-transform: uppercase; font-size: 0.7rem !important; letter-spacing: 0.05em; }
+
+/* Step 4: Summary & Book */
+.dz-intake-summary h3 { font-size: 1.2rem; color: #e4e4ee; margin: 0 0 20px; }
+.dz-summary-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 24px; }
+.dz-summary-row { display: flex; flex-direction: column; gap: 4px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.dz-summary-row:last-child { border-bottom: none; }
+.dz-summary-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #6b6b80; font-weight: 600; }
+.dz-summary-value { font-size: 0.92rem; color: #e4e4ee; }
+.dz-summary-concern { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
+.dz-summary-doc { display: flex; align-items: center; gap: 4px; font-size: 0.82rem; color: #a5a5b8; }
+.dz-btn-book { width: 100%; padding: 14px 24px; font-size: 1rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #3b82f6, #2563eb); border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 20px rgba(37,99,235,0.35); transition: all 0.3s; }
+.dz-btn-book:hover { box-shadow: 0 6px 28px rgba(37,99,235,0.5); transform: translateY(-1px); }
+
+/* Light mode intake overrides */
+.dz-light .dz-glass-pane { background: rgba(255,255,255,0.7); border-color: rgba(0,0,0,0.08); }
+.dz-light .dz-glass-content h3 { color: #1a1a2e; }
+.dz-light .dz-concern-input { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.12); color: #1a1a2e; }
+.dz-light .dz-concern-wrap.has-text .dz-concern-input { text-shadow: 0 0 8px rgba(99,102,241,0.15); }
+.dz-light .dz-voice-btn { border-color: rgba(0,0,0,0.1); color: #666; background: rgba(0,0,0,0.03); }
+.dz-light .dz-enhance-btn { background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #8b5cf6, #6366f1, #a78bfa) border-box; color: #7c3aed; }
+.dz-light .dz-intake-dot-circle { border-color: #d1d5db; color: #9ca3af; }
+.dz-light .dz-fit-title { color: #1a1a2e; }
+.dz-light .dz-intake-upload h3 { color: #1a1a2e; }
+.dz-light .dz-intake-summary h3 { color: #1a1a2e; }
+.dz-light .dz-summary-card { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
+.dz-light .dz-summary-value { color: #1a1a2e; }
+.dz-light .dz-upload-zone { border-color: rgba(0,0,0,0.15); background: rgba(0,0,0,0.01); }
+.dz-light .dz-upload-zone:hover { border-color: #2563eb; background: rgba(37,99,235,0.03); }
+
 /* Theme toggle */
 .dz-theme-toggle { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #6b6b80; transition: all 0.2s; }
 .dz-theme-toggle:hover { border-color: #6366f1; color: #818cf8; }
@@ -5448,6 +5576,10 @@ img.insurance-logo:hover {
   .dz-cal-cell { min-height: 60px; padding: 4px; }
   .dz-cal-pill { font-size: 0.55rem; padding: 2px 4px; }
   .dz-booking.expanded .dz-time-grid { grid-template-columns: repeat(4, 1fr); }
+  /* Intake mobile 900px */
+  .dz-intake-steps-bar { gap: 16px; }
+  .dz-intake-step-dot span { font-size: 0.62rem; }
+  .dz-glass-pane { padding: 20px 16px; }
 }
 @media (max-width: 600px) {
   .dz-main { padding: 16px; }
@@ -5459,6 +5591,24 @@ img.insurance-logo:hover {
   .dz-cal-cell { min-height: 50px; }
   .dz-cal-pills { display: none; }
   .dz-booking.expanded .dz-time-grid { grid-template-columns: repeat(3, 1fr); }
+  /* Intake mobile 600px */
+  .dz-intake-steps-bar { gap: 10px; }
+  .dz-intake-dot-circle { width: 24px; height: 24px; font-size: 0.65rem; }
+  .dz-intake-step-dot span { font-size: 0.58rem; }
+  .dz-glass-pane { padding: 16px 12px; }
+  .dz-glass-content h3 { font-size: 1rem; }
+  .dz-concern-input { font-size: 0.88rem; min-height: 100px; padding: 12px; }
+  .dz-concern-actions { gap: 8px; }
+  .dz-voice-btn { padding: 6px 10px; font-size: 0.78rem; }
+  .dz-enhance-btn { padding: 6px 12px; font-size: 0.78rem; }
+  .dz-fit-title { font-size: 1.2rem; }
+  .dz-fit-desc { font-size: 0.85rem; }
+  .dz-upload-zone { min-height: 80px; padding: 12px; }
+  .dz-summary-card { padding: 14px; }
+  .dz-orb { filter: blur(40px); }
+  .dz-orb-blue { width: 100px; height: 100px; }
+  .dz-orb-purple { width: 80px; height: 80px; }
+  .dz-orb-cyan { width: 70px; height: 70px; }
 }
 
 /* ===== Dev Tools Dashboard ===== */

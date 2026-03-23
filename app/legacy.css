@@ -6547,8 +6547,11 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-sidebar {
   width: 240px;
   height: 100vh;
-  background: #0a0a1a;
-  border-right: 1px solid rgba(99, 102, 241, 0.12);
+  background: rgba(6, 6, 18, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
   display: flex;
   flex-direction: column;
   padding: 16px 12px;
@@ -6826,8 +6829,11 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   color: #1e293b;
 }
 [data-theme="light"] .dz-sidebar {
-  background: #ffffff;
-  border-right-color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right-color: rgba(0, 0, 0, 0.06);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.5);
 }
 [data-theme="light"] .dz-sidebar-logo .dz-logo-text { color: #1e293b !important; }
 [data-theme="light"] .dz-sidebar-link { color: #64748b; }
@@ -6857,8 +6863,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 
 /* Stat cards */
 [data-theme="light"] .dz-stat-card {
-  background: #ffffff;
-  border-color: #e2e8f0;
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 [data-theme="light"] .dz-stat-card:hover { border-color: #c7d2fe; }
@@ -6937,21 +6943,28 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 }
 [data-theme="light"] .dz-sub-filter-count { background: rgba(99, 102, 241, 0.1); color: #4f46e5; }
 
-/* Cards */
+/* Cards — light mode uses CSS variables */
 [data-theme="light"] .dz-card {
-  background: #ffffff;
-  border-color: #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight-top);
 }
-[data-theme="light"] .dz-card:hover { border-color: #c7d2fe; }
+[data-theme="light"] .dz-card:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
 
 /* Patient cards (grid view) */
 [data-theme="light"] .dz-patient-card {
-  background: #ffffff;
-  border-color: #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight-top);
 }
-[data-theme="light"] .dz-patient-card:hover { border-color: #c7d2fe; }
+[data-theme="light"] .dz-patient-card:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255,255,255,0.9);
+}
 [data-theme="light"] .dz-patient-card-name { color: #1e293b; }
 [data-theme="light"] .dz-patient-card-condition { color: #64748b; }
 [data-theme="light"] .dz-patient-card-label { color: #94a3b8; }
@@ -7130,10 +7143,15 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 
 /* ── Generic card/dark-bg → light mode ────────────── */
 [data-theme="light"] .dz-card {
-  background: #ffffff !important; border-color: #e2e8f0 !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  background: var(--glass-bg) !important;
+  border-color: var(--glass-border) !important;
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight-top);
 }
-[data-theme="light"] .dz-card:hover { border-color: #c7d2fe !important; }
+[data-theme="light"] .dz-card:hover {
+  background: var(--glass-bg-hover) !important;
+  border-color: var(--glass-border-hover) !important;
+  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
 
 /* Sidebar submenu — light mode */
 [data-theme="light"] .dz-sidebar-parent { color: #64748b; }
@@ -7159,6 +7177,64 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   transition: margin-left 0.25s ease;
   position: relative;
   z-index: 1;
+}
+
+/* Ambient atmosphere overlay — subtle, alive, restrained */
+.dz-platform-main::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(99, 102, 241, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(168, 85, 247, 0.02) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 40% at 50% 50%, rgba(59, 130, 246, 0.015) 0%, transparent 60%);
+  animation: dz-ambient-drift 40s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.8;
+}
+/* Faint organic noise/grain overlay */
+.dz-platform-main::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+}
+
+@keyframes dz-ambient-drift {
+  0% {
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 30%, rgba(99, 102, 241, 0.03) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 80% 70%, rgba(168, 85, 247, 0.02) 0%, transparent 70%),
+      radial-gradient(ellipse 70% 40% at 50% 50%, rgba(59, 130, 246, 0.015) 0%, transparent 60%);
+  }
+  50% {
+    background:
+      radial-gradient(ellipse 70% 55% at 35% 45%, rgba(99, 102, 241, 0.025) 0%, transparent 70%),
+      radial-gradient(ellipse 65% 45% at 65% 55%, rgba(168, 85, 247, 0.025) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 45% 35%, rgba(59, 130, 246, 0.02) 0%, transparent 60%);
+  }
+  100% {
+    background:
+      radial-gradient(ellipse 75% 50% at 55% 40%, rgba(99, 102, 241, 0.035) 0%, transparent 70%),
+      radial-gradient(ellipse 55% 55% at 30% 60%, rgba(168, 85, 247, 0.02) 0%, transparent 70%),
+      radial-gradient(ellipse 65% 45% at 70% 45%, rgba(59, 130, 246, 0.015) 0%, transparent 60%);
+  }
+}
+
+/* Light mode atmosphere — softer, warmer */
+[data-theme="light"] .dz-platform-main::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(99, 102, 241, 0.02) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(168, 85, 247, 0.015) 0%, transparent 70%);
+  opacity: 0.5;
+}
+[data-theme="light"] .dz-platform-main::after {
+  opacity: 0.15;
 }
 .dz-platform-header {
   display: flex;
@@ -7200,14 +7276,31 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   margin-bottom: 32px;
 }
 .dz-stat-card {
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(99, 102, 241, 0.1);
-  border-radius: 14px;
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
   padding: 22px;
-  backdrop-filter: blur(12px);
-  transition: all 0.2s;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight-top);
+  transition: all var(--glass-transition);
+  overflow: hidden;
 }
-.dz-stat-card:hover { border-color: rgba(99, 102, 241, 0.25); }
+.dz-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.06) 80%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+.dz-stat-card:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255,255,255,0.1);
+  transform: translateY(-1px);
+}
 .dz-stat-card-label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
 .dz-stat-card-value { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; color: #f1f5f9; }
 .dz-stat-card-change { font-size: 0.72rem; }
@@ -7215,11 +7308,37 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 /* Table */
 .dz-dash-section h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; color: #f1f5f9; }
 .dz-table-wrap {
-  background: rgba(15, 23, 42, 0.45);
-  border: 1px solid rgba(99, 102, 241, 0.1);
-  border-radius: 14px;
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
   overflow: hidden;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow),
+              inset 0 1px 0 var(--glass-highlight-top);
+  transition: border-color var(--glass-transition), box-shadow var(--glass-transition);
+}
+.dz-table-wrap:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+/* Top highlight for table wrap */
+.dz-table-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 20%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.06) 80%,
+    transparent 100%
+  );
+  z-index: 2;
+  pointer-events: none;
 }
 .dz-table {
   width: 100%;
@@ -7233,18 +7352,34 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+  background: rgba(255, 255, 255, 0.015);
   background: rgba(10, 10, 26, 0.3);
 }
 .dz-table td {
   padding: 11px 16px;
   font-size: 0.82rem;
   color: #94a3b8;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.04);
+  transition: background 0.2s ease;
 }
-.dz-table tr:hover td { background: rgba(99, 102, 241, 0.04); }
+.dz-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
 .dz-row-clickable { cursor: pointer; }
-.dz-row-clickable:hover td { background: rgba(99, 102, 241, 0.06) !important; }
+.dz-row-clickable:hover td {
+  background: rgba(99, 102, 241, 0.04) !important;
+}
+[data-theme="light"] .dz-table th {
+  background: rgba(248, 250, 252, 0.8);
+  color: #64748b;
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+[data-theme="light"] .dz-table td {
+  border-bottom-color: rgba(0, 0, 0, 0.04);
+  color: #475569;
+}
+[data-theme="light"] .dz-table tr:hover td { background: rgba(99, 102, 241, 0.02); }
 [data-theme="light"] .dz-row-clickable:hover td { background: rgba(99, 102, 241, 0.04) !important; }
 .dz-table-name { font-weight: 600; color: #f1f5f9; white-space: nowrap; }
 .dz-table-sub { font-size: 0.72rem; color: #64748b; }
@@ -8223,7 +8358,128 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   .dz-bg-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ── Patient detail cards ────────────────────────────────────────── */
+/* ── Liquid Glass Design System ─────────────────────────────────── */
+/* Premium glassmorphic surfaces — translucent, dimensional, alive  */
+
+/* Design tokens */
+:root {
+  --glass-bg: rgba(12, 14, 28, 0.55);
+  --glass-bg-hover: rgba(16, 18, 36, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-border-hover: rgba(255, 255, 255, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.04);
+  --glass-highlight-top: rgba(255, 255, 255, 0.07);
+  --glass-shadow: 0 2px 16px rgba(0, 0, 0, 0.12),
+                  0 0 1px rgba(0, 0, 0, 0.15);
+  --glass-shadow-hover: 0 4px 32px rgba(0, 0, 0, 0.18),
+                        0 0 1px rgba(0, 0, 0, 0.2),
+                        0 0 60px rgba(99, 102, 241, 0.04);
+  --glass-shadow-active: 0 1px 8px rgba(0, 0, 0, 0.15),
+                         0 0 1px rgba(0, 0, 0, 0.12);
+  --glass-blur: 16px;
+  --glass-radius: 14px;
+  --glass-sheen-color: rgba(255, 255, 255, 0.03);
+  --glass-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-hover: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-border-hover: rgba(99, 102, 241, 0.18);
+  --glass-highlight: rgba(255, 255, 255, 0.5);
+  --glass-highlight-top: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 1px 8px rgba(0, 0, 0, 0.04),
+                  0 0 1px rgba(0, 0, 0, 0.06);
+  --glass-shadow-hover: 0 4px 24px rgba(0, 0, 0, 0.06),
+                        0 0 1px rgba(0, 0, 0, 0.08),
+                        0 0 40px rgba(99, 102, 241, 0.03);
+  --glass-shadow-active: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --glass-sheen-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Glass Surface (base card) ─────────────────────────────────── */
+.dz-card {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 20px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow),
+              inset 0 1px 0 var(--glass-highlight-top),
+              inset 0 -1px 0 var(--glass-highlight);
+  transition:
+    background var(--glass-transition),
+    border-color var(--glass-transition),
+    box-shadow var(--glass-transition),
+    transform var(--glass-transition);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Inner highlight — thick glass feel */
+.dz-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 20%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.06) 80%,
+    transparent 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Hover — increase clarity, brightness, depth */
+.dz-card:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              inset 0 -1px 0 var(--glass-highlight);
+  transform: translateY(-1px);
+}
+
+/* Active/press — subtle sheen sweep + depth */
+.dz-card:active {
+  transform: translateY(0);
+  box-shadow: var(--glass-shadow-active),
+              inset 0 1px 0 var(--glass-highlight-top);
+}
+
+/* Sheen sweep on click — CSS animation */
+@keyframes dz-glass-sheen {
+  0% { left: -100%; opacity: 0; }
+  10% { opacity: 1; }
+  100% { left: 150%; opacity: 0; }
+}
+.dz-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    var(--glass-sheen-color) 40%,
+    rgba(255, 255, 255, 0.06) 50%,
+    var(--glass-sheen-color) 60%,
+    transparent 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.dz-card:active::after {
+  animation: dz-glass-sheen 0.6s ease-out forwards;
+}
 .dz-card {
   background: rgba(20, 20, 35, 0.7);
   border: 1px solid rgba(99, 102, 241, 0.1);
@@ -8232,7 +8488,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   backdrop-filter: blur(8px);
 }
 
-/* ── Liquid Glass Glow ──────────────────────────────────────────── */
+/* ── Glass Shimmer (legacy compat) ─────────────────────────────── */
 @keyframes dz-glass-shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -8320,20 +8576,19 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-surgery-btn { transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .dz-glass-card,
-.dz-stat-card,
-.dz-card,
 .dz-insight-kpi,
 .dz-insight-card {
   position: relative;
   overflow: hidden;
-  box-shadow:
-    0 0 15px rgba(99, 102, 241, 0.06),
-    0 0 30px rgba(99, 102, 241, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight-top);
+  transition: all var(--glass-transition);
 }
 .dz-glass-card::before,
-.dz-stat-card::before,
 .dz-insight-kpi::before,
 .dz-insight-card::before {
   content: '';
@@ -8342,26 +8597,22 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   height: 1px;
   background: linear-gradient(90deg,
     transparent 0%,
-    rgba(99, 102, 241, 0.3) 30%,
-    rgba(167, 139, 250, 0.5) 50%,
-    rgba(99, 102, 241, 0.3) 70%,
+    rgba(255, 255, 255, 0.06) 20%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.06) 80%,
     transparent 100%
   );
-  background-size: 200% 100%;
-  animation: dz-glass-shimmer 4s ease-in-out infinite;
-  z-index: 1;
+  z-index: 2;
+  pointer-events: none;
 }
 .dz-glass-card:hover,
 .dz-stat-card:hover,
-.dz-card:hover,
 .dz-insight-kpi:hover,
 .dz-insight-card:hover {
-  border-color: rgba(99, 102, 241, 0.25);
-  box-shadow:
-    0 0 20px rgba(99, 102, 241, 0.1),
-    0 0 40px rgba(99, 102, 241, 0.05),
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }
 
 /* Drag handle */
@@ -8379,15 +8630,13 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   box-shadow: 0 0 30px rgba(99, 102, 241, 0.2) !important;
 }
 
-/* Light mode glass */
+/* Light mode glass — variables handle most of this automatically */
 [data-theme="light"] .dz-glass-card,
 [data-theme="light"] .dz-stat-card,
 [data-theme="light"] .dz-insight-kpi,
 [data-theme="light"] .dz-insight-card {
-  box-shadow:
-    0 0 15px rgba(99, 102, 241, 0.04),
-    0 1px 3px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: var(--glass-shadow),
+              inset 0 1px 0 var(--glass-highlight-top);
 }
 [data-theme="light"] .dz-glass-card::before,
 [data-theme="light"] .dz-stat-card::before,
@@ -8395,9 +8644,9 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 [data-theme="light"] .dz-insight-card::before {
   background: linear-gradient(90deg,
     transparent 0%,
-    rgba(99, 102, 241, 0.15) 30%,
-    rgba(167, 139, 250, 0.3) 50%,
-    rgba(99, 102, 241, 0.15) 70%,
+    rgba(99, 102, 241, 0.08) 30%,
+    rgba(167, 139, 250, 0.15) 50%,
+    rgba(99, 102, 241, 0.08) 70%,
     transparent 100%
   );
   background-size: 200% 100%;
@@ -8405,13 +8654,10 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 }
 [data-theme="light"] .dz-glass-card:hover,
 [data-theme="light"] .dz-stat-card:hover,
-[data-theme="light"] .dz-card:hover,
 [data-theme="light"] .dz-insight-kpi:hover,
 [data-theme="light"] .dz-insight-card:hover {
-  box-shadow:
-    0 0 20px rgba(99, 102, 241, 0.08),
-    0 4px 16px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: var(--glass-shadow-hover),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 .dz-card-title {
   display: flex;
@@ -8603,20 +8849,26 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   gap: 16px;
 }
 .dz-patient-card {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(99, 102, 241, 0.1);
-  border-radius: 14px;
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
   padding: 20px;
   text-decoration: none;
   color: inherit;
-  transition: all 0.2s;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight-top);
+  transition: all var(--glass-transition);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 .dz-patient-card:hover {
-  border-color: rgba(99, 102, 241, 0.3);
-  background: rgba(15, 23, 42, 0.8);
+  border-color: var(--glass-border-hover);
+  background: var(--glass-bg-hover);
+  box-shadow: var(--glass-shadow-hover), inset 0 1px 0 rgba(255,255,255,0.1);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }

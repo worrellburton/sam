@@ -717,6 +717,11 @@
             <p>Schedule your appointment through Zocdoc for instant confirmation.</p>
             <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-primary btn-lg btn-block">Book on Zocdoc</a>
           </div>
+          <div class="contact-card contact-card-intake">
+            <h3>Already Booked?</h3>
+            <p>Complete your pre-visit intake form to save time at your appointment.</p>
+            <button onclick="openIntake()" class="btn btn-outline btn-lg btn-block">Start Pre-Visit Form</button>
+          </div>
         </div>
       </div>
     </div>
@@ -773,37 +778,14 @@
           <div class="intake-step-dot" data-step="4"></div>
           <div class="intake-step-dot" data-step="5"></div>
           <div class="intake-step-dot" data-step="6"></div>
-          <div class="intake-step-dot" data-step="7"></div>
         </div>
-        <h2 id="intakeTitle">Select Appointment Date</h2>
-        <p id="intakeSubtitle">Choose a date and time that works for you.</p>
+        <h2 id="intakeTitle">Patient Details</h2>
+        <p id="intakeSubtitle">Are you a new or existing patient?</p>
       </div>
 
       <div class="intake-body">
-        <!-- Step 1: Calendar -->
+        <!-- Step 1: New or Existing Patient -->
         <div class="intake-step active" id="intakeStep1">
-          <div class="intake-calendar" id="intakeCalendar">
-            <div class="cal-header">
-              <button class="cal-nav" id="calPrev" aria-label="Previous month">&#8249;</button>
-              <span class="cal-month" id="calMonth"></span>
-              <button class="cal-nav" id="calNext" aria-label="Next month">&#8250;</button>
-            </div>
-            <div class="cal-weekdays">
-              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-            </div>
-            <div class="cal-days" id="calDays"></div>
-          </div>
-          <div class="intake-time-slots" id="timeSlots" style="display:none">
-            <p class="time-slots-label" id="timeSlotsLabel">Available times</p>
-            <div class="time-slots-grid" id="timeSlotsGrid"></div>
-          </div>
-          <div class="intake-actions">
-            <button class="intake-btn intake-btn-primary" id="intakeNext1" disabled>Confirm Appointment</button>
-          </div>
-        </div>
-
-        <!-- Step 2: New or Existing Patient -->
-        <div class="intake-step" id="intakeStep2">
           <div class="intake-patient-type">
             <button class="patient-type-btn" data-type="new" id="btnNewPatient">
               <div class="patient-type-icon">
@@ -820,13 +802,10 @@
               <span class="patient-type-desc">I've seen Dr. Elguizaoui before</span>
             </button>
           </div>
-          <div class="intake-actions">
-            <button class="intake-btn intake-btn-secondary" id="intakeBack2">Back</button>
-          </div>
         </div>
 
-        <!-- Step 3: Describe Issue — Liquid Glass -->
-        <div class="intake-step" id="intakeStep3">
+        <!-- Step 2: Describe Issue — Liquid Glass -->
+        <div class="intake-step" id="intakeStep2">
           <div class="glass-container">
             <div class="glass-orb glass-orb-1"></div>
             <div class="glass-orb glass-orb-2"></div>
@@ -841,17 +820,17 @@
             <span class="intake-timer" id="voiceTimer" style="display:none">0:00</span>
           </button>
           <div class="intake-actions">
-            <button class="intake-btn intake-btn-secondary" id="intakeBack3">Back</button>
+            <button class="intake-btn intake-btn-secondary" id="intakeBack2">Back</button>
             <button class="intake-btn intake-btn-enhance" id="intakeEnhance" style="display:none">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7L12 16.4 5.7 21l2.3-7L2 9.4h7.6z"/></svg>
               Enhance
             </button>
-            <button class="intake-btn intake-btn-primary" id="intakeNext3" style="display:none">Continue</button>
+            <button class="intake-btn intake-btn-primary" id="intakeNext2" style="display:none">Continue</button>
           </div>
         </div>
 
-        <!-- Step 4: Good Fit -->
-        <div class="intake-step" id="intakeStep4">
+        <!-- Step 3: Good Fit -->
+        <div class="intake-step" id="intakeStep3">
           <div class="goodfit-container">
             <div class="goodfit-icon">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -860,15 +839,15 @@
               </svg>
             </div>
             <h3 class="goodfit-title">You're a Great Fit!</h3>
-            <p class="goodfit-desc">Based on what you've described, Dr. Elguizaoui can help. Let's continue with booking &mdash; we'll need your card information next.</p>
+            <p class="goodfit-desc">Based on what you've described, Dr. Elguizaoui can help. Continue with booking &mdash; we'll need your card information next.</p>
           </div>
           <div class="intake-actions">
-            <button class="intake-btn intake-btn-primary" id="intakeNext4">Continue with Booking</button>
+            <button class="intake-btn intake-btn-primary" id="intakeNext3">Continue with Booking</button>
           </div>
         </div>
 
-        <!-- Step 5: Upload Cards -->
-        <div class="intake-step" id="intakeStep5">
+        <!-- Step 4: Upload Cards -->
+        <div class="intake-step" id="intakeStep4">
           <div class="intake-uploads">
             <div class="intake-upload-zone" id="uploadLicense">
               <input type="file" accept="image/*,.pdf" id="licenseInput">
@@ -890,18 +869,14 @@
             </div>
           </div>
           <div class="intake-actions">
-            <button class="intake-btn intake-btn-secondary" id="intakeBack5">Back</button>
-            <button class="intake-btn intake-btn-primary" id="intakeNext5" disabled>Continue</button>
+            <button class="intake-btn intake-btn-secondary" id="intakeBack4">Back</button>
+            <button class="intake-btn intake-btn-primary" id="intakeNext4" disabled>Continue</button>
           </div>
         </div>
 
-        <!-- Step 6: Summary -->
-        <div class="intake-step" id="intakeStep6">
+        <!-- Step 5: Summary -->
+        <div class="intake-step" id="intakeStep5">
           <div class="summary-container">
-            <div class="summary-item">
-              <div class="summary-label">Appointment</div>
-              <div class="summary-value" id="summaryDate">—</div>
-            </div>
             <div class="summary-item">
               <div class="summary-label">Patient Type</div>
               <div class="summary-value" id="summaryPatient">—</div>
@@ -916,13 +891,13 @@
             </div>
           </div>
           <div class="intake-actions">
-            <button class="intake-btn intake-btn-secondary" id="intakeBack6">Back</button>
+            <button class="intake-btn intake-btn-secondary" id="intakeBack5">Back</button>
             <button class="intake-btn intake-btn-book" id="intakeBook">Book Appointment</button>
           </div>
         </div>
 
-        <!-- Step 7: Booked -->
-        <div class="intake-step" id="intakeStep7">
+        <!-- Step 6: Booked -->
+        <div class="intake-step" id="intakeStep6">
           <div class="intake-success">
             <div class="intake-success-icon">&#10004;&#65039;</div>
             <h3>Appointment Booked!</h3>
@@ -1302,7 +1277,7 @@
   </script>
 
   <script>
-    // --- Patient Intake Flow (7-step with liquid glass + enhance) ---
+    // --- Patient Intake Flow (6-step: patient type → describe → good fit → cards → summary → booked) ---
     (function() {
       const overlay = document.getElementById('intakeOverlay');
       const closeBtn = document.getElementById('intakeClose');
@@ -1313,14 +1288,12 @@
       const textarea = document.getElementById('intakeIssue');
       const glassContainer = document.querySelector('.glass-container');
       const enhanceBtn = document.getElementById('intakeEnhance');
-      const next1 = document.getElementById('intakeNext1');
+      const next2 = document.getElementById('intakeNext2');
       const next3 = document.getElementById('intakeNext3');
       const next4 = document.getElementById('intakeNext4');
-      const next5 = document.getElementById('intakeNext5');
       const back2 = document.getElementById('intakeBack2');
-      const back3 = document.getElementById('intakeBack3');
+      const back4 = document.getElementById('intakeBack4');
       const back5 = document.getElementById('intakeBack5');
-      const back6 = document.getElementById('intakeBack6');
       const bookBtn = document.getElementById('intakeBook');
       const doneBtn = document.getElementById('intakeDone');
       const voiceBtn = document.getElementById('intakeVoiceBtn');
@@ -1338,20 +1311,16 @@
       let isRecording = false;
       let timerInterval = null;
       let seconds = 0;
-      let selectedDate = null;
-      let selectedTime = null;
       let patientType = '';
       let enhanced = false;
-      let calYear, calMonth;
 
       const stepData = {
-        1: { title: 'Select Appointment Date', subtitle: 'Choose a date and time that works for you.' },
-        2: { title: 'Patient Details', subtitle: 'Are you a new or existing patient?' },
-        3: { title: 'Tell Us About Your Issue', subtitle: 'Type it out or use voice-to-text. Talk for 1-2 minutes explaining what\'s going on.' },
-        4: { title: 'You\'re a Great Fit!', subtitle: 'Dr. Elguizaoui can help with your concern.' },
-        5: { title: 'Upload Your Cards', subtitle: 'We\'ll need your driver\'s license and medical insurance card.' },
-        6: { title: 'Review & Book', subtitle: 'Confirm your details before booking.' },
-        7: { title: 'Appointment Booked!', subtitle: 'We\'ll see you soon.' }
+        1: { title: 'Patient Details', subtitle: 'Are you a new or existing patient?' },
+        2: { title: 'Tell Us About Your Issue', subtitle: 'Type it out or use voice-to-text. Talk for 1-2 minutes explaining what\'s going on.' },
+        3: { title: 'You\'re a Great Fit!', subtitle: 'Dr. Elguizaoui can help with your concern.' },
+        4: { title: 'Upload Your Cards', subtitle: 'We\'ll need your driver\'s license and medical insurance card.' },
+        5: { title: 'Review & Book', subtitle: 'Confirm your details before booking.' },
+        6: { title: 'Appointment Booked!', subtitle: 'We\'ll see you soon.' }
       };
 
       function goToStep(step) {
@@ -1365,16 +1334,10 @@
         });
         titleEl.textContent = stepData[step].title;
         subtitleEl.textContent = stepData[step].subtitle;
-
-        // Populate summary on step 6
-        if (step === 6) populateSummary();
+        if (step === 5) populateSummary();
       }
 
       function populateSummary() {
-        const dateStr = selectedDate
-          ? selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ' at ' + selectedTime
-          : '—';
-        document.getElementById('summaryDate').textContent = dateStr;
         document.getElementById('summaryPatient').textContent = patientType === 'new' ? 'New Patient' : 'Existing Patient';
         document.getElementById('summaryConcern').textContent = textarea.value.trim() || '—';
         const hasLicense = uploadLicense.classList.contains('uploaded');
@@ -1382,91 +1345,20 @@
         document.getElementById('summaryDocs').textContent = (hasLicense ? 'License' : '') + (hasLicense && hasInsurance ? ' + ' : '') + (hasInsurance ? 'Insurance Card' : '') || '—';
       }
 
-      // ===== CALENDAR =====
-      const calDaysEl = document.getElementById('calDays');
-      const calMonthEl = document.getElementById('calMonth');
-      const calPrev = document.getElementById('calPrev');
-      const calNext = document.getElementById('calNext');
-      const timeSlotsEl = document.getElementById('timeSlots');
-      const timeSlotsGrid = document.getElementById('timeSlotsGrid');
-      const timeSlotsLabel = document.getElementById('timeSlotsLabel');
-      const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      const TIMES = ['8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM'];
-
-      function initCalendar() {
-        const now = new Date();
-        calYear = now.getFullYear();
-        calMonth = now.getMonth();
-        renderCalendar();
-      }
-
-      function renderCalendar() {
-        calMonthEl.textContent = MONTHS[calMonth] + ' ' + calYear;
-        calDaysEl.innerHTML = '';
-        const firstDay = new Date(calYear, calMonth, 1).getDay();
-        const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-        const today = new Date(); today.setHours(0,0,0,0);
-
-        for (let i = 0; i < firstDay; i++) {
-          const empty = document.createElement('div');
-          empty.className = 'cal-day cal-day-empty';
-          calDaysEl.appendChild(empty);
-        }
-        for (let d = 1; d <= daysInMonth; d++) {
-          const btn = document.createElement('button');
-          btn.className = 'cal-day';
-          btn.textContent = d;
-          const thisDate = new Date(calYear, calMonth, d);
-          if (thisDate < today) { btn.classList.add('cal-day-past'); }
-          else if (thisDate.getDay() === 0 || thisDate.getDay() === 6) { btn.classList.add('cal-day-disabled'); }
-          else {
-            if (thisDate.getTime() === today.getTime()) btn.classList.add('cal-day-today');
-            if (selectedDate && thisDate.getTime() === selectedDate.getTime()) btn.classList.add('cal-day-selected');
-            btn.addEventListener('click', () => { selectedDate = thisDate; selectedTime = null; renderCalendar(); showTimeSlots(thisDate); next1.disabled = true; });
-          }
-          calDaysEl.appendChild(btn);
-        }
-      }
-
-      function showTimeSlots(date) {
-        timeSlotsLabel.textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-        timeSlotsGrid.innerHTML = '';
-        const seed = date.getDate() * 7 + date.getMonth();
-        TIMES.forEach((time, i) => {
-          if ((seed + i) % 4 === 0) return;
-          const btn = document.createElement('button');
-          btn.className = 'time-slot';
-          btn.textContent = time;
-          btn.addEventListener('click', () => {
-            selectedTime = time;
-            timeSlotsGrid.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
-            btn.classList.add('selected');
-            next1.disabled = false;
-          });
-          timeSlotsGrid.appendChild(btn);
-        });
-        timeSlotsEl.style.display = 'block';
-      }
-
-      calPrev.addEventListener('click', () => { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); });
-      calNext.addEventListener('click', () => { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); });
-
       // ===== PATIENT TYPE =====
-      btnNew.addEventListener('click', () => { patientType = 'new'; btnNew.classList.add('selected'); btnExisting.classList.remove('selected'); setTimeout(() => goToStep(3), 250); });
-      btnExisting.addEventListener('click', () => { patientType = 'existing'; btnExisting.classList.add('selected'); btnNew.classList.remove('selected'); setTimeout(() => goToStep(3), 250); });
+      btnNew.addEventListener('click', () => { patientType = 'new'; btnNew.classList.add('selected'); btnExisting.classList.remove('selected'); setTimeout(() => goToStep(2), 250); });
+      btnExisting.addEventListener('click', () => { patientType = 'existing'; btnExisting.classList.add('selected'); btnNew.classList.remove('selected'); setTimeout(() => goToStep(2), 250); });
 
       // ===== LIQUID GLASS TEXT INPUT =====
       textarea.addEventListener('input', function() {
         const hasText = this.value.trim().length > 0;
         glassContainer.classList.toggle('has-text', hasText);
         textarea.classList.toggle('typing', hasText);
-
-        // Show enhance button once there's enough text
         if (this.value.trim().length >= 10 && !enhanced) {
           enhanceBtn.style.display = 'flex';
         } else if (this.value.trim().length < 10) {
           enhanceBtn.style.display = 'none';
-          next3.style.display = 'none';
+          next2.style.display = 'none';
         }
       });
 
@@ -1474,33 +1366,26 @@
       enhanceBtn.addEventListener('click', function() {
         const raw = textarea.value.trim();
         if (!raw) return;
-
         enhanceBtn.classList.add('enhancing');
         enhanceBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7L12 16.4 5.7 21l2.3-7L2 9.4h7.6z"/></svg> Enhancing...';
 
-        // Simulate AI enhancement (clean up text)
         setTimeout(() => {
-          const enhanced_text = enhanceText(raw);
-
-          // Animate the text replacement
+          const cleaned = enhanceText(raw);
           textarea.style.opacity = '0';
           setTimeout(() => {
-            textarea.value = enhanced_text;
+            textarea.value = cleaned;
             textarea.style.opacity = '1';
             textarea.style.transition = 'opacity 0.5s ease';
           }, 300);
-
           enhanced = true;
           enhanceBtn.style.display = 'none';
-          next3.style.display = '';
-          next3.disabled = false;
+          next2.style.display = '';
+          next2.disabled = false;
         }, 1500);
       });
 
       function enhanceText(raw) {
-        // Simple client-side text cleanup
         let text = raw.trim();
-        // Fix common typos
         const fixes = {
           'shoudlar': 'shoulder', 'sholder': 'shoulder', 'shouldar': 'shoulder',
           'nee': 'knee', 'kne': 'knee', 'knne': 'knee',
@@ -1514,31 +1399,21 @@
           'surgerey': 'surgery', 'surgury': 'surgery',
           'injurry': 'injury', 'injery': 'injury',
         };
-
-        for (const [wrong, right] of Object.entries(fixes)) {
-          text = text.split(wrong).join(right);
-        }
-
-        // Capitalize first letter of each sentence
+        for (const [wrong, right] of Object.entries(fixes)) { text = text.split(wrong).join(right); }
         text = text.replace(/(^\s*|[.!?]\s+)([a-z])/g, (m, p, c) => p + c.toUpperCase());
-        // Ensure first char is uppercase
         if (text.length > 0) text = text[0].toUpperCase() + text.slice(1);
-        // Add period at end if missing
         if (text.length > 0 && !/[.!?]$/.test(text)) text += '.';
-
         return text;
       }
 
       // ===== NAVIGATION =====
-      next1.addEventListener('click', () => goToStep(2));
       back2.addEventListener('click', () => goToStep(1));
-      back3.addEventListener('click', () => goToStep(2));
+      next2.addEventListener('click', () => goToStep(3));
       next3.addEventListener('click', () => goToStep(4));
+      back4.addEventListener('click', () => goToStep(3));
       next4.addEventListener('click', () => goToStep(5));
       back5.addEventListener('click', () => goToStep(4));
-      next5.addEventListener('click', () => goToStep(6));
-      back6.addEventListener('click', () => goToStep(5));
-      bookBtn.addEventListener('click', () => goToStep(7));
+      bookBtn.addEventListener('click', () => goToStep(6));
       doneBtn.addEventListener('click', () => closeIntake());
 
       closeBtn.addEventListener('click', closeIntake);
@@ -1546,8 +1421,7 @@
 
       // Upload handlers
       function checkUploads() {
-        const both = uploadLicense.classList.contains('uploaded') && uploadInsurance.classList.contains('uploaded');
-        next5.disabled = !both;
+        next4.disabled = !(uploadLicense.classList.contains('uploaded') && uploadInsurance.classList.contains('uploaded'));
       }
       licenseInput.addEventListener('change', function() { if (this.files.length) { uploadLicense.classList.add('uploaded'); checkUploads(); } });
       insuranceInput.addEventListener('change', function() { if (this.files.length) { uploadInsurance.classList.add('uploaded'); checkUploads(); } });
@@ -1558,12 +1432,11 @@
           alert('Voice-to-text is not supported in this browser. Please type your response instead.');
           return;
         }
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SR();
         recognition.continuous = true;
         recognition.interimResults = true;
         recognition.lang = 'en-US';
-
         let finalTranscript = textarea.value;
         recognition.onresult = function(event) {
           let interim = '';
@@ -1576,7 +1449,6 @@
         };
         recognition.onerror = function() { stopRecording(); };
         recognition.onend = function() { if (isRecording) recognition.start(); };
-
         recognition.start();
         isRecording = true;
         voiceBtn.classList.add('recording');
@@ -1585,9 +1457,7 @@
         seconds = 0;
         timerInterval = setInterval(() => {
           seconds++;
-          const m = Math.floor(seconds / 60);
-          const s = seconds % 60;
-          voiceTimer.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+          voiceTimer.textContent = Math.floor(seconds / 60) + ':' + (seconds % 60 < 10 ? '0' : '') + (seconds % 60);
         }, 1000);
       }
 
@@ -1605,11 +1475,12 @@
       function openIntake() {
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
-        selectedDate = null; selectedTime = null; patientType = ''; enhanced = false;
+        patientType = ''; enhanced = false;
         textarea.value = '';
         textarea.style.opacity = '1';
         textarea.style.transition = '';
-        next1.disabled = true; next3.style.display = 'none'; next5.disabled = true;
+        next2.style.display = 'none';
+        next4.disabled = true;
         enhanceBtn.style.display = 'none';
         enhanceBtn.classList.remove('enhancing');
         enhanceBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7L12 16.4 5.7 21l2.3-7L2 9.4h7.6z"/></svg> Enhance';
@@ -1620,8 +1491,6 @@
         licenseInput.value = ''; insuranceInput.value = '';
         btnNew.classList.remove('selected');
         btnExisting.classList.remove('selected');
-        timeSlotsEl.style.display = 'none';
-        initCalendar();
         goToStep(1);
       }
 
@@ -1631,11 +1500,7 @@
         stopRecording();
       }
 
-      // Hook into existing "Book" buttons
-      document.querySelectorAll('.nav-btn-book, .btn-hero').forEach(btn => {
-        btn.addEventListener('click', function(e) { e.preventDefault(); openIntake(); });
-      });
-
+      // Book buttons go to Zocdoc (default behavior, no hijack)
       window.openIntake = openIntake;
     })();
   </script>

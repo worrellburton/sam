@@ -20,38 +20,76 @@ export const blogPosts: BlogPost[] = [
       "Don't ignore these warning signs. Learn when it's time to consult an orthopedic specialist about your joint pain or injury.",
     tag: "Orthopedic Health",
     date: "March 10, 2026",
-    readTime: "5 min read",
+    readTime: "7 min read",
     image:
       "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=600&h=400&fit=crop",
     imageAlt: "Doctor examining a patient's knee",
     content: `
 ## When Should You See an Orthopedic Surgeon?
 
-Many people live with joint pain, stiffness, or limited mobility far longer than they need to. While some aches and pains resolve on their own, there are clear signs that it's time to see a specialist.
+Many people live with joint pain, stiffness, or limited mobility far longer than they need to. While some aches and pains resolve on their own, there are clear signs that it's time to see a specialist. Recognizing these warning signs early can mean the difference between a simple treatment and a complex surgery down the road.
 
 ### 1. Pain That Doesn't Improve After 48 Hours of Rest
 
 If you've rested an injury for two days and the pain hasn't improved — or has gotten worse — it's time to see an orthopedic surgeon. Persistent pain can indicate a more serious injury like a ligament tear, stress fracture, or cartilage damage.
 
+**What to watch for:**
+- Pain that is sharp rather than a dull ache
+- Pain that worsens with specific movements
+- Pain that returns every time you resume activity
+
+Over-the-counter medications may mask the symptoms, but they won't fix the underlying problem. An accurate diagnosis is the first step toward real relief.
+
 ### 2. Swelling That Won't Go Down
 
 Significant swelling in a joint, especially the knee or shoulder, can indicate internal damage. If ice, elevation, and rest haven't reduced the swelling within a few days, seek evaluation.
+
+Persistent swelling may be a sign of:
+- A meniscus tear or labral tear
+- Ligament damage
+- Early-stage arthritis
+- A joint infection (which requires urgent care)
+
+An orthopedic surgeon can use imaging — such as an MRI or ultrasound — to determine the exact cause and recommend appropriate treatment.
 
 ### 3. Limited Range of Motion
 
 If you can't fully bend or straighten a joint, or if simple movements like reaching overhead or climbing stairs have become difficult, this could signal a structural problem that needs attention.
 
+Common causes of lost range of motion include frozen shoulder, rotator cuff tears, meniscus injuries, and arthritis. The longer you compensate for limited motion, the more likely you are to develop problems in other areas of the body — such as back or hip pain from an altered gait.
+
 ### 4. Instability or "Giving Way"
 
 Feeling like your knee buckles or gives out — especially when walking, turning, or going down stairs — often indicates a ligament injury like an ACL tear that may require surgical repair.
+
+Joint instability isn't just uncomfortable — it's a safety concern. Each episode of giving way can cause additional damage to the cartilage and meniscus inside the joint, making future treatment more complex. Bracing can help in the short term, but an evaluation is essential to determine if surgery or rehabilitation is needed.
 
 ### 5. Pain That Disrupts Sleep or Daily Activities
 
 When pain prevents you from sleeping, working, or enjoying activities you love, it's affecting your quality of life. An orthopedic evaluation can identify the cause and outline treatment options — which may include non-surgical approaches like physical therapy or regenerative medicine.
 
+**Signs that pain has crossed this threshold:**
+- You wake up at night because of joint pain
+- You've stopped exercising or participating in hobbies
+- You rely on pain medication daily just to get through the day
+- You avoid stairs, walking, or standing for extended periods
+
+Quality of life matters. You don't have to accept chronic pain as a normal part of aging or activity.
+
 ### Don't Wait — Early Treatment Leads to Better Outcomes
 
-The sooner you address an orthopedic problem, the more treatment options are available. Dr. Elguizaoui always explores conservative treatment first, recommending surgery only when necessary.
+The sooner you address an orthopedic problem, the more treatment options are available. Many conditions that could be treated with physical therapy, PRP injections, or a minor arthroscopic procedure may eventually require a more invasive surgery if left untreated.
+
+Dr. Elguizaoui always explores conservative treatment first, recommending surgery only when necessary. During your first visit, you can expect a thorough physical exam, a review of any imaging, and a clear explanation of your diagnosis and options.
+
+### What to Bring to Your First Appointment
+
+- A list of your symptoms and when they started
+- Any imaging you've already had (X-rays, MRIs)
+- A list of treatments you've tried (physical therapy, medications, braces)
+- Your insurance information
+
+If you're experiencing any of these five warning signs, don't wait for the problem to get worse. Early evaluation gives you the best chance at a full recovery with the least invasive treatment possible.
     `,
   },
   {

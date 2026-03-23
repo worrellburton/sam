@@ -7010,8 +7010,13 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 [data-theme="light"] .dz-cal-panel-header h3 { color: #1e293b; }
 [data-theme="light"] .dz-cal-panel-close { border-color: #e2e8f0; color: #94a3b8; }
 [data-theme="light"] .dz-cal-panel-close:hover { color: #334155; border-color: #818cf8; }
+[data-theme="light"] .dz-cal-appt-item { background: rgba(99, 102, 241, 0.04); border-color: #e2e8f0; }
+[data-theme="light"] .dz-cal-appt-item:hover { background: rgba(99, 102, 241, 0.08); }
 [data-theme="light"] .dz-cal-appt-patient { color: #1e293b; }
 [data-theme="light"] .dz-cal-appt-meta { color: #64748b; }
+[data-theme="light"] .dz-loc-btn { background: #fff; border-color: #e2e8f0; color: #64748b; }
+[data-theme="light"] .dz-loc-btn:hover { border-color: #818cf8; color: #4f46e5; }
+[data-theme="light"] .dz-loc-btn.active { background: rgba(99, 102, 241, 0.08); border-color: #818cf8; color: #4f46e5; }
 [data-theme="light"] .dz-cal-no-appts { color: #94a3b8; }
 [data-theme="light"] .dz-loc-chip { border-color: #e2e8f0; color: #64748b; }
 [data-theme="light"] .dz-loc-chip:hover { border-color: #818cf8; color: #4f46e5; }
@@ -8254,6 +8259,64 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   transform: translateY(-1px);
   box-shadow: 0 8px 32px rgba(239,68,68,0.12), 0 0 60px rgba(168,85,247,0.08);
 }
+/* Sidebar surgery link — liquid glass glow */
+.dz-sidebar-surgery {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(168,85,247,0.1) 50%, rgba(99,102,241,0.08) 100%) !important;
+  border: 1px solid rgba(239,68,68,0.15) !important;
+  color: #f87171 !important;
+}
+.dz-sidebar-surgery::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #ef4444, #a855f7, #6366f1, #ec4899, #ef4444);
+  background-size: 300% 300%;
+  animation: dz-surgery-border 4s ease infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.dz-sidebar-surgery::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation: dz-surgery-shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+.dz-sidebar-surgery:hover {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(168,85,247,0.18) 50%, rgba(99,102,241,0.15) 100%) !important;
+  box-shadow: 0 0 20px rgba(239,68,68,0.2), 0 0 40px rgba(168,85,247,0.1) !important;
+  transform: scale(1.02);
+}
+.dz-sidebar-surgery.active {
+  background: linear-gradient(135deg, rgba(239,68,68,0.18) 0%, rgba(168,85,247,0.22) 50%, rgba(99,102,241,0.18) 100%) !important;
+  box-shadow: 0 0 24px rgba(239,68,68,0.25), 0 0 48px rgba(168,85,247,0.12) !important;
+  color: #f87171 !important;
+}
+.dz-sidebar-surgery svg { filter: drop-shadow(0 0 4px rgba(239,68,68,0.4)); }
+[data-theme="light"] .dz-sidebar-surgery {
+  background: linear-gradient(135deg, rgba(239,68,68,0.06) 0%, rgba(168,85,247,0.08) 50%, rgba(99,102,241,0.06) 100%) !important;
+  border-color: rgba(239,68,68,0.2) !important;
+  color: #dc2626 !important;
+}
+[data-theme="light"] .dz-sidebar-surgery:hover {
+  background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(168,85,247,0.12) 50%, rgba(99,102,241,0.1) 100%) !important;
+  box-shadow: 0 0 16px rgba(239,68,68,0.15), 0 0 32px rgba(168,85,247,0.08) !important;
+}
+[data-theme="light"] .dz-sidebar-surgery.active {
+  background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(168,85,247,0.15) 50%, rgba(99,102,241,0.12) 100%) !important;
+  color: #dc2626 !important;
+}
+
 .dz-surgery-btn { transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .dz-glass-card,

@@ -178,7 +178,7 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
           <Link
             key={l.to}
             to={l.to}
-            className={`dz-sidebar-link${path === l.to || (l.to !== "/doczoc/dashboard" && path.startsWith(l.to)) ? " active" : ""}`}
+            className={`dz-sidebar-link${l.to === "/doczoc/surgeries" ? " dz-sidebar-surgery" : ""}${path === l.to || (l.to !== "/doczoc/dashboard" && path.startsWith(l.to)) ? " active" : ""}`}
           >
             {l.icon}
             {!collapsed && <span>{l.label}</span>}

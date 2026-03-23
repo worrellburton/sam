@@ -5,6 +5,7 @@ export const conditionToBlogSlug: Record<string, string> = {
   "ACL, MCL, and PCL tears": "acl-mcl-pcl-tears-guide",
   "Meniscus tears and cartilage injuries": "meniscus-tears-cartilage-injuries",
   "Rotator cuff tears and shoulder instability": "rotator-cuff-tears-shoulder-instability",
+  "Tennis and golfer's elbow": "tennis-elbow-golfers-elbow-guide",
 };
 
 export const conditionBlogPosts: BlogPost[] = [
@@ -978,6 +979,415 @@ export const conditionBlogPosts: BlogPost[] = [
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
     <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert rotator cuff tear treatment and shoulder instability care for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
+  </div>
+</div>
+`,
+  },
+  {
+    slug: "tennis-elbow-golfers-elbow-guide",
+    title: "Tennis Elbow & Golfer's Elbow: A Caring Guide to Elbow Pain Relief",
+    excerpt:
+      "Elbow pain can make the simplest tasks feel impossible. Learn the difference between tennis elbow and golfer's elbow, explore modern treatment options, and understand what recovery looks like — with guidance from an expert who cares.",
+    tag: "Sports Medicine",
+    date: "March 22, 2026",
+    readTime: "10 min read",
+    image:
+      "https://images.unsplash.com/photo-1530549387789-4c1017266635?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Close-up of an athlete's arm during tennis swing",
+    relatedService: "sports-medicine",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#understanding">Understanding Elbow Tendon Pain</a></li>
+    <li><a href="#tennis-elbow">Tennis Elbow (Lateral Epicondylitis)</a></li>
+    <li><a href="#golfers-elbow">Golfer's Elbow (Medial Epicondylitis)</a></li>
+    <li><a href="#comparison">Side-by-Side Comparison</a></li>
+    <li><a href="#stats">By the Numbers</a></li>
+    <li><a href="#diagnosis">How We Diagnose Your Elbow</a></li>
+    <li><a href="#treatment">Treatment Options</a></li>
+    <li><a href="#recovery">Recovery Timeline</a></li>
+    <li><a href="#faq">Frequently Asked Questions</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you're struggling with elbow pain — whether it's gripping a coffee mug, shaking hands, or turning a doorknob — please know that this is one of the most treatable orthopedic conditions. Relief is closer than you think.</p>
+</div>
+
+<h2 id="understanding">Understanding Elbow Tendon Pain</h2>
+
+<p>Your elbow is a hinge joint where three bones meet: the humerus (upper arm) and the radius and ulna (forearm). Muscles that control your wrist and fingers attach to bony bumps on each side of the elbow through tendons. When those tendons become irritated or damaged from overuse, the result is a condition that can affect nearly everything you do with your hands.</p>
+
+<img class="blog-content-img" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop&q=80" alt="Active person stretching their arm before exercise" loading="lazy" />
+
+<p>The two most common forms of elbow tendon pain are <strong>tennis elbow</strong> (lateral epicondylitis) and <strong>golfer's elbow</strong> (medial epicondylitis). Despite their names, you don't need to play sports to develop either condition — in fact, most patients get them from everyday or work-related activities.</p>
+
+<div class="blog-expert-quote">
+  <p>I see tennis elbow and golfer's elbow in everyone from office workers to musicians to weekend athletes. The good news is that the vast majority of patients get better without surgery — we just need to find the right approach for each person.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="tennis-elbow">Tennis Elbow (Lateral Epicondylitis)</h2>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 4a4 4 0 0 0-4 4c0 2.5 2 4 2 6s-1 4-4 4"/>
+    <circle cx="8" cy="18" r="3"/>
+    <line x1="20" y1="2" x2="22" y2="4"/>
+    <line x1="20" y1="4" x2="22" y2="2"/>
+  </svg>
+  <h3>Pain on the Outside of the Elbow</h3>
+</div>
+
+<p>Tennis elbow affects the tendons that attach to the <strong>lateral epicondyle</strong> — the bony bump on the outer side of your elbow. These tendons connect to the muscles you use to extend your wrist and straighten your fingers. When these tendons develop tiny tears from repetitive stress, the result is pain that can range from a mild ache to a sharp, burning sensation.</p>
+
+<div class="blog-takeaway">
+  <h4>Common Causes of Tennis Elbow</h4>
+  <ul>
+    <li><strong>Repetitive gripping</strong> — using tools, shaking hands, typing</li>
+    <li><strong>Racquet sports</strong> — especially with poor backhand technique</li>
+    <li><strong>Manual work</strong> — plumbing, painting, carpentry, cooking</li>
+    <li><strong>Computer use</strong> — prolonged mouse or keyboard work</li>
+    <li><strong>Weightlifting</strong> — especially exercises involving wrist extension</li>
+  </ul>
+</div>
+
+<p><strong>What it feels like:</strong> Pain and tenderness on the outer elbow that worsens when you grip objects, turn a wrench, shake hands, or lift something with your palm facing down. Many patients notice it most in the morning or after periods of rest.</p>
+
+<h2 id="golfers-elbow">Golfer's Elbow (Medial Epicondylitis)</h2>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2v6l3-2"/>
+    <path d="M12 8l-3-2"/>
+    <circle cx="12" cy="18" r="4"/>
+    <path d="M12 14v-2"/>
+  </svg>
+  <h3>Pain on the Inside of the Elbow</h3>
+</div>
+
+<p>Golfer's elbow affects the tendons that attach to the <strong>medial epicondyle</strong> — the bony bump on the inner side of your elbow. These tendons connect to the muscles you use to flex your wrist and grip. It's less common than tennis elbow but can be just as disruptive to daily life.</p>
+
+<div class="blog-takeaway">
+  <h4>Common Causes of Golfer's Elbow</h4>
+  <ul>
+    <li><strong>Golf</strong> — gripping and swinging the club repeatedly</li>
+    <li><strong>Throwing sports</strong> — baseball, football, javelin</li>
+    <li><strong>Weightlifting</strong> — curls and other flexion exercises</li>
+    <li><strong>Occupational tasks</strong> — hammering, chopping, assembly line work</li>
+    <li><strong>Climbing</strong> — rock climbing or rope climbing</li>
+  </ul>
+</div>
+
+<p><strong>What it feels like:</strong> Pain and tenderness on the inner elbow that may radiate down the forearm. You might notice weakness in your grip, pain when flexing your wrist, or discomfort when squeezing objects. Some patients also feel numbness or tingling in the ring and pinky fingers.</p>
+
+<h2 id="comparison">Side-by-Side Comparison</h2>
+
+<div class="blog-comparison-table">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Tennis Elbow</th>
+        <th>Golfer's Elbow</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Medical name</strong></td>
+        <td>Lateral epicondylitis</td>
+        <td>Medial epicondylitis</td>
+      </tr>
+      <tr>
+        <td><strong>Pain location</strong></td>
+        <td>Outside of elbow</td>
+        <td>Inside of elbow</td>
+      </tr>
+      <tr>
+        <td><strong>Affected tendons</strong></td>
+        <td>Wrist extensors</td>
+        <td>Wrist flexors</td>
+      </tr>
+      <tr>
+        <td><strong>Hurts most when</strong></td>
+        <td>Gripping, lifting palm-down, backhand swing</td>
+        <td>Gripping, wrist flexion, throwing, forehand swing</td>
+      </tr>
+      <tr>
+        <td><strong>Prevalence</strong></td>
+        <td>5–10x more common</td>
+        <td>Less common</td>
+      </tr>
+      <tr>
+        <td><strong>Who gets it</strong></td>
+        <td>Ages 30–60, manual workers, racquet sports</td>
+        <td>Ages 30–60, throwers, golfers, climbers</td>
+      </tr>
+      <tr>
+        <td><strong>Non-surgical success</strong></td>
+        <td>80–95%</td>
+        <td>85–90%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/>
+    <line x1="16" y1="17" x2="8" y2="17"/>
+    <polyline points="10 9 9 9 8 9"/>
+  </svg>
+  <h3>An Important Note</h3>
+</div>
+
+<p>It's possible — though uncommon — to have <strong>both</strong> conditions at the same time, especially if your work or sport involves repetitive gripping combined with wrist flexion and extension. If you have pain on both sides of your elbow, an evaluation can sort out exactly what's going on and create a targeted treatment plan.</p>
+
+<h2 id="stats">By the Numbers</h2>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <span class="blog-stat-number">1–3%</span>
+    <span class="blog-stat-label">of adults are affected by tennis or golfer's elbow each year</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">80–95%</span>
+    <span class="blog-stat-label">of patients recover fully without surgery</span>
+  </div>
+  <div class="blog-stat">
+    <span class="blog-stat-number">30–50</span>
+    <span class="blog-stat-label">age range most commonly affected</span>
+  </div>
+</div>
+
+<div class="blog-chart">
+  <h4>Non-Surgical vs. Surgical Success Rates</h4>
+  <svg viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="elbowBar1" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#16a34a"/>
+      </linearGradient>
+      <linearGradient id="elbowBar2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#4f46e5"/>
+      </linearGradient>
+      <linearGradient id="elbowBar3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#22c55e"/>
+        <stop offset="100%" stop-color="#16a34a"/>
+      </linearGradient>
+      <linearGradient id="elbowBar4" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#4f46e5"/>
+      </linearGradient>
+    </defs>
+    <!-- Grid lines -->
+    <line x1="80" y1="30" x2="440" y2="30" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="80" y1="70" x2="440" y2="70" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="80" y1="110" x2="440" y2="110" stroke="#e5e7eb" stroke-width="0.5"/>
+    <line x1="80" y1="150" x2="440" y2="150" stroke="#e5e7eb" stroke-width="0.5"/>
+    <!-- Y-axis labels -->
+    <text x="70" y="35" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">100%</text>
+    <text x="70" y="75" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">75%</text>
+    <text x="70" y="115" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">50%</text>
+    <text x="70" y="155" text-anchor="end" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">25%</text>
+    <!-- Tennis Elbow: Non-surgical (90%) -->
+    <rect x="100" y="38" width="70" height="152" rx="6" fill="url(#elbowBar1)" opacity="0.9">
+      <animate attributeName="height" from="0" to="152" dur="1s" fill="freeze"/>
+      <animate attributeName="y" from="190" to="38" dur="1s" fill="freeze"/>
+    </rect>
+    <!-- Tennis Elbow: Surgical (85%) -->
+    <rect x="180" y="46" width="70" height="144" rx="6" fill="url(#elbowBar2)" opacity="0.9">
+      <animate attributeName="height" from="0" to="144" dur="1s" fill="freeze" begin="0.2s"/>
+      <animate attributeName="y" from="190" to="46" dur="1s" fill="freeze" begin="0.2s"/>
+    </rect>
+    <!-- Golfer's Elbow: Non-surgical (88%) -->
+    <rect x="280" y="42" width="70" height="148" rx="6" fill="url(#elbowBar3)" opacity="0.9">
+      <animate attributeName="height" from="0" to="148" dur="1s" fill="freeze" begin="0.4s"/>
+      <animate attributeName="y" from="190" to="42" dur="1s" fill="freeze" begin="0.4s"/>
+    </rect>
+    <!-- Golfer's Elbow: Surgical (83%) -->
+    <rect x="360" y="50" width="70" height="140" rx="6" fill="url(#elbowBar4)" opacity="0.9">
+      <animate attributeName="height" from="0" to="140" dur="1s" fill="freeze" begin="0.6s"/>
+      <animate attributeName="y" from="190" to="50" dur="1s" fill="freeze" begin="0.6s"/>
+    </rect>
+    <!-- Values above bars -->
+    <text x="135" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a" font-family="Inter, sans-serif">90%</text>
+    <text x="215" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">85%</text>
+    <text x="315" y="36" text-anchor="middle" font-size="13" font-weight="700" fill="#16a34a" font-family="Inter, sans-serif">88%</text>
+    <text x="395" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">83%</text>
+    <!-- X-axis group labels -->
+    <text x="170" y="212" text-anchor="middle" font-size="13" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Tennis Elbow</text>
+    <text x="350" y="212" text-anchor="middle" font-size="13" font-weight="600" fill="#374151" font-family="Inter, sans-serif">Golfer's Elbow</text>
+    <!-- Legend -->
+    <rect x="130" y="228" width="12" height="12" rx="2" fill="#22c55e"/>
+    <text x="148" y="239" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Non-surgical</text>
+    <rect x="260" y="228" width="12" height="12" rx="2" fill="#6366f1"/>
+    <text x="278" y="239" font-size="11" fill="#6b7280" font-family="Inter, sans-serif">Surgical (when needed)</text>
+  </svg>
+  <p class="blog-chart-caption">Success rates for both conditions are excellent with conservative and surgical approaches (sources: AAOS, JOSPT)</p>
+</div>
+
+<h2 id="diagnosis">How We Diagnose Your Elbow</h2>
+
+<p>In most cases, a thorough physical exam is all that's needed to diagnose tennis or golfer's elbow. Dr. Elguizaoui will ask about your symptoms, activities, and medical history, then perform specific tests that reproduce your pain to pinpoint the exact source.</p>
+
+<div class="blog-icon-header">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
+  <h3>Diagnostic Tools</h3>
+</div>
+
+<ul>
+  <li><strong>Physical examination</strong> — specific provocative tests (Cozen's test for tennis elbow, reverse Cozen's for golfer's elbow)</li>
+  <li><strong>X-rays</strong> — to rule out arthritis, fractures, or bone spurs</li>
+  <li><strong>Ultrasound</strong> — can show tendon thickening, tears, and inflammation in real time</li>
+  <li><strong>MRI</strong> — for complex cases or when surgery is being considered, to evaluate the extent of tendon damage</li>
+</ul>
+
+<h2 id="treatment">Treatment Options</h2>
+
+<p>The reassuring truth: the vast majority of patients with tennis or golfer's elbow get better without surgery. Dr. Elguizaoui creates an individualized treatment plan that addresses your specific condition, activity level, and goals.</p>
+
+<h3>Phase 1: Rest & Relief</h3>
+
+<ul>
+  <li><strong>Activity modification</strong> — identify and reduce the movements causing pain</li>
+  <li><strong>Bracing</strong> — a counterforce brace (forearm strap) reduces strain on the tendon</li>
+  <li><strong>Ice & anti-inflammatories</strong> — manage pain and swelling in the acute phase</li>
+  <li><strong>Ergonomic adjustments</strong> — workplace and sports technique modifications</li>
+</ul>
+
+<h3>Phase 2: Rehabilitation</h3>
+
+<ul>
+  <li><strong>Physical therapy</strong> — the cornerstone of treatment, focusing on eccentric strengthening exercises</li>
+  <li><strong>Stretching program</strong> — wrist flexor and extensor stretches to restore flexibility</li>
+  <li><strong>Gradual loading</strong> — progressively increasing resistance to rebuild tendon strength</li>
+</ul>
+
+<h3>Phase 3: Advanced Non-Surgical Options</h3>
+
+<ul>
+  <li><strong>PRP (Platelet-Rich Plasma) therapy</strong> — your body's own healing factors concentrated and injected into the damaged tendon</li>
+  <li><strong>Corticosteroid injection</strong> — can provide short-term relief, though used sparingly as it may weaken the tendon over time</li>
+  <li><strong>Shockwave therapy (ESWT)</strong> — sound waves stimulate tendon healing without needles</li>
+</ul>
+
+<div class="blog-expert-quote">
+  <p>For elbow tendinitis, eccentric exercises and PRP therapy have been game-changers. We're seeing patients return to full activity faster than ever — and staying pain-free long-term — without ever needing surgery.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h3>Surgery — Only When Necessary</h3>
+
+<p>If symptoms persist after 6–12 months of dedicated conservative treatment, surgery may be recommended. The most common procedure involves removing the damaged tendon tissue and reattaching healthy tendon to the bone.</p>
+
+<ul>
+  <li><strong>Arthroscopic or open technique</strong> — Dr. Elguizaoui chooses the approach that offers the best outcome for each patient</li>
+  <li><strong>Outpatient procedure</strong> — you go home the same day</li>
+  <li><strong>High success rate</strong> — 83–95% of surgical patients report significant improvement</li>
+</ul>
+
+<h2 id="recovery">Recovery Timeline</h2>
+
+<div class="blog-chart">
+  <h4>What to Expect During Recovery</h4>
+  <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+    <!-- Timeline line -->
+    <line x1="30" y1="90" x2="470" y2="90" stroke="#e5e7eb" stroke-width="3" stroke-linecap="round"/>
+    <!-- Milestone 1: Week 1-2 -->
+    <circle cx="60" cy="90" r="10" fill="#ef4444">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze"/>
+    </circle>
+    <text x="60" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Week 1-2</text>
+    <text x="60" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#ef4444" font-family="Inter, sans-serif">Rest &</text>
+    <text x="60" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">brace</text>
+    <!-- Milestone 2: Week 2-6 -->
+    <circle cx="155" cy="90" r="10" fill="#f59e0b">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.15s"/>
+    </circle>
+    <text x="155" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Week 2-6</text>
+    <text x="155" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#f59e0b" font-family="Inter, sans-serif">Gentle PT</text>
+    <text x="155" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Stretching</text>
+    <!-- Milestone 3: Week 6-12 -->
+    <circle cx="250" cy="90" r="10" fill="#22c55e">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.3s"/>
+    </circle>
+    <text x="250" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Week 6-12</text>
+    <text x="250" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#22c55e" font-family="Inter, sans-serif">Strengthening</text>
+    <text x="250" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">Eccentric loading</text>
+    <!-- Milestone 4: Month 3-4 -->
+    <circle cx="350" cy="90" r="10" fill="#6366f1">
+      <animate attributeName="r" from="0" to="10" dur="0.5s" fill="freeze" begin="0.45s"/>
+    </circle>
+    <text x="350" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Month 3-4</text>
+    <text x="350" y="70" text-anchor="middle" font-size="9" font-weight="600" fill="#6366f1" font-family="Inter, sans-serif">Return to</text>
+    <text x="350" y="58" text-anchor="middle" font-size="9" fill="#6b7280" font-family="Inter, sans-serif">activity</text>
+    <!-- Milestone 5: Month 4-6 -->
+    <circle cx="445" cy="90" r="12" fill="#4f46e5" stroke="#fff" stroke-width="2">
+      <animate attributeName="r" from="0" to="12" dur="0.5s" fill="freeze" begin="0.6s"/>
+    </circle>
+    <text x="445" y="125" text-anchor="middle" font-size="10" fill="#6b7280" font-family="Inter, sans-serif">Month 4-6</text>
+    <text x="445" y="70" text-anchor="middle" font-size="9" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">Full</text>
+    <text x="445" y="58" text-anchor="middle" font-size="9" font-weight="700" fill="#4f46e5" font-family="Inter, sans-serif">recovery!</text>
+  </svg>
+</div>
+
+<div class="blog-takeaway">
+  <h4>Keys to a Successful Recovery</h4>
+  <ul>
+    <li><strong>Be consistent with your exercises</strong> — a few minutes daily is more effective than occasional long sessions</li>
+    <li><strong>Don't push through pain</strong> — discomfort during rehab is expected, but sharp pain means you're doing too much</li>
+    <li><strong>Address the root cause</strong> — technique changes or ergonomic adjustments prevent recurrence</li>
+    <li><strong>Be patient</strong> — tendons heal more slowly than muscles, but they do heal</li>
+    <li><strong>Communicate with your care team</strong> — every question matters, and adjustments to your plan are normal</li>
+  </ul>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3>Do I need to stop playing tennis or golf entirely?</h3>
+<p>Not necessarily. In many cases, reducing the frequency and intensity of play, combined with technique corrections and a rehab program, allows you to continue the activities you love. Dr. Elguizaoui works with each patient to find the right balance between rest and activity.</p>
+
+<h3>Will a cortisone injection cure my tennis elbow?</h3>
+<p>Cortisone injections can provide significant short-term relief, but they don't address the underlying tendon damage and may weaken the tendon with repeated use. Dr. Elguizaoui typically recommends PRP therapy or a structured physical therapy program for more lasting results.</p>
+
+<h3>Is tennis elbow the same as elbow arthritis?</h3>
+<p>No. Tennis elbow is a tendon condition (tendinopathy), not a joint condition. However, elbow arthritis can cause similar symptoms. A proper evaluation helps distinguish between the two so you receive the right treatment.</p>
+
+<h3>How do I know if I need surgery?</h3>
+<p>Surgery is typically considered only after 6–12 months of conservative treatment hasn't provided adequate relief. Less than 10% of patients with tennis or golfer's elbow ultimately need surgery. Dr. Elguizaoui will discuss all your options openly and recommend surgery only when he believes it will genuinely improve your quality of life.</p>
+
+<h3>Can tennis or golfer's elbow come back after treatment?</h3>
+<p>Recurrence is possible, especially if the underlying cause (repetitive motion, poor technique, ergonomic issues) isn't addressed. Part of your treatment plan will include strategies to prevent the condition from returning — including technique modifications, strengthening exercises, and equipment adjustments.</p>
+
+<h3>Can I do anything at home to help?</h3>
+<p>Absolutely. Ice the affected area for 15–20 minutes after activities that cause pain. Gentle stretching of the forearm muscles several times a day can help. And using a counterforce brace during activities reduces strain on the tendon. Dr. Elguizaoui will provide a detailed home program as part of your treatment plan.</p>
+
+<div class="blog-cta">
+  <h3>Elbow Pain Doesn't Have to Run Your Life</h3>
+  <p>Whether you're dealing with tennis elbow, golfer's elbow, or elbow pain you can't quite explain — Dr. Elguizaoui is here to provide a clear diagnosis, a compassionate plan, and expert care. With offices in Manhattan, Brooklyn, and Scarsdale, expert elbow pain relief is close to home.</p>
+  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
+</div>
+
+<p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
+  <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/blog/prp-therapy-sports-medicine">How PRP Therapy Is Changing Sports Medicine</a> · <a href="/blog/5-signs-orthopedic-surgeon">5 Signs You Need to See an Orthopedic Surgeon</a>
+</p>
+
+<div class="blog-author">
+  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <div class="blog-author-info">
+    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
+    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
+    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui provides expert tennis elbow treatment and golfer's elbow care for patients throughout Manhattan, Brooklyn, Scarsdale, and the greater NYC metropolitan area.</p>
   </div>
 </div>
 `,

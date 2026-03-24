@@ -10032,3 +10032,469 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-tm-contact-value:hover {
   color: #818cf8;
 }
+
+/* ===================================================================
+   COMPREHENSIVE MOBILE PASS
+   Fills gaps for selectors that had no mobile breakpoints
+   =================================================================== */
+
+/* ── 768px — Tablet / Small Screen ─────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* Reviews carousel: show 1 card per page on mobile */
+  .reviews-carousel-wrapper {
+    margin-left: -14px;
+    margin-right: -14px;
+    padding: 0 14px;
+  }
+
+  /* Blog cards on mobile */
+  .blog-card-body {
+    padding: 18px;
+  }
+  .blog-card-body h3 {
+    font-size: 1.05rem;
+  }
+  .blog-card-img {
+    height: 180px;
+  }
+
+  /* Footer columns mobile */
+  .footer-col h4 {
+    margin-bottom: 10px;
+  }
+  .footer-col a {
+    font-size: 0.85rem;
+    padding: 4px 0;
+  }
+
+  /* Sticky bar: on mobile just show the book button */
+  .sticky-bar-marquee {
+    display: none;
+  }
+
+  /* Patient choice badge — stack on mobile */
+  .patient-choice-badge {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 20px;
+  }
+  .patient-choice-badge strong {
+    font-size: 1rem;
+  }
+  .patient-choice-badge p {
+    font-size: 0.85rem;
+  }
+
+  /* Platform cards */
+  .platform-card {
+    padding: 14px;
+    gap: 10px;
+  }
+  .platform-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+  .platform-name {
+    font-size: 0.82rem;
+  }
+  .platform-score {
+    font-size: 0.85rem;
+  }
+  .platform-count {
+    font-size: 0.72rem;
+  }
+
+  /* Service approach grid */
+  .svc-approach-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .svc-approach-card {
+    padding: 22px 20px;
+  }
+  .svc-approach {
+    padding: 48px 0;
+  }
+
+  /* Blog audio player — stack on small screens */
+  .blog-audio-inner {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .blog-audio-content {
+    flex: 1 1 calc(100% - 60px);
+  }
+  .blog-audio-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* About specs (about page) */
+  .about-specs {
+    gap: 12px;
+  }
+  .about-spec-card {
+    padding: 16px;
+    gap: 12px;
+  }
+  .about-spec-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Booking layer — ensure it fills mobile viewport */
+  .booking-layer {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* FAQ answer inner — reduce left padding on mobile for readability */
+  .faq-answer-inner {
+    padding: 0 20px 18px 54px;
+  }
+  .faq-summary {
+    padding: 16px 18px;
+    gap: 10px;
+    font-size: 0.92rem;
+  }
+  .faq-icon-wrap {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Contact form row — stack fields on mobile */
+  .contact-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Condition pages */
+  .cond-hero {
+    padding: 100px 0 40px;
+  }
+  .cond-hero h1 {
+    font-size: 1.8rem;
+  }
+  .cond-overview-card {
+    padding: 24px 20px;
+  }
+  .cond-grid {
+    grid-template-columns: 1fr;
+  }
+  .cond-card {
+    padding: 24px 20px;
+  }
+
+  /* Locations header — stack vertically */
+  .locations-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .locations-header h2 {
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  /* Location card on mobile */
+  .location-card {
+    border-radius: 12px;
+  }
+  .location-map-placeholder {
+    height: 200px;
+  }
+
+  /* Service hero actions — stack on mobile */
+  .svc-hero-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .svc-hero-actions .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Insurance section  */
+  .insurance-logo-item {
+    min-height: 40px;
+    padding: 6px 8px;
+  }
+
+  /* DocZoc dashboard pages — responsive nav and layout */
+  .dz-nav-inner {
+    padding: 0 16px;
+    height: 50px;
+  }
+  .dz-bg-switcher {
+    display: none;
+  }
+  .dz-nav-phone {
+    display: none;
+  }
+  .dz-main {
+    flex-direction: column;
+    padding: 20px 16px;
+    gap: 20px;
+  }
+  .dz-hero {
+    padding: 60px 20px 48px;
+  }
+  .dz-hero h1 {
+    font-size: 1.6rem;
+  }
+
+  /* Blog post hero */
+  .blog-post-meta {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .blog-breadcrumb {
+    font-size: 0.85rem;
+  }
+
+  /* About page — sidebar should be below on mobile */
+  .service-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .service-sidebar {
+    order: 2;
+  }
+  .service-main {
+    order: 1;
+  }
+
+  /* GetStarted / Contact CTA section */
+  .contact-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .contact-benefits {
+    margin-bottom: 20px;
+  }
+}
+
+/* ── 480px — Small Phone ───────────────────────────────────────── */
+@media (max-width: 480px) {
+
+  /* Platform cards — single column already via existing rule, just fix padding */
+  .platform-card {
+    padding: 12px;
+  }
+
+  /* Blog audio player — fully stacked */
+  .blog-audio-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .blog-audio-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .blog-audio-content {
+    flex: none;
+    width: 100%;
+  }
+  .blog-audio-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .blog-audio-btn.generate {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Condition pages — tighter spacing */
+  .cond-hero {
+    padding: 90px 0 32px;
+  }
+  .cond-hero h1 {
+    font-size: 1.5rem;
+  }
+  .cond-recovery-card,
+  .cond-reassure-card {
+    padding: 20px 16px;
+  }
+  .cond-seo-text {
+    font-size: 0.82rem;
+  }
+
+  /* FAQ — tighter on very small phones */
+  .faq-answer-inner {
+    padding: 0 16px 16px 16px;
+  }
+  .faq-summary {
+    padding: 14px 14px;
+    font-size: 0.88rem;
+    gap: 8px;
+  }
+
+  /* Booking layer — safe area insets for notched phones */
+  .booking-layer {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* About spec cards — stack icon */
+  .about-spec-card {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  /* Service hero stats — 2 col grid instead of flex */
+  .svc-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .svc-hero-stat {
+    text-align: center;
+  }
+  .svc-stat-value {
+    font-size: 0.95rem;
+  }
+  .svc-stat-label {
+    font-size: 0.68rem;
+  }
+
+  /* Location cards — reduce map height */
+  .location-map-placeholder {
+    height: 170px;
+  }
+
+  /* Patient choice badge */
+  .patient-choice-badge {
+    padding: 16px;
+  }
+  .patient-choice-badge svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Blog card body */
+  .blog-card-body {
+    padding: 14px;
+  }
+  .blog-card-body h3 {
+    font-size: 0.95rem;
+  }
+  .blog-card-img {
+    height: 160px;
+  }
+
+  /* Contact info items — tighter */
+  .contact-info-item {
+    gap: 10px;
+  }
+  .contact-info-item h4 {
+    font-size: 0.85rem;
+  }
+
+  /* Insurance logo grid — already 2 cols, just tighten */
+  .insurance-logo-item {
+    min-height: 36px;
+    padding: 4px 6px;
+  }
+
+  /* Footer — single col already, just tighten */
+  .footer-bottom p {
+    font-size: 0.72rem;
+  }
+
+  /* Ticker — smaller on mobile */
+  .ticker-track {
+    gap: 32px;
+  }
+  .ticker-item {
+    gap: 6px;
+  }
+
+  /* Sticky bar — taller touch target */
+  .sticky-bottom-bar {
+    height: 54px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .sticky-bar-btn {
+    font-size: 1.05rem;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Blog article — tighter */
+  .blog-article p {
+    font-size: 0.92rem;
+    line-height: 1.8;
+  }
+  .blog-article h3 {
+    font-size: 1.05rem;
+  }
+  .blog-article ul, .blog-article ol {
+    font-size: 0.92rem;
+    margin-left: 16px;
+  }
+  .blog-takeaway {
+    padding: 18px 16px;
+  }
+
+  /* DocZoc pages — tighter */
+  .dz-hero {
+    padding: 48px 14px 36px;
+  }
+  .dz-hero h1 {
+    font-size: 1.5rem;
+  }
+  .dz-main {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+}
+
+/* ── Touch Device Optimizations ────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  /* Disable hover transforms on touch to prevent "sticky" hover states */
+  .blog-card:hover,
+  .faq-item:hover,
+  .platform-card:hover,
+  .highlight-card:hover,
+  .svc-approach-card:hover,
+  .about-spec-card:hover {
+    transform: none;
+  }
+
+  /* Bigger tap targets */
+  .faq-summary {
+    min-height: 56px;
+  }
+  .reviews-nav-btn {
+    width: 48px;
+    height: 48px;
+  }
+  .svc-condition-row {
+    padding: 20px 24px;
+    min-height: 56px;
+  }
+
+  /* Prevent text selection flash on tap */
+  .mnav-link,
+  .mnav-service-item,
+  .sticky-bar-btn {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* ── Safe Area Insets for Notched Phones ────────────────────────── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .sticky-bottom-bar {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mobile-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mnav-footer {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+}

@@ -3,13 +3,13 @@ export const BG_VERT = `
   void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
 `;
 
-// All backgrounds are flowing wave patterns that sweep horizontally.
-// Each receives u_dark (1.0 = dark, 0.0 = light) for theme-aware colors.
+// Dark, subtle, moody backgrounds inspired by Flow Waves / Aurora / Mesh / Particles.
+// Each receives u_dark (1.0 = dark, 0.0 = light) for theme adaptation.
 export const BG_PRESETS = [
   {
-    id: "pulse",
-    label: "Vital Pulse",
-    desc: "Smooth flowing pulse waves",
+    id: "waves",
+    label: "Flow Waves",
+    desc: "Gentle sine waves flowing across the screen",
     frag: `
       precision mediump float;
       uniform float u_time;
@@ -17,38 +17,90 @@ export const BG_PRESETS = [
       uniform float u_dark;
       void main() {
         vec2 uv = gl_FragCoord.xy / u_res;
-        float t = u_time * 0.15;
-        vec3 bg = mix(vec3(0.95, 0.96, 0.98), vec3(0.06, 0.06, 0.12), u_dark);
-        vec3 c1 = mix(vec3(0.55, 0.48, 0.95), vec3(0.45, 0.38, 0.92), u_dark);
-        vec3 c2 = mix(vec3(0.35, 0.65, 0.92), vec3(0.25, 0.55, 0.88), u_dark);
+        float t = u_time * 0.08;
 
-        float w = 0.0;
-        for (float i = 1.0; i <= 6.0; i++) {
-          float amp = 0.12 / i;
-          float freq = i * 1.8;
-          float speed = t * (0.8 + i * 0.15);
-          w += sin(uv.x * freq + speed + sin(uv.y * 2.0 + t * 0.3) * 0.5) * amp;
-          w += cos(uv.x * freq * 0.7 - speed * 0.6 + uv.y * i * 0.8) * amp * 0.5;
+        vec3 bg = mix(vec3(0.94, 0.95, 0.97), vec3(0.03, 0.03, 0.06), u_dark);
+        vec3 lineCol = mix(vec3(0.7, 0.72, 0.82), vec3(0.25, 0.27, 0.38), u_dark);
+
+        float intensity = 0.0;
+        for (float i = 0.0; i < 5.0; i++) {
+          float y = 0.35 + i * 0.07;
+          float freq = 2.0 + i * 0.6;
+          float speed = t * (0.5 + i * 0.12);
+          float amp = 0.04 + i * 0.008;
+
+          float wave = y + sin(uv.x * freq * 3.14159 + speed + sin(uv.x * 1.5 + t * 0.3) * 0.3) * amp;
+          float d = abs(uv.y - wave);
+
+          // Thin crisp line
+          float line = smoothstep(0.003, 0.0005, d);
+          // Soft glow around line
+          float glow = exp(-d * d * 2000.0) * 0.15;
+
+          intensity += (line * 0.3 + glow) * (0.8 - i * 0.1);
         }
-        w = w * 0.5 + 0.5;
 
-        float band1 = smoothstep(0.3, 0.5, w) - smoothstep(0.5, 0.7, w);
-        float band2 = smoothstep(0.5, 0.7, w) - smoothstep(0.7, 0.9, w);
-        float glow = smoothstep(0.2, 0.6, w) * 0.35;
+        vec3 col = mix(bg, lineCol, clamp(intensity, 0.0, 0.6));
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `,
+  },
+  {
+    id: "aurora",
+    label: "Flow Aurora",
+    desc: "Slow-moving aurora borealis effect",
+    frag: `
+      precision mediump float;
+      uniform float u_time;
+      uniform vec2 u_res;
+      uniform float u_dark;
+
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float noise(vec2 p) {
+        vec2 i = floor(p); vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                   mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_res;
+        float t = u_time * 0.04;
+
+        vec3 bg = mix(vec3(0.94, 0.95, 0.97), vec3(0.02, 0.02, 0.05), u_dark);
+
+        // Aurora colors — deep blue and teal
+        vec3 c1 = mix(vec3(0.5, 0.6, 0.85), vec3(0.05, 0.1, 0.3), u_dark);
+        vec3 c2 = mix(vec3(0.4, 0.7, 0.75), vec3(0.02, 0.15, 0.25), u_dark);
+
+        // Warped horizontal band near bottom third
+        float n1 = noise(vec2(uv.x * 2.0 + t, uv.y * 0.5 + t * 0.2));
+        float n2 = noise(vec2(uv.x * 3.0 - t * 0.5, uv.y * 0.8 + t * 0.15));
+        float n3 = noise(vec2(uv.x * 1.5 + t * 0.3, uv.y * 1.2 - t * 0.1));
+
+        // Create aurora band centered around y=0.45
+        float band = exp(-pow((uv.y - 0.45 + n1 * 0.08) * 4.0, 2.0));
+        float band2 = exp(-pow((uv.y - 0.5 + n2 * 0.06) * 5.0, 2.0));
+
+        float a1 = band * n1 * 0.5;
+        float a2 = band2 * n2 * 0.35;
+
+        // Very subtle shimmer
+        float shimmer = noise(uv * 8.0 + t * 2.0) * 0.03 * band;
 
         vec3 col = bg;
-        col = mix(col, c1, glow + band1 * 0.5);
-        col = mix(col, c2, band2 * 0.4);
-        col = mix(col, mix(c1, c2, 0.5), smoothstep(0.45, 0.55, w) * 0.25);
+        col = mix(col, c1, clamp(a1, 0.0, 0.35));
+        col = mix(col, c2, clamp(a2, 0.0, 0.25));
+        col += shimmer * c2;
 
         gl_FragColor = vec4(col, 1.0);
       }
     `,
   },
   {
-    id: "cells",
-    label: "Plasma Flow",
-    desc: "Soft layered current waves",
+    id: "mesh",
+    label: "Flow Mesh",
+    desc: "Subtle gradient mesh that shifts slowly",
     frag: `
       precision mediump float;
       uniform float u_time;
@@ -56,85 +108,152 @@ export const BG_PRESETS = [
       uniform float u_dark;
       void main() {
         vec2 uv = gl_FragCoord.xy / u_res;
-        float t = u_time * 0.12;
-        vec3 bg = mix(vec3(0.95, 0.96, 0.98), vec3(0.06, 0.06, 0.12), u_dark);
-        vec3 c1 = mix(vec3(0.75, 0.3, 0.4), vec3(0.65, 0.2, 0.35), u_dark);
-        vec3 c2 = mix(vec3(0.9, 0.45, 0.5), vec3(0.8, 0.35, 0.45), u_dark);
-        vec3 c3 = mix(vec3(0.55, 0.25, 0.55), vec3(0.5, 0.2, 0.5), u_dark);
+        float t = u_time * 0.03;
 
-        float w1 = sin(uv.x * 3.0 + t + sin(uv.y * 4.0 + t * 0.5) * 0.6) * 0.5 + 0.5;
-        float w2 = sin(uv.x * 2.0 - t * 0.7 + cos(uv.y * 3.0 - t * 0.3) * 0.8) * 0.5 + 0.5;
-        float w3 = sin(uv.x * 4.5 + t * 0.5 + sin(uv.y * 2.5 + t * 0.8) * 0.4) * 0.5 + 0.5;
+        vec3 bg = mix(vec3(0.94, 0.95, 0.97), vec3(0.025, 0.03, 0.065), u_dark);
 
-        float f1 = smoothstep(0.25, 0.55, w1) * 0.4;
-        float f2 = smoothstep(0.3, 0.6, w2) * 0.35;
-        float f3 = smoothstep(0.35, 0.65, w3) * 0.3;
+        // Three gradient blobs that drift very slowly
+        vec2 p1 = vec2(0.3 + sin(t * 0.7) * 0.15, 0.35 + cos(t * 0.5) * 0.12);
+        vec2 p2 = vec2(0.7 + cos(t * 0.4) * 0.12, 0.6 + sin(t * 0.6) * 0.15);
+        vec2 p3 = vec2(0.5 + sin(t * 0.3) * 0.18, 0.5 + cos(t * 0.8) * 0.1);
+
+        float d1 = length(uv - p1);
+        float d2 = length(uv - p2);
+        float d3 = length(uv - p3);
+
+        float g1 = exp(-d1 * d1 * 3.0) * 0.3;
+        float g2 = exp(-d2 * d2 * 4.0) * 0.25;
+        float g3 = exp(-d3 * d3 * 2.5) * 0.2;
+
+        vec3 c1 = mix(vec3(0.55, 0.58, 0.78), vec3(0.06, 0.07, 0.18), u_dark);
+        vec3 c2 = mix(vec3(0.5, 0.62, 0.72), vec3(0.04, 0.08, 0.16), u_dark);
+        vec3 c3 = mix(vec3(0.58, 0.55, 0.75), vec3(0.05, 0.05, 0.14), u_dark);
 
         vec3 col = bg;
-        col = mix(col, c1, f1);
-        col = mix(col, c2, f2);
-        col = mix(col, c3, f3);
-
-        // Bright crests
-        float crest = pow(w1 * w2, 2.0) * 0.3;
-        col = mix(col, mix(c1, c2, 0.5) + 0.15, crest);
+        col = mix(col, c1, g1);
+        col = mix(col, c2, g2);
+        col = mix(col, c3, g3);
 
         gl_FragColor = vec4(col, 1.0);
       }
     `,
   },
   {
-    id: "helix",
-    label: "Helix Drift",
-    desc: "Intertwining wave ribbons",
+    id: "particles",
+    label: "Flow Particles",
+    desc: "Drifting particles following a fluid current",
     frag: `
       precision mediump float;
       uniform float u_time;
       uniform vec2 u_res;
       uniform float u_dark;
+
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+
       void main() {
         vec2 uv = gl_FragCoord.xy / u_res;
-        float t = u_time * 0.12;
-        vec3 bg = mix(vec3(0.95, 0.96, 0.98), vec3(0.06, 0.06, 0.12), u_dark);
-        vec3 c1 = mix(vec3(0.45, 0.35, 0.85), vec3(0.5, 0.38, 0.92), u_dark);
-        vec3 c2 = mix(vec3(0.2, 0.6, 0.8), vec3(0.25, 0.65, 0.88), u_dark);
+        float t = u_time * 0.06;
+
+        vec3 bg = mix(vec3(0.94, 0.95, 0.97), vec3(0.02, 0.02, 0.045), u_dark);
+        vec3 dotCol = mix(vec3(0.45, 0.5, 0.8), vec3(0.15, 0.2, 0.6), u_dark);
+
+        float intensity = 0.0;
+
+        // ~30 particles drifting
+        for (float i = 0.0; i < 30.0; i++) {
+          float h1 = hash(vec2(i, 0.0));
+          float h2 = hash(vec2(i, 1.0));
+          float h3 = hash(vec2(i, 2.0));
+
+          // Position with slow drift
+          vec2 pos = vec2(
+            fract(h1 + t * (0.02 + h3 * 0.03)),
+            fract(h2 + sin(t * 0.5 + h1 * 6.28) * 0.02 + t * 0.005)
+          );
+
+          float d = length(uv - pos);
+          float size = 0.002 + h3 * 0.003;
+
+          // Sharp dot with soft glow
+          float dot = smoothstep(size, size * 0.3, d);
+          float glow = exp(-d * d * 8000.0) * 0.3;
+
+          // Pulsing brightness
+          float pulse = 0.6 + 0.4 * sin(t * 3.0 + h1 * 6.28);
+
+          intensity += (dot * 0.5 + glow) * pulse;
+        }
+
+        vec3 col = bg;
+        col = mix(col, dotCol, clamp(intensity, 0.0, 0.8));
+
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `,
+  },
+  {
+    id: "ribbon",
+    label: "Flow Ribbon",
+    desc: "Silky ribbons of light drifting across",
+    frag: `
+      precision mediump float;
+      uniform float u_time;
+      uniform vec2 u_res;
+      uniform float u_dark;
+
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float noise(vec2 p) {
+        vec2 i = floor(p); vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                   mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_res;
+        float t = u_time * 0.06;
+
+        vec3 bg = mix(vec3(0.94, 0.95, 0.97), vec3(0.025, 0.025, 0.055), u_dark);
+        vec3 c1 = mix(vec3(0.6, 0.55, 0.8), vec3(0.12, 0.08, 0.28), u_dark);
+        vec3 c2 = mix(vec3(0.45, 0.6, 0.8), vec3(0.06, 0.12, 0.25), u_dark);
 
         float intensity = 0.0;
         vec3 tint = vec3(0.0);
 
-        for (float i = 0.0; i < 8.0; i++) {
-          float offset = i * 0.12;
-          float phase = uv.x * 5.0 - t * 1.5 + i * 0.8;
+        // Several ribbon strands
+        for (float i = 0.0; i < 4.0; i++) {
+          float yBase = 0.25 + i * 0.15;
+          float freq = 1.5 + i * 0.4;
 
-          // Two intertwined sine ribbons
-          float y1 = 0.5 + sin(phase) * (0.15 + i * 0.02) + offset - 0.5;
-          float y2 = 0.5 + sin(phase + 3.14159) * (0.15 + i * 0.02) + offset - 0.5;
+          // Noise-warped sine ribbon
+          float n = noise(vec2(uv.x * 2.0 + t + i * 10.0, i));
+          float wave = yBase + sin(uv.x * freq * 3.14159 + t * (0.8 + i * 0.2) + n * 1.5) * (0.06 + i * 0.01);
 
-          float d1 = abs(uv.y - y1);
-          float d2 = abs(uv.y - y2);
+          float d = abs(uv.y - wave);
 
-          float s1 = smoothstep(0.04, 0.005, d1) * (0.5 - i * 0.04);
-          float s2 = smoothstep(0.04, 0.005, d2) * (0.5 - i * 0.04);
+          // Ribbon width varies along x
+          float width = 0.015 + noise(vec2(uv.x * 4.0 + t + i * 5.0, 0.0)) * 0.01;
+          float ribbon = smoothstep(width, width * 0.1, d);
+          float glow = exp(-d * d * 600.0) * 0.2;
 
-          float g1 = exp(-d1 * d1 * 200.0) * 0.25;
-          float g2 = exp(-d2 * d2 * 200.0) * 0.25;
+          float contrib = (ribbon * 0.25 + glow) * (0.7 - i * 0.1);
+          intensity += contrib;
 
-          intensity += s1 + s2 + g1 + g2;
-          tint += c1 * (s1 + g1) + c2 * (s2 + g2);
+          vec3 rc = mix(c1, c2, i / 3.0);
+          tint += rc * contrib;
         }
 
         vec3 col = bg;
-        col = mix(col, tint / max(intensity, 0.01), clamp(intensity, 0.0, 0.85));
-        col = mix(bg, col, clamp(intensity * 2.0, 0.0, 1.0));
+        col += tint;
 
         gl_FragColor = vec4(col, 1.0);
       }
     `,
   },
   {
-    id: "tissue",
-    label: "Neural Tide",
-    desc: "Undulating neural wave field",
+    id: "pulse",
+    label: "Flow Pulse",
+    desc: "Gentle radial pulse emanating outward",
     frag: `
       precision mediump float;
       uniform float u_time;
@@ -151,125 +270,35 @@ export const BG_PRESETS = [
 
       void main() {
         vec2 uv = gl_FragCoord.xy / u_res;
-        float t = u_time * 0.1;
-        vec3 bg = mix(vec3(0.95, 0.96, 0.98), vec3(0.06, 0.06, 0.12), u_dark);
-        vec3 c1 = mix(vec3(0.35, 0.45, 0.88), vec3(0.4, 0.5, 0.95), u_dark);
-        vec3 c2 = mix(vec3(0.25, 0.7, 0.75), vec3(0.3, 0.8, 0.85), u_dark);
-        vec3 c3 = mix(vec3(0.55, 0.35, 0.8), vec3(0.65, 0.45, 0.9), u_dark);
+        float aspect = u_res.x / u_res.y;
+        vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
+        float t = u_time * 0.05;
 
-        // Distorted wave field using noise
-        vec2 q = uv;
-        q.x += noise(uv * 3.0 + t * 0.5) * 0.15;
-        q.y += noise(uv * 2.5 - t * 0.3) * 0.1;
+        vec3 bg = mix(vec3(0.94, 0.95, 0.97), vec3(0.02, 0.02, 0.05), u_dark);
+        vec3 c1 = mix(vec3(0.5, 0.55, 0.82), vec3(0.08, 0.1, 0.25), u_dark);
+        vec3 c2 = mix(vec3(0.45, 0.62, 0.78), vec3(0.05, 0.12, 0.22), u_dark);
 
-        float w1 = sin(q.x * 6.0 + t * 1.2 + noise(q * 4.0 + t) * 2.0) * 0.5 + 0.5;
-        float w2 = sin(q.x * 4.0 - t * 0.8 + noise(q * 3.0 - t * 0.5) * 2.5) * 0.5 + 0.5;
-        float w3 = sin(q.x * 8.0 + t * 0.6 + q.y * 3.0) * 0.5 + 0.5;
+        float dist = length(p);
 
-        vec3 col = bg;
-        col = mix(col, c1, smoothstep(0.3, 0.6, w1) * 0.45);
-        col = mix(col, c2, smoothstep(0.35, 0.65, w2) * 0.35);
-        col = mix(col, c3, smoothstep(0.4, 0.7, w3) * 0.25);
-
-        // Bright wave crests
-        float crest = pow(max(w1, w2), 3.0) * 0.2;
-        col += crest * mix(c1, c2, 0.5);
-
-        gl_FragColor = vec4(col, 1.0);
-      }
-    `,
-  },
-  {
-    id: "breath",
-    label: "Respira",
-    desc: "Deep breathing wave rhythm",
-    frag: `
-      precision mediump float;
-      uniform float u_time;
-      uniform vec2 u_res;
-      uniform float u_dark;
-      void main() {
-        vec2 uv = gl_FragCoord.xy / u_res;
-        float t = u_time * 0.1;
-        vec3 bg = mix(vec3(0.95, 0.96, 0.98), vec3(0.06, 0.06, 0.12), u_dark);
-        vec3 c1 = mix(vec3(0.2, 0.65, 0.82), vec3(0.25, 0.7, 0.9), u_dark);
-        vec3 c2 = mix(vec3(0.15, 0.5, 0.7), vec3(0.2, 0.55, 0.78), u_dark);
-
-        // Slow breathing modulation
-        float breath = sin(t * 0.8) * 0.5 + 0.5;
-        breath = pow(breath, 0.6);
-
-        float w = 0.0;
-        for (float i = 1.0; i <= 8.0; i++) {
-          float amp = (0.08 / i) * (0.7 + breath * 0.6);
-          float freq = i * 1.5;
-          float speed = t * (0.6 + i * 0.1);
-          w += sin(uv.x * freq + speed + uv.y * i * 0.3) * amp;
-          w += cos(uv.x * freq * 0.6 - speed * 0.4 + uv.y * 2.0) * amp * 0.6;
+        // Expanding rings
+        float intensity = 0.0;
+        for (float i = 0.0; i < 4.0; i++) {
+          float radius = fract(t * 0.3 + i * 0.25) * 1.2;
+          float fade = 1.0 - fract(t * 0.3 + i * 0.25);
+          float ring = exp(-pow(dist - radius, 2.0) * 300.0) * fade;
+          intensity += ring * 0.25;
         }
-        w = w * 0.5 + 0.5;
 
-        // Wide flowing bands
-        float f1 = smoothstep(0.2, 0.5, w) * 0.5;
-        float f2 = smoothstep(0.5, 0.8, w) * 0.4;
+        // Subtle noise overlay
+        float n = noise(uv * 3.0 + t) * 0.03;
 
-        vec3 col = bg;
-        col = mix(col, c1, f1);
-        col = mix(col, c2, f2);
-
-        // Breathing brightness pulse
-        col = mix(col, mix(c1, c2, 0.5) + 0.1, smoothstep(0.55, 0.65, w) * breath * 0.3);
-
-        gl_FragColor = vec4(col, 1.0);
-      }
-    `,
-  },
-  {
-    id: "marrow",
-    label: "Biofield",
-    desc: "Organic flowing gradient waves",
-    frag: `
-      precision mediump float;
-      uniform float u_time;
-      uniform vec2 u_res;
-      uniform float u_dark;
-
-      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-      float noise(vec2 p) {
-        vec2 i = floor(p); vec2 f = fract(p);
-        f = f * f * (3.0 - 2.0 * f);
-        return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
-                   mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
-      }
-
-      void main() {
-        vec2 uv = gl_FragCoord.xy / u_res;
-        float t = u_time * 0.08;
-        vec3 bg = mix(vec3(0.95, 0.96, 0.98), vec3(0.06, 0.06, 0.12), u_dark);
-        vec3 c1 = mix(vec3(0.6, 0.4, 0.8), vec3(0.55, 0.35, 0.85), u_dark);
-        vec3 c2 = mix(vec3(0.35, 0.55, 0.85), vec3(0.3, 0.5, 0.9), u_dark);
-        vec3 c3 = mix(vec3(0.25, 0.7, 0.65), vec3(0.2, 0.65, 0.7), u_dark);
-
-        // Warped coordinates for organic feel
-        vec2 q = uv;
-        q += vec2(
-          noise(uv * 2.0 + t * 0.4) * 0.12,
-          noise(uv * 2.5 + t * 0.3 + 50.0) * 0.1
-        );
-
-        // Three flowing wave layers
-        float w1 = sin(q.x * 4.0 + t * 1.0 + q.y * 1.5) * 0.5 + 0.5;
-        float w2 = sin(q.x * 3.0 - t * 0.7 + q.y * 2.5 + 1.0) * 0.5 + 0.5;
-        float w3 = sin(q.x * 5.0 + t * 0.5 - q.y * 1.0 + 2.0) * 0.5 + 0.5;
+        // Central glow
+        float glow = exp(-dist * dist * 2.0) * 0.15;
 
         vec3 col = bg;
-        col = mix(col, c1, smoothstep(0.25, 0.6, w1) * 0.45);
-        col = mix(col, c2, smoothstep(0.3, 0.65, w2) * 0.4);
-        col = mix(col, c3, smoothstep(0.35, 0.7, w3) * 0.3);
-
-        // Intersection highlights
-        float overlap = w1 * w2 * w3;
-        col += overlap * mix(c1, c3, 0.5) * 0.2;
+        col = mix(col, c1, clamp(intensity + glow, 0.0, 0.4));
+        col = mix(col, c2, clamp(glow * 0.5, 0.0, 0.2));
+        col += n * c1;
 
         gl_FragColor = vec4(col, 1.0);
       }

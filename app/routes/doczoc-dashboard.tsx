@@ -1,6 +1,33 @@
 import { Link, useLocation } from "react-router";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type ReactNode } from "react";
 import { PlatformBg } from "~/components/PlatformBg";
+
+export function AiSummaryExpand({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      {open && (
+        <div style={{ marginTop: 6 }}>{children}</div>
+      )}
+      <button
+        onClick={() => setOpen(!open)}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 4,
+          marginTop: 6, padding: "3px 10px", borderRadius: 6,
+          fontSize: "0.65rem", fontWeight: 700, cursor: "pointer",
+          background: open ? "rgba(99,102,241,0.12)" : "rgba(99,102,241,0.06)",
+          color: "#818cf8", border: "1px solid rgba(99,102,241,0.15)",
+          transition: "all 0.15s",
+        }}
+      >
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        {open ? "Less" : "More insight"}
+      </button>
+    </>
+  );
+}
 
 function SplashScreen({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
@@ -441,7 +468,10 @@ export default function DashboardPage() {
               </svg>
               <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
             </div>
-            28-year-old male presenting for ACL injury follow-up. MRI confirmed complete tear of left ACL with associated lateral meniscus involvement. Physical exam reveals positive Lachman and anterior drawer tests. Patient reports instability during lateral movements and inability to return to sports. Conservative management with bracing and PT x 8 weeks showed minimal improvement. Scheduled for reconstruction consultation — recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
+            ACL tear (left), positive Lachman. Scheduled for reconstruction consult.
+            <AiSummaryExpand>
+              MRI confirmed complete tear with lateral meniscus involvement. Anterior drawer test positive. Reports instability during lateral movements, unable to return to sports. Conservative management (bracing + PT x 8 weeks) showed minimal improvement. Recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
+            </AiSummaryExpand>
           </div>
           <div style={{
             display: "flex", alignItems: "center", gap: 8, marginTop: 10,

@@ -7127,6 +7127,17 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 [data-theme="light"] .dz-rcm-move-btn:hover:not(:disabled) { border-color: #818cf8; color: #4f46e5; }
 [data-theme="light"] .dz-rcm-step-label { color: #94a3b8; }
 [data-theme="light"] .dz-rcm-empty { color: #94a3b8; }
+[data-theme="light"] .dz-rcm-modal-overlay { background: rgba(0, 0, 0, 0.3); }
+[data-theme="light"] .dz-rcm-modal { background: #ffffff; border-color: #e2e8f0; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.12); }
+[data-theme="light"] .dz-rcm-modal-header { background: #ffffff; border-bottom-color: #e2e8f0; }
+[data-theme="light"] .dz-rcm-modal-close { border-color: #e2e8f0; color: #94a3b8; }
+[data-theme="light"] .dz-rcm-modal-close:hover { color: #1e293b; border-color: #c7d2fe; }
+[data-theme="light"] .dz-rcm-modal-list li { color: #475569; }
+[data-theme="light"] .dz-rcm-modal-list li::marker { color: #94a3b8; }
+[data-theme="light"] .dz-rcm-term-card { background: #f8fafc; border-color: #e2e8f0; }
+[data-theme="light"] .dz-rcm-term-name { color: #1e293b; }
+[data-theme="light"] .dz-rcm-term-def { color: #64748b; }
+[data-theme="light"] .dz-rcm-automation-item { color: #475569; }
 
 /* ── Team — light mode ────────────────────────────── */
 [data-theme="light"] .dz-team-card {

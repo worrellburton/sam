@@ -215,8 +215,8 @@ function StepInfoModal({ stepId, onClose, onNavigate }: { stepId: Step; onClose:
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <div className="dz-rcm-modal-num" style={{ background: `${col.color}20`, color: col.color }}>{stepId}</div>
             <div>
-              <h2 style={{ margin: 0, fontSize: "1.3rem", fontWeight: 800, color: "#f1f5f9" }}>Step {stepId}: {info.fullTitle}</h2>
-              <p style={{ margin: "4px 0 0", fontSize: "0.85rem", color: "#64748b" }}>{col.timeline}</p>
+              <h2 style={{ margin: 0, fontSize: "1.3rem", fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)" }}>Step {stepId}: {info.fullTitle}</h2>
+              <p style={{ margin: "4px 0 0", fontSize: "0.85rem", color: "var(--dz-text-muted, #64748b)" }}>{col.timeline}</p>
             </div>
           </div>
           <button className="dz-rcm-modal-close" onClick={onClose}>
@@ -225,7 +225,7 @@ function StepInfoModal({ stepId, onClose, onNavigate }: { stepId: Step; onClose:
         </div>
 
         <div className="dz-rcm-modal-body">
-          <p style={{ fontSize: "0.92rem", color: "#cbd5e1", lineHeight: 1.8, margin: "0 0 24px" }}>
+          <p style={{ fontSize: "0.92rem", color: "var(--dz-text-secondary, #cbd5e1)", lineHeight: 1.8, margin: "0 0 24px" }}>
             {info.description}
           </p>
 
@@ -422,8 +422,8 @@ export default function RcmPage() {
         {/* ── Cash Pipeline ── */}
         <section style={{ marginTop: 36 }}>
           <div style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f1f5f9", margin: 0 }}>Cash Pipeline</h2>
-            <p style={{ fontSize: "0.78rem", color: "#64748b", margin: "4px 0 0" }}>Track revenue as it flows through each stage of the billing cycle</p>
+            <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)", margin: 0 }}>Cash Pipeline</h2>
+            <p style={{ fontSize: "0.78rem", color: "var(--dz-text-muted, #64748b)", margin: "4px 0 0" }}>Track revenue as it flows through each stage of the billing cycle</p>
           </div>
 
           {/* Funnel stages */}
@@ -452,7 +452,7 @@ export default function RcmPage() {
                       <polyline points="9 18 15 12 9 6"/>
                     </svg>
                   )}
-                  <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "#94a3b8", textAlign: "center", lineHeight: 1.2 }}>
+                  <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "var(--dz-text-muted, #94a3b8)", textAlign: "center", lineHeight: 1.2 }}>
                     {stage.label}
                   </span>
                 </div>
@@ -465,15 +465,14 @@ export default function RcmPage() {
             {CASH_PIPELINE_STATS.map(stat => (
               <div
                 key={stat.label}
+                className="dz-card"
                 style={{
-                  background: "rgba(30, 30, 45, 0.6)",
-                  border: "1px solid rgba(255,255,255,0.06)",
                   borderRadius: 10,
                   padding: "16px 14px",
                   textAlign: "center",
                 }}
               >
-                <div style={{ fontSize: "0.66rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "#5a5a6e", marginBottom: 6 }}>
+                <div style={{ fontSize: "0.66rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--dz-text-dim, #5a5a6e)", marginBottom: 6 }}>
                   {stat.label}
                 </div>
                 <div style={{ fontSize: "1.3rem", fontWeight: 800, color: stat.color }}>

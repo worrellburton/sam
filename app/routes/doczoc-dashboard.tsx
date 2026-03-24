@@ -370,14 +370,8 @@ function ThemeToggleFab() {
 
 export { Sidebar, ThemeToggleFab };
 
-// ── Google Reviews (Dashboard) ──────────────────────────────────────
-const DEMO_REVIEWS = [
-  { author_name: "Jennifer M.", rating: 5, text: "Dr. Elguizaoui is an exceptional surgeon. He repaired my torn ACL and I was back on my feet faster than expected. His entire team was caring and professional.", relative_time_description: "2 days ago", time: Date.now() / 1000 - 172800 },
-  { author_name: "Robert K.", rating: 5, text: "Best orthopedic experience I've had. Dr. Elguizaoui took the time to explain everything about my shoulder surgery options. Highly recommend!", relative_time_description: "a week ago", time: Date.now() / 1000 - 604800 },
-  { author_name: "Patricia S.", rating: 4, text: "Very knowledgeable doctor. The wait time was a bit long but the care was worth it. My knee replacement went smoothly.", relative_time_description: "2 weeks ago", time: Date.now() / 1000 - 1209600 },
-  { author_name: "Michael T.", rating: 5, text: "Had rotator cuff surgery and the recovery has been fantastic. Great bedside manner and very thorough follow-up care.", relative_time_description: "3 weeks ago", time: Date.now() / 1000 - 1814400 },
-  { author_name: "Susan L.", rating: 5, text: "Came in for a sports injury evaluation. Dr. Elguizaoui was incredibly thorough and got me back to running within 2 months.", relative_time_description: "a month ago", time: Date.now() / 1000 - 2592000 },
-];
+// ── Google Reviews (Dashboard Card) ─────────────────────────────────
+import { GOOGLE_REVIEWS, GOOGLE_RATING, GOOGLE_REVIEW_COUNT } from "~/data/google-reviews";
 
 function StarRating({ rating, size = 10 }: { rating: number; size?: number }) {
   return (
@@ -392,86 +386,42 @@ function StarRating({ rating, size = 10 }: { rating: number; size?: number }) {
 }
 
 function DashGoogleReviews() {
-  const [expanded, setExpanded] = useState(false);
-  const reviews = DEMO_REVIEWS;
-  const newest = reviews[0];
+  const latest = GOOGLE_REVIEWS[0];
 
   return (
-    <>
-      <div className="dz-stat-card" style={{ cursor: "pointer" }} onClick={() => setExpanded(!expanded)}>
-        <div className="dz-stat-card-label" style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-          Google Reviews
-        </div>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-          <div className="dz-stat-card-value" style={{ color: "#fbbf24" }}>4.9</div>
-          <StarRating rating={5} size={11} />
-        </div>
-        <div className="dz-stat-card-change" style={{ color: "#22c55e" }}>127 reviews</div>
+    <Link to="/doczoc/google-reviews" className="dz-stat-card" style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }}>
+      <div className="dz-stat-card-label" style={{ display: "flex", alignItems: "center", gap: 5 }}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Google Reviews
       </div>
-
-      {expanded && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-          background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
-          zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center",
-        }} onClick={() => setExpanded(false)}>
-          <div onClick={e => e.stopPropagation()} style={{
-            width: 520, maxHeight: "80vh", overflow: "auto",
-            background: "var(--dz-card-bg, rgba(15,15,35,0.98))", backdropFilter: "blur(20px)",
-            border: "1px solid rgba(99,102,241,0.15)", borderRadius: 16,
-            padding: "24px 28px", boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                </svg>
-                <span style={{ fontSize: "1rem", fontWeight: 800, color: "var(--dz-text-primary)" }}>Google Reviews</span>
-                <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#fbbf24" }}>4.9</span>
-                <StarRating rating={5} size={12} />
-              </div>
-              <button onClick={() => setExpanded(false)} style={{ background: "none", border: "none", color: "var(--dz-text-muted)", cursor: "pointer", padding: 4 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {reviews.map((r, i) => (
-                <div key={i} style={{
-                  padding: "14px 16px", borderRadius: 10,
-                  background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
-                  border: "1px solid rgba(148,163,184,0.06)",
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                    <div style={{
-                      width: 28, height: 28, borderRadius: "50%", background: "rgba(251,191,36,0.15)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: "0.65rem", fontWeight: 700, color: "#fbbf24", flexShrink: 0,
-                    }}>{r.author_name.charAt(0)}</div>
-                    <div>
-                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{r.author_name}</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <StarRating rating={r.rating} size={10} />
-                        <span style={{ fontSize: "0.65rem", color: "var(--dz-text-muted)" }}>{r.relative_time_description}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ fontSize: "0.78rem", color: "var(--dz-text-secondary)", lineHeight: 1.5 }}>{r.text}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+        <div className="dz-stat-card-value" style={{ color: "#fbbf24" }}>{GOOGLE_RATING}</div>
+        <StarRating rating={5} size={11} />
+      </div>
+      <div className="dz-stat-card-change" style={{ color: "#22c55e" }}>{GOOGLE_REVIEW_COUNT} reviews</div>
+      {/* Latest review preview */}
+      <div style={{
+        marginTop: 8, padding: "8px 10px", borderRadius: 8,
+        background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
+        border: "1px solid rgba(148,163,184,0.05)",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+          <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{latest.author_name}</span>
+          <StarRating rating={latest.rating} size={8} />
         </div>
-      )}
-    </>
+        <div style={{
+          fontSize: "0.68rem", color: "var(--dz-text-muted)", lineHeight: 1.4,
+          overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const,
+        }}>
+          {latest.text}
+        </div>
+      </div>
+    </Link>
   );
 }
 

@@ -30,12 +30,6 @@ const APPT_TYPES = {
   followUp: "Follow-up",
   postOp: "Post-Op Follow-up",
   preOp: "Pre-Op Evaluation",
-  surgeryHip: "Surgery — Total Hip Arthroplasty",
-  surgeryKneeReplace: "Surgery — Total Knee Replacement",
-  surgeryKneeArthro: "Surgery — Knee Arthroscopy",
-  surgeryMeniscus: "Surgery — Meniscus Repair",
-  surgeryRotatorCuff: "Surgery — Rotator Cuff Repair",
-  surgeryACL: "Surgery — ACL Reconstruction",
   sportsInjury: "Sports Injury Evaluation",
   imaging: "Imaging Review",
   injection: "Joint Injection",
@@ -56,7 +50,7 @@ const FUTURE_APPTS: { patientIdx: number; type: string; daysOut: number; notes: 
   { patientIdx: 7, type: APPT_TYPES.postOp, daysOut: 4, notes: "2-week post-op rotator cuff repair. Suture check.", codes: ["M75.111", "99213"] },
   // Week 2
   { patientIdx: 8, type: APPT_TYPES.initialConsult, daysOut: 7, notes: "New referral — left knee meniscus tear, failed conservative tx.", codes: ["M23.211", "99203"] },
-  { patientIdx: 9, type: APPT_TYPES.surgeryKneeArthro, daysOut: 7, notes: "Arthroscopic meniscus repair, right knee.", codes: ["M23.211", "29882"] },
+  { patientIdx: 9, type: APPT_TYPES.preOp, daysOut: 7, notes: "Pre-op evaluation for arthroscopic meniscus repair, right knee.", codes: ["M23.211", "99213"] },
   { patientIdx: 10, type: APPT_TYPES.followUp, daysOut: 8, notes: "8-week follow-up distal radius fracture. X-ray in office.", codes: ["S52.501A", "99213"] },
   { patientIdx: 11, type: APPT_TYPES.preOp, daysOut: 8, notes: "Pre-op clearance for total hip replacement. EKG + labs.", codes: ["M16.11", "99213"] },
   { patientIdx: 12, type: APPT_TYPES.ptEval, daysOut: 9, notes: "PT progression check — advance to phase III protocol.", codes: ["S83.511A", "97161"] },
@@ -64,25 +58,25 @@ const FUTURE_APPTS: { patientIdx: number; type: string; daysOut: number; notes: 
   { patientIdx: 14, type: APPT_TYPES.initialConsult, daysOut: 10, notes: "Hip pain x 3 months, worse with stairs. R/O labral tear.", codes: ["M25.551", "99203"] },
   { patientIdx: 15, type: APPT_TYPES.injection, daysOut: 10, notes: "Hyaluronic acid injection series, right knee.", codes: ["M17.11", "20610"] },
   // Week 3
-  { patientIdx: 16, type: APPT_TYPES.surgeryHip, daysOut: 14, notes: "Total hip arthroplasty, right hip. NPO after midnight.", codes: ["M16.11", "27130"] },
+  { patientIdx: 16, type: APPT_TYPES.preOp, daysOut: 14, notes: "Final pre-op clearance for total hip arthroplasty, right hip.", codes: ["M16.11", "99213"] },
   { patientIdx: 17, type: APPT_TYPES.postOp, daysOut: 14, notes: "12-week post-op ACL. Return to sport evaluation.", codes: ["S83.511A", "99214"] },
   { patientIdx: 18, type: APPT_TYPES.followUp, daysOut: 15, notes: "Shoulder impingement — conservative tx progress.", codes: ["M75.41", "99213"] },
   { patientIdx: 19, type: APPT_TYPES.sportsInjury, daysOut: 15, notes: "Runner's knee evaluation. Activity modification plan.", codes: ["M76.51", "99203"] },
   { patientIdx: 20, type: APPT_TYPES.preOp, daysOut: 16, notes: "Pre-op for rotator cuff repair. Anesthesia consult.", codes: ["M75.111", "99213"] },
   { patientIdx: 21, type: APPT_TYPES.imaging, daysOut: 16, notes: "CT review — complex tibial plateau fracture planning.", codes: ["S82.101A", "99213"] },
   // Week 4
-  { patientIdx: 22, type: APPT_TYPES.surgeryRotatorCuff, daysOut: 21, notes: "Arthroscopic RCR, right shoulder. Nerve block planned.", codes: ["M75.111", "29827"] },
+  { patientIdx: 22, type: APPT_TYPES.preOp, daysOut: 21, notes: "Pre-op for arthroscopic rotator cuff repair, right shoulder.", codes: ["M75.111", "99213"] },
   { patientIdx: 23, type: APPT_TYPES.initialConsult, daysOut: 21, notes: "Chronic knee pain, failed PT. Discuss surgical options.", codes: ["M17.11", "99203"] },
   { patientIdx: 24, type: APPT_TYPES.followUp, daysOut: 22, notes: "Hip injection follow-up — pain level reassessment.", codes: ["M16.11", "99213"] },
   { patientIdx: 25, type: APPT_TYPES.postOp, daysOut: 22, notes: "4-week post-op meniscus repair. ROM check.", codes: ["M23.211", "99213"] },
   { patientIdx: 0, type: APPT_TYPES.ptEval, daysOut: 23, notes: "PT re-evaluation — knee flexion plateau, adjust protocol.", codes: ["S83.511A", "97161"] },
   { patientIdx: 1, type: APPT_TYPES.followUp, daysOut: 23, notes: "Shoulder follow-up — MRI results discussion.", codes: ["M75.111", "99213"] },
   // Week 5-6
-  { patientIdx: 26, type: APPT_TYPES.surgeryKneeReplace, daysOut: 28, notes: "Total knee replacement, left knee. Bilateral staged.", codes: ["M17.11", "27447"] },
-  { patientIdx: 27, type: APPT_TYPES.surgeryMeniscus, daysOut: 28, notes: "Arthroscopic meniscus repair, medial compartment.", codes: ["M23.211", "29882"] },
+  { patientIdx: 26, type: APPT_TYPES.preOp, daysOut: 28, notes: "Pre-op for total knee replacement, left knee. Bilateral staged.", codes: ["M17.11", "99213"] },
+  { patientIdx: 27, type: APPT_TYPES.followUp, daysOut: 28, notes: "Follow-up meniscus evaluation, medial compartment.", codes: ["M23.211", "99213"] },
   { patientIdx: 28, type: APPT_TYPES.initialConsult, daysOut: 30, notes: "New patient — elbow pain, possible tennis elbow.", codes: ["M77.11", "99203"] },
   { patientIdx: 29, type: APPT_TYPES.preOp, daysOut: 30, notes: "Pre-op for ACL reconstruction. PT prehab started.", codes: ["S83.511A", "99213"] },
-  { patientIdx: 30, type: APPT_TYPES.surgeryACL, daysOut: 35, notes: "ACL reconstruction with hamstring autograft.", codes: ["S83.511A", "29888"] },
+  { patientIdx: 30, type: APPT_TYPES.preOp, daysOut: 35, notes: "Final pre-op for ACL reconstruction with hamstring autograft.", codes: ["S83.511A", "99213"] },
   { patientIdx: 2, type: APPT_TYPES.postOp, daysOut: 35, notes: "8-week post-op wrist fracture. Grip strength test.", codes: ["S52.501A", "99213"] },
   { patientIdx: 3, type: APPT_TYPES.followUp, daysOut: 37, notes: "Knee arthroscopy follow-up — clearing for light activity.", codes: ["M23.211", "99213"] },
   { patientIdx: 4, type: APPT_TYPES.injection, daysOut: 37, notes: "PRP injection, left knee. Regenerative protocol.", codes: ["M17.11", "0232T"] },
@@ -115,7 +109,6 @@ function getAllAppointments(): ApptRecord[] {
 
 function getTypeColor(type: string) {
   const t = type.toLowerCase();
-  if (t.includes("surgery")) return "#ef4444";
   if (t.includes("pre-op")) return "#f59e0b";
   if (t.includes("post-op") || t.includes("follow")) return "#22c55e";
   if (t.includes("consult") || t.includes("initial")) return "#6366f1";

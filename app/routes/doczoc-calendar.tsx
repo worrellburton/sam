@@ -129,6 +129,74 @@ export default function CalendarPage() {
           </div>
         </header>
 
+        {/* Location selector */}
+        <div style={{ display: "flex", gap: 10, marginBottom: 20, overflowX: "auto", paddingBottom: 4 }}>
+          <button
+            onClick={() => setSelectedLoc("all")}
+            style={{
+              display: "flex", alignItems: "center", gap: 8,
+              padding: "10px 18px", borderRadius: 12, cursor: "pointer",
+              border: selectedLoc === "all" ? "2px solid #818cf8" : "1px solid var(--dz-input-border, rgba(148,163,184,0.12))",
+              background: selectedLoc === "all" ? "rgba(99,102,241,0.1)" : "var(--dz-card-bg, rgba(15,15,35,0.6))",
+              color: selectedLoc === "all" ? "#818cf8" : "var(--dz-text-secondary, #94a3b8)",
+              fontSize: "0.82rem", fontWeight: 600, whiteSpace: "nowrap",
+              transition: "all 0.15s", flexShrink: 0,
+              backdropFilter: "blur(12px)",
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            All Locations
+          </button>
+          {locations.map(loc => (
+            <button
+              key={loc.id}
+              onClick={() => setSelectedLoc(loc.id)}
+              style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "8px 14px", borderRadius: 12, cursor: "pointer",
+                border: selectedLoc === loc.id ? "2px solid #818cf8" : "1px solid var(--dz-input-border, rgba(148,163,184,0.12))",
+                background: selectedLoc === loc.id ? "rgba(99,102,241,0.1)" : "var(--dz-card-bg, rgba(15,15,35,0.6))",
+                color: "var(--dz-text-secondary, #94a3b8)",
+                fontSize: "0.78rem", fontWeight: 500, whiteSpace: "nowrap",
+                transition: "all 0.15s", flexShrink: 0,
+                backdropFilter: "blur(12px)",
+              }}
+            >
+              <div style={{
+                width: 56, height: 40, borderRadius: 6, overflow: "hidden", flexShrink: 0,
+                background: "rgba(99,102,241,0.06)", position: "relative",
+              }}>
+                <img
+                  src={`https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/${loc.lng},${loc.lat},13,0/112x80@2x?access_token=pk.placeholder&attribution=false`}
+                  alt={loc.label}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.6 }}
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = "none";
+                    if (img.parentElement) {
+                      img.parentElement.style.display = "flex";
+                      img.parentElement.style.alignItems = "center";
+                      img.parentElement.style.justifyContent = "center";
+                    }
+                  }}
+                />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", opacity: 0.6 }}>
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 1, textAlign: "left" }}>
+                <span style={{
+                  fontSize: "0.8rem", fontWeight: 700,
+                  color: selectedLoc === loc.id ? "#818cf8" : "var(--dz-text-primary, #f1f5f9)",
+                }}>{loc.label}</span>
+                <span style={{ fontSize: "0.65rem", color: "var(--dz-text-muted, #64748b)" }}>{loc.address}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+
         <div style={{ position: "relative" }}>
           {/* Calendar grid */}
           <div className="dz-cal-main" style={{ flex: 1 }}>

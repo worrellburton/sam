@@ -101,24 +101,22 @@ export default function PatientsPage() {
       <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
-        <header className="dz-platform-header">
+        <header className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div>
             <h1>Patients</h1>
             <p>{PATIENTS.length} total patients</p>
           </div>
-        </header>
-
-        {/* Search + view toggle + focus in one row */}
-        <div className="dz-toolbar-row">
-          <input
-            type="text"
-            placeholder="Search patients..."
-            className="dz-search-input"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ maxWidth: 260 }}
-          />
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{
+              display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+              background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 260,
+            }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search patients..." style={{
+                background: "transparent", border: "none", outline: "none", width: "100%",
+                fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+              }} />
+            </div>
             <CrosshairToggle active={tableFocusMode} onClick={() => setTableFocusMode(f => !f)} />
             <div className="dz-view-toggle">
               <button
@@ -137,7 +135,7 @@ export default function PatientsPage() {
               </button>
             </div>
           </div>
-        </div>
+        </header>
 
         {view === "table" ? (
           <DraggablePatientTable patients={filtered} onRowClick={(id) => navigate(`/doczoc/patients/${id}`)} externalFocusMode={tableFocusMode} />
@@ -173,11 +171,10 @@ export default function PatientsPage() {
 }
 
 // ── Draggable Patient Table ──────────────────────────────────────────
-type ColKey = "patient" | "status" | "nextAppt" | "condition" | "age" | "phone" | "email" | "insurance" | "visits";
+type ColKey = "patient" | "nextAppt" | "condition" | "age" | "phone" | "email" | "insurance" | "visits";
 
 const COL_HEADERS: Record<ColKey, { label: string; className?: string; style?: React.CSSProperties }> = {
   patient: { label: "Patient" },
-  status: { label: "Status" },
   nextAppt: { label: "Next Appt" },
   condition: { label: "Condition" },
   age: { label: "Age" },
@@ -187,7 +184,7 @@ const COL_HEADERS: Record<ColKey, { label: string; className?: string; style?: R
   visits: { label: "Visits", style: { textAlign: "center" } },
 };
 
-const DEFAULT_COLS: ColKey[] = ["patient", "status", "nextAppt", "condition", "age", "phone", "email", "insurance", "visits"];
+const DEFAULT_COLS: ColKey[] = ["patient", "visits", "nextAppt", "condition", "age", "phone", "email", "insurance"];
 const PATIENT_DATA_KEYS = new Set<ColKey>(["age", "visits"]);
 
 function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { patients: Patient[]; onRowClick: (id: number) => void; externalFocusMode?: boolean }) {
@@ -237,7 +234,6 @@ function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { pa
         </td>
       );
       case "nextAppt": return <td key={key} {...handlers} style={{ fontSize: "0.75rem", ...cellStyle, transition: "opacity 0.2s ease" }}>{p.nextAppt}</td>;
-      case "status": return <td key={key} {...handlers} style={{ ...cellStyle, transition: "opacity 0.2s ease" }}><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>;
       default: return <td key={key} />;
     }
   };

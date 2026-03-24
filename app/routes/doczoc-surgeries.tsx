@@ -115,117 +115,87 @@ export default function SurgeriesPage() {
           <SurgeryDetailView surgery={selectedSurgery} onBack={() => setSubPage("main")} />
         ) : (
           <>
-            {/* Hero header */}
-            <div className="dz-surgery-hero" style={{
-              position: "relative", overflow: "hidden", borderRadius: 20, padding: "28px 32px",
-              marginBottom: 24,
-              background: "linear-gradient(135deg, rgba(239,68,68,0.06) 0%, rgba(168,85,247,0.1) 40%, rgba(99,102,241,0.08) 100%)",
-              backdropFilter: "blur(20px)", isolation: "isolate",
-            }}>
-              <div style={{
-                position: "absolute", inset: 0, borderRadius: 20, padding: 1,
-                background: "linear-gradient(135deg, #ef4444, #a855f7, #6366f1, #ec4899, #ef4444)",
-                backgroundSize: "300% 300%", animation: "dz-surgery-border 4s ease infinite",
-                WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                WebkitMaskComposite: "xor" as any, maskComposite: "exclude",
-                pointerEvents: "none", zIndex: 1,
-              }} />
-              <div style={{
-                position: "absolute", top: 0, left: "-100%", width: "60%", height: "100%",
-                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)",
-                animation: "dz-surgery-shimmer 3s ease-in-out infinite", pointerEvents: "none", zIndex: 2,
-              }} />
-              <div style={{
-                position: "absolute", top: -20, right: 80, width: 90, height: 90, borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(239,68,68,0.1) 0%, transparent 70%)",
-                animation: "dz-surgery-float 6s ease-in-out infinite", pointerEvents: "none",
-              }} />
-
-              <div style={{ position: "relative", zIndex: 3, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <div style={{
-                    width: 48, height: 48, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center",
-                    background: "linear-gradient(135deg, rgba(239,68,68,0.2), rgba(168,85,247,0.2))",
-                    animation: "dz-surgery-pulse 2s ease-in-out infinite",
-                  }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                  </div>
-                  <div>
-                    <h1 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#f1f5f9", margin: 0 }}>Surgical Center</h1>
-                    <p style={{ fontSize: "0.8rem", color: "#94a3b8", margin: 0 }}>
-                      {completedCount} completed · {upcomingCount} upcoming · {preOpCount} pre-op
-                    </p>
-                  </div>
+            {/* Header */}
+            <div className="dz-platform-header" style={{ marginBottom: 24 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{
+                  width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.15)",
+                }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button
-                    onClick={() => setSubPage(subPage === "database" ? "main" : "database")}
-                    style={{
-                      padding: "8px 16px", borderRadius: 8, border: "1px solid rgba(99,102,241,0.2)",
-                      background: subPage === "database" ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.06)",
-                      color: "#a5b4fc", fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
-                      display: "flex", alignItems: "center", gap: 6,
-                    }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-                    Database
-                  </button>
+                <div>
+                  <h1>Surgeries</h1>
+                  <p>{completedCount} completed · {upcomingCount} upcoming · {preOpCount} pre-op</p>
                 </div>
+              </div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  onClick={() => setSubPage(subPage === "database" ? "main" : "database")}
+                  style={{
+                    padding: "8px 16px", borderRadius: 8, border: "1px solid var(--dz-input-border)",
+                    background: subPage === "database" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
+                    color: "var(--dz-accent-text)", fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+                    display: "flex", alignItems: "center", gap: 6,
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                  Database
+                </button>
               </div>
             </div>
 
-            {/* Controls */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+            {/* Controls — single row */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <div style={{ display: "flex", gap: 6 }}>
                 {(["all", "completed", "upcoming", "pre-op"] as const).map(f => (
                   <button key={f} onClick={() => setFilter(f)} style={{
                     padding: "6px 14px", borderRadius: 8, border: "none", cursor: "pointer",
                     fontSize: "0.75rem", fontWeight: 700, textTransform: "capitalize",
-                    background: filter === f ? "rgba(239,68,68,0.15)" : "rgba(148,163,184,0.06)",
-                    color: filter === f ? "#f87171" : "#94a3b8",
+                    background: filter === f ? "rgba(239,68,68,0.15)" : "var(--dz-input-bg)",
+                    color: filter === f ? "#f87171" : "var(--dz-text-muted)",
                   }}>
                     {f === "all" ? `All (${allSurgeries.length})` : `${f.replace("-", " ")} (${f === "completed" ? completedCount : f === "upcoming" ? upcomingCount : preOpCount})`}
                   </button>
                 ))}
               </div>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-                  background: "rgba(148,163,184,0.06)", border: "1px solid rgba(99,102,241,0.1)", width: 220,
-                }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." style={{
-                    background: "transparent", border: "none", outline: "none", width: "100%",
-                    fontSize: "0.78rem", color: "#e2e8f0",
-                  }} />
-                </div>
-                <div style={{ display: "flex", gap: 2 }}>
-                  <button onClick={() => setView("table")} style={{
-                    padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
-                    background: view === "table" ? "rgba(99,102,241,0.15)" : "rgba(148,163,184,0.06)",
-                    color: view === "table" ? "#818cf8" : "#64748b",
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                  </button>
-                  <button onClick={() => setView("list")} style={{
-                    padding: "6px 8px", borderRadius: "0 6px 6px 0", border: "none", cursor: "pointer",
-                    background: view === "list" ? "rgba(99,102,241,0.15)" : "rgba(148,163,184,0.06)",
-                    color: view === "list" ? "#818cf8" : "#64748b",
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                  </button>
-                </div>
-                {subPage === "database" && (
-                  <button onClick={() => setShowAddForm(!showAddForm)} style={{
-                    padding: "6px 14px", borderRadius: 8, border: "none", cursor: "pointer",
-                    background: "linear-gradient(135deg, #ef4444, #a855f7)", color: "#fff",
-                    fontSize: "0.75rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4,
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    Add Surgery
-                  </button>
-                )}
+              <div style={{ flex: 1 }} />
+              <div style={{
+                display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+                background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 220,
+              }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." style={{
+                  background: "transparent", border: "none", outline: "none", width: "100%",
+                  fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+                }} />
               </div>
+              <div style={{ display: "flex", gap: 2 }}>
+                <button onClick={() => setView("table")} style={{
+                  padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
+                  background: view === "table" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
+                  color: view === "table" ? "var(--dz-accent)" : "var(--dz-text-dim)",
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <button onClick={() => setView("list")} style={{
+                  padding: "6px 8px", borderRadius: "0 6px 6px 0", border: "none", cursor: "pointer",
+                  background: view === "list" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
+                  color: view === "list" ? "var(--dz-accent)" : "var(--dz-text-dim)",
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                </button>
+              </div>
+              {subPage === "database" && (
+                <button onClick={() => setShowAddForm(!showAddForm)} style={{
+                  padding: "6px 14px", borderRadius: 8, border: "none", cursor: "pointer",
+                  background: "linear-gradient(135deg, #ef4444, #a855f7)", color: "#fff",
+                  fontSize: "0.75rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4,
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Surgery
+                </button>
+              )}
             </div>
 
             {/* Add form */}
@@ -522,11 +492,11 @@ function SurgeryDetailView({ surgery, onBack }: { surgery: SurgeryRecord; onBack
 }
 
 // ── Draggable Surgery Table ──────────────────────────────────────────
-type SurgColKey = "status" | "procedure" | "patient" | "date" | "codes" | "action";
+type SurgColKey = "patient" | "status" | "procedure" | "date" | "codes";
 const SURG_DATA_KEYS = new Set<SurgColKey>(["date", "codes"]);
 
 function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord[]; onView: (s: SurgeryRecord) => void }) {
-  const [columns, setColumns] = useState<SurgColKey[]>(["status", "procedure", "patient", "date", "codes", "action"]);
+  const [columns, setColumns] = useState<SurgColKey[]>(["patient", "status", "procedure", "date", "codes"]);
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
@@ -542,8 +512,8 @@ function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord
   };
 
   const headers: Record<SurgColKey, { label: string; style?: React.CSSProperties }> = {
-    status: { label: "Status" }, procedure: { label: "Procedure" }, patient: { label: "Patient" },
-    date: { label: "Date" }, codes: { label: "Codes" }, action: { label: "Action", style: { textAlign: "center" } },
+    patient: { label: "Patient" }, status: { label: "Status" }, procedure: { label: "Procedure" },
+    date: { label: "Date" }, codes: { label: "Codes" },
   };
 
   const renderCell = (s: SurgeryRecord, key: SurgColKey, colIdx: number) => {
@@ -558,15 +528,21 @@ function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord
         </span></td>
       );
       case "procedure": return <td key={key} {...h} style={{ fontWeight: 600, fontSize: "0.82rem", ...cs, transition: "opacity 0.2s ease" }}>{s.type}</td>;
-      case "patient": return <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}><Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ color: "#a5b4fc", textDecoration: "none", fontSize: "0.82rem" }}>{s.patient.name}</Link></td>;
+      case "patient": return (
+        <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}>
+          <Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>
+            <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
+              {s.patient.name.split(" ").map(n => n[0]).join("")}
+            </div>
+            {s.patient.name}
+          </Link>
+        </td>
+      );
       case "date": return <td key={key} {...h} style={{ fontSize: "0.82rem", whiteSpace: "nowrap", ...cs, transition: "opacity 0.2s ease" }}>{s.date}</td>;
       case "codes": return (
         <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}><div style={{ display: "flex", gap: 3 }}>
           {s.codes.slice(0, 3).map(c => <span key={c} style={{ fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "1px 6px", borderRadius: 4, fontWeight: 600, background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{c}</span>)}
         </div></td>
-      );
-      case "action": return (
-        <td key={key} {...h} style={{ textAlign: "center", ...cs, transition: "opacity 0.2s ease" }}><button onClick={e => { e.stopPropagation(); onView(s); }} style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "rgba(99,102,241,0.06)", color: "#818cf8", fontSize: "0.7rem", fontWeight: 700, cursor: "pointer" }}>View</button></td>
       );
       default: return <td key={key} />;
     }

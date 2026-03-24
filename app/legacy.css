@@ -8380,6 +8380,16 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   --glass-radius: 14px;
   --glass-sheen-color: rgba(255, 255, 255, 0.03);
   --glass-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* DocZoc semantic text colors */
+  --dz-text-primary: #f1f5f9;
+  --dz-text-secondary: #e2e8f0;
+  --dz-text-muted: #94a3b8;
+  --dz-text-dim: #64748b;
+  --dz-accent: #818cf8;
+  --dz-accent-text: #a5b4fc;
+  --dz-input-bg: rgba(148,163,184,0.06);
+  --dz-input-border: rgba(99,102,241,0.1);
 }
 
 [data-theme="light"] {
@@ -8396,6 +8406,15 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
                         0 0 40px rgba(99, 102, 241, 0.03);
   --glass-shadow-active: 0 1px 4px rgba(0, 0, 0, 0.06);
   --glass-sheen-color: rgba(255, 255, 255, 0.15);
+
+  --dz-text-primary: #1e293b;
+  --dz-text-secondary: #334155;
+  --dz-text-muted: #64748b;
+  --dz-text-dim: #94a3b8;
+  --dz-accent: #6366f1;
+  --dz-accent-text: #4f46e5;
+  --dz-input-bg: rgba(0,0,0,0.03);
+  --dz-input-border: rgba(0,0,0,0.08);
 }
 
 /* ── Glass Surface (base card) ─────────────────────────────────── */
@@ -8515,20 +8534,21 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   transform: translateY(-1px);
   box-shadow: 0 8px 32px rgba(239,68,68,0.12), 0 0 60px rgba(168,85,247,0.08);
 }
-/* Sidebar surgery link — liquid glass glow */
+/* Sidebar surgery link — electric glow */
 .dz-sidebar-surgery {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(168,85,247,0.1) 50%, rgba(99,102,241,0.08) 100%) !important;
-  border: 1px solid rgba(239,68,68,0.15) !important;
+  background: transparent !important;
+  border: none !important;
   color: #f87171 !important;
+  text-shadow: 0 0 8px rgba(239,68,68,0.5), 0 0 20px rgba(239,68,68,0.3);
 }
 .dz-sidebar-surgery::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: 0;
   background: linear-gradient(135deg, #ef4444, #a855f7, #6366f1, #ec4899, #ef4444);
   background-size: 300% 300%;
   animation: dz-surgery-border 4s ease infinite;
@@ -8549,28 +8569,29 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   pointer-events: none;
 }
 .dz-sidebar-surgery:hover {
-  background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(168,85,247,0.18) 50%, rgba(99,102,241,0.15) 100%) !important;
-  box-shadow: 0 0 20px rgba(239,68,68,0.2), 0 0 40px rgba(168,85,247,0.1) !important;
-  transform: scale(1.02);
+  background: transparent !important;
+  text-shadow: 0 0 12px rgba(239,68,68,0.7), 0 0 30px rgba(239,68,68,0.4), 0 0 60px rgba(168,85,247,0.2);
 }
 .dz-sidebar-surgery.active {
-  background: linear-gradient(135deg, rgba(239,68,68,0.18) 0%, rgba(168,85,247,0.22) 50%, rgba(99,102,241,0.18) 100%) !important;
-  box-shadow: 0 0 24px rgba(239,68,68,0.25), 0 0 48px rgba(168,85,247,0.12) !important;
+  background: transparent !important;
   color: #f87171 !important;
+  text-shadow: 0 0 10px rgba(239,68,68,0.6), 0 0 25px rgba(239,68,68,0.35), 0 0 50px rgba(168,85,247,0.15);
 }
-.dz-sidebar-surgery svg { filter: drop-shadow(0 0 4px rgba(239,68,68,0.4)); }
+.dz-sidebar-surgery svg { filter: drop-shadow(0 0 6px rgba(239,68,68,0.6)) drop-shadow(0 0 12px rgba(239,68,68,0.3)); }
 [data-theme="light"] .dz-sidebar-surgery {
-  background: linear-gradient(135deg, rgba(239,68,68,0.06) 0%, rgba(168,85,247,0.08) 50%, rgba(99,102,241,0.06) 100%) !important;
-  border-color: rgba(239,68,68,0.2) !important;
+  background: transparent !important;
+  border: none !important;
   color: #dc2626 !important;
+  text-shadow: 0 0 8px rgba(239,68,68,0.4), 0 0 20px rgba(239,68,68,0.2);
 }
 [data-theme="light"] .dz-sidebar-surgery:hover {
-  background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(168,85,247,0.12) 50%, rgba(99,102,241,0.1) 100%) !important;
-  box-shadow: 0 0 16px rgba(239,68,68,0.15), 0 0 32px rgba(168,85,247,0.08) !important;
+  background: transparent !important;
+  text-shadow: 0 0 12px rgba(239,68,68,0.6), 0 0 30px rgba(239,68,68,0.3);
 }
 [data-theme="light"] .dz-sidebar-surgery.active {
-  background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(168,85,247,0.15) 50%, rgba(99,102,241,0.12) 100%) !important;
+  background: transparent !important;
   color: #dc2626 !important;
+  text-shadow: 0 0 10px rgba(239,68,68,0.5), 0 0 25px rgba(239,68,68,0.25);
 }
 
 .dz-surgery-btn { transition: transform 0.25s ease, box-shadow 0.25s ease;

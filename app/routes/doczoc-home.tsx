@@ -94,7 +94,7 @@ export default function HomePage() {
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "28px 32px" }}>
         {/* Greeting */}
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#f1f5f9", margin: 0 }}>
+          <h1 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--dz-text-primary)", margin: 0 }}>
             {greeting}, Dr. Elguizaoui
           </h1>
           <p style={{ fontSize: "0.82rem", color: "#64748b", margin: "4px 0 0" }}>
@@ -147,9 +147,9 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#f1f5f9" }}>{data.nextAppt.type}</div>
-                  <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
-                    <Link to={`/doczoc/patients/${data.nextAppt.patient.id}`} style={{ color: "#a5b4fc", textDecoration: "none" }}>{data.nextAppt.patient.name}</Link>
+                  <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{data.nextAppt.type}</div>
+                  <div style={{ fontSize: "0.75rem", color: "var(--dz-text-muted)" }}>
+                    <Link to={`/doczoc/patients/${data.nextAppt.patient.id}`} style={{ color: "var(--dz-accent-text)", textDecoration: "none" }}>{data.nextAppt.patient.name}</Link>
                     {" · "}{data.nextAppt.date}
                   </div>
                 </div>
@@ -171,9 +171,9 @@ export default function HomePage() {
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#f1f5f9" }}>{data.nextSurgery.type}</div>
-                  <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
-                    <Link to={`/doczoc/patients/${data.nextSurgery.patient.id}`} style={{ color: "#a5b4fc", textDecoration: "none" }}>{data.nextSurgery.patient.name}</Link>
+                  <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{data.nextSurgery.type}</div>
+                  <div style={{ fontSize: "0.75rem", color: "var(--dz-text-muted)" }}>
+                    <Link to={`/doczoc/patients/${data.nextSurgery.patient.id}`} style={{ color: "var(--dz-accent-text)", textDecoration: "none" }}>{data.nextSurgery.patient.name}</Link>
                     {" · "}{data.nextSurgery.date}
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export default function HomePage() {
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#22c55e", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
               ${(data.totalPaid / 1000).toFixed(1)}K
             </div>
-            <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>
+            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
               {data.collectionRate.toFixed(1)}% collection rate
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function HomePage() {
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#f59e0b", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
               ${(data.totalOwed / 1000).toFixed(1)}K
             </div>
-            <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>
+            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
               {data.overdueInvoices.length} overdue
             </div>
           </div>
@@ -207,7 +207,7 @@ export default function HomePage() {
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#818cf8", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
               {data.pendingInvoices.length}
             </div>
-            <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>
+            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
               ${(data.pendingInvoices.reduce((s, i) => s + i.totalCharged, 0) / 1000).toFixed(1)}K total
             </div>
           </div>
@@ -218,7 +218,7 @@ export default function HomePage() {
           {/* Today's patients mini-cards */}
           <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f1f5f9" }}>Patient Roster</span>
+              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Patient Roster</span>
               <Link to="/doczoc/patients" style={{ fontSize: "0.72rem", color: "#818cf8", fontWeight: 600, textDecoration: "none" }}>View All →</Link>
             </div>
             <div style={{ maxHeight: 320, overflowY: "auto" }}>
@@ -241,7 +241,7 @@ export default function HomePage() {
                     fontSize: "0.65rem", fontWeight: 700,
                   }}>{p.name.split(" ").map(n => n[0]).join("")}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e2e8f0" }}>{p.name}</div>
+                    <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-secondary)" }}>{p.name}</div>
                     <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{p.condition}</div>
                   </div>
                   {p.allergies.length > 0 && (
@@ -261,7 +261,7 @@ export default function HomePage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {/* Quick actions */}
             <div className="dz-card" style={{ padding: "18px 20px" }}>
-              <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 14 }}>Quick Actions</div>
+              <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 14 }}>Quick Actions</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                 <QuickActionBtn label="New Patient" icon="user-plus" to="/doczoc/patients" color="#6366f1" />
                 <QuickActionBtn label="Schedule" icon="calendar" to="/doczoc/calendar" color="#22c55e" />
@@ -274,7 +274,7 @@ export default function HomePage() {
 
             {/* This week */}
             <div className="dz-card" style={{ padding: "18px 20px" }}>
-              <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 12 }}>This Week</div>
+              <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 12 }}>This Week</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <WeekStat label="Surgeries" count={data.thisWeekSurgeries.length} color="#ef4444" />
                 <WeekStat label="Active Patients" count={data.activePatients} color="#22c55e" />
@@ -288,7 +288,7 @@ export default function HomePage() {
         {/* ── Row 5: Upcoming schedule list ── */}
         <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
           <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f1f5f9" }}>Upcoming Schedule</span>
+            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Schedule</span>
             <Link to="/doczoc/appointments" style={{ fontSize: "0.72rem", color: "#818cf8", fontWeight: 600, textDecoration: "none" }}>View All →</Link>
           </div>
           <div style={{ maxHeight: 300, overflowY: "auto" }}>
@@ -305,8 +305,8 @@ export default function HomePage() {
                     boxShadow: isSurgery ? "0 0 6px rgba(239,68,68,0.4)" : undefined,
                   }} />
                   <span style={{ fontSize: "0.75rem", color: "#818cf8", fontWeight: 600, width: 90, flexShrink: 0 }}>{a.date}</span>
-                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e2e8f0", flex: 1 }}>{a.type}</span>
-                  <Link to={`/doczoc/patients/${a.patient.id}`} style={{ fontSize: "0.72rem", color: "#a5b4fc", textDecoration: "none", fontWeight: 600 }}>{a.patient.name}</Link>
+                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-secondary)", flex: 1 }}>{a.type}</span>
+                  <Link to={`/doczoc/patients/${a.patient.id}`} style={{ fontSize: "0.72rem", color: "var(--dz-accent-text)", textDecoration: "none", fontWeight: 600 }}>{a.patient.name}</Link>
                 </div>
               );
             })}
@@ -330,7 +330,7 @@ function AlertCard({ icon, label, count, color, linkTo }: { icon: React.ReactNod
       </div>
       <div>
         <div style={{ fontSize: "1.2rem", fontWeight: 800, color: count > 0 ? color : "#64748b", fontFamily: "'SF Mono', Consolas, monospace" }}>{count}</div>
-        <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "#94a3b8" }}>{label}</div>
+        <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--dz-text-muted)" }}>{label}</div>
       </div>
     </Link>
   );
@@ -355,7 +355,7 @@ function QuickActionBtn({ label, icon, to, color }: { label: string; icon: strin
     onMouseLeave={e => { e.currentTarget.style.background = `${color}08`; }}
     >
       {icons[icon]}
-      <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#e2e8f0" }}>{label}</span>
+      <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--dz-text-secondary)" }}>{label}</span>
     </Link>
   );
 }
@@ -363,7 +363,7 @@ function QuickActionBtn({ label, icon, to, color }: { label: string; icon: strin
 function WeekStat({ label, count, color }: { label: string; count: number; color: string }) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-      <span style={{ fontSize: "0.78rem", color: "#94a3b8" }}>{label}</span>
+      <span style={{ fontSize: "0.78rem", color: "var(--dz-text-muted)" }}>{label}</span>
       <span style={{ fontSize: "0.88rem", fontWeight: 800, color, fontFamily: "'SF Mono', Consolas, monospace" }}>{count}</span>
     </div>
   );

@@ -48,12 +48,428 @@ function getAppts(date: Date, locId?: string) {
   if (seed % 2 === 0) return [];
   const count = seed > 20 ? 3 : seed > 12 ? 2 : 1;
   const LOC_LABELS = ['Upper East Side', 'West Village', 'Brooklyn'];
-  return Array.from({ length: count }, (_, i) => ({
-    type: APPT_TYPES[(seed + i * 3) % APPT_TYPES.length],
-    time: `${8 + ((seed + i * 2) % 9)}:${i % 2 === 0 ? '00' : '30'} AM`,
-    patient: ['Sarah M.', 'James K.', 'Maria L.', 'David R.', 'Emily C.', 'Michael B.'][(seed + i) % 6],
-    location: LOC_LABELS[(seed + i) % LOC_LABELS.length],
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    const rawHour = 8 + ((seed + i * 2) % 9); // 8-16
+    const mins = i % 2 === 0 ? 0 : 30;
+    const h12 = rawHour > 12 ? rawHour - 12 : rawHour;
+    const ampm = rawHour >= 12 ? "PM" : "AM";
+    return {
+      type: APPT_TYPES[(seed + i * 3) % APPT_TYPES.length],
+      time: `${h12}:${mins === 0 ? "00" : "30"} ${ampm}`,
+      startMin: rawHour * 60 + mins,
+      duration: 30 + ((seed + i) % 3) * 15, // 30, 45, or 60 min
+      patient: ['Sarah M.', 'James K.', 'Maria L.', 'David R.', 'Emily C.', 'Michael B.'][(seed + i) % 6],
+      location: LOC_LABELS[(seed + i) % LOC_LABELS.length],
+    };
+  });
+}
+
+// Timeline constants
+const TIMELINE_START = 7; // 7 AM
+const TIMELINE_END = 18; // 6 PM
+const TIMELINE_HOURS = TIMELINE_END - TIMELINE_START; // 11 hours
+const SNAP_MINUTES = 15;
+
+function minToTime(min: number) {
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
+  const ampm = h >= 12 ? "PM" : "AM";
+  return `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
+}
+
+function snapTo(min: number, snap: number) {
+  return Math.round(min / snap) * snap;
+}
+
+// ── Draggable Day View ──────────────────────────────────────────────
+interface DayAppt {
+  id: string;
+  patient: string;
+  type: { label: string; color: string };
+  location?: string;
+  startMin: number;
+  duration: number;
+}
+
+function DayView({
+  selectedDate, selectedAppts, userAppts, apptOverrides, setApptOverrides,
+  timelineRef, onBack, onPrev, onNext, selectedLoc, setSelectedLoc,
+  showAddForm, setShowAddForm, newAppt, setNewAppt, handleAddAppt,
+}: {
+  selectedDate: Date;
+  selectedAppts: ReturnType<typeof getAppts>;
+  userAppts: { patient: string; time: string; type: string; location: string }[];
+  apptOverrides: Record<string, { startMin: number; duration: number }>;
+  setApptOverrides: React.Dispatch<React.SetStateAction<Record<string, { startMin: number; duration: number }>>>;
+  timelineRef: React.RefObject<HTMLDivElement | null>;
+  onBack: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  selectedLoc: string;
+  setSelectedLoc: (v: string) => void;
+  showAddForm: boolean;
+  setShowAddForm: (v: boolean) => void;
+  newAppt: { patient: string; time: string; type: string; location: string };
+  setNewAppt: React.Dispatch<React.SetStateAction<{ patient: string; time: string; type: string; location: string }>>;
+  handleAddAppt: () => void;
+}) {
+  const [dragState, setDragState] = useState<{ id: string; offsetMin: number; startY: number; origMin: number } | null>(null);
+  const [resizeState, setResizeState] = useState<{ id: string; startY: number; origDur: number } | null>(null);
+
+  // Build unified appointment list with overrides applied
+  const allAppts: DayAppt[] = useMemo(() => {
+    const result: DayAppt[] = [];
+    for (let i = 0; i < selectedAppts.length; i++) {
+      const a = selectedAppts[i];
+      const id = `gen-${i}`;
+      const ov = apptOverrides[id];
+      result.push({
+        id,
+        patient: a.patient,
+        type: a.type,
+        location: a.location,
+        startMin: ov ? ov.startMin : a.startMin,
+        duration: ov ? ov.duration : a.duration,
+      });
+    }
+    for (let i = 0; i < userAppts.length; i++) {
+      const a = userAppts[i];
+      const id = `user-${i}`;
+      const typeObj = APPT_TYPES.find(t => t.label === a.type) || APPT_TYPES[0];
+      const locLabel = locations.find(l => l.id === a.location)?.label;
+      // Parse time string to minutes
+      const parts = a.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+      let sm = 9 * 60;
+      if (parts) {
+        let h = parseInt(parts[1]);
+        const m = parseInt(parts[2]);
+        const pm = parts[3].toUpperCase() === "PM";
+        if (pm && h !== 12) h += 12;
+        if (!pm && h === 12) h = 0;
+        sm = h * 60 + m;
+      }
+      const ov = apptOverrides[id];
+      result.push({
+        id,
+        patient: a.patient,
+        type: typeObj,
+        location: locLabel,
+        startMin: ov ? ov.startMin : sm,
+        duration: ov ? ov.duration : 30,
+      });
+    }
+    return result.sort((a, b) => a.startMin - b.startMin);
+  }, [selectedAppts, userAppts, apptOverrides]);
+
+  // Convert minutes to % position in timeline
+  const totalMin = TIMELINE_HOURS * 60;
+  const minToPct = (min: number) => ((min - TIMELINE_START * 60) / totalMin) * 100;
+  const durToPct = (dur: number) => (dur / totalMin) * 100;
+
+  // Mouse handlers for drag
+  const handleDragStart = useCallback((e: React.MouseEvent, appt: DayAppt) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragState({ id: appt.id, offsetMin: 0, startY: e.clientY, origMin: appt.startMin });
+  }, []);
+
+  const handleResizeStart = useCallback((e: React.MouseEvent, appt: DayAppt) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setResizeState({ id: appt.id, startY: e.clientY, origDur: appt.duration });
+  }, []);
+
+  useEffect(() => {
+    if (!dragState && !resizeState) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const tl = timelineRef.current;
+      if (!tl) return;
+      const tlHeight = tl.clientHeight;
+      const pxPerMin = tlHeight / totalMin;
+
+      if (dragState) {
+        const dy = e.clientY - dragState.startY;
+        const dMin = dy / pxPerMin;
+        const newStart = snapTo(dragState.origMin + dMin, SNAP_MINUTES);
+        const clamped = Math.max(TIMELINE_START * 60, Math.min(TIMELINE_END * 60 - 15, newStart));
+        setApptOverrides(prev => {
+          const existing = prev[dragState.id];
+          return { ...prev, [dragState.id]: { startMin: clamped, duration: existing?.duration ?? allAppts.find(a => a.id === dragState.id)!.duration } };
+        });
+      }
+
+      if (resizeState) {
+        const dy = e.clientY - resizeState.startY;
+        const dMin = dy / pxPerMin;
+        const newDur = snapTo(resizeState.origDur + dMin, SNAP_MINUTES);
+        const clamped = Math.max(15, Math.min(180, newDur));
+        setApptOverrides(prev => {
+          const existing = prev[resizeState.id];
+          return { ...prev, [resizeState.id]: { startMin: existing?.startMin ?? allAppts.find(a => a.id === resizeState.id)!.startMin, duration: clamped } };
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setDragState(null);
+      setResizeState(null);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [dragState, resizeState, totalMin, timelineRef, setApptOverrides, allAppts]);
+
+  const isDragging = dragState !== null || resizeState !== null;
+
+  // Hour labels for the timeline
+  const hourLabels = [];
+  for (let h = TIMELINE_START; h <= TIMELINE_END; h++) {
+    hourLabels.push(h);
+  }
+
+  return (
+    <div style={{ display: "flex", gap: 16, height: "calc(100vh - 160px)" }}>
+      {/* Left: Day schedule timeline */}
+      <div style={{ flex: "1 1 65%", minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <div className="dz-cal-main" style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div className="dz-cal-header" style={{ justifyContent: "flex-start", gap: 12, flexShrink: 0 }}>
+            <button className="dz-cal-btn" onClick={onBack} title="Back to month">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <h2 style={{ margin: 0 }}>
+              {DAY_NAMES[selectedDate.getDay()]}, {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}, {selectedDate.getFullYear()}
+            </h2>
+            <div style={{ display: "flex", gap: 4, marginLeft: "auto" }}>
+              <button className="dz-cal-btn" onClick={onPrev} title="Previous day">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button className="dz-cal-btn" onClick={onNext} title="Next day">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Pixel-based timeline */}
+          <div style={{ flex: 1, display: "flex", marginTop: 4, overflow: "hidden", userSelect: isDragging ? "none" : undefined }}>
+            {/* Hour labels */}
+            <div style={{ width: 56, flexShrink: 0, position: "relative" }}>
+              {hourLabels.map(h => (
+                <div key={h} style={{
+                  position: "absolute",
+                  top: `${((h - TIMELINE_START) / TIMELINE_HOURS) * 100}%`,
+                  right: 8,
+                  fontSize: "0.68rem", fontWeight: 600,
+                  color: "var(--dz-text-muted, #64748b)",
+                  transform: "translateY(-50%)",
+                  lineHeight: 1,
+                }}>
+                  {h === 0 ? "12 AM" : h < 12 ? `${h} AM` : h === 12 ? "12 PM" : `${h - 12} PM`}
+                </div>
+              ))}
+            </div>
+
+            {/* Timeline body with grid lines + positioned appointments */}
+            <div ref={timelineRef} style={{ flex: 1, position: "relative", borderLeft: "1px solid rgba(148,163,184,0.08)" }}>
+              {/* Hour grid lines */}
+              {hourLabels.map(h => (
+                <div key={h} style={{
+                  position: "absolute", left: 0, right: 0,
+                  top: `${((h - TIMELINE_START) / TIMELINE_HOURS) * 100}%`,
+                  borderTop: "1px solid rgba(148,163,184,0.06)",
+                }} />
+              ))}
+              {/* Half-hour grid lines */}
+              {hourLabels.slice(0, -1).map(h => (
+                <div key={`half-${h}`} style={{
+                  position: "absolute", left: 0, right: 0,
+                  top: `${((h - TIMELINE_START + 0.5) / TIMELINE_HOURS) * 100}%`,
+                  borderTop: "1px dashed rgba(148,163,184,0.03)",
+                }} />
+              ))}
+
+              {/* Appointment blocks — draggable + resizable */}
+              {allAppts.map(appt => {
+                const topPct = minToPct(appt.startMin);
+                const heightPct = durToPct(appt.duration);
+                const isActive = dragState?.id === appt.id || resizeState?.id === appt.id;
+                return (
+                  <div
+                    key={appt.id}
+                    onMouseDown={(e) => handleDragStart(e, appt)}
+                    style={{
+                      position: "absolute",
+                      top: `${topPct}%`,
+                      height: `${heightPct}%`,
+                      left: 4, right: 4,
+                      minHeight: 28,
+                      borderRadius: 8,
+                      borderLeft: `3px solid ${appt.type.color}`,
+                      background: `${appt.type.color}14`,
+                      cursor: isDragging ? "grabbing" : "grab",
+                      zIndex: isActive ? 10 : 1,
+                      boxShadow: isActive ? "0 4px 16px rgba(0,0,0,0.2)" : "none",
+                      transition: isActive ? "none" : "top 0.15s, height 0.15s",
+                      display: "flex", alignItems: "flex-start", gap: 8,
+                      padding: "5px 10px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div style={{
+                      width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                      background: `${appt.type.color}20`, color: appt.type.color,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "0.52rem", fontWeight: 700, marginTop: 1,
+                    }}>
+                      {appt.patient.split(" ").map(n => n[0]).join("")}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: "0.76rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{appt.patient}</div>
+                      <div style={{ fontSize: "0.65rem", color: "var(--dz-text-muted, #64748b)", whiteSpace: "nowrap" }}>
+                        {minToTime(appt.startMin)} – {minToTime(appt.startMin + appt.duration)} &middot; {appt.type.label}
+                      </div>
+                    </div>
+
+                    {/* Resize handle at bottom */}
+                    <div
+                      onMouseDown={(e) => handleResizeStart(e, appt)}
+                      style={{
+                        position: "absolute", bottom: 0, left: 0, right: 0, height: 8,
+                        cursor: "ns-resize",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}
+                    >
+                      <div style={{
+                        width: 24, height: 3, borderRadius: 2,
+                        background: `${appt.type.color}40`,
+                      }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right: Panel with time-aligned appointment list */}
+      <div style={{ flex: "0 0 280px", minWidth: 240, display: "flex", flexDirection: "column" }}>
+        <div className="dz-cal-main" style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          {/* Header */}
+          <div style={{ padding: "12px 16px 0", flexShrink: 0 }}>
+            <h3 style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", margin: "0 0 4px" }}>
+              {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}
+            </h3>
+            <p style={{ fontSize: "0.72rem", color: "var(--dz-text-muted, #64748b)", margin: "0 0 10px" }}>
+              {allAppts.length} appointment{allAppts.length !== 1 ? "s" : ""}
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 10 }}>
+              <button className={`dz-loc-chip${selectedLoc === "all" ? " active" : ""}`} onClick={() => setSelectedLoc("all")}>All</button>
+              {locations.map(loc => (
+                <button key={loc.id} className={`dz-loc-chip${selectedLoc === loc.id ? " active" : ""}`} onClick={() => setSelectedLoc(loc.id)}>{loc.label}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Time-aligned appointment cards — same timeline as left */}
+          <div style={{ flex: 1, position: "relative", overflow: "hidden", margin: "0 8px" }}>
+            {/* Hour tick marks on right panel */}
+            {hourLabels.map(h => (
+              <div key={h} style={{
+                position: "absolute", left: 0, right: 0,
+                top: `${((h - TIMELINE_START) / TIMELINE_HOURS) * 100}%`,
+                borderTop: "1px solid rgba(148,163,184,0.04)",
+              }}>
+                <span style={{
+                  position: "absolute", left: 0, top: -7,
+                  fontSize: "0.58rem", color: "var(--dz-text-dim, #475569)",
+                }}>
+                  {h === 0 ? "12A" : h < 12 ? `${h}A` : h === 12 ? "12P" : `${h - 12}P`}
+                </span>
+              </div>
+            ))}
+
+            {/* Appointment cards aligned to timeline */}
+            {allAppts.map(appt => {
+              const topPct = minToPct(appt.startMin);
+              const heightPct = durToPct(appt.duration);
+              return (
+                <div key={appt.id} style={{
+                  position: "absolute",
+                  top: `${topPct}%`,
+                  height: `${Math.max(heightPct, 5)}%`,
+                  left: 24, right: 0,
+                  padding: "4px 8px",
+                  borderRadius: 6,
+                  background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
+                  border: "1px solid rgba(148,163,184,0.06)",
+                  borderLeft: `3px solid ${appt.type.color}`,
+                  overflow: "hidden",
+                  display: "flex", flexDirection: "column", justifyContent: "center",
+                }}>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{appt.patient}</div>
+                  <div style={{ fontSize: "0.62rem", color: "var(--dz-text-muted, #64748b)" }}>
+                    {minToTime(appt.startMin)} &middot; {appt.type.label}
+                  </div>
+                  {appt.location && (
+                    <div style={{ fontSize: "0.58rem", color: "var(--dz-text-dim, #475569)", display: "flex", alignItems: "center", gap: 2 }}>
+                      <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      {appt.location}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Add appointment button */}
+          <div style={{ padding: "8px 16px 12px", flexShrink: 0 }}>
+            {showAddForm ? (
+              <div style={{ borderTop: "1px solid rgba(148,163,184,0.08)", paddingTop: 10 }}>
+                <h4 style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", margin: "0 0 8px" }}>New Appointment</h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <select className="dz-cal-add-input" value={newAppt.patient} onChange={e => setNewAppt(prev => ({ ...prev, patient: e.target.value }))}>
+                    <option value="">Select patient...</option>
+                    {PATIENTS.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
+                  </select>
+                  <div style={{ display: "flex", gap: 4 }}>
+                    <select className="dz-cal-add-input" value={newAppt.time} onChange={e => setNewAppt(prev => ({ ...prev, time: e.target.value }))}>
+                      {["8:00 AM","8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM"].map(t => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                    <select className="dz-cal-add-input" value={newAppt.type} onChange={e => setNewAppt(prev => ({ ...prev, type: e.target.value }))}>
+                      {APPT_TYPES.map(t => <option key={t.label} value={t.label}>{t.label}</option>)}
+                    </select>
+                  </div>
+                  <select className="dz-cal-add-input" value={newAppt.location} onChange={e => setNewAppt(prev => ({ ...prev, location: e.target.value }))}>
+                    {locations.map(loc => <option key={loc.id} value={loc.id}>{loc.label}</option>)}
+                  </select>
+                </div>
+                <div style={{ display: "flex", gap: 6, marginTop: 8, justifyContent: "flex-end" }}>
+                  <button className="dz-cal-add-cancel" onClick={() => setShowAddForm(false)}>Cancel</button>
+                  <button className="dz-cal-add-save" onClick={handleAddAppt} disabled={!newAppt.patient}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Add
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button className="dz-cal-add-trigger" onClick={() => setShowAddForm(true)} style={{ width: "100%", fontSize: "0.75rem" }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Appointment
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function CalendarPage() {
@@ -68,6 +484,9 @@ export default function CalendarPage() {
   const [locDropOpen, setLocDropOpen] = useState(false);
   const locDropRef = useRef<HTMLDivElement>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  // Drag/resize overrides: key = "gen-{i}" or "user-{i}", value = { startMin, duration }
+  const [apptOverrides, setApptOverrides] = useState<Record<string, { startMin: number; duration: number }>>({});
+  const timelineRef = useRef<HTMLDivElement>(null);
   const [scheduleMode, setScheduleMode] = useState(false);
   const [selectedSchedDates, setSelectedSchedDates] = useState<Set<string>>(new Set());
   // schedule: dateKey -> set of time slots
@@ -272,211 +691,36 @@ export default function CalendarPage() {
 
         {/* Day view — when a day is selected */}
         {panelOpen && selectedDate && !scheduleMode ? (
-          <div style={{ display: "flex", gap: 16 }}>
-            {/* Left: Day schedule timeline */}
-            <div style={{ flex: "1 1 60%", minWidth: 0 }}>
-              <div className="dz-cal-main">
-                <div className="dz-cal-header" style={{ justifyContent: "flex-start", gap: 12 }}>
-                  <button className="dz-cal-btn" onClick={() => { setPanelOpen(false); setSelectedDate(null); }} title="Back to month">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-                  </button>
-                  <h2 style={{ margin: 0 }}>
-                    {DAY_NAMES[selectedDate.getDay()]}, {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}, {selectedDate.getFullYear()}
-                  </h2>
-                  <div style={{ display: "flex", gap: 4, marginLeft: "auto" }}>
-                    <button className="dz-cal-btn" onClick={() => {
-                      const prev = new Date(selectedDate);
-                      prev.setDate(prev.getDate() - 1);
-                      setSelectedDate(prev);
-                      setMonth(prev.getMonth());
-                      setYear(prev.getFullYear());
-                    }} title="Previous day">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-                    </button>
-                    <button className="dz-cal-btn" onClick={() => {
-                      const next = new Date(selectedDate);
-                      next.setDate(next.getDate() + 1);
-                      setSelectedDate(next);
-                      setMonth(next.getMonth());
-                      setYear(next.getFullYear());
-                    }} title="Next day">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Day timeline — fills available viewport height */}
-                <div style={{ display: "flex", flexDirection: "column", marginTop: 8, height: "calc(100vh - 220px)" }}>
-                  {DAY_HOURS.map(hour => {
-                    const hourAppts = [...selectedAppts, ...userAppts.map(a => {
-                      const typeObj = APPT_TYPES.find(t => t.label === a.type) || APPT_TYPES[0];
-                      const locLabel = locations.find(l => l.id === a.location)?.label;
-                      return { patient: a.patient, time: a.time, type: typeObj, location: locLabel };
-                    })].filter(a => {
-                      const h = parseInt(a.time);
-                      const isPM = a.time.includes("PM");
-                      const hour24 = isPM && h !== 12 ? h + 12 : (!isPM && h === 12 ? 0 : h);
-                      return hour24 === hour;
-                    });
-
-                    return (
-                      <div key={hour} style={{
-                        display: "flex", alignItems: "stretch", flex: 1,
-                        borderBottom: "1px solid rgba(148,163,184,0.06)",
-                      }}>
-                        <div style={{
-                          width: 60, flexShrink: 0, fontSize: "0.7rem", fontWeight: 600,
-                          color: "var(--dz-text-muted, #64748b)", paddingTop: 6, textAlign: "right", paddingRight: 12,
-                        }}>
-                          {hour === 0 ? "12 AM" : hour < 12 ? `${hour} AM` : hour === 12 ? "12 PM" : `${hour - 12} PM`}
-                        </div>
-                        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4, padding: "4px 0" }}>
-                          {hourAppts.map((a, i) => (
-                            <div key={i} style={{
-                              display: "flex", alignItems: "center", gap: 8,
-                              padding: "6px 10px", borderRadius: 8, borderLeft: `3px solid ${a.type.color}`,
-                              background: `${a.type.color}10`,
-                            }}>
-                              <div style={{
-                                width: 24, height: 24, borderRadius: "50%", flexShrink: 0,
-                                background: `${a.type.color}20`, color: a.type.color,
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                fontSize: "0.55rem", fontWeight: 700,
-                              }}>
-                                {a.patient.split(" ").map(n => n[0]).join("")}
-                              </div>
-                              <div>
-                                <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{a.patient}</div>
-                                <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)" }}>
-                                  {a.time} &middot; {a.type.label}
-                                  {"location" in a && a.location && <> &middot; <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ display: "inline", verticalAlign: "middle", marginRight: 2 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>{a.location}</>}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Options panel */}
-            <div style={{ flex: "0 0 300px", minWidth: 260 }}>
-              <div className="dz-cal-main" style={{ padding: 16 }}>
-                <h3 style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", margin: "0 0 6px" }}>
-                  {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}
-                </h3>
-                <p style={{ fontSize: "0.72rem", color: "var(--dz-text-muted, #64748b)", margin: "0 0 14px" }}>
-                  {selectedAppts.length + userAppts.length} appointment{selectedAppts.length + userAppts.length !== 1 ? "s" : ""}
-                </p>
-
-                {/* Location filter */}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 16 }}>
-                  <button className={`dz-loc-chip${selectedLoc === "all" ? " active" : ""}`} onClick={() => setSelectedLoc("all")}>All</button>
-                  {locations.map(loc => (
-                    <button key={loc.id} className={`dz-loc-chip${selectedLoc === loc.id ? " active" : ""}`} onClick={() => setSelectedLoc(loc.id)}>{loc.label}</button>
-                  ))}
-                </div>
-
-                {/* Appointment list */}
-                {(selectedAppts.length > 0 || userAppts.length > 0) ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
-                    {selectedAppts.map((a, i) => (
-                      <div key={`gen-${i}`} style={{
-                        display: "flex", alignItems: "center", gap: 8,
-                        padding: "8px 10px", borderRadius: 8,
-                        background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
-                        border: "1px solid rgba(148,163,184,0.06)",
-                      }}>
-                        <div style={{ width: 8, height: 8, borderRadius: "50%", background: a.type.color, flexShrink: 0 }} />
-                        <div>
-                          <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{a.patient}</div>
-                          <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)" }}>{a.time} &middot; {a.type.label}</div>
-                          {a.location && <div style={{ fontSize: "0.62rem", color: "var(--dz-text-dim, #475569)", display: "flex", alignItems: "center", gap: 3, marginTop: 1 }}>
-                            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            {a.location}
-                          </div>}
-                        </div>
-                      </div>
-                    ))}
-                    {userAppts.map((a, i) => {
-                      const typeObj = APPT_TYPES.find(t => t.label === a.type) || APPT_TYPES[0];
-                      return (
-                        <div key={`user-${i}`} style={{
-                          display: "flex", alignItems: "center", gap: 8,
-                          padding: "8px 10px", borderRadius: 8,
-                          background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
-                          border: "1px solid rgba(99,102,241,0.15)",
-                        }}>
-                          <div style={{ width: 8, height: 8, borderRadius: "50%", background: typeObj.color, flexShrink: 0 }} />
-                          <div>
-                            <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{a.patient}</div>
-                            <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)" }}>{a.time} &middot; {a.type}</div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p style={{ fontSize: "0.78rem", color: "var(--dz-text-muted, #64748b)", textAlign: "center", padding: "16px 0" }}>
-                    No appointments
-                  </p>
-                )}
-
-                {/* Add appointment */}
-                {showAddForm ? (
-                  <div style={{ borderTop: "1px solid rgba(148,163,184,0.08)", paddingTop: 12 }}>
-                    <h4 style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", margin: "0 0 10px" }}>New Appointment</h4>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      <div>
-                        <label style={{ fontSize: "0.68rem", color: "var(--dz-text-muted)", fontWeight: 600, display: "block", marginBottom: 3 }}>Patient</label>
-                        <select className="dz-cal-add-input" value={newAppt.patient} onChange={e => setNewAppt(prev => ({ ...prev, patient: e.target.value }))}>
-                          <option value="">Select patient...</option>
-                          {PATIENTS.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
-                        </select>
-                      </div>
-                      <div style={{ display: "flex", gap: 6 }}>
-                        <div style={{ flex: 1 }}>
-                          <label style={{ fontSize: "0.68rem", color: "var(--dz-text-muted)", fontWeight: 600, display: "block", marginBottom: 3 }}>Time</label>
-                          <select className="dz-cal-add-input" value={newAppt.time} onChange={e => setNewAppt(prev => ({ ...prev, time: e.target.value }))}>
-                            {["8:00 AM","8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM"].map(t => (
-                              <option key={t} value={t}>{t}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <label style={{ fontSize: "0.68rem", color: "var(--dz-text-muted)", fontWeight: 600, display: "block", marginBottom: 3 }}>Type</label>
-                          <select className="dz-cal-add-input" value={newAppt.type} onChange={e => setNewAppt(prev => ({ ...prev, type: e.target.value }))}>
-                            {APPT_TYPES.map(t => <option key={t.label} value={t.label}>{t.label}</option>)}
-                          </select>
-                        </div>
-                      </div>
-                      <div>
-                        <label style={{ fontSize: "0.68rem", color: "var(--dz-text-muted)", fontWeight: 600, display: "block", marginBottom: 3 }}>Location</label>
-                        <select className="dz-cal-add-input" value={newAppt.location} onChange={e => setNewAppt(prev => ({ ...prev, location: e.target.value }))}>
-                          {locations.map(loc => <option key={loc.id} value={loc.id}>{loc.label}</option>)}
-                        </select>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", gap: 8, marginTop: 10, justifyContent: "flex-end" }}>
-                      <button className="dz-cal-add-cancel" onClick={() => setShowAddForm(false)}>Cancel</button>
-                      <button className="dz-cal-add-save" onClick={handleAddAppt} disabled={!newAppt.patient}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                        Add
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <button className="dz-cal-add-trigger" onClick={() => setShowAddForm(true)} style={{ width: "100%" }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    Add Appointment
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+          <DayView
+            selectedDate={selectedDate}
+            selectedAppts={selectedAppts}
+            userAppts={userAppts}
+            apptOverrides={apptOverrides}
+            setApptOverrides={setApptOverrides}
+            timelineRef={timelineRef}
+            onBack={() => { setPanelOpen(false); setSelectedDate(null); }}
+            onPrev={() => {
+              const prev = new Date(selectedDate);
+              prev.setDate(prev.getDate() - 1);
+              setSelectedDate(prev);
+              setMonth(prev.getMonth());
+              setYear(prev.getFullYear());
+            }}
+            onNext={() => {
+              const next = new Date(selectedDate);
+              next.setDate(next.getDate() + 1);
+              setSelectedDate(next);
+              setMonth(next.getMonth());
+              setYear(next.getFullYear());
+            }}
+            selectedLoc={selectedLoc}
+            setSelectedLoc={setSelectedLoc}
+            showAddForm={showAddForm}
+            setShowAddForm={setShowAddForm}
+            newAppt={newAppt}
+            setNewAppt={setNewAppt}
+            handleAddAppt={handleAddAppt}
+          />
         ) : (
           <div style={{ display: "flex", gap: 16 }}>
             {/* Calendar grid — squeeze when schedule mode has selections */}

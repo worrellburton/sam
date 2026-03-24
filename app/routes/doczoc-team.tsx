@@ -59,7 +59,7 @@ export default function TeamPage() {
             </div>
             <input
               type="text"
-              placeholder="Search team..."
+              placeholder="Search"
               className="dz-search-input"
               value={search}
               onChange={e => setSearch(e.target.value)}

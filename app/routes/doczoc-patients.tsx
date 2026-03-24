@@ -152,7 +152,7 @@ export default function PatientsPage() {
             background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
           }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search patients..." style={{
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search" style={{
               background: "transparent", border: "none", outline: "none", width: "100%",
               fontSize: "0.78rem", color: "var(--dz-text-secondary)",
             }} />

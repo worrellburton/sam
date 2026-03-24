@@ -7888,7 +7888,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   text-align: center;
   cursor: pointer;
   transition: all 0.15s;
-  min-height: 60px;
+  min-height: 90px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8537,6 +8537,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   --dz-green-border: rgba(52,211,153,0.3);
   --dz-input-bg: rgba(148,163,184,0.06);
   --dz-input-border: rgba(99,102,241,0.1);
+  --dz-card-bg: rgba(15, 23, 42, 0.95);
 }
 
 [data-theme="light"] {
@@ -8568,6 +8569,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   --dz-green-border: rgba(5,150,105,0.3);
   --dz-input-bg: rgba(0,0,0,0.03);
   --dz-input-border: rgba(0,0,0,0.08);
+  --dz-card-bg: rgba(255, 255, 255, 0.95);
 }
 
 /* ── Glass Surface (base card) ─────────────────────────────────── */

@@ -348,7 +348,7 @@ function ICD10SearchPanel() {
       <div style={{ position: "relative", marginBottom: 8 }}>
         <input
           type="text"
-          placeholder="Search ICD-10 codes (e.g. &quot;ACL tear&quot;, &quot;M75&quot;, &quot;rotator cuff&quot;)..."
+          placeholder="Search"
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           className="dz-search-input"

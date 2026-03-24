@@ -198,7 +198,7 @@ export default function SurgeriesPage() {
                 background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
               }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search surgeries..." style={{
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search" style={{
                   background: "transparent", border: "none", outline: "none", width: "100%",
                   fontSize: "0.78rem", color: "var(--dz-text-secondary)",
                 }} />
@@ -337,12 +337,23 @@ const PROCEDURES = [
   { name: "Carpal Tunnel Release", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l4-2v16l-4-2z"/><path d="M10 4l4 2v12l-4 2"/><path d="M14 6l4-2v16l-4-2z"/></svg>, color: "#f97316", desc: "Decompression of the median nerve in the wrist" },
   { name: "Spinal Fusion", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><rect x="9" y="9" width="6" height="4" rx="1"/><rect x="9" y="16" width="6" height="4" rx="1"/><line x1="12" y1="6" x2="12" y2="9"/><line x1="12" y1="13" x2="12" y2="16"/><line x1="7" y1="11" x2="9" y2="11"/><line x1="15" y1="11" x2="17" y2="11"/></svg>, color: "#a855f7", desc: "Vertebrae fusion to stabilize the spine" },
   { name: "Fracture Fixation (ORIF)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20L10 4"/><path d="M14 20L20 4"/><line x1="7" y1="12" x2="17" y2="12"/><circle cx="7" cy="12" r="1.5"/><circle cx="17" cy="12" r="1.5"/></svg>, color: "#14b8a6", desc: "Open reduction and internal fixation of broken bones" },
+  { name: "Total Hip Arthroplasty", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="7" r="4"/><path d="M6 11c-1 3-1 6 0 9"/><path d="M14 11l3 10"/><circle cx="10" cy="7" r="1.5"/><path d="M14 7h4"/></svg>, color: "#ec4899", desc: "Complete hip joint replacement with prosthetic implant" },
+  { name: "Pre-Op Evaluation", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 2h6v4H9z"/><path d="M7 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/><circle cx="9" cy="12" r="0"/></svg>, color: "#64748b", desc: "Pre-operative assessment and surgical clearance" },
+  { name: "Ankle Arthroscopy", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="14" r="7"/><circle cx="12" cy="14" r="2.5"/><line x1="12" y1="7" x2="12" y2="3"/><line x1="8" y1="8" x2="6" y2="5"/><line x1="16" y1="8" x2="18" y2="5"/></svg>, color: "#0ea5e9", desc: "Minimally invasive ankle joint inspection and repair" },
+  { name: "Shoulder Arthroscopy", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="9" r="6"/><circle cx="12" cy="9" r="2"/><path d="M6 15c2 4 4 6 6 6s4-2 6-6"/></svg>, color: "#8b5cf6", desc: "Minimally invasive shoulder joint surgery" },
+  { name: "Ligament Reconstruction", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M7 4v16"/><path d="M17 4v16"/><path d="M7 8c3 2 7 2 10 0"/><path d="M7 16c3-2 7-2 10 0"/><path d="M7 12h10"/></svg>, color: "#ef4444", desc: "Surgical repair of torn ligaments" },
+  { name: "Tendon Repair", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4c4 4 4 8 0 12"/><path d="M20 4c-4 4-4 8 0 12"/><path d="M8 8c2 2 6 2 8 0"/><path d="M8 16c2-2 6-2 8 0"/></svg>, color: "#f59e0b", desc: "Surgical reattachment of torn tendons" },
 ];
 
-function getProcedureIcon(type: string): { icon: React.ReactNode; color: string } | null {
+function getProcedureIcon(type: string): { icon: React.ReactNode; color: string } {
   const normalized = type.replace(/^Surgery\s*[—–-]\s*/i, "").toLowerCase();
   const match = PROCEDURES.find(p => normalized.includes(p.name.toLowerCase()) || p.name.toLowerCase().includes(normalized));
-  return match ? { icon: match.icon, color: match.color } : null;
+  if (match) return { icon: match.icon, color: match.color };
+  // Default icon for unmatched procedures
+  return {
+    icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>,
+    color: "#94a3b8",
+  };
 }
 
 function stripSurgeryPrefix(type: string): string {

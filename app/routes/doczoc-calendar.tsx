@@ -116,6 +116,12 @@ function DayView({
 }) {
   const [dragState, setDragState] = useState<{ id: string; offsetMin: number; startY: number; origMin: number } | null>(null);
   const [resizeState, setResizeState] = useState<{ id: string; startY: number; origDur: number } | null>(null);
+  const [resizeTopState, setResizeTopState] = useState<{ id: string; startY: number; origStartMin: number; origDur: number } | null>(null);
+  const [notifyPrompt, setNotifyPrompt] = useState<{ appt: DayAppt; oldStart: number; oldEnd: number; newStart: number; newEnd: number } | null>(null);
+  const [emailPreview, setEmailPreview] = useState<{ appt: DayAppt; newStart: number; newEnd: number } | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
+  // Track pre-drag values for notification prompt
+  const preDragRef = useRef<Record<string, { startMin: number; duration: number }>>({});
 
   // Build unified appointment list with overrides applied
   const allAppts: DayAppt[] = useMemo(() => {
@@ -167,21 +173,47 @@ function DayView({
   const minToPct = (min: number) => ((min - TIMELINE_START * 60) / totalMin) * 100;
   const durToPct = (dur: number) => (dur / totalMin) * 100;
 
+  // Detect overlapping appointments
+  const overlaps = useMemo(() => {
+    const result: Set<string> = new Set();
+    for (let i = 0; i < allAppts.length; i++) {
+      for (let j = i + 1; j < allAppts.length; j++) {
+        const a = allAppts[i], b = allAppts[j];
+        const aEnd = a.startMin + a.duration;
+        const bEnd = b.startMin + b.duration;
+        if (a.startMin < bEnd && b.startMin < aEnd) {
+          result.add(a.id);
+          result.add(b.id);
+        }
+      }
+    }
+    return result;
+  }, [allAppts]);
+
   // Mouse handlers for drag
   const handleDragStart = useCallback((e: React.MouseEvent, appt: DayAppt) => {
     e.preventDefault();
     e.stopPropagation();
+    preDragRef.current[appt.id] = { startMin: appt.startMin, duration: appt.duration };
     setDragState({ id: appt.id, offsetMin: 0, startY: e.clientY, origMin: appt.startMin });
   }, []);
 
   const handleResizeStart = useCallback((e: React.MouseEvent, appt: DayAppt) => {
     e.preventDefault();
     e.stopPropagation();
+    preDragRef.current[appt.id] = { startMin: appt.startMin, duration: appt.duration };
     setResizeState({ id: appt.id, startY: e.clientY, origDur: appt.duration });
   }, []);
 
+  const handleResizeTopStart = useCallback((e: React.MouseEvent, appt: DayAppt) => {
+    e.preventDefault();
+    e.stopPropagation();
+    preDragRef.current[appt.id] = { startMin: appt.startMin, duration: appt.duration };
+    setResizeTopState({ id: appt.id, startY: e.clientY, origStartMin: appt.startMin, origDur: appt.duration });
+  }, []);
+
   useEffect(() => {
-    if (!dragState && !resizeState) return;
+    if (!dragState && !resizeState && !resizeTopState) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       const tl = timelineRef.current;
@@ -210,11 +242,40 @@ function DayView({
           return { ...prev, [resizeState.id]: { startMin: existing?.startMin ?? allAppts.find(a => a.id === resizeState.id)!.startMin, duration: clamped } };
         });
       }
+
+      if (resizeTopState) {
+        const dy = e.clientY - resizeTopState.startY;
+        const dMin = dy / pxPerMin;
+        const endMin = resizeTopState.origStartMin + resizeTopState.origDur;
+        const newStart = snapTo(resizeTopState.origStartMin + dMin, SNAP_MINUTES);
+        const clampedStart = Math.max(TIMELINE_START * 60, Math.min(endMin - 15, newStart));
+        const newDur = endMin - clampedStart;
+        setApptOverrides(prev => ({
+          ...prev,
+          [resizeTopState.id]: { startMin: clampedStart, duration: newDur },
+        }));
+      }
     };
 
     const handleMouseUp = () => {
+      // Check if appointment was actually moved/resized and show notification prompt
+      const activeId = dragState?.id || resizeState?.id || resizeTopState?.id;
+      if (activeId) {
+        const pre = preDragRef.current[activeId];
+        const appt = allAppts.find(a => a.id === activeId);
+        if (pre && appt && (pre.startMin !== appt.startMin || pre.duration !== appt.duration)) {
+          setNotifyPrompt({
+            appt,
+            oldStart: pre.startMin,
+            oldEnd: pre.startMin + pre.duration,
+            newStart: appt.startMin,
+            newEnd: appt.startMin + appt.duration,
+          });
+        }
+      }
       setDragState(null);
       setResizeState(null);
+      setResizeTopState(null);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -223,9 +284,9 @@ function DayView({
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [dragState, resizeState, totalMin, timelineRef, setApptOverrides, allAppts]);
+  }, [dragState, resizeState, resizeTopState, totalMin, timelineRef, setApptOverrides, allAppts]);
 
-  const isDragging = dragState !== null || resizeState !== null;
+  const isDragging = dragState !== null || resizeState !== null || resizeTopState !== null;
 
   // Hour labels for the timeline
   const hourLabels = [];
@@ -297,7 +358,8 @@ function DayView({
               {allAppts.map(appt => {
                 const topPct = minToPct(appt.startMin);
                 const heightPct = durToPct(appt.duration);
-                const isActive = dragState?.id === appt.id || resizeState?.id === appt.id;
+                const isActive = dragState?.id === appt.id || resizeState?.id === appt.id || resizeTopState?.id === appt.id;
+                const hasOverlap = overlaps.has(appt.id);
                 return (
                   <div
                     key={appt.id}
@@ -310,16 +372,53 @@ function DayView({
                       minHeight: 28,
                       borderRadius: 8,
                       borderLeft: `3px solid ${appt.type.color}`,
-                      background: `${appt.type.color}14`,
+                      background: hasOverlap ? `${appt.type.color}22` : `${appt.type.color}14`,
                       cursor: isDragging ? "grabbing" : "grab",
                       zIndex: isActive ? 10 : 1,
-                      boxShadow: isActive ? "0 4px 16px rgba(0,0,0,0.2)" : "none",
+                      boxShadow: isActive ? "0 4px 16px rgba(0,0,0,0.2)" : hasOverlap ? `0 0 0 1.5px #ef444480, inset 0 0 12px rgba(239,68,68,0.08)` : "none",
                       transition: isActive ? "none" : "top 0.15s, height 0.15s",
                       display: "flex", alignItems: "flex-start", gap: 8,
-                      padding: "5px 10px",
+                      padding: "18px 10px 18px",
                       overflow: "hidden",
                     }}
                   >
+                    {/* Resize handle at top */}
+                    <div
+                      onMouseDown={(e) => handleResizeTopStart(e, appt)}
+                      className="dz-cal-resize-handle"
+                      style={{
+                        position: "absolute", top: 0, left: 0, right: 0, height: 14,
+                        cursor: "ns-resize",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        borderRadius: "8px 8px 0 0",
+                        background: `${appt.type.color}08`,
+                        transition: "background 0.15s",
+                      }}
+                    >
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                        <div style={{ width: 18, height: 2.5, borderRadius: 2, background: `${appt.type.color}35` }} />
+                        <div style={{ width: 28, height: 2.5, borderRadius: 2, background: `${appt.type.color}50` }} />
+                      </div>
+                    </div>
+
+                    {/* Overlap warning badge */}
+                    {hasOverlap && (
+                      <div style={{
+                        position: "absolute", top: 3, right: 8,
+                        display: "flex", alignItems: "center", gap: 3,
+                        padding: "1px 6px", borderRadius: 6,
+                        background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.3)",
+                        fontSize: "0.55rem", fontWeight: 700, color: "#f87171",
+                        zIndex: 2,
+                      }}>
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        Overlap
+                      </div>
+                    )}
+
                     <div style={{
                       width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
                       background: `${appt.type.color}20`, color: appt.type.color,
@@ -352,13 +451,6 @@ function DayView({
                         <div style={{ width: 28, height: 2.5, borderRadius: 2, background: `${appt.type.color}50` }} />
                         <div style={{ width: 18, height: 2.5, borderRadius: 2, background: `${appt.type.color}35` }} />
                       </div>
-                      {/* Up/down arrows on hover */}
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={appt.type.color} strokeWidth="2.5" strokeLinecap="round" className="dz-cal-resize-icon" style={{ position: "absolute", left: 6, opacity: 0, transition: "opacity 0.15s" }}>
-                        <polyline points="18 15 12 9 6 15"/>
-                      </svg>
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={appt.type.color} strokeWidth="2.5" strokeLinecap="round" className="dz-cal-resize-icon" style={{ position: "absolute", right: 6, opacity: 0, transition: "opacity 0.15s" }}>
-                        <polyline points="6 9 12 15 18 9"/>
-                      </svg>
                     </div>
                   </div>
                 );
@@ -479,6 +571,191 @@ function DayView({
           </div>
         </div>
       </div>
+      {/* Notification prompt modal */}
+      {notifyPrompt && !emailPreview && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 100,
+          background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }} onClick={() => setNotifyPrompt(null)}>
+          <div onClick={e => e.stopPropagation()} style={{
+            background: "var(--dz-card-bg, rgba(15,15,35,0.97))", border: "1px solid rgba(99,102,241,0.2)",
+            borderRadius: 16, padding: 24, width: 420, maxWidth: "90vw",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: "50%",
+                background: "rgba(251,191,36,0.15)", color: "#fbbf24",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: "0.92rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>Appointment Changed</h3>
+                <p style={{ margin: 0, fontSize: "0.72rem", color: "var(--dz-text-muted, #64748b)" }}>Notify {notifyPrompt.appt.patient} about the schedule change?</p>
+              </div>
+            </div>
+
+            <div style={{
+              padding: 12, borderRadius: 10, marginBottom: 16,
+              background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
+              border: "1px solid rgba(148,163,184,0.08)",
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", marginBottom: 6 }}>
+                <span style={{ color: "var(--dz-text-muted, #64748b)" }}>Previous</span>
+                <span style={{ color: "#ef4444", fontWeight: 600, textDecoration: "line-through" }}>
+                  {minToTime(notifyPrompt.oldStart)} – {minToTime(notifyPrompt.oldEnd)}
+                </span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem" }}>
+                <span style={{ color: "var(--dz-text-muted, #64748b)" }}>New time</span>
+                <span style={{ color: "#34d399", fontWeight: 600 }}>
+                  {minToTime(notifyPrompt.newStart)} – {minToTime(notifyPrompt.newEnd)}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setNotifyPrompt(null)} style={{
+                flex: 1, padding: "10px", borderRadius: 8, cursor: "pointer",
+                border: "1px solid rgba(148,163,184,0.15)", background: "transparent",
+                color: "var(--dz-text-muted, #64748b)", fontSize: "0.76rem", fontWeight: 600,
+              }}>Skip</button>
+              <button onClick={() => {
+                setEmailPreview({ appt: notifyPrompt.appt, newStart: notifyPrompt.newStart, newEnd: notifyPrompt.newEnd });
+                setEmailSent(false);
+              }} style={{
+                flex: 2, padding: "10px", borderRadius: 8, cursor: "pointer",
+                border: "none", background: "linear-gradient(135deg, #6366f1, #818cf8)",
+                color: "#fff", fontSize: "0.78rem", fontWeight: 700,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+                Send Notification
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Email preview modal */}
+      {emailPreview && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 110,
+          background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }} onClick={() => { setEmailPreview(null); setNotifyPrompt(null); }}>
+          <div onClick={e => e.stopPropagation()} style={{
+            background: "var(--dz-card-bg, rgba(15,15,35,0.97))", border: "1px solid rgba(99,102,241,0.2)",
+            borderRadius: 16, padding: 0, width: 480, maxWidth: "90vw",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.5)", overflow: "hidden",
+          }}>
+            {/* Email header */}
+            <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(148,163,184,0.1)", display: "flex", alignItems: "center", gap: 10 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>Email Preview</span>
+              <button onClick={() => { setEmailPreview(null); setNotifyPrompt(null); }} style={{
+                marginLeft: "auto", background: "none", border: "none", color: "var(--dz-text-muted, #64748b)", cursor: "pointer", fontSize: "1.1rem",
+              }}>&times;</button>
+            </div>
+
+            {/* Email content */}
+            <div style={{ padding: "20px", background: "var(--dz-input-bg, rgba(255,255,255,0.03))" }}>
+              <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)", marginBottom: 4 }}>
+                <strong>To:</strong> {emailPreview.appt.patient.toLowerCase().replace(/\s+/g, "").replace(".", "")}@email.com
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)", marginBottom: 4 }}>
+                <strong>From:</strong> appointments@doczoc.com
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)", marginBottom: 12 }}>
+                <strong>Subject:</strong> Appointment Rescheduled — Dr. Elguizaoui
+              </div>
+
+              <div style={{
+                padding: 16, borderRadius: 10,
+                background: "var(--dz-card-bg, rgba(15,15,35,0.8))",
+                border: "1px solid rgba(148,163,184,0.08)",
+              }}>
+                <p style={{ margin: "0 0 10px", fontSize: "0.78rem", color: "var(--dz-text-primary, #f1f5f9)" }}>
+                  Dear {emailPreview.appt.patient},
+                </p>
+                <p style={{ margin: "0 0 10px", fontSize: "0.74rem", color: "var(--dz-text-secondary, #94a3b8)", lineHeight: 1.6 }}>
+                  Your <strong style={{ color: emailPreview.appt.type.color }}>{emailPreview.appt.type.label}</strong> appointment
+                  with <strong>Dr. Sameh Elguizaoui, M.D.</strong> has been rescheduled.
+                </p>
+                <div style={{
+                  padding: 12, borderRadius: 8, marginBottom: 10,
+                  background: "rgba(148,163,184,0.04)", border: "1px solid rgba(148,163,184,0.06)",
+                }}>
+                  <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted, #64748b)", marginBottom: 6 }}>
+                    <strong>New Time:</strong>
+                  </div>
+                  <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#34d399" }}>
+                    {minToTime(emailPreview.newStart)} – {minToTime(emailPreview.newEnd)}
+                  </div>
+                  <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)", marginTop: 4 }}>
+                    {DAY_NAMES[selectedDate.getDay()]}, {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}, {selectedDate.getFullYear()}
+                  </div>
+                  {emailPreview.appt.location && (
+                    <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)", marginTop: 2, display: "flex", alignItems: "center", gap: 3 }}>
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      {emailPreview.appt.location}
+                    </div>
+                  )}
+                </div>
+                <p style={{ margin: "0 0 6px", fontSize: "0.72rem", color: "var(--dz-text-secondary, #94a3b8)", lineHeight: 1.5 }}>
+                  If you need to reschedule or cancel, please contact our office at least 24 hours in advance.
+                </p>
+                <p style={{ margin: 0, fontSize: "0.72rem", color: "var(--dz-text-secondary, #94a3b8)" }}>
+                  — Dr. Elguizaoui&apos;s Office
+                </p>
+              </div>
+            </div>
+
+            {/* Send button */}
+            <div style={{ padding: "14px 20px", borderTop: "1px solid rgba(148,163,184,0.1)", display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <button onClick={() => { setEmailPreview(null); setNotifyPrompt(null); }} style={{
+                padding: "9px 16px", borderRadius: 8, cursor: "pointer",
+                border: "1px solid rgba(148,163,184,0.15)", background: "transparent",
+                color: "var(--dz-text-muted, #64748b)", fontSize: "0.76rem", fontWeight: 600,
+              }}>Cancel</button>
+              {emailSent ? (
+                <div style={{
+                  padding: "9px 20px", borderRadius: 8,
+                  background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.3)",
+                  color: "#34d399", fontSize: "0.78rem", fontWeight: 700,
+                  display: "flex", alignItems: "center", gap: 6,
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Sent!
+                </div>
+              ) : (
+                <button onClick={() => {
+                  setEmailSent(true);
+                  setTimeout(() => { setEmailPreview(null); setNotifyPrompt(null); setEmailSent(false); }, 1200);
+                }} style={{
+                  padding: "9px 20px", borderRadius: 8, cursor: "pointer",
+                  border: "none", background: "linear-gradient(135deg, #6366f1, #818cf8)",
+                  color: "#fff", fontSize: "0.78rem", fontWeight: 700,
+                  display: "flex", alignItems: "center", gap: 6,
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                  Send Email
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -796,15 +1073,38 @@ export default function CalendarPage() {
                             )
                           ) : (
                             <>
-                              <span className={`dz-cal-shift-count${appts.length > 0 ? ' has' : ''}`}>
-                                {appts.length > 0 ? `${appts.length} appts` : date.getDay() === 0 || date.getDay() === 6 ? '' : 'No avail.'}
-                              </span>
-                              {appts.length > 0 && (
-                                <div className="dz-cal-dots">
-                                  {appts.slice(0, 3).map((a, i) => (
-                                    <span key={i} className="dz-cal-dot" style={{ background: a.type.color }} />
-                                  ))}
-                                </div>
+                              {appts.length > 0 ? (
+                                <>
+                                  {/* Mini timeline visualization */}
+                                  <div style={{
+                                    width: "80%", height: 28, position: "relative",
+                                    background: "rgba(148,163,184,0.04)", borderRadius: 3,
+                                    marginTop: 4, overflow: "hidden",
+                                    border: "1px solid rgba(148,163,184,0.06)",
+                                  }}>
+                                    {appts.map((a, i) => {
+                                      const tStart = Math.max(0, (a.startMin - 7 * 60) / (11 * 60));
+                                      const tHeight = Math.max(0.08, a.duration / (11 * 60));
+                                      return (
+                                        <div key={i} style={{
+                                          position: "absolute",
+                                          top: `${tStart * 100}%`,
+                                          height: `${tHeight * 100}%`,
+                                          left: 2, right: 2,
+                                          background: `${a.type.color}50`,
+                                          borderLeft: `2px solid ${a.type.color}`,
+                                          borderRadius: 2,
+                                          minHeight: 3,
+                                        }} />
+                                      );
+                                    })}
+                                  </div>
+                                  <span className="dz-cal-shift-count has">{appts.length} appt{appts.length !== 1 ? "s" : ""}</span>
+                                </>
+                              ) : (
+                                <span className="dz-cal-shift-count">
+                                  {date.getDay() === 0 || date.getDay() === 6 ? '' : 'No avail.'}
+                                </span>
                               )}
                             </>
                           )}

@@ -370,9 +370,12 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!showSplash && !contentReady) {
-      requestAnimationFrame(() => setContentReady(true));
+      // Wait for splash exit transition (700ms) to fully complete before fading in content
+      const delay = fromLogin ? 750 : 0;
+      const id = setTimeout(() => setContentReady(true), delay);
+      return () => clearTimeout(id);
     }
-  }, [showSplash, contentReady]);
+  }, [showSplash, contentReady, fromLogin]);
 
 
   return (

@@ -8836,13 +8836,19 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 }
 
 /* Content fade-in elements */
-.dz-content-hidden .dz-fade-element { opacity: 0; }
+.dz-content-hidden .dz-fade-element { opacity: 0; transform: translateY(12px); }
 .dz-content-visible .dz-fade-element {
-  animation: dz-content-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: dz-content-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @keyframes dz-content-fade-in {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Prevent layout shift during splash — sidebar and main keep stable size */
+.dz-platform-cinematic .dz-sidebar,
+.dz-platform-cinematic .dz-platform-main {
+  will-change: opacity;
 }
 
 .dz-splash-canvas {

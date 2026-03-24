@@ -3734,22 +3734,24 @@ a.nav-btn-book,
 /* ===== Insurance ===== */
 /* Insurance logos — no cards, just a clean logo grid */
 .insurance-logo-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 40px 56px;
-  padding: 20px 0 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 40px;
+  padding: 24px 0 10px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 .insurance-logo-item {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 48px;
+  padding: 8px 12px;
 }
 img.insurance-logo {
   height: 32px;
   width: auto;
-  max-width: 140px;
+  max-width: 160px;
   object-fit: contain;
   opacity: 0.75;
   transition: opacity 0.2s;
@@ -3791,11 +3793,11 @@ img.insurance-logo:hover {
   text-decoration: underline;
 }
 @media (max-width: 768px) {
-  .insurance-logo-grid { gap: 28px 36px; }
+  .insurance-logo-grid { grid-template-columns: repeat(3, 1fr); gap: 24px 28px; }
   img.insurance-logo { height: 26px; max-width: 110px; }
 }
 @media (max-width: 480px) {
-  .insurance-logo-grid { gap: 20px 28px; }
+  .insurance-logo-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 16px; }
   img.insurance-logo { height: 22px; max-width: 90px; }
 }
 

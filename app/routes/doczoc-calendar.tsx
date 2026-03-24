@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { locations } from "~/data/locations";
@@ -18,6 +18,24 @@ const APPT_TYPES = [
   { label: 'Joint Assessment', color: '#60a5fa' },
   { label: 'Post-Op', color: '#f472b6' },
 ];
+
+// Build a set of dates that have surgeries from patient data
+function getSurgeryDates(): Set<string> {
+  const dates = new Set<string>();
+  for (const p of PATIENTS) {
+    for (const v of p.visits) {
+      if (v.type.toLowerCase().includes("surgery") || v.type.toLowerCase().includes("pre-op")) {
+        const d = new Date(v.date);
+        if (!isNaN(d.getTime())) {
+          dates.add(`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`);
+        }
+      }
+    }
+  }
+  return dates;
+}
+
+const SURGERY_DATES = getSurgeryDates();
 
 function getAppts(date: Date, locId?: string) {
   const dow = date.getDay();
@@ -43,7 +61,33 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [selectedLoc, setSelectedLoc] = useState<string>("all");
+  const [locDropOpen, setLocDropOpen] = useState(false);
+  const locDropRef = useRef<HTMLDivElement>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [scheduleMode, setScheduleMode] = useState(false);
+  // schedule: dateKey -> set of time slots
+  const [schedule, setSchedule] = useState<Record<string, Set<string>>>({});
+  const TIME_SLOTS = ["Early Morning (7–9 AM)", "Late Morning (9–12 PM)", "Early Afternoon (12–3 PM)"];
+
+  const toggleScheduleSlot = useCallback((dateKey: string, slot: string) => {
+    setSchedule(prev => {
+      const next = { ...prev };
+      const existing = next[dateKey] ? new Set(next[dateKey]) : new Set<string>();
+      if (existing.has(slot)) existing.delete(slot); else existing.add(slot);
+      if (existing.size === 0) { delete next[dateKey]; } else { next[dateKey] = existing; }
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (locDropRef.current && !locDropRef.current.contains(e.target as Node)) {
+        setLocDropOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   const [newAppt, setNewAppt] = useState({ patient: "", time: "9:00 AM", type: "Consultation", location: "manhattan" });
   const [savedAppts, setSavedAppts] = useState<{ date: string; patient: string; time: string; type: string; location: string }[]>([]);
 
@@ -79,6 +123,13 @@ export default function CalendarPage() {
   const selectedAppts = selectedDate ? getAppts(selectedDate, selectedLoc === "all" ? undefined : selectedLoc) : [];
 
   function handleDateClick(date: Date) {
+    if (scheduleMode) {
+      const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+      // If no slots yet, add all by default; if already has slots, open panel to toggle
+      setSelectedDate(date);
+      setPanelOpen(true);
+      return;
+    }
     setSelectedDate(date);
     setPanelOpen(true);
   }
@@ -94,22 +145,158 @@ export default function CalendarPage() {
             <p>{MONTHS[month]} {year}</p>
           </div>
           <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            {/* Location dropdown */}
+            <div ref={locDropRef} style={{ position: "relative" }}>
+              <button
+                onClick={() => setLocDropOpen(!locDropOpen)}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "9px 16px", borderRadius: 10,
+                  border: "1px solid rgba(99,102,241,0.2)",
+                  background: locDropOpen ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.08)",
+                  color: "#818cf8", fontSize: "0.82rem", fontWeight: 600,
+                  cursor: "pointer", transition: "all 0.15s",
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                {selectedLoc === "all" ? "All Locations" : locations.find(l => l.id === selectedLoc)?.label ?? "All Locations"}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: locDropOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s" }}>
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+
+              {locDropOpen && (
+                <div style={{
+                  position: "absolute", top: "calc(100% + 6px)", right: 0, zIndex: 50,
+                  background: "var(--dz-card-bg, rgba(15,15,35,0.95))", backdropFilter: "blur(16px)",
+                  border: "1px solid rgba(99,102,241,0.15)", borderRadius: 14,
+                  padding: 8, minWidth: 340, boxShadow: "0 12px 40px rgba(0,0,0,0.4)",
+                }}>
+                  {/* Mini map */}
+                  <div style={{
+                    height: 140, borderRadius: 10, overflow: "hidden", marginBottom: 8,
+                    background: "rgba(30,41,59,0.5)", position: "relative",
+                  }}>
+                    <iframe
+                      title="Office Locations"
+                      width="100%" height="100%"
+                      style={{ border: 0, filter: "invert(90%) hue-rotate(180deg) brightness(0.9) contrast(1.1)" }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      src={`https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=40.73,-73.98&zoom=11&maptype=roadmap`}
+                    />
+                    {/* Location pin overlays */}
+                    {locations.map(loc => {
+                      const centerLat = 40.73, centerLng = -73.98, zoom = 11;
+                      const scale = Math.pow(2, zoom) * 256 / 360;
+                      const xPct = 50 + (loc.lng - centerLng) * scale / 3.4;
+                      const latRad = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2));
+                      const yPct = 50 - (latRad(loc.lat) - latRad(centerLat)) * scale / 1.4 * (100 / 140);
+                      const isActive = selectedLoc === loc.id || selectedLoc === "all";
+                      return (
+                        <button
+                          key={loc.id}
+                          onClick={() => { setSelectedLoc(loc.id); }}
+                          style={{
+                            position: "absolute",
+                            left: `${Math.max(8, Math.min(92, xPct))}%`,
+                            top: `${Math.max(8, Math.min(88, yPct))}%`,
+                            transform: "translate(-50%, -50%)",
+                            width: 28, height: 28, borderRadius: "50%",
+                            background: isActive ? "rgba(99,102,241,0.9)" : "rgba(99,102,241,0.4)",
+                            border: isActive ? "2px solid #c7d2fe" : "2px solid rgba(199,210,254,0.3)",
+                            cursor: "pointer", transition: "all 0.2s",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            boxShadow: isActive ? "0 0 12px rgba(99,102,241,0.6)" : "none",
+                            zIndex: 5,
+                          }}
+                          title={loc.label}
+                        >
+                          <span style={{ fontSize: "0.55rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>
+                            {loc.label.charAt(0)}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Dropdown options */}
+                  <button
+                    onClick={() => { setSelectedLoc("all"); setLocDropOpen(false); }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 8, width: "100%",
+                      padding: "8px 10px", borderRadius: 8, border: "none", cursor: "pointer",
+                      background: selectedLoc === "all" ? "rgba(99,102,241,0.12)" : "transparent",
+                      color: selectedLoc === "all" ? "#818cf8" : "var(--dz-text-secondary, #94a3b8)",
+                      fontSize: "0.8rem", fontWeight: 600, transition: "background 0.1s",
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    All Locations
+                    {selectedLoc === "all" && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginLeft: "auto" }}><polyline points="20 6 9 17 4 12"/></svg>}
+                  </button>
+                  {locations.map(loc => (
+                    <button
+                      key={loc.id}
+                      onClick={() => { setSelectedLoc(loc.id); setLocDropOpen(false); }}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 8, width: "100%",
+                        padding: "8px 10px", borderRadius: 8, border: "none", cursor: "pointer",
+                        background: selectedLoc === loc.id ? "rgba(99,102,241,0.12)" : "transparent",
+                        color: selectedLoc === loc.id ? "#818cf8" : "var(--dz-text-secondary, #94a3b8)",
+                        fontSize: "0.8rem", fontWeight: 500, transition: "background 0.1s",
+                      }}
+                    >
+                      <div style={{
+                        width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                        background: selectedLoc === loc.id ? "rgba(99,102,241,0.25)" : "rgba(99,102,241,0.08)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 0, textAlign: "left" }}>
+                        <span style={{ fontWeight: 600, color: selectedLoc === loc.id ? "#818cf8" : "var(--dz-text-primary, #f1f5f9)" }}>{loc.label}</span>
+                        <span style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)" }}>{loc.address}</span>
+                      </div>
+                      {selectedLoc === loc.id && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginLeft: "auto" }}><polyline points="20 6 9 17 4 12"/></svg>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <button
+              onClick={() => setScheduleMode(!scheduleMode)}
               style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "9px 18px", borderRadius: 10,
-                border: "1px solid rgba(99,102,241,0.2)",
-                background: "rgba(99,102,241,0.08)",
-                color: "#818cf8", fontSize: "0.82rem", fontWeight: 600,
+                border: scheduleMode ? "1px solid #34d399" : "1px solid rgba(99,102,241,0.2)",
+                background: scheduleMode ? "rgba(52,211,153,0.12)" : "rgba(99,102,241,0.08)",
+                color: scheduleMode ? "#34d399" : "#818cf8", fontSize: "0.82rem", fontWeight: 600,
                 cursor: "pointer", transition: "all 0.15s",
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.15)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(99,102,241,0.08)"; }}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              Set Schedule
+              {scheduleMode ? (
+                <>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Done
+                </>
+              ) : (
+                <>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  Set Schedule
+                </>
+              )}
             </button>
             <button
               className="dz-add-btn"
@@ -128,74 +315,6 @@ export default function CalendarPage() {
             </button>
           </div>
         </header>
-
-        {/* Location selector */}
-        <div style={{ display: "flex", gap: 10, marginBottom: 20, overflowX: "auto", paddingBottom: 4 }}>
-          <button
-            onClick={() => setSelectedLoc("all")}
-            style={{
-              display: "flex", alignItems: "center", gap: 8,
-              padding: "10px 18px", borderRadius: 12, cursor: "pointer",
-              border: selectedLoc === "all" ? "2px solid #818cf8" : "1px solid var(--dz-input-border, rgba(148,163,184,0.12))",
-              background: selectedLoc === "all" ? "rgba(99,102,241,0.1)" : "var(--dz-card-bg, rgba(15,15,35,0.6))",
-              color: selectedLoc === "all" ? "#818cf8" : "var(--dz-text-secondary, #94a3b8)",
-              fontSize: "0.82rem", fontWeight: 600, whiteSpace: "nowrap",
-              transition: "all 0.15s", flexShrink: 0,
-              backdropFilter: "blur(12px)",
-            }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-            </svg>
-            All Locations
-          </button>
-          {locations.map(loc => (
-            <button
-              key={loc.id}
-              onClick={() => setSelectedLoc(loc.id)}
-              style={{
-                display: "flex", alignItems: "center", gap: 10,
-                padding: "8px 14px", borderRadius: 12, cursor: "pointer",
-                border: selectedLoc === loc.id ? "2px solid #818cf8" : "1px solid var(--dz-input-border, rgba(148,163,184,0.12))",
-                background: selectedLoc === loc.id ? "rgba(99,102,241,0.1)" : "var(--dz-card-bg, rgba(15,15,35,0.6))",
-                color: "var(--dz-text-secondary, #94a3b8)",
-                fontSize: "0.78rem", fontWeight: 500, whiteSpace: "nowrap",
-                transition: "all 0.15s", flexShrink: 0,
-                backdropFilter: "blur(12px)",
-              }}
-            >
-              <div style={{
-                width: 56, height: 40, borderRadius: 6, overflow: "hidden", flexShrink: 0,
-                background: "rgba(99,102,241,0.06)", position: "relative",
-              }}>
-                <img
-                  src={`https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/${loc.lng},${loc.lat},13,0/112x80@2x?access_token=pk.placeholder&attribution=false`}
-                  alt={loc.label}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.6 }}
-                  onError={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.style.display = "none";
-                    if (img.parentElement) {
-                      img.parentElement.style.display = "flex";
-                      img.parentElement.style.alignItems = "center";
-                      img.parentElement.style.justifyContent = "center";
-                    }
-                  }}
-                />
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", opacity: 0.6 }}>
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                </svg>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 1, textAlign: "left" }}>
-                <span style={{
-                  fontSize: "0.8rem", fontWeight: 700,
-                  color: selectedLoc === loc.id ? "#818cf8" : "var(--dz-text-primary, #f1f5f9)",
-                }}>{loc.label}</span>
-                <span style={{ fontSize: "0.65rem", color: "var(--dz-text-muted, #64748b)" }}>{loc.address}</span>
-              </div>
-            </button>
-          ))}
-        </div>
 
         <div style={{ position: "relative" }}>
           {/* Calendar grid */}
@@ -224,22 +343,52 @@ export default function CalendarPage() {
                   const isToday = dateStr === todayStr;
                   const isSelected = selectedDate && date.getTime() === selectedDate.getTime();
                   const appts = getAppts(date, selectedLoc === "all" ? undefined : selectedLoc);
+                  const hasSurgery = SURGERY_DATES.has(dateStr);
+                  const schedSlots = schedule[dateStr];
+                  const hasSchedule = schedSlots && schedSlots.size > 0;
                   return (
                     <div
                       key={di}
-                      className={`dz-cal-cell${appts.length > 0 ? ' has-appts' : ''}${isSelected ? ' selected' : ''}`}
+                      className={`dz-cal-cell${appts.length > 0 ? ' has-appts' : ''}${isSelected ? ' selected' : ''}${scheduleMode ? ' schedule-mode' : ''}`}
                       onClick={() => handleDateClick(date)}
+                      style={scheduleMode && hasSchedule ? { borderColor: "rgba(52,211,153,0.3)" } : undefined}
                     >
-                      <span className={`dz-cal-date${isToday ? ' today' : ''}`}>{date.getDate()}</span>
-                      <span className={`dz-cal-shift-count${appts.length > 0 ? ' has' : ''}`}>
-                        {appts.length > 0 ? `${appts.length} appts` : date.getDay() === 0 || date.getDay() === 6 ? '' : 'No avail.'}
-                      </span>
-                      {appts.length > 0 && (
-                        <div className="dz-cal-dots">
-                          {appts.slice(0, 3).map((a, i) => (
-                            <span key={i} className="dz-cal-dot" style={{ background: a.type.color }} />
-                          ))}
-                        </div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                        <span className={`dz-cal-date${isToday ? ' today' : ''}`}>{date.getDate()}</span>
+                        {hasSurgery && (
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f472b6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" title="Surgery scheduled" style={{ flexShrink: 0, opacity: 0.85 }}>
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                          </svg>
+                        )}
+                      </div>
+                      {scheduleMode ? (
+                        hasSchedule ? (
+                          <div style={{ display: "flex", gap: 3, marginTop: 2 }}>
+                            {TIME_SLOTS.map((slot, si) => (
+                              <div key={si} style={{
+                                width: 6, height: 6, borderRadius: "50%",
+                                background: schedSlots.has(slot) ? "#34d399" : "rgba(148,163,184,0.15)",
+                              }} title={slot} />
+                            ))}
+                          </div>
+                        ) : (
+                          <span style={{ fontSize: "0.6rem", color: "var(--dz-text-muted, #64748b)", marginTop: 2 }}>
+                            {date.getDay() === 0 || date.getDay() === 6 ? "" : "Click to set"}
+                          </span>
+                        )
+                      ) : (
+                        <>
+                          <span className={`dz-cal-shift-count${appts.length > 0 ? ' has' : ''}`}>
+                            {appts.length > 0 ? `${appts.length} appts` : date.getDay() === 0 || date.getDay() === 6 ? '' : 'No avail.'}
+                          </span>
+                          {appts.length > 0 && (
+                            <div className="dz-cal-dots">
+                              {appts.slice(0, 3).map((a, i) => (
+                                <span key={i} className="dz-cal-dot" style={{ background: a.type.color }} />
+                              ))}
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   );
@@ -275,7 +424,45 @@ export default function CalendarPage() {
             </div>
 
             <div style={{ padding: "0 20px 20px" }}>
-              {selectedDate ? (
+              {scheduleMode && selectedDate ? (
+                <div>
+                  <p style={{ fontSize: "0.78rem", color: "var(--dz-text-muted, #64748b)", marginBottom: 12 }}>
+                    Select available time slots for this day:
+                  </p>
+                  {TIME_SLOTS.map(slot => {
+                    const dateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
+                    const isActive = schedule[dateKey]?.has(slot) ?? false;
+                    return (
+                      <button
+                        key={slot}
+                        onClick={() => toggleScheduleSlot(dateKey, slot)}
+                        style={{
+                          display: "flex", alignItems: "center", gap: 10, width: "100%",
+                          padding: "12px 14px", marginBottom: 8, borderRadius: 10, cursor: "pointer",
+                          border: isActive ? "1px solid rgba(52,211,153,0.4)" : "1px solid var(--dz-input-border, rgba(148,163,184,0.1))",
+                          background: isActive ? "rgba(52,211,153,0.1)" : "transparent",
+                          color: isActive ? "#34d399" : "var(--dz-text-secondary, #94a3b8)",
+                          fontSize: "0.82rem", fontWeight: 500, transition: "all 0.15s",
+                        }}
+                      >
+                        <div style={{
+                          width: 20, height: 20, borderRadius: 4, flexShrink: 0,
+                          border: isActive ? "2px solid #34d399" : "2px solid rgba(148,163,184,0.25)",
+                          background: isActive ? "rgba(52,211,153,0.2)" : "transparent",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>
+                          {isActive && (
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                          )}
+                        </div>
+                        {slot}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : selectedDate ? (
                 <>
                   {(selectedAppts.length > 0 || userAppts.length > 0) ? (
                     <div className="dz-cal-appt-list">

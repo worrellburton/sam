@@ -65,7 +65,7 @@ export default function SurgeriesPage() {
   const { bgId } = useDzPrefs();
   const surgeries = useMemo(() => getAllSurgeries(), []);
   const [view, setView] = useState<"table" | "list">("table");
-  const [subPage, setSubPage] = useState<"main" | "database" | "detail">("main");
+  const [subPage, setSubPage] = useState<"upcoming" | "completed" | "database" | "detail">("upcoming");
   const [filter, setFilter] = useState<"all" | "completed" | "upcoming" | "pre-op">("all");
   const [selectedSurgery, setSelectedSurgery] = useState<SurgeryRecord | null>(null);
   const [search, setSearch] = useState("");
@@ -75,7 +75,11 @@ export default function SurgeriesPage() {
 
   const allSurgeries = useMemo(() => [...surgeries, ...addedSurgeries], [surgeries, addedSurgeries]);
   const filtered = allSurgeries
-    .filter(s => filter === "all" ? true : s.status === filter)
+    .filter(s => {
+      if (subPage === "upcoming") return s.status === "upcoming" || s.status === "pre-op";
+      if (subPage === "completed") return s.status === "completed";
+      return true; // database shows all
+    })
     .filter(s => !search || s.patient.name.toLowerCase().includes(search.toLowerCase()) || s.type.toLowerCase().includes(search.toLowerCase()));
 
   const completedCount = allSurgeries.filter(s => s.status === "completed").length;
@@ -112,7 +116,7 @@ export default function SurgeriesPage() {
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "32px 36px" }}>
 
         {subPage === "detail" && selectedSurgery ? (
-          <SurgeryDetailView surgery={selectedSurgery} onBack={() => setSubPage("main")} />
+          <SurgeryDetailView surgery={selectedSurgery} onBack={() => setSubPage("upcoming")} />
         ) : (
           <>
             {/* Header */}
@@ -126,51 +130,47 @@ export default function SurgeriesPage() {
                 </div>
                 <div>
                   <h1>Surgeries</h1>
-                  <p>{completedCount} completed · {upcomingCount} upcoming · {preOpCount} pre-op</p>
+                  <p>{completedCount} completed · {upcomingCount + preOpCount} upcoming</p>
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 8 }}>
-                <button
-                  onClick={() => setSubPage(subPage === "database" ? "main" : "database")}
-                  style={{
-                    padding: "8px 16px", borderRadius: 8, border: "1px solid var(--dz-input-border)",
-                    background: subPage === "database" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-                    color: "var(--dz-accent-text)", fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
-                    display: "flex", alignItems: "center", gap: 6,
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-                  Database
+              {subPage === "database" && (
+                <button onClick={() => setShowAddForm(!showAddForm)} style={{
+                  padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer",
+                  background: "linear-gradient(135deg, #ef4444, #a855f7)", color: "#fff",
+                  fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 5,
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Surgery
                 </button>
-              </div>
+              )}
             </div>
 
-            {/* Controls — single row */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-              <div style={{ display: "flex", gap: 6 }}>
-                {(["all", "completed", "upcoming", "pre-op"] as const).map(f => (
-                  <button key={f} onClick={() => setFilter(f)} style={{
-                    padding: "6px 14px", borderRadius: 8, border: "none", cursor: "pointer",
-                    fontSize: "0.75rem", fontWeight: 700, textTransform: "capitalize",
-                    background: filter === f ? "rgba(239,68,68,0.15)" : "var(--dz-input-bg)",
-                    color: filter === f ? "#f87171" : "var(--dz-text-muted)",
-                  }}>
-                    {f === "all" ? `All (${allSurgeries.length})` : `${f.replace("-", " ")} (${f === "completed" ? completedCount : f === "upcoming" ? upcomingCount : preOpCount})`}
-                  </button>
-                ))}
-              </div>
+            {/* 3-Tab Navigation */}
+            <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 20, borderBottom: "1px solid rgba(148,163,184,0.08)", paddingBottom: 0 }}>
+              {([
+                { key: "upcoming" as const, label: "Upcoming", count: upcomingCount + preOpCount, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
+                { key: "completed" as const, label: "Completed", count: completedCount, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> },
+                { key: "database" as const, label: "Database", count: allSurgeries.length, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> },
+              ]).map(tab => (
+                <button key={tab.key} onClick={() => setSubPage(tab.key)} style={{
+                  display: "flex", alignItems: "center", gap: 6,
+                  padding: "10px 18px", border: "none", cursor: "pointer",
+                  fontSize: "0.8rem", fontWeight: 600, background: "transparent",
+                  color: subPage === tab.key ? "#f87171" : "var(--dz-text-muted, #64748b)",
+                  borderBottom: subPage === tab.key ? "2px solid #f87171" : "2px solid transparent",
+                  transition: "all 0.15s", marginBottom: -1,
+                }}>
+                  {tab.icon}
+                  {tab.label}
+                  <span style={{
+                    fontSize: "0.65rem", fontWeight: 700, padding: "1px 6px", borderRadius: 10,
+                    background: subPage === tab.key ? "rgba(239,68,68,0.12)" : "rgba(148,163,184,0.08)",
+                    color: subPage === tab.key ? "#f87171" : "var(--dz-text-dim, #475569)",
+                  }}>{tab.count}</span>
+                </button>
+              ))}
               <div style={{ flex: 1 }} />
-              <div style={{
-                display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-                background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 220,
-              }}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." style={{
-                  background: "transparent", border: "none", outline: "none", width: "100%",
-                  fontSize: "0.78rem", color: "var(--dz-text-secondary)",
-                }} />
-              </div>
-              <div style={{ display: "flex", gap: 2 }}>
+              <div style={{ display: "flex", gap: 2, marginBottom: 4 }}>
                 <button onClick={() => setView("table")} style={{
                   padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
                   background: view === "table" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
@@ -186,20 +186,10 @@ export default function SurgeriesPage() {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                 </button>
               </div>
-              {subPage === "database" && (
-                <button onClick={() => setShowAddForm(!showAddForm)} style={{
-                  padding: "6px 14px", borderRadius: 8, border: "none", cursor: "pointer",
-                  background: "linear-gradient(135deg, #ef4444, #a855f7)", color: "#fff",
-                  fontSize: "0.75rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 4,
-                }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  Add Surgery
-                </button>
-              )}
             </div>
 
             {/* Add form */}
-            {showAddForm && subPage === "database" && (
+            {showAddForm && (
               <div className="dz-card" style={{ padding: "18px 22px", marginBottom: 16 }}>
                 <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 12 }}>Schedule New Surgery</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
@@ -241,7 +231,18 @@ export default function SurgeriesPage() {
 
             {/* Table View */}
             {view === "table" ? (
-              <DraggableSurgeryTable surgeries={filtered} onView={openDetail} />
+              <DraggableSurgeryTable surgeries={filtered} onView={openDetail} searchNode={
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+                  background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 240,
+                }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." style={{
+                    background: "transparent", border: "none", outline: "none", width: "100%",
+                    fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+                  }} />
+                </div>
+              } />
             ) : (
               /* List/Card View */
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12 }}>
@@ -495,12 +496,36 @@ function SurgeryDetailView({ surgery, onBack }: { surgery: SurgeryRecord; onBack
 type SurgColKey = "patient" | "status" | "procedure" | "date" | "codes";
 const SURG_DATA_KEYS = new Set<SurgColKey>(["date", "codes"]);
 
-function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord[]; onView: (s: SurgeryRecord) => void }) {
+function DraggableSurgeryTable({ surgeries, onView, searchNode }: { surgeries: SurgeryRecord[]; onView: (s: SurgeryRecord) => void; searchNode?: React.ReactNode }) {
   const [columns, setColumns] = useState<SurgColKey[]>(["patient", "status", "procedure", "date", "codes"]);
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+  const [sortCol, setSortCol] = useState<SurgColKey | null>("date");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle, getRowStyle } = useCrosshairFocusByKey(columns, SURG_DATA_KEYS);
+
+  const handleSort = (col: SurgColKey) => {
+    if (sortCol === col) { setSortDir(d => d === "asc" ? "desc" : "asc"); }
+    else { setSortCol(col); setSortDir("asc"); }
+  };
+
+  const sorted = useMemo(() => {
+    if (!sortCol) return surgeries;
+    const arr = [...surgeries];
+    const dir = sortDir === "asc" ? 1 : -1;
+    arr.sort((a, b) => {
+      switch (sortCol) {
+        case "patient": return dir * a.patient.name.localeCompare(b.patient.name);
+        case "status": return dir * a.status.localeCompare(b.status);
+        case "procedure": return dir * a.type.localeCompare(b.type);
+        case "date": return dir * (parseDateLoose(a.date).getTime() - parseDateLoose(b.date).getTime());
+        case "codes": return dir * ((a.codes[0] || "").localeCompare(b.codes[0] || ""));
+        default: return 0;
+      }
+    });
+    return arr;
+  }, [surgeries, sortCol, sortDir]);
 
   const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
   const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };
@@ -550,24 +575,36 @@ function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8, marginTop: -44 }}>
-        <CrosshairToggle active={focusMode} onClick={toggleFocus} />
-      </div>
+      {searchNode && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          {searchNode}
+          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
+        </div>
+      )}
       <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
         <div className="dz-table-wrap">
           <table className="dz-table" style={{ margin: 0 }}>
             <thead>
               <tr>
                 {columns.map((key, i) => (
-                  <th key={key} style={{ ...headers[key].style, cursor: "grab", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
-                    draggable onDragStart={() => handleDragStart(i)} onDragEnter={() => handleDragEnter(i)} onDragEnd={handleDragEnd} onDragOver={e => e.preventDefault()}>
-                    {headers[key].label}
+                  <th key={key} style={{ ...headers[key].style, cursor: "pointer", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
+                    draggable onDragStart={() => handleDragStart(i)} onDragEnter={() => handleDragEnter(i)} onDragEnd={handleDragEnd} onDragOver={e => e.preventDefault()}
+                    onClick={() => handleSort(key)}
+                  >
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      {headers[key].label}
+                      {sortCol === key && (
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" style={{ transform: sortDir === "asc" ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s" }}>
+                          <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                      )}
+                    </span>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {surgeries.map(s => (
+              {sorted.map(s => (
                 <tr key={s.id} onClick={() => onView(s)} style={{ cursor: "pointer", ...getRowStyle(s.id) }} onMouseEnter={() => onCellEnter(s.id, 0)} onMouseLeave={onCellLeave}>
                   {columns.map((key, i) => renderCell(s, key, i))}
                 </tr>
@@ -575,7 +612,7 @@ function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord
             </tbody>
           </table>
         </div>
-        {surgeries.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>No surgeries found</div>}
+        {sorted.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "#64748b" }}>No surgeries found</div>}
       </div>
     </div>
   );

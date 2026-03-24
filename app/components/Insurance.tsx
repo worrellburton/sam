@@ -1,19 +1,27 @@
+import { useState } from "react";
+
 const carriers = [
   { name: "BlueCross BlueShield", domain: "bcbs.com" },
-  { name: "Kaiser Permanente", domain: "kaiserpermanente.org" },
   { name: "UnitedHealthcare", domain: "uhc.com" },
   { name: "Aetna", domain: "aetna.com" },
   { name: "Cigna", domain: "cigna.com" },
   { name: "Humana", domain: "humana.com" },
   { name: "Anthem", domain: "anthem.com" },
-  { name: "Elevance Health", domain: "elevancehealth.com" },
-  { name: "Centene (Ambetter)", domain: "centene.com" },
+  { name: "TRICARE", domain: "tricare.mil" },
+  { name: "Kaiser Permanente", domain: "kaiserpermanente.org" },
   { name: "Oscar Health", domain: "hioscar.com" },
   { name: "Oxford", domain: "oxhp.com" },
   { name: "Empire BCBS", domain: "empireblue.com" },
+  { name: "Elevance Health", domain: "elevancehealth.com" },
 ];
 
-function BrandfetchLogo({ domain, name }: { domain: string; name: string }) {
+function CarrierLogo({ domain, name }: { domain: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return <span className="insurance-fallback">{name}</span>;
+  }
+
   return (
     <img
       src={`https://cdn.brandfetch.io/${domain}/w/512/h/200/fallback/lettermark/theme/dark/type/logo?c=1id3n10pdBTarCHI0db`}
@@ -21,9 +29,7 @@ function BrandfetchLogo({ domain, name }: { domain: string; name: string }) {
       className="insurance-logo"
       loading="lazy"
       referrerPolicy="origin"
-      onError={(e) => {
-        (e.target as HTMLImageElement).style.display = "none";
-      }}
+      onError={() => setFailed(true)}
     />
   );
 }
@@ -40,7 +46,7 @@ export function Insurance() {
         <div className="insurance-logo-grid">
           {carriers.map(({ name, domain }) => (
             <div className="insurance-logo-item" key={name}>
-              <BrandfetchLogo domain={domain} name={name} />
+              <CarrierLogo domain={domain} name={name} />
             </div>
           ))}
         </div>

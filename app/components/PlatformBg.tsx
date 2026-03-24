@@ -1,6 +1,10 @@
 import { useEffect, useRef } from "react";
 import { BG_VERT, BG_PRESETS } from "~/data/doczoc-bg";
 
+function isDarkMode() {
+  return document.documentElement.getAttribute("data-theme") !== "light";
+}
+
 export function PlatformBg({ bgId }: { bgId: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animRef = useRef<number>(0);
@@ -12,11 +16,8 @@ export function PlatformBg({ bgId }: { bgId: string }) {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: false });
+    const gl = canvas.getContext("webgl", { alpha: false });
     if (!gl) return;
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     const vs = gl.createShader(gl.VERTEX_SHADER)!;
     gl.shaderSource(vs, BG_VERT);
@@ -34,6 +35,7 @@ export function PlatformBg({ bgId }: { bgId: string }) {
     const posLoc = gl.getAttribLocation(prog, "a_pos");
     const timeLoc = gl.getUniformLocation(prog, "u_time");
     const resLoc = gl.getUniformLocation(prog, "u_res");
+    const darkLoc = gl.getUniformLocation(prog, "u_dark");
 
     const buf = gl.createBuffer()!;
     gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -53,14 +55,13 @@ export function PlatformBg({ bgId }: { bgId: string }) {
       if (!gl) return;
       resize();
       gl.viewport(0, 0, canvas!.width, canvas!.height);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(prog);
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       gl.enableVertexAttribArray(posLoc);
       gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
       gl.uniform1f(timeLoc, (performance.now() - start) / 1000);
       gl.uniform2f(resLoc, canvas!.width, canvas!.height);
+      gl.uniform1f(darkLoc, isDarkMode() ? 1.0 : 0.0);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       animRef.current = requestAnimationFrame(frame);
     }

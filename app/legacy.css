@@ -6541,7 +6541,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   min-height: 100vh;
   background: #0f0f1e;
   color: #e2e8f0;
-  font-family: Inter, -apple-system, sans-serif;
+  font-family: var(--dz-font, Inter, -apple-system, sans-serif);
   font-size: 0.875rem;
 }
 .dz-sidebar {

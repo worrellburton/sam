@@ -45,7 +45,7 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
   },
-  { rel: "icon", type: "image/svg+xml", href: "/sammd/favicon.svg" },
+  { rel: "icon", type: "image/svg+xml", href: "/sam/favicon.svg" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -99,10 +99,10 @@ export default function App() {
       const href = anchor.getAttribute("href") || "";
       const to = anchor.getAttribute("data-to") || "";
 
-      // Check for links to /book or /sammd/book
+      // Check for links to /book or /sam/book
       if (
         href === "/book" ||
-        href === "/sammd/book" ||
+        href === "/sam/book" ||
         href.endsWith("/book") ||
         to === "/book"
       ) {

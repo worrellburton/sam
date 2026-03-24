@@ -57,8 +57,8 @@ app/
 - Auto-deploys to GitHub Pages on push to `main` or `claude/**` branches
 - Build step: `npm ci && npm run build`
 - Serves from `build/client/`
-- Live URL: https://rwb8771.github.io/sammd/
-- `basename: "/sammd/"` configured in `react-router.config.ts`
+- Live URL: https://rwb8771.github.io/sam/
+- `basename: "/sam/"` configured in `react-router.config.ts`
 
 ## Development Notes
 

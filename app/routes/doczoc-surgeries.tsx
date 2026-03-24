@@ -124,17 +124,9 @@ export default function SurgeriesPage() {
           <>
             {/* Header */}
             <div className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.15)",
-                }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                </div>
-                <div>
-                  <h1>Surgeries</h1>
-                  <p>{completedCount} completed · {upcomingCount + preOpCount} upcoming</p>
-                </div>
+              <div>
+                <h1>Surgeries</h1>
+                <p>{completedCount} completed · {upcomingCount + preOpCount} upcoming</p>
               </div>
               {subPage === "database" && (
                 <button onClick={() => setShowAddForm(!showAddForm)} style={{

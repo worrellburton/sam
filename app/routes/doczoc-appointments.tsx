@@ -24,16 +24,70 @@ function parseDateLoose(s: string) {
   return isNaN(d.getTime()) ? new Date() : d;
 }
 
-// Demo future appointments so "upcoming" isn't empty
+// Appointment type database
+const APPT_TYPES = {
+  initialConsult: "Initial Consultation",
+  followUp: "Follow-up",
+  postOp: "Post-Op Follow-up",
+  preOp: "Pre-Op Evaluation",
+  surgeryHip: "Surgery — Total Hip Arthroplasty",
+  surgeryKneeReplace: "Surgery — Total Knee Replacement",
+  surgeryKneeArthro: "Surgery — Knee Arthroscopy",
+  surgeryMeniscus: "Surgery — Meniscus Repair",
+  surgeryRotatorCuff: "Surgery — Rotator Cuff Repair",
+  surgeryACL: "Surgery — ACL Reconstruction",
+  sportsInjury: "Sports Injury Evaluation",
+  imaging: "Imaging Review",
+  injection: "Joint Injection",
+  castRemoval: "Cast/Splint Removal",
+  ptEval: "Physical Therapy Evaluation",
+} as const;
+
+// Demo future appointments — diverse mix across patients
 const FUTURE_APPTS: { patientIdx: number; type: string; daysOut: number; notes: string; codes: string[] }[] = [
-  { patientIdx: 0, type: "Post-Op Follow-up", daysOut: 2, notes: "6-week check ACL reconstruction. Assess ROM and stability.", codes: ["S83.511A", "Z96.651"] },
-  { patientIdx: 1, type: "Initial Consultation", daysOut: 3, notes: "Right shoulder pain x 2 months, MRI pending review.", codes: ["M75.111", "99203"] },
-  { patientIdx: 2, type: "Pre-Op Evaluation", daysOut: 5, notes: "Pre-op clearance for knee arthroscopy. Labs ordered.", codes: ["M23.211", "99213"] },
-  { patientIdx: 3, type: "Surgery — Total Hip Arthroplasty", daysOut: 7, notes: "Total hip arthroplasty, right hip. NPO after midnight.", codes: ["M16.11", "27130"] },
-  { patientIdx: 4, type: "Follow-up Consultation", daysOut: 10, notes: "8-week follow-up distal radius fracture. X-ray in office.", codes: ["S52.501A", "Z87.39"] },
-  { patientIdx: 5, type: "Initial Consultation", daysOut: 12, notes: "New referral — left knee meniscus tear, failed conservative tx.", codes: ["M23.211", "99203"] },
-  { patientIdx: 0, type: "Pre-Op Evaluation", daysOut: 14, notes: "Pre-op clearance for total knee replacement.", codes: ["S83.511A", "99213"] },
-  { patientIdx: 6, type: "Surgery — Knee Arthroscopy", daysOut: 16, notes: "Arthroscopic meniscus repair, right knee.", codes: ["M23.211", "29882"] },
+  // Week 1
+  { patientIdx: 0, type: APPT_TYPES.postOp, daysOut: 1, notes: "6-week check ACL reconstruction. Assess ROM and stability.", codes: ["S83.511A", "99214"] },
+  { patientIdx: 1, type: APPT_TYPES.initialConsult, daysOut: 1, notes: "Right shoulder pain x 2 months, MRI pending review.", codes: ["M75.111", "99203"] },
+  { patientIdx: 2, type: APPT_TYPES.followUp, daysOut: 2, notes: "4-week follow-up, wrist fracture healing well.", codes: ["S52.501A", "99213"] },
+  { patientIdx: 3, type: APPT_TYPES.preOp, daysOut: 2, notes: "Pre-op clearance for knee arthroscopy. Labs ordered.", codes: ["M23.211", "99213"] },
+  { patientIdx: 4, type: APPT_TYPES.injection, daysOut: 3, notes: "Cortisone injection, left knee — OA management.", codes: ["M17.11", "20610"] },
+  { patientIdx: 5, type: APPT_TYPES.sportsInjury, daysOut: 3, notes: "Acute ankle sprain during basketball. R/O fracture.", codes: ["S93.401A", "99203"] },
+  { patientIdx: 6, type: APPT_TYPES.imaging, daysOut: 4, notes: "MRI review — right shoulder, evaluate rotator cuff.", codes: ["M75.111", "99213"] },
+  { patientIdx: 7, type: APPT_TYPES.postOp, daysOut: 4, notes: "2-week post-op rotator cuff repair. Suture check.", codes: ["M75.111", "99213"] },
+  // Week 2
+  { patientIdx: 8, type: APPT_TYPES.initialConsult, daysOut: 7, notes: "New referral — left knee meniscus tear, failed conservative tx.", codes: ["M23.211", "99203"] },
+  { patientIdx: 9, type: APPT_TYPES.surgeryKneeArthro, daysOut: 7, notes: "Arthroscopic meniscus repair, right knee.", codes: ["M23.211", "29882"] },
+  { patientIdx: 10, type: APPT_TYPES.followUp, daysOut: 8, notes: "8-week follow-up distal radius fracture. X-ray in office.", codes: ["S52.501A", "99213"] },
+  { patientIdx: 11, type: APPT_TYPES.preOp, daysOut: 8, notes: "Pre-op clearance for total hip replacement. EKG + labs.", codes: ["M16.11", "99213"] },
+  { patientIdx: 12, type: APPT_TYPES.ptEval, daysOut: 9, notes: "PT progression check — advance to phase III protocol.", codes: ["S83.511A", "97161"] },
+  { patientIdx: 13, type: APPT_TYPES.castRemoval, daysOut: 9, notes: "Cast removal, 6-week distal radius. X-ray for union.", codes: ["S52.501A", "29085"] },
+  { patientIdx: 14, type: APPT_TYPES.initialConsult, daysOut: 10, notes: "Hip pain x 3 months, worse with stairs. R/O labral tear.", codes: ["M25.551", "99203"] },
+  { patientIdx: 15, type: APPT_TYPES.injection, daysOut: 10, notes: "Hyaluronic acid injection series, right knee.", codes: ["M17.11", "20610"] },
+  // Week 3
+  { patientIdx: 16, type: APPT_TYPES.surgeryHip, daysOut: 14, notes: "Total hip arthroplasty, right hip. NPO after midnight.", codes: ["M16.11", "27130"] },
+  { patientIdx: 17, type: APPT_TYPES.postOp, daysOut: 14, notes: "12-week post-op ACL. Return to sport evaluation.", codes: ["S83.511A", "99214"] },
+  { patientIdx: 18, type: APPT_TYPES.followUp, daysOut: 15, notes: "Shoulder impingement — conservative tx progress.", codes: ["M75.41", "99213"] },
+  { patientIdx: 19, type: APPT_TYPES.sportsInjury, daysOut: 15, notes: "Runner's knee evaluation. Activity modification plan.", codes: ["M76.51", "99203"] },
+  { patientIdx: 20, type: APPT_TYPES.preOp, daysOut: 16, notes: "Pre-op for rotator cuff repair. Anesthesia consult.", codes: ["M75.111", "99213"] },
+  { patientIdx: 21, type: APPT_TYPES.imaging, daysOut: 16, notes: "CT review — complex tibial plateau fracture planning.", codes: ["S82.101A", "99213"] },
+  // Week 4
+  { patientIdx: 22, type: APPT_TYPES.surgeryRotatorCuff, daysOut: 21, notes: "Arthroscopic RCR, right shoulder. Nerve block planned.", codes: ["M75.111", "29827"] },
+  { patientIdx: 23, type: APPT_TYPES.initialConsult, daysOut: 21, notes: "Chronic knee pain, failed PT. Discuss surgical options.", codes: ["M17.11", "99203"] },
+  { patientIdx: 24, type: APPT_TYPES.followUp, daysOut: 22, notes: "Hip injection follow-up — pain level reassessment.", codes: ["M16.11", "99213"] },
+  { patientIdx: 25, type: APPT_TYPES.postOp, daysOut: 22, notes: "4-week post-op meniscus repair. ROM check.", codes: ["M23.211", "99213"] },
+  { patientIdx: 0, type: APPT_TYPES.ptEval, daysOut: 23, notes: "PT re-evaluation — knee flexion plateau, adjust protocol.", codes: ["S83.511A", "97161"] },
+  { patientIdx: 1, type: APPT_TYPES.followUp, daysOut: 23, notes: "Shoulder follow-up — MRI results discussion.", codes: ["M75.111", "99213"] },
+  // Week 5-6
+  { patientIdx: 26, type: APPT_TYPES.surgeryKneeReplace, daysOut: 28, notes: "Total knee replacement, left knee. Bilateral staged.", codes: ["M17.11", "27447"] },
+  { patientIdx: 27, type: APPT_TYPES.surgeryMeniscus, daysOut: 28, notes: "Arthroscopic meniscus repair, medial compartment.", codes: ["M23.211", "29882"] },
+  { patientIdx: 28, type: APPT_TYPES.initialConsult, daysOut: 30, notes: "New patient — elbow pain, possible tennis elbow.", codes: ["M77.11", "99203"] },
+  { patientIdx: 29, type: APPT_TYPES.preOp, daysOut: 30, notes: "Pre-op for ACL reconstruction. PT prehab started.", codes: ["S83.511A", "99213"] },
+  { patientIdx: 30, type: APPT_TYPES.surgeryACL, daysOut: 35, notes: "ACL reconstruction with hamstring autograft.", codes: ["S83.511A", "29888"] },
+  { patientIdx: 2, type: APPT_TYPES.postOp, daysOut: 35, notes: "8-week post-op wrist fracture. Grip strength test.", codes: ["S52.501A", "99213"] },
+  { patientIdx: 3, type: APPT_TYPES.followUp, daysOut: 37, notes: "Knee arthroscopy follow-up — clearing for light activity.", codes: ["M23.211", "99213"] },
+  { patientIdx: 4, type: APPT_TYPES.injection, daysOut: 37, notes: "PRP injection, left knee. Regenerative protocol.", codes: ["M17.11", "0232T"] },
+  { patientIdx: 5, type: APPT_TYPES.sportsInjury, daysOut: 40, notes: "Hamstring strain evaluation. Soccer player.", codes: ["S76.311A", "99203"] },
+  { patientIdx: 6, type: APPT_TYPES.initialConsult, daysOut: 42, notes: "Chronic shoulder instability. Discuss Bankart repair.", codes: ["M24.411", "99203"] },
 ];
 
 function getAllAppointments(): ApptRecord[] {
@@ -128,22 +182,12 @@ export default function AppointmentsPage() {
     <div className="dz-platform">
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <PlatformBg bgId={bgId} />
-      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "32px 36px" }}>
+      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
         {/* Header */}
         <div className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
-              background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.15)",
-            }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-              </svg>
-            </div>
-            <div>
-              <h1>Appointments</h1>
-              <p>{upcomingCount} upcoming · {newCount} new</p>
-            </div>
+          <div>
+            <h1>Appointments</h1>
+            <p>{upcomingCount} upcoming · {newCount} new</p>
           </div>
         </div>
 

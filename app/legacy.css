@@ -7380,8 +7380,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 }
 .dz-table th {
   text-align: left;
-  padding: 10px 16px;
-  font-size: 0.7rem;
+  padding: 7px 12px;
+  font-size: 0.67rem;
   font-weight: 600;
   color: #94a3b8;
   text-transform: uppercase;
@@ -7397,8 +7397,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-table th:hover { background: rgba(99, 102, 241, 0.08); }
 .dz-table th .dz-sort-icon { margin-left: 4px; font-size: 0.6rem; opacity: 0.5; }
 .dz-table td {
-  padding: 11px 16px;
-  font-size: 0.82rem;
+  padding: 8px 12px;
+  font-size: 0.76rem;
   color: #94a3b8;
   border-bottom: 1px solid rgba(148, 163, 184, 0.06);
   border-right: 1px solid rgba(148, 163, 184, 0.03);
@@ -7434,9 +7434,9 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 [data-theme="light"] .dz-table tbody tr:nth-child(even) td { background: rgba(248, 250, 252, 0.5); }
 [data-theme="light"] .dz-table tr:hover td { background: rgba(99, 102, 241, 0.04); }
 [data-theme="light"] .dz-row-clickable:hover td { background: rgba(99, 102, 241, 0.06) !important; }
-.dz-table-name { font-weight: 600; color: #f1f5f9; white-space: nowrap; }
-.dz-table-sub { font-size: 0.72rem; color: #64748b; }
-.dz-table-time { font-weight: 600; color: #818cf8; font-size: 0.82rem; white-space: nowrap; }
+.dz-table-name { font-weight: 600; color: #f1f5f9; white-space: nowrap; font-size: 0.78rem; }
+.dz-table-sub { font-size: 0.68rem; color: #64748b; }
+.dz-table-time { font-weight: 600; color: #818cf8; font-size: 0.76rem; white-space: nowrap; }
 .dz-table td { white-space: nowrap; }
 .dz-table .dz-col-notes { white-space: normal; max-width: 200px; }
 

@@ -30,7 +30,7 @@ function InsuranceLogo({ name }: { name: string }) {
         <img
           src={logoUrl}
           alt={name}
-          style={{ width: 60, height: 24, borderRadius: 4, objectFit: "contain", background: "#fff", padding: "2px 4px" }}
+          style={{ width: 50, height: 20, borderRadius: 3, objectFit: "contain" }}
           onError={() => setImgFailed(true)}
         />
       ) : (
@@ -46,10 +46,10 @@ function PatientInitials({ name }: { name: string }) {
   const idx = name.charCodeAt(0) % colors.length;
   return (
     <div style={{
-      width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+      width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
       background: `${colors[idx]}18`, color: colors[idx],
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: "0.7rem", fontWeight: 700,
+      fontSize: "0.6rem", fontWeight: 700,
     }}>{initials}</div>
   );
 }

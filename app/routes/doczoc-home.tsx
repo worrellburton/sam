@@ -367,45 +367,54 @@ export default function HomePage() {
     </div>,
     /* Section 5 */
     <div key={5} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          {/* Today's patients mini-cards */}
+          {/* Upcoming Schedule — appointments + surgeries */}
           <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Patient Roster</span>
-              <Link to="/doczoc/patients" style={{ fontSize: "0.72rem", color: "#818cf8", fontWeight: 600, textDecoration: "none" }}>View All →</Link>
+              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Schedule</span>
+              <Link to="/doczoc/calendar" style={{ fontSize: "0.72rem", color: "var(--dz-accent, #818cf8)", fontWeight: 600, textDecoration: "none" }}>View Calendar →</Link>
             </div>
-            <div style={{ maxHeight: 320, overflowY: "auto" }}>
-              {PATIENTS.slice(0, 8).map(p => (
-                <Link
-                  key={p.id}
-                  to={`/doczoc/patients/${p.id}`}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 12, padding: "10px 18px",
-                    textDecoration: "none", borderBottom: "1px solid rgba(99,102,241,0.05)",
-                    transition: "background 0.15s",
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.04)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-                >
-                  <div style={{
-                    width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
-                    background: "rgba(99,102,241,0.12)", color: "#818cf8",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "0.65rem", fontWeight: 700,
-                  }}>{p.name.split(" ").map(n => n[0]).join("")}</div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-secondary)" }}>{p.name}</div>
-                    <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{p.condition}</div>
-                  </div>
-                  {p.allergies.length > 0 && (
-                    <span style={{ fontSize: "0.6rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>ALLERGY</span>
-                  )}
-                  <span style={{
-                    fontSize: "0.65rem", fontWeight: 700, padding: "2px 8px", borderRadius: 10,
-                    background: p.status === "Active" ? "rgba(34,197,94,0.12)" : p.status === "New" ? "rgba(99,102,241,0.12)" : "rgba(148,163,184,0.1)",
-                    color: p.status === "Active" ? "#22c55e" : p.status === "New" ? "#818cf8" : "#94a3b8",
-                  }}>{p.status}</span>
-                </Link>
-              ))}
+            <div style={{ maxHeight: 360, overflowY: "auto" }}>
+              {data.upcomingAppts.slice(0, 10).map((a, i) => {
+                const isSurgery = a.type.toLowerCase().includes("surgery");
+                const isPreOp = a.type.toLowerCase().includes("pre-op");
+                const colors = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
+                const avatarColor = colors[a.patient.name.charCodeAt(0) % colors.length];
+                return (
+                  <Link
+                    key={i}
+                    to={`/doczoc/patients/${a.patient.id}`}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 12, padding: "10px 18px",
+                      textDecoration: "none", borderBottom: "1px solid rgba(99,102,241,0.05)",
+                      transition: "background 0.15s",
+                      borderLeft: isSurgery ? "3px solid #ef4444" : isPreOp ? "3px solid #818cf8" : "3px solid transparent",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.04)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                  >
+                    <div style={{
+                      width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+                      background: `${avatarColor}18`, color: avatarColor,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "0.6rem", fontWeight: 700,
+                    }}>{a.patient.name.split(" ").map(n => n[0]).join("")}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-secondary)" }}>{a.patient.name}</span>
+                        {isSurgery && <span style={{ fontSize: "0.55rem", fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>SURGERY</span>}
+                        {isPreOp && <span style={{ fontSize: "0.55rem", fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: "rgba(129,140,248,0.12)", color: "#818cf8" }}>PRE-OP</span>}
+                      </div>
+                      <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{a.type}</div>
+                    </div>
+                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                      <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--dz-accent-text, #818cf8)" }}>{a.date}</div>
+                    </div>
+                  </Link>
+                );
+              })}
+              {data.upcomingAppts.length === 0 && (
+                <div style={{ padding: 24, textAlign: "center", color: "#64748b", fontSize: "0.78rem" }}>No upcoming appointments or surgeries</div>
+              )}
             </div>
           </div>
 

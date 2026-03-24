@@ -87,6 +87,7 @@ export default function PatientsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"table" | "grid">("table");
+  const [tableFocusMode, setTableFocusMode] = useState(false);
   const { bgId } = useDzPrefs();
   const navigate = useNavigate();
 
@@ -117,26 +118,29 @@ export default function PatientsPage() {
             onChange={(e) => setSearch(e.target.value)}
             style={{ maxWidth: 260 }}
           />
-          <div className="dz-view-toggle">
-            <button
-              className={`dz-view-btn${view === "table" ? " dz-view-active" : ""}`}
-              onClick={() => setView("table")}
-              title="Table view"
-            >
-              <TableIcon active={view === "table"} />
-            </button>
-            <button
-              className={`dz-view-btn${view === "grid" ? " dz-view-active" : ""}`}
-              onClick={() => setView("grid")}
-              title="Grid view"
-            >
-              <GridIcon active={view === "grid"} />
-            </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <CrosshairToggle active={tableFocusMode} onClick={() => setTableFocusMode(f => !f)} />
+            <div className="dz-view-toggle">
+              <button
+                className={`dz-view-btn${view === "table" ? " dz-view-active" : ""}`}
+                onClick={() => setView("table")}
+                title="Table view"
+              >
+                <TableIcon active={view === "table"} />
+              </button>
+              <button
+                className={`dz-view-btn${view === "grid" ? " dz-view-active" : ""}`}
+                onClick={() => setView("grid")}
+                title="Grid view"
+              >
+                <GridIcon active={view === "grid"} />
+              </button>
+            </div>
           </div>
         </div>
 
         {view === "table" ? (
-          <DraggablePatientTable patients={filtered} onRowClick={(id) => navigate(`/doczoc/patients/${id}`)} />
+          <DraggablePatientTable patients={filtered} onRowClick={(id) => navigate(`/doczoc/patients/${id}`)} externalFocusMode={tableFocusMode} />
         ) : (
           <div className="dz-patients-grid">
             {filtered.map((p) => (
@@ -186,12 +190,14 @@ const COL_HEADERS: Record<ColKey, { label: string; className?: string; style?: R
 const DEFAULT_COLS: ColKey[] = ["patient", "status", "nextAppt", "condition", "age", "phone", "email", "insurance", "visits"];
 const PATIENT_DATA_KEYS = new Set<ColKey>(["age", "visits"]);
 
-function DraggablePatientTable({ patients, onRowClick }: { patients: Patient[]; onRowClick: (id: number) => void }) {
+function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { patients: Patient[]; onRowClick: (id: number) => void; externalFocusMode?: boolean }) {
   const [columns, setColumns] = useState<ColKey[]>(DEFAULT_COLS);
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
-  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle, getRowStyle } = useCrosshairFocusByKey(columns, PATIENT_DATA_KEYS);
+  const crosshair = useCrosshairFocusByKey(columns, PATIENT_DATA_KEYS);
+  const focusMode = externalFocusMode ?? crosshair.focusMode;
+  const { onCellEnter, onCellLeave, getCellStyle, getRowStyle } = crosshair;
 
   const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
   const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };
@@ -238,9 +244,6 @@ function DraggablePatientTable({ patients, onRowClick }: { patients: Patient[]; 
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8, marginTop: -44 }}>
-        <CrosshairToggle active={focusMode} onClick={toggleFocus} />
-      </div>
       <div className="dz-table-wrap">
         <table className="dz-table">
           <thead>

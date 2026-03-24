@@ -181,7 +181,7 @@ export default function DocZocSignIn() {
 
           {mode === "choose" && !codeSent && (
             <div className="dz-sso-buttons">
-              <Link to="/doczoc/dashboard" state={{ fromLogin: true }} className="dz-sso-btn dz-sso-google dz-anim-up" style={{ animationDelay: "0.35s" }}>
+              <Link to="/doczoc/home" state={{ fromLogin: true }} className="dz-sso-btn dz-sso-google dz-anim-up" style={{ animationDelay: "0.35s" }}>
                 <svg width="22" height="22" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -273,7 +273,7 @@ export default function DocZocSignIn() {
                 ))}
               </div>
               <Link
-                to="/doczoc/dashboard"
+                to="/doczoc/home"
                 state={{ fromLogin: true }}
                 className={`dz-sso-submit${code.every(d => d) ? "" : " disabled"}`}
                 onClick={(e) => { if (!code.every(d => d)) e.preventDefault(); }}

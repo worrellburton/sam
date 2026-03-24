@@ -163,7 +163,16 @@ export default function AppointmentsPage() {
       if (filter === "type") return typeFilter ? a.type === typeFilter : true;
       return true;
     })
-    .filter(a => !search || a.patient.name.toLowerCase().includes(search.toLowerCase()) || a.type.toLowerCase().includes(search.toLowerCase()))
+    .filter(a => {
+      if (!search) return true;
+      const q = search.toLowerCase();
+      return a.patient.name.toLowerCase().includes(q) ||
+        a.type.toLowerCase().includes(q) ||
+        a.date.toLowerCase().includes(q) ||
+        a.notes.toLowerCase().includes(q) ||
+        a.codes.some(c => c.toLowerCase().includes(q)) ||
+        (a.isPast ? "completed" : "upcoming").includes(q);
+    })
     .sort((a, b) => {
       if (!sortCol) return 0;
       const dir = sortDir === "asc" ? 1 : -1;

@@ -370,6 +370,212 @@ function ThemeToggleFab() {
 
 export { Sidebar, ThemeToggleFab };
 
+// ── Google Reviews (Dashboard) ──────────────────────────────────────
+const DEMO_REVIEWS = [
+  { author_name: "Jennifer M.", rating: 5, text: "Dr. Elguizaoui is an exceptional surgeon. He repaired my torn ACL and I was back on my feet faster than expected. His entire team was caring and professional.", relative_time_description: "2 days ago", time: Date.now() / 1000 - 172800 },
+  { author_name: "Robert K.", rating: 5, text: "Best orthopedic experience I've had. Dr. Elguizaoui took the time to explain everything about my shoulder surgery options. Highly recommend!", relative_time_description: "a week ago", time: Date.now() / 1000 - 604800 },
+  { author_name: "Patricia S.", rating: 4, text: "Very knowledgeable doctor. The wait time was a bit long but the care was worth it. My knee replacement went smoothly.", relative_time_description: "2 weeks ago", time: Date.now() / 1000 - 1209600 },
+  { author_name: "Michael T.", rating: 5, text: "Had rotator cuff surgery and the recovery has been fantastic. Great bedside manner and very thorough follow-up care.", relative_time_description: "3 weeks ago", time: Date.now() / 1000 - 1814400 },
+  { author_name: "Susan L.", rating: 5, text: "Came in for a sports injury evaluation. Dr. Elguizaoui was incredibly thorough and got me back to running within 2 months.", relative_time_description: "a month ago", time: Date.now() / 1000 - 2592000 },
+];
+
+function StarRating({ rating, size = 10 }: { rating: number; size?: number }) {
+  return (
+    <span style={{ display: "inline-flex", gap: 1 }}>
+      {[1, 2, 3, 4, 5].map(i => (
+        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= rating ? "#fbbf24" : "none"} stroke="#fbbf24" strokeWidth="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+function DashGoogleReviews() {
+  const [expanded, setExpanded] = useState(false);
+  const reviews = DEMO_REVIEWS;
+  const newest = reviews[0];
+
+  return (
+    <>
+      <div className="dz-stat-card" style={{ cursor: "pointer" }} onClick={() => setExpanded(!expanded)}>
+        <div className="dz-stat-card-label" style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Google Reviews
+        </div>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+          <div className="dz-stat-card-value" style={{ color: "#fbbf24" }}>4.9</div>
+          <StarRating rating={5} size={11} />
+        </div>
+        <div className="dz-stat-card-change" style={{ color: "#22c55e" }}>127 reviews</div>
+      </div>
+
+      {expanded && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
+          zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center",
+        }} onClick={() => setExpanded(false)}>
+          <div onClick={e => e.stopPropagation()} style={{
+            width: 520, maxHeight: "80vh", overflow: "auto",
+            background: "var(--dz-card-bg, rgba(15,15,35,0.98))", backdropFilter: "blur(20px)",
+            border: "1px solid rgba(99,102,241,0.15)", borderRadius: 16,
+            padding: "24px 28px", boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                <span style={{ fontSize: "1rem", fontWeight: 800, color: "var(--dz-text-primary)" }}>Google Reviews</span>
+                <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#fbbf24" }}>4.9</span>
+                <StarRating rating={5} size={12} />
+              </div>
+              <button onClick={() => setExpanded(false)} style={{ background: "none", border: "none", color: "var(--dz-text-muted)", cursor: "pointer", padding: 4 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {reviews.map((r, i) => (
+                <div key={i} style={{
+                  padding: "14px 16px", borderRadius: 10,
+                  background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
+                  border: "1px solid rgba(148,163,184,0.06)",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                    <div style={{
+                      width: 28, height: 28, borderRadius: "50%", background: "rgba(251,191,36,0.15)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "0.65rem", fontWeight: 700, color: "#fbbf24", flexShrink: 0,
+                    }}>{r.author_name.charAt(0)}</div>
+                    <div>
+                      <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{r.author_name}</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <StarRating rating={r.rating} size={10} />
+                        <span style={{ fontSize: "0.65rem", color: "var(--dz-text-muted)" }}>{r.relative_time_description}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: "0.78rem", color: "var(--dz-text-secondary)", lineHeight: 1.5 }}>{r.text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+// ── Next Patient with live countdown ────────────────────────────────
+function DashNextPatient() {
+  // Demo: appointment is always 1:30 from now
+  const [secondsLeft, setSecondsLeft] = useState(90);
+  const [insightHovered, setInsightHovered] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSecondsLeft(prev => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const mins = Math.floor(secondsLeft / 60);
+  const secs = secondsLeft % 60;
+  const countdownText = `${mins}:${secs.toString().padStart(2, "0")}`;
+  const urgent = secondsLeft < 60;
+
+  return (
+    <div className="dz-card dz-fade-element" style={{
+      animationDelay: "0.35s",
+      padding: 0,
+      marginBottom: 24,
+      overflow: "hidden",
+    }}>
+      <div style={{ display: "flex" }}>
+        {/* Left: countdown */}
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          padding: "20px 24px", minWidth: 100,
+          background: urgent ? "rgba(239,68,68,0.08)" : "rgba(99,102,241,0.06)",
+          borderRight: `1px solid ${urgent ? "rgba(239,68,68,0.12)" : "rgba(99,102,241,0.08)"}`,
+        }}>
+          <div style={{
+            fontSize: "1.6rem", fontWeight: 900, fontVariantNumeric: "tabular-nums",
+            color: urgent ? "#f87171" : "#818cf8",
+            fontFamily: "'SF Mono', Consolas, monospace",
+          }}>{countdownText}</div>
+          <div style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--dz-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 2 }}>
+            until start
+          </div>
+        </div>
+
+        {/* Right: patient info */}
+        <div style={{ flex: 1, padding: "16px 22px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <div>
+              <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "var(--dz-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Next Patient</div>
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--dz-text-primary)" }}>James Kim</div>
+            </div>
+            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: 4,
+                fontSize: "0.62rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
+                background: "rgba(99,102,241,0.1)", color: "#818cf8",
+              }}>
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+                Appointment
+              </span>
+              <span style={{
+                fontSize: "0.62rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
+                background: "rgba(59,130,246,0.12)", color: "#60a5fa",
+              }}>New Patient</span>
+              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#818cf8" }}>9:30 AM</span>
+            </div>
+          </div>
+
+          <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)", marginBottom: 8 }}>
+            Initial Consultation — Knee (ACL)
+          </div>
+
+          {/* AI Insight — More insight only on hover */}
+          <div
+            onMouseEnter={() => setInsightHovered(true)}
+            onMouseLeave={() => setInsightHovered(false)}
+            style={{
+              fontSize: "0.78rem", lineHeight: 1.6, color: "var(--dz-text-secondary)",
+              padding: "10px 12px", borderRadius: 8,
+              background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.08)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
+              <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
+            </div>
+            ACL tear (left), positive Lachman. Scheduled for reconstruction consult.
+            <span style={{
+              display: insightHovered ? "inline" : "none",
+              marginLeft: 4,
+            }}>
+              <AiSummaryExpand>
+                MRI confirmed complete tear with lateral meniscus involvement. Anterior drawer test positive. Reports instability during lateral movements, unable to return to sports. Conservative management (bracing + PT x 8 weeks) showed minimal improvement. Recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
+              </AiSummaryExpand>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
@@ -380,7 +586,6 @@ export default function DashboardPage() {
     { label: "Today's Appointments", value: "24", change: "+3", color: "#6366f1" },
     { label: "New Patients (Week)", value: "18", change: "+5", color: "#22c55e" },
     { label: "Show Rate", value: "96%", change: "+2%", color: "#a78bfa" },
-    { label: "Pending Reviews", value: "7", change: "-2", color: "#f59e0b" },
   ];
 
   const recentPatients = [
@@ -426,65 +631,11 @@ export default function DashboardPage() {
               <div className="dz-stat-card-change" style={{ color: "#22c55e" }}>{s.change} from last week</div>
             </div>
           ))}
+          <DashGoogleReviews />
         </div>
 
         {/* Next Patient */}
-        <div className="dz-card dz-fade-element" style={{
-          animationDelay: "0.35s",
-          padding: "22px 26px",
-          marginBottom: 24,
-          borderLeft: "3px solid #6366f1",
-          background: "var(--dz-card-bg, rgba(15,23,42,0.55))",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-            <div style={{
-              width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
-              background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.15)",
-            }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-              </svg>
-            </div>
-            <div>
-              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Next Patient</div>
-              <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)" }}>James Kim</div>
-            </div>
-            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{
-                fontSize: "0.65rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
-                background: "rgba(59,130,246,0.12)", color: "#60a5fa",
-              }}>New Patient</span>
-              <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "#818cf8" }}>9:30 AM</span>
-            </div>
-          </div>
-          <div style={{
-            fontSize: "0.8rem", lineHeight: 1.65, color: "var(--dz-text-secondary, #94a3b8)",
-            padding: "12px 14px", borderRadius: 8,
-            background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.08)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-              </svg>
-              <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
-            </div>
-            ACL tear (left), positive Lachman. Scheduled for reconstruction consult.
-            <AiSummaryExpand>
-              MRI confirmed complete tear with lateral meniscus involvement. Anterior drawer test positive. Reports instability during lateral movements, unable to return to sports. Conservative management (bracing + PT x 8 weeks) showed minimal improvement. Recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
-            </AiSummaryExpand>
-          </div>
-          <div style={{
-            display: "flex", alignItems: "center", gap: 8, marginTop: 10,
-            padding: "8px 12px", borderRadius: 8,
-            background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.12)",
-          }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-            </svg>
-            <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#f87171" }}>Starts in 25 minutes</span>
-            <span style={{ fontSize: "0.65rem", color: "var(--dz-text-dim)", marginLeft: 4 }}>(9:30 AM)</span>
-          </div>
-        </div>
+        <DashNextPatient />
 
         <div className="dz-dash-section dz-fade-element" style={{ animationDelay: "0.5s" }}>
           <h2>Today's Schedule</h2>

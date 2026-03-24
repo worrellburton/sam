@@ -83,7 +83,16 @@ export default function SurgeriesPage() {
       if (subPage === "completed") return s.status === "completed";
       return true; // database shows all
     })
-    .filter(s => !search || s.patient.name.toLowerCase().includes(search.toLowerCase()) || s.type.toLowerCase().includes(search.toLowerCase()));
+    .filter(s => {
+      if (!search) return true;
+      const q = search.toLowerCase();
+      return s.patient.name.toLowerCase().includes(q) ||
+        s.type.toLowerCase().includes(q) ||
+        s.date.toLowerCase().includes(q) ||
+        s.notes.toLowerCase().includes(q) ||
+        s.codes.some(c => c.toLowerCase().includes(q)) ||
+        s.status.toLowerCase().includes(q);
+    });
 
   const completedCount = allSurgeries.filter(s => s.status === "completed").length;
   const upcomingCount = allSurgeries.filter(s => s.status === "upcoming").length;

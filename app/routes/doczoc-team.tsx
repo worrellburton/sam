@@ -19,7 +19,10 @@ export default function TeamPage() {
 
   const filtered = TEAM.filter(m => {
     if (roleFilter !== "All" && m.role !== roleFilter) return false;
-    if (search && !m.name.toLowerCase().includes(search.toLowerCase()) && !m.role.toLowerCase().includes(search.toLowerCase())) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      if (!m.name.toLowerCase().includes(q) && !m.role.toLowerCase().includes(q) && !m.specialty.toLowerCase().includes(q) && !m.email.toLowerCase().includes(q) && !m.phone.toLowerCase().includes(q)) return false;
+    }
     return true;
   });
 

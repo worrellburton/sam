@@ -95,8 +95,15 @@ export default function PatientsPage() {
   const newCount = PATIENTS.filter(p => p.status.toLowerCase() === "new").length;
 
   const filtered = PATIENTS.filter((p) => {
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.condition.toLowerCase().includes(search.toLowerCase());
+    const q = search.toLowerCase();
+    const matchesSearch = !q || p.name.toLowerCase().includes(q) ||
+      p.condition.toLowerCase().includes(q) ||
+      p.phone.toLowerCase().includes(q) ||
+      p.email.toLowerCase().includes(q) ||
+      p.insurance.toLowerCase().includes(q) ||
+      p.status.toLowerCase().includes(q) ||
+      String(p.age).includes(q) ||
+      p.nextAppt.toLowerCase().includes(q);
     if (!matchesSearch) return false;
     if (subPage === "all") return true;
     return p.status.toLowerCase() === subPage;

@@ -121,153 +121,6 @@ function buildTimeline(startYear: number, endYear: number): TimelineMonth[] {
   return months;
 }
 
-// ── Cash Pipeline ────────────────────────────────────────────────────
-const PIPELINE_STAGES = [
-  { label: "Charges Billed", value: 584200, color: "#6366f1", count: 312 },
-  { label: "Claims Submitted", value: 571800, color: "#818cf8", count: 298 },
-  { label: "In Review", value: 89400, color: "#f59e0b", count: 47 },
-  { label: "Paid", value: 462200, color: "#22c55e", count: 238 },
-  { label: "Denied", value: 20200, color: "#ef4444", count: 13 },
-  { label: "Patient Balance", value: 12400, color: "#a78bfa", count: 34 },
-];
-
-function CashPipeline() {
-  const [stages, setStages] = useState(PIPELINE_STAGES);
-  const maxVal = stages[0]?.value || 1;
-  const dragItem = useRef<number | null>(null);
-  const dragOverItem = useRef<number | null>(null);
-  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
-
-  const handleDragStart = (idx: number) => { dragItem.current = idx; setDraggingIdx(idx); };
-  const handleDragEnter = (idx: number) => { dragOverItem.current = idx; };
-  const handleDragEnd = () => {
-    if (dragItem.current !== null && dragOverItem.current !== null) {
-      const copy = [...stages];
-      const dragged = copy.splice(dragItem.current, 1)[0];
-      copy.splice(dragOverItem.current, 0, dragged);
-      setStages(copy);
-    }
-    dragItem.current = null; dragOverItem.current = null; setDraggingIdx(null);
-  };
-
-  return (
-    <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
-      <div style={{
-        padding: "18px 22px", borderBottom: "1px solid rgba(99,102,241,0.1)",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-          </svg>
-          <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "#f1f5f9" }}>Cash Pipeline</span>
-        </div>
-        <span style={{ fontSize: "0.78rem", color: "#64748b", fontWeight: 600 }}>Last 90 days</span>
-      </div>
-      <div style={{ padding: "20px 22px" }}>
-        {/* Funnel bars — draggable */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {stages.map((stage, i) => {
-            const pct = (stage.value / maxVal) * 100;
-            return (
-              <div
-                key={stage.label}
-                draggable
-                onDragStart={() => handleDragStart(i)}
-                onDragEnter={() => handleDragEnter(i)}
-                onDragEnd={handleDragEnd}
-                onDragOver={(e) => e.preventDefault()}
-                style={{
-                  display: "flex", alignItems: "center", gap: 14, cursor: "grab",
-                  opacity: draggingIdx === i ? 0.4 : 1,
-                  transition: "opacity 0.15s, transform 0.15s",
-                  transform: draggingIdx === i ? "scale(0.98)" : "scale(1)",
-                  borderRadius: 6, padding: "2px 0",
-                }}
-              >
-                <div style={{ width: 130, flexShrink: 0, textAlign: "right" }}>
-                  <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#94a3b8" }}>{stage.label}</div>
-                </div>
-                <div style={{ flex: 1, position: "relative" }}>
-                  <div style={{
-                    height: 28, borderRadius: 6, overflow: "hidden",
-                    background: "rgba(148,163,184,0.06)",
-                  }}>
-                    <div style={{
-                      height: "100%", width: `${pct}%`, borderRadius: 6,
-                      background: `linear-gradient(90deg, ${stage.color}22, ${stage.color}44)`,
-                      borderLeft: `3px solid ${stage.color}`,
-                      display: "flex", alignItems: "center", paddingLeft: 10,
-                      transition: "width 0.5s ease",
-                      minWidth: 60,
-                    }}>
-                      <span style={{
-                        fontSize: "0.78rem", fontWeight: 700, color: stage.color,
-                        fontFamily: "'SF Mono', Consolas, monospace",
-                        whiteSpace: "nowrap",
-                      }}>
-                        ${(stage.value / 1000).toFixed(1)}K
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div style={{ width: 70, flexShrink: 0, textAlign: "right" }}>
-                  <span style={{
-                    fontSize: "0.72rem", fontWeight: 700, color: "#64748b",
-                    fontFamily: "'SF Mono', Consolas, monospace",
-                  }}>
-                    {stage.count} claims
-                  </span>
-                </div>
-                {i < stages.length - 1 && i !== 3 && (
-                  <div style={{ width: 40, flexShrink: 0, textAlign: "center" }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3d3f4a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                  </div>
-                )}
-                {(i === 3 || i === stages.length - 1) && <div style={{ width: 40, flexShrink: 0 }} />}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Summary row */}
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          marginTop: 18, paddingTop: 16, borderTop: "1px solid rgba(99,102,241,0.1)",
-          flexWrap: "wrap", gap: 12,
-        }}>
-          <div style={{ display: "flex", gap: 24 }}>
-            <div>
-              <div style={{ fontSize: "0.68rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Collection Rate</div>
-              <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#22c55e" }}>79.1%</div>
-            </div>
-            <div>
-              <div style={{ fontSize: "0.68rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Denial Rate</div>
-              <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#ef4444" }}>3.5%</div>
-            </div>
-            <div>
-              <div style={{ fontSize: "0.68rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Avg. Days to Pay</div>
-              <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#818cf8" }}>18</div>
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: 24 }}>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: "0.68rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Outstanding A/R</div>
-              <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#f59e0b" }}>$101.8K</div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: "0.68rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>Net Collected</div>
-              <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#22c55e" }}>$462.2K</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function TimelineRangePicker({
   startIdx,
   endIdx,
@@ -538,6 +391,7 @@ export default function InsightsPage() {
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main
         className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""} dz-snap-container`}
+        style={{ padding: "32px 36px" }}
       >
         {/* ── Screen 1: Dashboard ── */}
         <section className="dz-snap-section">
@@ -717,10 +571,6 @@ export default function InsightsPage() {
         </div>
         </section>
 
-        {/* ── Screen 2: Cash Pipeline ── */}
-        <section className="dz-snap-section dz-snap-pipeline">
-          <CashPipeline />
-        </section>
       </main>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 
@@ -155,6 +155,24 @@ const STEP_INFO: Record<Step, { fullTitle: string; description: string; whatHapp
     ],
   },
 };
+
+// ── Cash Pipeline Data ──────────────────────────────────────────────
+const CASH_PIPELINE_STAGES = [
+  { label: "Charges Billed", value: 482600, color: "#6366f1" },
+  { label: "Claims Submitted", value: 468200, color: "#a78bfa" },
+  { label: "In Review", value: 124500, color: "#f59e0b" },
+  { label: "Paid", value: 312400, color: "#22c55e" },
+  { label: "Denied", value: 31300, color: "#ef4444" },
+  { label: "Patient Balance", value: 38700, color: "#22d3ee" },
+];
+
+const CASH_PIPELINE_STATS = [
+  { label: "Collection Rate", value: "94.2%", color: "#22c55e" },
+  { label: "Denial Rate", value: "4.2%", color: "#ef4444" },
+  { label: "Avg Days to Pay", value: "32", color: "#a78bfa" },
+  { label: "Outstanding A/R", value: "$163,200", color: "#f59e0b" },
+  { label: "Net Collected", value: "$312,400", color: "#6366f1" },
+];
 
 const INITIAL_CLAIMS: Claim[] = [
   { id: 1, patient: "James Kim", procedure: "ACL Reconstruction", cpt: "29888", amount: "$8,450.00", payer: "Aetna", payerColor: "#7b2d8e", payerInitial: "A", payerDomain: "aetna.com", step: 1 },
@@ -400,6 +418,71 @@ export default function RcmPage() {
             );
           })}
         </div>
+
+        {/* ── Cash Pipeline ── */}
+        <section style={{ marginTop: 36 }}>
+          <div style={{ marginBottom: 20 }}>
+            <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f1f5f9", margin: 0 }}>Cash Pipeline</h2>
+            <p style={{ fontSize: "0.78rem", color: "#64748b", margin: "4px 0 0" }}>Track revenue as it flows through each stage of the billing cycle</p>
+          </div>
+
+          {/* Funnel stages */}
+          <div style={{ display: "flex", gap: 2, marginBottom: 20, alignItems: "flex-end" }}>
+            {CASH_PIPELINE_STAGES.map((stage, i) => {
+              const maxVal = Math.max(...CASH_PIPELINE_STAGES.map(s => s.value));
+              const heightPct = Math.max(30, (stage.value / maxVal) * 100);
+              return (
+                <div key={stage.label} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: "0.92rem", fontWeight: 700, color: stage.color }}>
+                    ${(stage.value / 1000).toFixed(stage.value >= 100000 ? 0 : 1)}k
+                  </span>
+                  <div
+                    style={{
+                      width: "100%",
+                      height: `${heightPct}px`,
+                      background: `linear-gradient(180deg, ${stage.color}40 0%, ${stage.color}15 100%)`,
+                      borderTop: `3px solid ${stage.color}`,
+                      borderRadius: "4px 4px 0 0",
+                      position: "relative",
+                      minHeight: 30,
+                    }}
+                  />
+                  {i < CASH_PIPELINE_STAGES.length - 1 && (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", right: -10, top: "50%", display: "none" }}>
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  )}
+                  <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "#94a3b8", textAlign: "center", lineHeight: 1.2 }}>
+                    {stage.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Summary stats */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
+            {CASH_PIPELINE_STATS.map(stat => (
+              <div
+                key={stat.label}
+                style={{
+                  background: "rgba(30, 30, 45, 0.6)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: 10,
+                  padding: "16px 14px",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ fontSize: "0.66rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "#5a5a6e", marginBottom: 6 }}>
+                  {stat.label}
+                </div>
+                <div style={{ fontSize: "1.3rem", fontWeight: 800, color: stat.color }}>
+                  {stat.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Info Modal */}
         {infoStep && (

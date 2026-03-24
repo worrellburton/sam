@@ -4,6 +4,7 @@ import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { PATIENTS, type Patient } from "~/data/patients";
 import { useCrosshairFocus, CrosshairToggle } from "~/hooks/useCrosshairFocus";
+import { getCodeDescription } from "~/data/medical-codes";
 
 export function meta() {
   return [{ title: "Appointments | DocZoc" }];
@@ -126,16 +127,6 @@ export default function AppointmentsPage() {
               <p>{upcomingCount} upcoming · {pastCount} past</p>
             </div>
           </div>
-          <div style={{
-            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-            background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 260,
-          }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search appointments..." style={{
-              background: "transparent", border: "none", outline: "none", width: "100%",
-              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
-            }} />
-          </div>
         </div>
 
         {/* Controls — single row */}
@@ -174,6 +165,20 @@ export default function AppointmentsPage() {
             </button>
           </div>
           {view === "table" && <CrosshairToggle active={focusMode} onClick={toggleFocus} />}
+        </div>
+
+        {/* Search bar — full width */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+            background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
+          }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search appointments..." style={{
+              background: "transparent", border: "none", outline: "none", width: "100%",
+              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+            }} />
+          </div>
         </div>
 
         {/* Table View */}
@@ -223,7 +228,7 @@ export default function AppointmentsPage() {
                         <td>
                           <div style={{ display: "flex", gap: 3 }}>
                             {a.codes.slice(0, 2).map(c => (
-                              <span key={c} style={{
+                              <span key={c} title={getCodeDescription(c)} style={{
                                 fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
                                 padding: "1px 6px", borderRadius: 4, fontWeight: 600,
                                 background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
@@ -303,7 +308,7 @@ export default function AppointmentsPage() {
                   </Link>
                   <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
                     {a.codes.slice(0, 2).map(c => (
-                      <span key={c} style={{
+                      <span key={c} title={getCodeDescription(c)} style={{
                         fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
                         padding: "2px 6px", borderRadius: 4, fontWeight: 600,
                         background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",

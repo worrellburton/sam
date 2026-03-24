@@ -106,6 +106,7 @@ export default function HomePage() {
   const now = new Date();
   const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
   const [sectionOrder, setSectionOrder] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]);
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
@@ -448,7 +449,18 @@ export default function HomePage() {
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
                   <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
                 </div>
-                28-year-old male presenting for ACL injury follow-up. MRI confirmed complete tear of left ACL. Scheduled for reconstruction consultation. No prior surgical history.
+                28-year-old male presenting for ACL injury follow-up. MRI confirmed complete tear of left ACL with associated lateral meniscus involvement. Physical exam reveals positive Lachman and anterior drawer tests. Patient reports instability during lateral movements and inability to return to sports. Conservative management with bracing and PT x 8 weeks showed minimal improvement. Scheduled for reconstruction consultation — recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
+              </div>
+              <div style={{
+                display: "flex", alignItems: "center", gap: 8, marginTop: 10,
+                padding: "8px 12px", borderRadius: 8,
+                background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.12)",
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#f87171" }}>Starts in 25 minutes</span>
+                <span style={{ fontSize: "0.65rem", color: "var(--dz-text-dim)", marginLeft: 4 }}>(9:30 AM)</span>
               </div>
             </div>
 
@@ -491,7 +503,7 @@ export default function HomePage() {
             })}
           </div>
         </div>,
-    /* Section 7: Today's Schedule + Quick Stats */
+    /* Section 7: Upcoming Schedule + Quick Stats */
     <div key={7} style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
       {/* Quick Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
@@ -508,30 +520,46 @@ export default function HomePage() {
           </div>
         ))}
       </div>
-      {/* Today's Schedule table */}
+      {/* Upcoming Schedule table */}
       <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
         <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Today's Schedule</span>
+          <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Schedule</span>
         </div>
         <div className="dz-table-wrap">
           <table className="dz-table" style={{ margin: 0 }}>
-            <thead><tr><th>Time</th><th>Patient</th><th>Procedure</th><th>Status</th></tr></thead>
+            <thead><tr><th>Time</th><th>In</th><th>Patient</th><th>Type / Procedure</th><th>Summary Notes</th></tr></thead>
             <tbody>
-              {[
-                { name: "Sarah Mitchell", type: "Follow-up — Shoulder", time: "9:00 AM", status: "Confirmed" },
-                { name: "James Kim", type: "New Patient — Knee", time: "9:30 AM", status: "New" },
-                { name: "Maria Lopez", type: "Post-Op — ACL", time: "10:15 AM", status: "Confirmed" },
-                { name: "David Ross", type: "Consultation — Hip", time: "11:00 AM", status: "Pending" },
-                { name: "Emily Chen", type: "Follow-up — Wrist", time: "1:00 PM", status: "Confirmed" },
-                { name: "Michael Brown", type: "Sports Injury — Ankle", time: "2:30 PM", status: "New" },
-              ].map(p => (
-                <tr key={p.name}>
-                  <td style={{ fontWeight: 600, fontSize: "0.78rem" }}>{p.time}</td>
-                  <td style={{ fontWeight: 600, fontSize: "0.78rem" }}>{p.name}</td>
-                  <td style={{ fontSize: "0.78rem" }}>{p.type}</td>
-                  <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
-                </tr>
-              ))}
+              {(() => {
+                const scheduleRows = [
+                  { name: "Sarah Mitchell", type: "Follow-up — Shoulder", time: "9:00 AM", minutesUntil: 25, notes: "6-week post-op check, ROM assessment", overview: "Patient is 6 weeks post arthroscopic shoulder surgery (rotator cuff repair). Presenting for routine follow-up to assess range of motion, pain levels, and progress with physical therapy. Previous visit noted good healing with mild stiffness." },
+                  { name: "James Kim", type: "New Patient — Knee", time: "9:30 AM", minutesUntil: 55, notes: "Initial eval, MRI review", overview: "New patient referral from Dr. Patel for right knee pain persisting 3 months after a basketball injury. MRI results available for review showing possible meniscal tear. Patient reports intermittent locking and swelling." },
+                  { name: "Maria Lopez", type: "Post-Op — ACL Reconstruction", time: "10:15 AM", minutesUntil: 100, notes: "2-week post-op, suture removal", overview: "2-week follow-up after left ACL reconstruction using patellar tendon autograft. Scheduled for suture removal and wound check. Patient to begin supervised physical therapy next week. No complications reported at discharge." },
+                  { name: "David Ross", type: "Consultation — Hip", time: "11:00 AM", minutesUntil: 145, notes: "Hip replacement candidacy eval", overview: "62-year-old male presenting for total hip replacement consultation. Chronic right hip osteoarthritis with failed conservative management (PT, cortisone injections x3). X-rays show significant joint space narrowing. Discuss surgical options and timeline." },
+                  { name: "Emily Chen", type: "Follow-up — Wrist Fracture", time: "1:00 PM", minutesUntil: 265, notes: "Cast removal, X-ray review", overview: "8-week follow-up for distal radius fracture (non-displaced). Scheduled for cast removal and repeat X-ray to confirm bone healing. If healed, will transition to removable splint and begin gentle ROM exercises." },
+                  { name: "Michael Brown", type: "Sports Injury — Ankle Sprain", time: "2:30 PM", minutesUntil: 355, notes: "Grade II sprain, rehab progress", overview: "28-year-old athlete with grade II lateral ankle sprain sustained during soccer 4 weeks ago. Returning to assess ligament stability and rehab progress. Goal is to clear for gradual return to sport. May need bracing recommendation." },
+                ];
+                return scheduleRows.map((p, idx) => (
+                  <>
+                    <tr key={p.name} onClick={() => setExpandedRow(expandedRow === idx ? null : idx)} style={{ cursor: "pointer", transition: "background 0.15s" }}>
+                      <td style={{ fontWeight: 600, fontSize: "0.78rem" }}>{p.time}</td>
+                      <td style={{ fontSize: "0.78rem", color: p.minutesUntil <= 30 ? "#ef4444" : p.minutesUntil <= 60 ? "#f59e0b" : "#64748b", fontWeight: p.minutesUntil <= 60 ? 700 : 500 }}>{p.minutesUntil < 60 ? `${p.minutesUntil}m` : `${Math.floor(p.minutesUntil / 60)}h ${p.minutesUntil % 60}m`}</td>
+                      <td style={{ fontWeight: 600, fontSize: "0.78rem" }}>{p.name}</td>
+                      <td style={{ fontSize: "0.78rem" }}>{p.type}</td>
+                      <td style={{ fontSize: "0.75rem", color: "#64748b", maxWidth: 200, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.notes}</td>
+                    </tr>
+                    {expandedRow === idx && (
+                      <tr key={`${p.name}-detail`}>
+                        <td colSpan={5} style={{ padding: "12px 18px", background: "rgba(99,102,241,0.04)", borderTop: "none" }}>
+                          <div style={{ fontSize: "0.78rem", color: "var(--dz-text-primary)", lineHeight: 1.6 }}>
+                            <strong style={{ color: "#6366f1", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.03em" }}>Appointment Overview</strong>
+                            <p style={{ margin: "6px 0 0" }}>{p.overview}</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                ));
+              })()}
             </tbody>
           </table>
         </div>

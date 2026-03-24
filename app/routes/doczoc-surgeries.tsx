@@ -136,28 +136,16 @@ export default function SurgeriesPage() {
                   <p>{completedCount} completed · {upcomingCount + preOpCount} upcoming</p>
                 </div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-                  background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 260,
+              {subPage === "database" && (
+                <button onClick={() => setShowAddForm(!showAddForm)} style={{
+                  padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer",
+                  background: "linear-gradient(135deg, #ef4444, #a855f7)", color: "#fff",
+                  fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 5,
                 }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search surgeries..." style={{
-                    background: "transparent", border: "none", outline: "none", width: "100%",
-                    fontSize: "0.78rem", color: "var(--dz-text-secondary)",
-                  }} />
-                </div>
-                {subPage === "database" && (
-                  <button onClick={() => setShowAddForm(!showAddForm)} style={{
-                    padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer",
-                    background: "linear-gradient(135deg, #ef4444, #a855f7)", color: "#fff",
-                    fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 5,
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    Add Surgery
-                  </button>
-                )}
-              </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Surgery
+                </button>
+              )}
             </div>
 
             {/* 3-Tab Navigation */}
@@ -200,25 +188,36 @@ export default function SurgeriesPage() {
                   color: subPage === "database" ? "#c084fc" : "var(--dz-text-dim, #475569)",
                 }}>{allSurgeries.length}</span>
               </button>
-              <div style={{ flex: 1 }} />
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                <CrosshairToggle active={focusMode} onClick={() => setFocusMode(f => !f)} />
-                <div style={{ display: "flex", gap: 0 }}>
-                  <button onClick={() => setView("table")} style={{
-                    padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
-                    background: view === "table" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-                    color: view === "table" ? "var(--dz-accent)" : "var(--dz-text-dim)",
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                  </button>
-                  <button onClick={() => setView("list")} style={{
-                    padding: "6px 8px", borderRadius: "0 6px 6px 0", border: "none", cursor: "pointer",
-                    background: view === "list" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-                    color: view === "list" ? "var(--dz-accent)" : "var(--dz-text-dim)",
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                  </button>
-                </div>
+            </div>
+
+            {/* Search + view controls row */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+              <div style={{
+                display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+                background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
+              }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search surgeries..." style={{
+                  background: "transparent", border: "none", outline: "none", width: "100%",
+                  fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+                }} />
+              </div>
+              <CrosshairToggle active={focusMode} onClick={() => setFocusMode(f => !f)} />
+              <div style={{ display: "flex", gap: 0 }}>
+                <button onClick={() => setView("table")} style={{
+                  padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
+                  background: view === "table" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
+                  color: view === "table" ? "var(--dz-accent)" : "var(--dz-text-dim)",
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <button onClick={() => setView("list")} style={{
+                  padding: "6px 8px", borderRadius: "0 6px 6px 0", border: "none", cursor: "pointer",
+                  background: view === "list" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
+                  color: view === "list" ? "var(--dz-accent)" : "var(--dz-text-dim)",
+                }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                </button>
               </div>
             </div>
 
@@ -295,7 +294,10 @@ export default function SurgeriesPage() {
                           </span>
                           <span style={{ fontSize: "0.75rem", color: "#818cf8", fontWeight: 600 }}>{s.date}</span>
                         </div>
-                        <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 4 }}>{s.type}</div>
+                        <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+                          {(() => { const pm = getProcedureIcon(s.type); return pm ? <div style={{ width: 26, height: 26, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", background: `${pm.color}15`, color: pm.color, flexShrink: 0 }}>{pm.icon}</div> : null; })()}
+                          {stripSurgeryPrefix(s.type)}
+                        </div>
                         <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: 8 }}>{s.patient.name}</div>
                         <div style={{ fontSize: "0.75rem", color: "#64748b", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                           {s.notes}
@@ -303,7 +305,7 @@ export default function SurgeriesPage() {
                         {s.codes.length > 0 && (
                           <div style={{ display: "flex", gap: 4, marginTop: 8 }}>
                             {s.codes.slice(0, 3).map(c => (
-                              <span key={c} style={{
+                              <span key={c} title={getCodeDescription(c)} style={{
                                 fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
                                 padding: "2px 6px", borderRadius: 4, fontWeight: 600,
                                 background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
@@ -339,6 +341,16 @@ const PROCEDURES = [
   { name: "Spinal Fusion", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><rect x="9" y="9" width="6" height="4" rx="1"/><rect x="9" y="16" width="6" height="4" rx="1"/><line x1="12" y1="6" x2="12" y2="9"/><line x1="12" y1="13" x2="12" y2="16"/><line x1="7" y1="11" x2="9" y2="11"/><line x1="15" y1="11" x2="17" y2="11"/></svg>, color: "#a855f7", desc: "Vertebrae fusion to stabilize the spine" },
   { name: "Fracture Fixation (ORIF)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20L10 4"/><path d="M14 20L20 4"/><line x1="7" y1="12" x2="17" y2="12"/><circle cx="7" cy="12" r="1.5"/><circle cx="17" cy="12" r="1.5"/></svg>, color: "#14b8a6", desc: "Open reduction and internal fixation of broken bones" },
 ];
+
+function getProcedureIcon(type: string): { icon: React.ReactNode; color: string } | null {
+  const normalized = type.replace(/^Surgery\s*[—–-]\s*/i, "").toLowerCase();
+  const match = PROCEDURES.find(p => normalized.includes(p.name.toLowerCase()) || p.name.toLowerCase().includes(normalized));
+  return match ? { icon: match.icon, color: match.color } : null;
+}
+
+function stripSurgeryPrefix(type: string): string {
+  return type.replace(/^Surgery\s*[—–-]\s*/i, "");
+}
 
 function getProcedureStats(name: string, allSurgeries: SurgeryRecord[]) {
   const keywords = name.toLowerCase().split(/\s+/);
@@ -511,7 +523,7 @@ function ProcedureDetail({ procedureName, allSurgeries, onBack }: { procedureNam
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{s.patient.name}</div>
-                    <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)" }}>{s.type} · {s.date}</div>
+                    <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)" }}>{stripSurgeryPrefix(s.type)} · {s.date}</div>
                   </div>
                   <span style={{ fontSize: "0.65rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: `${sc}18`, color: sc, textTransform: "capitalize" }}>
                     {s.status.replace("-", " ")}
@@ -557,7 +569,10 @@ function SurgeryDetailView({ surgery, onBack }: { surgery: SurgeryRecord; onBack
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={statusColor} strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             </div>
             <div>
-              <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f1f5f9", margin: 0 }}>{s.type}</h2>
+              <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f1f5f9", margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
+                {(() => { const pm = getProcedureIcon(s.type); return pm ? <div style={{ width: 30, height: 30, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", background: `${pm.color}15`, color: pm.color, flexShrink: 0 }}>{pm.icon}</div> : null; })()}
+                {stripSurgeryPrefix(s.type)}
+              </h2>
               <p style={{ fontSize: "0.82rem", color: "#94a3b8", margin: 0 }}>{s.date}</p>
             </div>
           </div>
@@ -791,7 +806,15 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: sc }} />{s.status.replace("-", " ")}
         </span></td>
       );
-      case "procedure": return <td key={key} {...h} style={{ fontWeight: 600, fontSize: "0.82rem", ...cs, transition: "opacity 0.2s ease" }}>{s.type}</td>;
+      case "procedure": {
+        const procMatch = getProcedureIcon(s.type);
+        return <td key={key} {...h} style={{ fontWeight: 600, fontSize: "0.82rem", ...cs, transition: "opacity 0.2s ease" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {procMatch && <div style={{ width: 26, height: 26, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", background: `${procMatch.color}15`, color: procMatch.color, flexShrink: 0 }}>{procMatch.icon}</div>}
+            {stripSurgeryPrefix(s.type)}
+          </div>
+        </td>;
+      }
       case "patient": return (
         <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}>
           <Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>

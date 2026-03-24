@@ -440,7 +440,18 @@ export default function DashboardPage() {
               </svg>
               <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
             </div>
-            28-year-old male presenting for ACL injury follow-up. MRI confirmed complete tear of left ACL. Scheduled for reconstruction consultation. No prior surgical history.
+            28-year-old male presenting for ACL injury follow-up. MRI confirmed complete tear of left ACL with associated lateral meniscus involvement. Physical exam reveals positive Lachman and anterior drawer tests. Patient reports instability during lateral movements and inability to return to sports. Conservative management with bracing and PT x 8 weeks showed minimal improvement. Scheduled for reconstruction consultation — recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
+          </div>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 8, marginTop: 10,
+            padding: "8px 12px", borderRadius: 8,
+            background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.12)",
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#f87171" }}>Starts in 25 minutes</span>
+            <span style={{ fontSize: "0.65rem", color: "var(--dz-text-dim)", marginLeft: 4 }}>(9:30 AM)</span>
           </div>
         </div>
 

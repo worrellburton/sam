@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { Link } from "react-router";
 import { Sidebar, useDzPrefs, AiSummaryExpand } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
@@ -11,6 +11,137 @@ export function meta() {
 function parseDateLoose(s: string) {
   const d = new Date(s);
   return isNaN(d.getTime()) ? new Date() : d;
+}
+
+// ── Google Reviews ──────────────────────────────────────────────────
+const GOOGLE_PLACE_ID = "ChIJOwg_06VPwokRYv534QaPC8g"; // Dr. Elguizaoui's practice
+const GOOGLE_API_KEY = typeof window !== "undefined" ? (window as any).__GOOGLE_PLACES_API_KEY ?? "" : "";
+
+type GoogleReview = {
+  author_name: string;
+  rating: number;
+  text: string;
+  relative_time_description: string;
+  time: number;
+  profile_photo_url?: string;
+};
+
+function useGoogleReviews() {
+  const [reviews, setReviews] = useState<GoogleReview[]>([]);
+  const [rating, setRating] = useState<number>(4.9);
+  const [totalReviews, setTotalReviews] = useState<number>(127);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!GOOGLE_API_KEY) {
+      // Use demo data when no API key is configured
+      setReviews(DEMO_REVIEWS);
+      return;
+    }
+
+    setLoading(true);
+    // Google Places API - Details request with reviews field
+    fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${GOOGLE_PLACE_ID}&fields=rating,user_ratings_total,reviews&key=${GOOGLE_API_KEY}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.result) {
+          setRating(data.result.rating ?? 4.9);
+          setTotalReviews(data.result.user_ratings_total ?? 127);
+          setReviews(data.result.reviews ?? []);
+        }
+      })
+      .catch(() => {
+        setError("Failed to fetch reviews");
+        setReviews(DEMO_REVIEWS);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { reviews, rating, totalReviews, loading, error };
+}
+
+const DEMO_REVIEWS: GoogleReview[] = [
+  {
+    author_name: "Jennifer M.",
+    rating: 5,
+    text: "Dr. Elguizaoui is an exceptional surgeon. He repaired my torn ACL and I was back on my feet faster than expected. His entire team was caring and professional throughout the process.",
+    relative_time_description: "2 days ago",
+    time: Date.now() / 1000 - 172800,
+  },
+  {
+    author_name: "Robert K.",
+    rating: 5,
+    text: "Best orthopedic experience I've had. Dr. Elguizaoui took the time to explain everything about my shoulder surgery options. Highly recommend!",
+    relative_time_description: "a week ago",
+    time: Date.now() / 1000 - 604800,
+  },
+  {
+    author_name: "Patricia S.",
+    rating: 4,
+    text: "Very knowledgeable doctor. The wait time was a bit long but the care was worth it. My knee replacement went smoothly.",
+    relative_time_description: "2 weeks ago",
+    time: Date.now() / 1000 - 1209600,
+  },
+];
+
+function StarRating({ rating, size = 10 }: { rating: number; size?: number }) {
+  return (
+    <div style={{ display: "flex", gap: 1 }}>
+      {[1, 2, 3, 4, 5].map(i => (
+        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= rating ? "#fbbf24" : "none"} stroke="#fbbf24" strokeWidth="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+function GoogleReviewCard() {
+  const { reviews, rating, totalReviews } = useGoogleReviews();
+  const newest = reviews[0];
+
+  return (
+    <div className="dz-card" style={{ padding: "16px 18px", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>Google Reviews</span>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4 }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#fbbf24" }}>{rating}</span>
+          <StarRating rating={Math.round(rating)} size={9} />
+        </div>
+      </div>
+      <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f59e0b", margin: "0 0 2px" }}>{totalReviews} <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#94a3b8" }}>reviews</span></div>
+      {newest && (
+        <div style={{
+          marginTop: 6, padding: "8px 10px", borderRadius: 8,
+          background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
+          border: "1px solid rgba(148,163,184,0.06)",
+          flex: 1,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+            <div style={{
+              width: 18, height: 18, borderRadius: "50%", background: "rgba(251,191,36,0.15)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "0.5rem", fontWeight: 700, color: "#fbbf24", flexShrink: 0,
+            }}>{newest.author_name.charAt(0)}</div>
+            <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--dz-text-primary)" }}>{newest.author_name}</span>
+            <StarRating rating={newest.rating} size={8} />
+            <span style={{ fontSize: "0.6rem", color: "var(--dz-text-muted)", marginLeft: "auto" }}>{newest.relative_time_description}</span>
+          </div>
+          <div style={{
+            fontSize: "0.68rem", color: "var(--dz-text-muted)", lineHeight: 1.4,
+            overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as any,
+          }}>{newest.text}</div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ── Data helpers ─────────────────────────────────────────────────────
@@ -426,7 +557,15 @@ export default function HomePage() {
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Next Patient</span>
-                <span style={{ marginLeft: "auto", fontSize: "0.68rem", fontWeight: 600, padding: "2px 8px", borderRadius: 10, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>9:30 AM</span>
+                <span style={{
+                  marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 4,
+                  fontSize: "0.65rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
+                  background: "rgba(99,102,241,0.1)", color: "#818cf8",
+                }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+                  Appointment
+                </span>
+                <span style={{ fontSize: "0.68rem", fontWeight: 600, padding: "2px 8px", borderRadius: 10, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>9:30 AM</span>
               </div>
               <Link to="/doczoc/patients/2" style={{ textDecoration: "none" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
@@ -514,7 +653,6 @@ export default function HomePage() {
           { label: "Today's Appointments", value: String(data.upcomingAppts.filter(a => { const d = new Date(a.date); const t = new Date(); return d.toDateString() === t.toDateString(); }).length || 6), change: "+3", color: "#6366f1" },
           { label: "New Patients (Week)", value: String(data.newPatients?.length ?? 4), change: "+5", color: "#22c55e" },
           { label: "Show Rate", value: "96%", change: "+2%", color: "#a78bfa" },
-          { label: "Pending Reviews", value: "7", change: "-2", color: "#f59e0b" },
         ].map(s => (
           <div key={s.label} className="dz-card" style={{ padding: "16px 18px" }}>
             <div style={{ fontSize: "0.68rem", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>{s.label}</div>
@@ -522,6 +660,7 @@ export default function HomePage() {
             <div style={{ fontSize: "0.72rem", color: "#22c55e" }}>{s.change} from last week</div>
           </div>
         ))}
+        <GoogleReviewCard />
       </div>
       {/* Upcoming Schedule table */}
       <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>

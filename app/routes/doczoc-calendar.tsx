@@ -46,10 +46,12 @@ function getAppts(date: Date, locId?: string) {
   const seed = (d * 7 + m * 13 + y + locSeed) % 30;
   if (seed % 2 === 0) return [];
   const count = seed > 20 ? 3 : seed > 12 ? 2 : 1;
+  const LOC_LABELS = ['Upper East Side', 'West Village', 'Brooklyn'];
   return Array.from({ length: count }, (_, i) => ({
     type: APPT_TYPES[(seed + i * 3) % APPT_TYPES.length],
     time: `${8 + ((seed + i * 2) % 9)}:${i % 2 === 0 ? '00' : '30'} AM`,
     patient: ['Sarah M.', 'James K.', 'Maria L.', 'David R.', 'Emily C.', 'Michael B.'][(seed + i) % 6],
+    location: LOC_LABELS[(seed + i) % LOC_LABELS.length],
   }));
 }
 
@@ -302,12 +304,13 @@ export default function CalendarPage() {
                   </div>
                 </div>
 
-                {/* Day timeline */}
-                <div style={{ position: "relative", marginTop: 8 }}>
+                {/* Day timeline — fills available viewport height */}
+                <div style={{ display: "flex", flexDirection: "column", marginTop: 8, height: "calc(100vh - 220px)" }}>
                   {DAY_HOURS.map(hour => {
                     const hourAppts = [...selectedAppts, ...userAppts.map(a => {
                       const typeObj = APPT_TYPES.find(t => t.label === a.type) || APPT_TYPES[0];
-                      return { patient: a.patient, time: a.time, type: typeObj };
+                      const locLabel = locations.find(l => l.id === a.location)?.label;
+                      return { patient: a.patient, time: a.time, type: typeObj, location: locLabel };
                     })].filter(a => {
                       const h = parseInt(a.time);
                       const isPM = a.time.includes("PM");
@@ -317,7 +320,7 @@ export default function CalendarPage() {
 
                     return (
                       <div key={hour} style={{
-                        display: "flex", alignItems: "stretch", minHeight: 52,
+                        display: "flex", alignItems: "stretch", flex: 1,
                         borderBottom: "1px solid rgba(148,163,184,0.06)",
                       }}>
                         <div style={{
@@ -343,7 +346,10 @@ export default function CalendarPage() {
                               </div>
                               <div>
                                 <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{a.patient}</div>
-                                <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)" }}>{a.time} &middot; {a.type.label}</div>
+                                <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)" }}>
+                                  {a.time} &middot; {a.type.label}
+                                  {"location" in a && a.location && <> &middot; <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ display: "inline", verticalAlign: "middle", marginRight: 2 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>{a.location}</>}
+                                </div>
                               </div>
                             </div>
                           ))}
@@ -387,6 +393,10 @@ export default function CalendarPage() {
                         <div>
                           <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{a.patient}</div>
                           <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)" }}>{a.time} &middot; {a.type.label}</div>
+                          {a.location && <div style={{ fontSize: "0.62rem", color: "var(--dz-text-dim, #475569)", display: "flex", alignItems: "center", gap: 3, marginTop: 1 }}>
+                            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            {a.location}
+                          </div>}
                         </div>
                       </div>
                     ))}

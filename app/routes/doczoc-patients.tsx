@@ -177,7 +177,9 @@ export default function PatientsPage() {
         </div>
 
         {view === "table" ? (
-          <DraggablePatientTable patients={filtered} onRowClick={(id) => navigate(`/doczoc/patients/${id}`)} externalFocusMode={tableFocusMode} />
+          <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+            <DraggablePatientTable patients={filtered} onRowClick={(id) => navigate(`/doczoc/patients/${id}`)} externalFocusMode={tableFocusMode} />
+          </div>
         ) : (
           <div className="dz-patients-grid">
             {filtered.map((p) => (

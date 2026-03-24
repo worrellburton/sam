@@ -138,10 +138,11 @@ export default function AppointmentsPage() {
 
   const newCount = appointments.filter(a => !a.isPast && (a.type.toLowerCase().includes("new patient") || a.type.toLowerCase().includes("initial consultation") || a.type.toLowerCase().includes("consultation"))).length;
 
-  // Unique procedure types for type filter
+  // Unique procedure types for type filter (exclude surgery types — those belong on Surgeries page)
   const procedureTypes = useMemo(() => {
     const types = new Map<string, number>();
     for (const a of appointments) {
+      if (a.type.toLowerCase().startsWith("surgery")) continue;
       const t = a.type;
       types.set(t, (types.get(t) || 0) + 1);
     }
@@ -242,9 +243,8 @@ export default function AppointmentsPage() {
           </button>
         </div>
 
-        {/* Search bar — full width (hidden in type catalog mode without typeFilter) */}
-        {(filter !== "type" || typeFilter) && (
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+        {/* Search bar — always visible */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
             <div style={{
               display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
               background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
@@ -269,7 +269,6 @@ export default function AppointmentsPage() {
               </button>
             </div>
           </div>
-        )}
 
         {/* Type Catalog View — shows appointment types, not individual appointments */}
         {filter === "type" && !typeFilter ? (
@@ -279,7 +278,7 @@ export default function AppointmentsPage() {
                 <table className="dz-table" style={{ margin: 0, width: "100%" }}>
                   <thead>
                     <tr>
-                      <th style={{ textAlign: "left" }}>Appointment Type</th>
+                      <th style={{ textAlign: "left" }}>Procedure</th>
                       <th style={{ textAlign: "center" }}>Total</th>
                       <th style={{ textAlign: "center" }}>Upcoming</th>
                       <th style={{ textAlign: "center" }}>Completed</th>

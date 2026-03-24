@@ -80,31 +80,20 @@ export default function CalendarPage() {
             <p>{MONTHS[month]} {year}</p>
           </div>
           <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <button
-              className="dz-add-btn"
-              onClick={() => setPanelOpen(!panelOpen)}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09"/>
-              </svg>
-              Set Up Calendar
-            </button>
           </div>
         </header>
 
         <div style={{ position: "relative" }}>
           {/* Calendar grid */}
           <div className="dz-cal-main" style={{ flex: 1 }}>
-            <div className="dz-cal-header">
-              <h2>{MONTHS[month]} {year}</h2>
-              <div className="dz-cal-nav">
-                <button className="dz-cal-btn" onClick={prevMonth}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <button className="dz-cal-btn" onClick={nextMonth}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-              </div>
+            <div className="dz-cal-header" style={{ justifyContent: "center", gap: 16 }}>
+              <button className="dz-cal-btn" onClick={prevMonth}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <h2 style={{ minWidth: 200, textAlign: "center" }}>{MONTHS[month]} {year}</h2>
+              <button className="dz-cal-btn" onClick={nextMonth}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
             </div>
 
             <div className="dz-cal-row dz-cal-day-headers">

@@ -7,9 +7,18 @@ export function meta() {
   return [{ title: "In-Person | DocZoc" }];
 }
 
-type Tab = "appointments" | "surgeries" | "reports";
-type ApptFilter = "all" | "incoming" | "completed";
+type Tab = "upcoming" | "completed" | "procedures";
 type ViewMode = "table" | "grid";
+
+const PROCEDURE_TYPES = [
+  { label: "Surgery", color: "#ef4444", description: "Operative procedures including arthroscopy, arthroplasty, and reconstructions" },
+  { label: "Pre-Op Evaluation", color: "#94a3b8", description: "Pre-surgical assessment and medical clearance" },
+  { label: "Post-Op Follow-up", color: "#22c55e", description: "Post-operative recovery check at 2, 4, 6, 8, and 12 weeks" },
+  { label: "Physical Therapy Eval", color: "#3b82f6", description: "Rehab progress evaluation and therapy plan adjustment" },
+  { label: "New Patient Consultation", color: "#a78bfa", description: "First-time patient intake and diagnostic assessment" },
+  { label: "Initial Consultation", color: "#f59e0b", description: "Initial evaluation for referred or returning patients" },
+  { label: "Follow-up", color: "#34d399", description: "Routine follow-up for ongoing treatment plans" },
+];
 
 const APPOINTMENTS = [
   { id: 1, patient: "Sarah Mitchell", date: "Mar 25, 2026", time: "9:00 AM", type: "Post-Op Follow-up", location: "Manhattan", status: "Confirmed", notes: "8-week post-op rotator cuff repair", completed: false },
@@ -270,16 +279,13 @@ function OperativeReportBuilder() {
 export default function InPersonPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
-  const [tab, setTab] = useState<Tab>("appointments");
-  const [apptFilter, setApptFilter] = useState<ApptFilter>("all");
+  const [tab, setTab] = useState<Tab>("upcoming");
   const [viewMode, setViewMode] = useState<ViewMode>("table");
   const now = useCountdown();
 
-  const incomingAppts = APPOINTMENTS.filter(a => !a.completed);
+  const upcomingAppts = APPOINTMENTS.filter(a => !a.completed);
   const completedAppts = APPOINTMENTS.filter(a => a.completed);
-  const filteredAppts = apptFilter === "incoming" ? incomingAppts
-    : apptFilter === "completed" ? completedAppts
-    : APPOINTMENTS;
+  const displayedAppts = tab === "upcoming" ? upcomingAppts : completedAppts;
 
   return (
     <div className="dz-platform">
@@ -288,61 +294,53 @@ export default function InPersonPage() {
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
         <header className="dz-platform-header">
           <div>
-            <h1>In-Person</h1>
-            <p>Appointments, surgeries, and operative reports</p>
+            <h1>Appointments</h1>
+            <p>Manage appointments and procedure types</p>
           </div>
           <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            {tab === "appointments" && (
-              <>
-                <AddButton label="New Appointment" to="/doczoc/calendar" />
-                <div className="dz-view-toggle">
-                  <button className={`dz-view-btn${viewMode === "table" ? " dz-view-active" : ""}`} onClick={() => setViewMode("table")} title="Table view">
-                    <TableIcon active={viewMode === "table"} />
-                  </button>
-                  <button className={`dz-view-btn${viewMode === "grid" ? " dz-view-active" : ""}`} onClick={() => setViewMode("grid")} title="Grid view">
-                    <GridIcon active={viewMode === "grid"} />
-                  </button>
-                </div>
-              </>
-            )}
-            {tab === "surgeries" && (
-              <AddButton label="New Surgery" to="/doczoc/calendar" />
+            {(tab === "upcoming" || tab === "completed") && (
+              <div className="dz-view-toggle">
+                <button className={`dz-view-btn${viewMode === "table" ? " dz-view-active" : ""}`} onClick={() => setViewMode("table")} title="Table view">
+                  <TableIcon active={viewMode === "table"} />
+                </button>
+                <button className={`dz-view-btn${viewMode === "grid" ? " dz-view-active" : ""}`} onClick={() => setViewMode("grid")} title="Grid view">
+                  <GridIcon active={viewMode === "grid"} />
+                </button>
+              </div>
             )}
           </div>
         </header>
 
-        {/* Tabs */}
+        {/* Tabs — Upcoming / Completed / Procedures */}
         <div style={{ marginBottom: 20 }}>
-          <div className="dz-insight-period-tabs" style={{ display: "inline-flex" }}>
-            <button className={`dz-insight-period-btn${tab === "appointments" ? " active" : ""}`} onClick={() => setTab("appointments")}>
-              Appointments<span className="dz-tab-count">{APPOINTMENTS.length}</span>
+          <div className="dz-insight-period-tabs" style={{ display: "inline-flex", alignItems: "center" }}>
+            <button className={`dz-insight-period-btn${tab === "upcoming" ? " active" : ""}`} onClick={() => setTab("upcoming")}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Upcoming<span className="dz-tab-count">{upcomingAppts.length}</span>
             </button>
-            <button className={`dz-insight-period-btn${tab === "surgeries" ? " active" : ""}`} onClick={() => setTab("surgeries")}>
-              Surgeries<span className="dz-tab-count">{SURGERIES.length}</span>
+            <button className={`dz-insight-period-btn${tab === "completed" ? " active" : ""}`} onClick={() => setTab("completed")}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Completed<span className="dz-tab-count">{completedAppts.length}</span>
             </button>
-            <button className={`dz-insight-period-btn${tab === "reports" ? " active" : ""}`} onClick={() => setTab("reports")}>
-              Reports
+            <button
+              className={`dz-insight-period-btn${tab === "procedures" ? " active" : ""}`}
+              onClick={() => setTab("procedures")}
+              style={{
+                border: "1px solid rgba(99,102,241,0.35)",
+                borderRadius: 8,
+                margin: "0 0 0 8px",
+                background: tab === "procedures" ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.06)",
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+              Procedures<span className="dz-tab-count">{PROCEDURE_TYPES.length}</span>
             </button>
           </div>
         </div>
 
-        {/* Appointments sub-filter */}
-        {tab === "appointments" && (
+        {/* Upcoming / Completed appointments */}
+        {(tab === "upcoming" || tab === "completed") && (
           <>
-            <div className="dz-sub-filter-bar">
-              <button className={`dz-sub-filter-btn${apptFilter === "all" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("all")}>
-                All <span className="dz-sub-filter-count">{APPOINTMENTS.length}</span>
-              </button>
-              <button className={`dz-sub-filter-btn${apptFilter === "incoming" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("incoming")}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Incoming <span className="dz-sub-filter-count">{incomingAppts.length}</span>
-              </button>
-              <button className={`dz-sub-filter-btn${apptFilter === "completed" ? " dz-sub-filter-active" : ""}`} onClick={() => setApptFilter("completed")}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                Completed <span className="dz-sub-filter-count">{completedAppts.length}</span>
-              </button>
-            </div>
-
             {viewMode === "table" ? (
               <div className="dz-table-wrap">
                 <table className="dz-table">
@@ -350,7 +348,7 @@ export default function InPersonPage() {
                     <tr><th>Patient</th><th>Date</th><th>Time</th><th>Countdown</th><th>Type</th><th>Location</th><th>Status</th><th>Notes</th></tr>
                   </thead>
                   <tbody>
-                    {filteredAppts.map((a) => {
+                    {displayedAppts.map((a) => {
                       const cd = formatCountdown(now, a.date, a.time, a.completed);
                       return (
                         <tr key={a.id} style={a.completed ? { opacity: 0.6 } : undefined}>
@@ -365,7 +363,7 @@ export default function InPersonPage() {
                         </tr>
                       );
                     })}
-                    {filteredAppts.length === 0 && (
+                    {displayedAppts.length === 0 && (
                       <tr><td colSpan={8} style={{ textAlign: "center", padding: 32, color: "#64748b" }}>No appointments found</td></tr>
                     )}
                   </tbody>
@@ -373,7 +371,7 @@ export default function InPersonPage() {
               </div>
             ) : (
               <div className="dz-appt-grid">
-                {filteredAppts.map((a) => {
+                {displayedAppts.map((a) => {
                   const cd = formatCountdown(now, a.date, a.time, a.completed);
                   return (
                     <div key={a.id} className={`dz-appt-card${a.completed ? " dz-appt-completed" : ""}`}>
@@ -403,7 +401,7 @@ export default function InPersonPage() {
                     </div>
                   );
                 })}
-                {filteredAppts.length === 0 && (
+                {displayedAppts.length === 0 && (
                   <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 32, color: "#64748b" }}>No appointments found</div>
                 )}
               </div>
@@ -411,65 +409,31 @@ export default function InPersonPage() {
           </>
         )}
 
-        {/* Surgeries */}
-        {tab === "surgeries" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            {SURGERIES.map((s) => {
-              const cd = formatCountdown(now, s.date, s.time, false);
-              return (
-                <div key={s.id} className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-                  <div style={{ padding: "18px 22px", borderBottom: "1px solid rgba(99,102,241,0.1)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
-                        <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "#f1f5f9" }}>{s.procedure}</span>
-                        <Badge label={s.status} />
-                      </div>
-                      <div style={{ fontSize: "0.85rem", color: "#94a3b8" }}>{s.patient}</div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <div style={{ textAlign: "right" }}>
-                          <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#818cf8" }}>{s.date}</div>
-                          <div style={{ fontSize: "0.82rem", fontFamily: "'SF Mono', Consolas, monospace", color: "#94a3b8" }}>{s.time}</div>
-                        </div>
-                      </div>
-                      <CountdownBadge text={cd.text} color={cd.color} />
-                    </div>
-                  </div>
-                  <div style={{ padding: "16px 22px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Facility</div>
-                      <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>{s.facility}</div>
-                      <div style={{ fontSize: "0.78rem", color: "#64748b" }}>POS {s.pos}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>Anesthesia</div>
-                      <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>{s.anesthesia}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 4 }}>CPT / ICD-10</div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                        {s.codes.map((code) => (
-                          <span key={code} style={{ fontSize: "0.72rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "2px 8px", borderRadius: 4, fontWeight: 600, background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{code}</span>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 6 }}>Readiness</div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                        <CheckBadge ok={s.preOp} label="Pre-Op Cleared" />
-                        <CheckBadge ok={s.authObtained} label="Auth Obtained" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+        {/* Procedures — color-coded type catalog */}
+        {tab === "procedures" && (
+          <div className="dz-table-wrap">
+            <table className="dz-table">
+              <thead>
+                <tr>
+                  <th style={{ width: 6, padding: 0 }}></th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {PROCEDURE_TYPES.map((p) => (
+                  <tr key={p.label}>
+                    <td style={{ width: 6, padding: 0, position: "relative" }}>
+                      <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: p.color, borderRadius: "0 2px 2px 0" }} />
+                    </td>
+                    <td style={{ fontWeight: 600, color: "#e2e8f0", fontSize: "0.95rem" }}>{p.label}</td>
+                    <td style={{ color: "#94a3b8", fontSize: "0.85rem" }}>{p.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
-
-        {/* Reports */}
-        {tab === "reports" && <OperativeReportBuilder />}
       </main>
     </div>
   );

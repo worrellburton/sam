@@ -8,6 +8,41 @@ export function meta() {
   return [{ title: "Patient | DocZoc" }];
 }
 
+const CODE_DESCRIPTIONS: Record<string, string> = {
+  // ICD-10 codes
+  "M75.111": "Rotator cuff tear, right shoulder",
+  "S83.511A": "Sprain of ACL, right knee, initial",
+  "S83.512A": "Sprain of ACL, left knee, initial",
+  "S83.282A": "Lateral meniscus tear, current injury",
+  "M16.11": "Primary osteoarthritis, right hip",
+  "S52.501A": "Distal radius fracture, unspecified",
+  "S93.401A": "Sprain of ankle, unspecified",
+  "M23.211": "Derangement of meniscus, right knee",
+  "M19.011": "Primary osteoarthritis, right shoulder",
+  "Z96.651": "Presence of right artificial knee joint",
+  "Z96.611": "Presence of right artificial shoulder joint",
+  "Z87.39": "Personal history of musculoskeletal disorders",
+  // CPT codes
+  "99203": "New patient office visit, moderate complexity",
+  "99213": "Established patient visit, low complexity",
+  "99214": "Established patient visit, moderate complexity",
+  "97161": "Physical therapy evaluation, low complexity",
+  "29827": "Arthroscopic rotator cuff repair",
+  "29826": "Arthroscopic acromioplasty",
+  "29888": "Arthroscopic ACL reconstruction",
+  "29881": "Arthroscopic meniscectomy",
+  "29882": "Arthroscopic meniscus repair",
+  "29916": "Arthroscopic shoulder surgery with labral repair",
+  "27130": "Total hip arthroplasty",
+  "25600": "Closed treatment of distal radius fracture",
+  "73221": "MRI upper extremity joint",
+  "73721": "MRI lower extremity joint",
+  "73060": "X-ray humerus, minimum 2 views",
+  "73100": "X-ray wrist, minimum 3 views",
+  "73502": "X-ray hip, minimum 2 views",
+  "73600": "X-ray ankle, minimum 2 views",
+};
+
 export default function PatientDetailPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
@@ -306,11 +341,13 @@ export default function PatientDetailPage() {
                   {visit.codes.map((code) => (
                     <span
                       key={code}
+                      title={CODE_DESCRIPTIONS[code] || code}
                       style={{
                         fontSize: "0.68rem", fontFamily: "'SF Mono', Consolas, monospace",
                         padding: "2px 7px", borderRadius: 4, fontWeight: 600,
                         background: code.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
                         color: code.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
+                        cursor: "help",
                       }}
                     >
                       {code}

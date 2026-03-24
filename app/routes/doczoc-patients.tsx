@@ -50,9 +50,16 @@ export default function PatientsPage() {
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
         <header className="dz-platform-header">
-          <div>
-            <h1>Patients</h1>
-            <p>{PATIENTS.length} total patients</p>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div className="dz-logo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div>
+              <h1>Patients</h1>
+              <p>{PATIENTS.length} total patients</p>
+            </div>
           </div>
           <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <div className="dz-view-toggle">
@@ -74,18 +81,19 @@ export default function PatientsPage() {
           </div>
         </header>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+        <div className="dz-table-wrap" style={{ marginBottom: 0, borderBottom: "none", borderRadius: "12px 12px 0 0", padding: "12px 16px" }}>
           <input
             type="text"
             placeholder="Search patients..."
             className="dz-search-input"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            style={{ width: "100%" }}
           />
         </div>
 
         {view === "table" ? (
-          <div className="dz-table-wrap">
+          <div className="dz-table-wrap" style={{ borderRadius: "0 0 12px 12px", borderTop: "1px solid rgba(99,102,241,0.1)" }}>
             <table className="dz-table">
               <thead>
                 <tr>

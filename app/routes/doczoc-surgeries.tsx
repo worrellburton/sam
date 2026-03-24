@@ -72,6 +72,8 @@ export default function SurgeriesPage() {
   const [addedSurgeries, setAddedSurgeries] = useState<SurgeryRecord[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newSurgery, setNewSurgery] = useState({ patient: "", type: "", date: "", notes: "" });
+  const [selectedProcedure, setSelectedProcedure] = useState<string | null>(null);
+  const [focusMode, setFocusMode] = useState(false);
 
   const allSurgeries = useMemo(() => [...surgeries, ...addedSurgeries], [surgeries, addedSurgeries]);
   const filtered = allSurgeries
@@ -170,21 +172,24 @@ export default function SurgeriesPage() {
                 </button>
               ))}
               <div style={{ flex: 1 }} />
-              <div style={{ display: "flex", gap: 2, marginBottom: 4 }}>
-                <button onClick={() => setView("table")} style={{
-                  padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
-                  background: view === "table" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-                  color: view === "table" ? "var(--dz-accent)" : "var(--dz-text-dim)",
-                }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                </button>
-                <button onClick={() => setView("list")} style={{
-                  padding: "6px 8px", borderRadius: "0 6px 6px 0", border: "none", cursor: "pointer",
-                  background: view === "list" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-                  color: view === "list" ? "var(--dz-accent)" : "var(--dz-text-dim)",
-                }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                </button>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                <div style={{ display: "flex", gap: 0 }}>
+                  <button onClick={() => setView("table")} style={{
+                    padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
+                    background: view === "table" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
+                    color: view === "table" ? "var(--dz-accent)" : "var(--dz-text-dim)",
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                  </button>
+                  <button onClick={() => setView("list")} style={{
+                    padding: "6px 8px", borderRadius: "0 6px 6px 0", border: "none", cursor: "pointer",
+                    background: view === "list" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
+                    color: view === "list" ? "var(--dz-accent)" : "var(--dz-text-dim)",
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                  </button>
+                </div>
+                <CrosshairToggle active={focusMode} onClick={() => setFocusMode(f => !f)} />
               </div>
             </div>
 
@@ -229,64 +234,227 @@ export default function SurgeriesPage() {
               </div>
             )}
 
-            {/* Table View */}
-            {view === "table" ? (
-              <DraggableSurgeryTable surgeries={filtered} onView={openDetail} searchNode={
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-                  background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 240,
-                }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." style={{
-                    background: "transparent", border: "none", outline: "none", width: "100%",
-                    fontSize: "0.78rem", color: "var(--dz-text-secondary)",
-                  }} />
-                </div>
-              } />
-            ) : (
-              /* List/Card View */
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12 }}>
-                {filtered.map(s => {
-                  const statusColor = s.status === "completed" ? "#22c55e" : s.status === "upcoming" ? "#f59e0b" : "#818cf8";
-                  return (
-                    <div key={s.id} className="dz-surgery-btn dz-card" onClick={() => openDetail(s)} style={{
-                      padding: "16px 18px", cursor: "pointer", borderLeft: `3px solid ${statusColor}`,
-                    }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                        <span style={{
-                          fontSize: "0.65rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20,
-                          background: `${statusColor}18`, color: statusColor, textTransform: "capitalize",
-                        }}>
-                          {s.status.replace("-", " ")}
-                        </span>
-                        <span style={{ fontSize: "0.75rem", color: "#818cf8", fontWeight: 600 }}>{s.date}</span>
-                      </div>
-                      <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 4 }}>{s.type}</div>
-                      <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: 8 }}>{s.patient.name}</div>
-                      <div style={{ fontSize: "0.75rem", color: "#64748b", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                        {s.notes}
-                      </div>
-                      {s.codes.length > 0 && (
-                        <div style={{ display: "flex", gap: 4, marginTop: 8 }}>
-                          {s.codes.slice(0, 3).map(c => (
-                            <span key={c} style={{
-                              fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
-                              padding: "2px 6px", borderRadius: 4, fontWeight: 600,
-                              background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
-                              color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
-                            }}>{c}</span>
-                          ))}
+            {/* Procedure Catalog — Database tab */}
+            {subPage === "database" && !selectedProcedure && (
+              <ProcedureCatalog allSurgeries={allSurgeries} onSelectProcedure={setSelectedProcedure} />
+            )}
+
+            {/* Procedure Detail */}
+            {subPage === "database" && selectedProcedure && (
+              <ProcedureDetail procedureName={selectedProcedure} allSurgeries={allSurgeries} onBack={() => setSelectedProcedure(null)} />
+            )}
+
+            {/* Table/List View — shown on Upcoming / Completed tabs */}
+            {subPage !== "database" && (
+              view === "table" ? (
+                <DraggableSurgeryTable surgeries={filtered} onView={openDetail} focusMode={focusMode} searchNode={
+                  <div style={{
+                    display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+                    background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 240,
+                  }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." style={{
+                      background: "transparent", border: "none", outline: "none", width: "100%",
+                      fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+                    }} />
+                  </div>
+                } />
+              ) : (
+                /* List/Card View */
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12 }}>
+                  {filtered.map(s => {
+                    const statusColor = s.status === "completed" ? "#22c55e" : s.status === "upcoming" ? "#f59e0b" : "#818cf8";
+                    return (
+                      <div key={s.id} className="dz-surgery-btn dz-card" onClick={() => openDetail(s)} style={{
+                        padding: "16px 18px", cursor: "pointer", borderLeft: `3px solid ${statusColor}`,
+                      }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                          <span style={{
+                            fontSize: "0.65rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20,
+                            background: `${statusColor}18`, color: statusColor, textTransform: "capitalize",
+                          }}>
+                            {s.status.replace("-", " ")}
+                          </span>
+                          <span style={{ fontSize: "0.75rem", color: "#818cf8", fontWeight: 600 }}>{s.date}</span>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-                {filtered.length === 0 && <div style={{ textAlign: "center", padding: 60, color: "#64748b", gridColumn: "1/-1" }}>No surgeries found</div>}
-              </div>
+                        <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 4 }}>{s.type}</div>
+                        <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginBottom: 8 }}>{s.patient.name}</div>
+                        <div style={{ fontSize: "0.75rem", color: "#64748b", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                          {s.notes}
+                        </div>
+                        {s.codes.length > 0 && (
+                          <div style={{ display: "flex", gap: 4, marginTop: 8 }}>
+                            {s.codes.slice(0, 3).map(c => (
+                              <span key={c} style={{
+                                fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
+                                padding: "2px 6px", borderRadius: 4, fontWeight: 600,
+                                background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
+                                color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
+                              }}>{c}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {filtered.length === 0 && <div style={{ textAlign: "center", padding: 60, color: "#64748b", gridColumn: "1/-1" }}>No surgeries found</div>}
+                </div>
+              )
             )}
           </>
         )}
       </main>
+    </div>
+  );
+}
+
+// ── Procedure Catalog (top 10 orthopedic) ───────────────────────────
+const PROCEDURES = [
+  { name: "ACL Reconstruction", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v8l4 4"/><path d="M12 10l-4 4"/><circle cx="12" cy="18" r="4"/></svg>, color: "#ef4444", desc: "Anterior cruciate ligament repair using graft tissue" },
+  { name: "Rotator Cuff Repair", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="5"/><path d="M7 13l-3 8h16l-3-8"/><line x1="12" y1="3" x2="12" y2="13"/></svg>, color: "#f59e0b", desc: "Reattachment of torn shoulder tendons" },
+  { name: "Knee Arthroscopy", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/></svg>, color: "#3b82f6", desc: "Minimally invasive knee joint inspection and repair" },
+  { name: "Total Knee Replacement", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="2" width="8" height="8" rx="1"/><rect x="8" y="14" width="8" height="8" rx="1"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="9" y1="12" x2="15" y2="12"/></svg>, color: "#8b5cf6", desc: "Full joint replacement with prosthetic implant" },
+  { name: "Total Shoulder Arthroplasty", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="5"/><path d="M5 12c0 5 3 10 7 10s7-5 7-10"/><circle cx="12" cy="7" r="2"/></svg>, color: "#06b6d4", desc: "Shoulder joint replacement surgery" },
+  { name: "Meniscus Repair", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 12c0-4 3-8 6-8s6 4 6 8-3 8-6 8-6-4-6-8z"/><path d="M6 12h12"/><path d="M9 8c1 2 1 6 0 8"/><path d="M15 8c-1 2-1 6 0 8"/></svg>, color: "#22c55e", desc: "Torn cartilage repair in the knee" },
+  { name: "Hip Replacement", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M8 12l-2 10"/><path d="M16 12l2 10"/><circle cx="12" cy="8" r="1.5"/></svg>, color: "#ec4899", desc: "Total hip arthroplasty with prosthesis" },
+  { name: "Carpal Tunnel Release", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l4-2v16l-4-2z"/><path d="M10 4l4 2v12l-4 2"/><path d="M14 6l4-2v16l-4-2z"/></svg>, color: "#f97316", desc: "Decompression of the median nerve in the wrist" },
+  { name: "Spinal Fusion", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><rect x="9" y="9" width="6" height="4" rx="1"/><rect x="9" y="16" width="6" height="4" rx="1"/><line x1="12" y1="6" x2="12" y2="9"/><line x1="12" y1="13" x2="12" y2="16"/><line x1="7" y1="11" x2="9" y2="11"/><line x1="15" y1="11" x2="17" y2="11"/></svg>, color: "#a855f7", desc: "Vertebrae fusion to stabilize the spine" },
+  { name: "Fracture Fixation (ORIF)", icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20L10 4"/><path d="M14 20L20 4"/><line x1="7" y1="12" x2="17" y2="12"/><circle cx="7" cy="12" r="1.5"/><circle cx="17" cy="12" r="1.5"/></svg>, color: "#14b8a6", desc: "Open reduction and internal fixation of broken bones" },
+];
+
+function getProcedureStats(name: string, allSurgeries: SurgeryRecord[]) {
+  const keywords = name.toLowerCase().split(/\s+/);
+  const matches = allSurgeries.filter(s => {
+    const t = s.type.toLowerCase();
+    return keywords.some(kw => t.includes(kw));
+  });
+  const completed = matches.filter(s => s.status === "completed").length;
+  const upcoming = matches.filter(s => s.status === "upcoming" || s.status === "pre-op").length;
+  return { total: matches.length, completed, upcoming, matches };
+}
+
+function ProcedureCatalog({ allSurgeries, onSelectProcedure }: { allSurgeries: SurgeryRecord[]; onSelectProcedure: (name: string) => void }) {
+  return (
+    <div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+        {PROCEDURES.map(proc => {
+          const stats = getProcedureStats(proc.name, allSurgeries);
+          return (
+            <div
+              key={proc.name}
+              className="dz-card dz-surgery-btn"
+              onClick={() => onSelectProcedure(proc.name)}
+              style={{ padding: "18px 20px", cursor: "pointer", borderLeft: `3px solid ${proc.color}`, transition: "all 0.15s" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
+                  background: `${proc.color}15`, color: proc.color,
+                }}>{proc.icon}</div>
+                <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>{proc.name}</div>
+              </div>
+              <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted, #64748b)", lineHeight: 1.5, marginBottom: 12 }}>{proc.desc}</div>
+              <div style={{ display: "flex", gap: 12 }}>
+                <div style={{ fontSize: "0.7rem" }}>
+                  <span style={{ fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)", fontSize: "1rem" }}>{stats.total}</span>
+                  <span style={{ color: "var(--dz-text-muted, #64748b)", marginLeft: 4 }}>total</span>
+                </div>
+                {stats.completed > 0 && (
+                  <div style={{ fontSize: "0.7rem" }}>
+                    <span style={{ fontWeight: 700, color: "#22c55e" }}>{stats.completed}</span>
+                    <span style={{ color: "var(--dz-text-muted, #64748b)", marginLeft: 4 }}>done</span>
+                  </div>
+                )}
+                {stats.upcoming > 0 && (
+                  <div style={{ fontSize: "0.7rem" }}>
+                    <span style={{ fontWeight: 700, color: "#f59e0b" }}>{stats.upcoming}</span>
+                    <span style={{ color: "var(--dz-text-muted, #64748b)", marginLeft: 4 }}>upcoming</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ProcedureDetail({ procedureName, allSurgeries, onBack }: { procedureName: string; allSurgeries: SurgeryRecord[]; onBack: () => void }) {
+  const proc = PROCEDURES.find(p => p.name === procedureName) || PROCEDURES[0];
+  const stats = getProcedureStats(procedureName, allSurgeries);
+  const avgRecovery = proc.name.includes("Knee") ? "6–9 months" : proc.name.includes("Shoulder") ? "4–6 months" : proc.name.includes("ACL") ? "6–12 months" : proc.name.includes("Hip") ? "3–6 months" : "4–8 weeks";
+  const successRate = proc.name.includes("Replacement") ? "95%" : proc.name.includes("ACL") ? "90%" : "92%";
+
+  return (
+    <div>
+      <button onClick={onBack} style={{
+        display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+        border: "1px solid rgba(99,102,241,0.15)", background: "rgba(99,102,241,0.06)",
+        color: "#a5b4fc", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", marginBottom: 20,
+      }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Procedures
+      </button>
+
+      {/* Procedure header */}
+      <div className="dz-card" style={{ padding: "24px 28px", marginBottom: 20, borderLeft: `3px solid ${proc.color}` }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{
+            width: 52, height: 52, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center",
+            background: `${proc.color}15`, color: proc.color,
+          }}>{proc.icon}</div>
+          <div>
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)", margin: 0 }}>{proc.name}</h2>
+            <p style={{ fontSize: "0.82rem", color: "var(--dz-text-muted, #64748b)", margin: "4px 0 0" }}>{proc.desc}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats row */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 20 }}>
+        {[
+          { label: "Times Performed", value: String(stats.total), color: "var(--dz-text-primary, #f1f5f9)" },
+          { label: "Completed", value: String(stats.completed), color: "#22c55e" },
+          { label: "Avg Recovery", value: avgRecovery, color: "#60a5fa" },
+          { label: "Success Rate", value: successRate, color: "#a78bfa" },
+        ].map(s => (
+          <div key={s.label} className="dz-card" style={{ padding: "16px 18px", textAlign: "center" }}>
+            <div style={{ fontSize: "1.1rem", fontWeight: 800, color: s.color }}>{s.value}</div>
+            <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)", marginTop: 4, fontWeight: 600 }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Recent cases */}
+      <div className="dz-card" style={{ padding: "18px 22px" }}>
+        <h3 style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", marginBottom: 14 }}>
+          Recent Cases ({stats.matches.length})
+        </h3>
+        {stats.matches.length > 0 ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {stats.matches.map(s => {
+              const sc = s.status === "completed" ? "#22c55e" : s.status === "upcoming" ? "#f59e0b" : "#818cf8";
+              return (
+                <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(99,102,241,0.04)" }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
+                    {s.patient.name.split(" ").map(n => n[0]).join("")}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{s.patient.name}</div>
+                    <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)" }}>{s.type} · {s.date}</div>
+                  </div>
+                  <span style={{ fontSize: "0.65rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: `${sc}18`, color: sc, textTransform: "capitalize" }}>
+                    {s.status.replace("-", " ")}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p style={{ fontSize: "0.78rem", color: "#64748b" }}>No cases recorded for this procedure yet.</p>
+        )}
+      </div>
     </div>
   );
 }
@@ -496,14 +664,16 @@ function SurgeryDetailView({ surgery, onBack }: { surgery: SurgeryRecord; onBack
 type SurgColKey = "patient" | "status" | "procedure" | "date" | "codes";
 const SURG_DATA_KEYS = new Set<SurgColKey>(["date", "codes"]);
 
-function DraggableSurgeryTable({ surgeries, onView, searchNode }: { surgeries: SurgeryRecord[]; onView: (s: SurgeryRecord) => void; searchNode?: React.ReactNode }) {
+function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: externalFocusMode }: { surgeries: SurgeryRecord[]; onView: (s: SurgeryRecord) => void; searchNode?: React.ReactNode; focusMode?: boolean }) {
   const [columns, setColumns] = useState<SurgColKey[]>(["patient", "status", "procedure", "date", "codes"]);
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
   const [sortCol, setSortCol] = useState<SurgColKey | null>("date");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
-  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle, getRowStyle } = useCrosshairFocusByKey(columns, SURG_DATA_KEYS);
+  const crosshair = useCrosshairFocusByKey(columns, SURG_DATA_KEYS);
+  const focusMode = externalFocusMode ?? crosshair.focusMode;
+  const { onCellEnter, onCellLeave, getCellStyle, getRowStyle } = crosshair;
 
   const handleSort = (col: SurgColKey) => {
     if (sortCol === col) { setSortDir(d => d === "asc" ? "desc" : "asc"); }
@@ -578,7 +748,6 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode }: { surgeries: S
       {searchNode && (
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
           {searchNode}
-          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
         </div>
       )}
       <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>

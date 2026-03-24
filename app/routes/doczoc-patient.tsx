@@ -215,7 +215,7 @@ export default function PatientDetailPage() {
 
 // ── Patient Details Section (collapsible) ──────────────────────────
 function PatientDetailsSection({ patient }: { patient: Patient }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <div className="dz-card" style={{ padding: 0, overflow: "hidden", marginBottom: 24 }}>
@@ -676,7 +676,7 @@ function InvoicesSection({ patient }: { patient: Patient }) {
                   {/* Amount */}
                   <div style={{
                     fontSize: "0.88rem", fontWeight: 800,
-                    fontFamily: "'SF Mono', Consolas, monospace",
+                    fontFamily: "'Inter', system-ui, sans-serif",
                     color: "var(--dz-text-primary)",
                   }}>${inv.totalCharged.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
 
@@ -702,19 +702,19 @@ function InvoicesSection({ patient }: { patient: Patient }) {
           }}>
             <div style={{ textAlign: "right" }}>
               <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Total Charged</div>
-              <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace" }}>
+              <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'Inter', system-ui, sans-serif" }}>
                 ${totalCharged.toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
               <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Insurance Paid</div>
-              <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace", color: "#22c55e" }}>
+              <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'Inter', system-ui, sans-serif", color: "#22c55e" }}>
                 ${totalInsurancePaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
             </div>
             <div style={{ textAlign: "right" }}>
               <div className="dz-text-muted" style={{ fontSize: "0.72rem", fontWeight: 600 }}>Patient Owes</div>
-              <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'SF Mono', Consolas, monospace", color: "#f59e0b" }}>
+              <div style={{ fontSize: "1rem", fontWeight: 800, fontFamily: "'Inter', system-ui, sans-serif", color: "#f59e0b" }}>
                 ${totalPatientOwes.toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </div>
             </div>
@@ -995,7 +995,7 @@ function TimelineSection({ events }: { events: TimelineEvent[] }) {
 
                 {event.amount !== undefined && (
                   <span style={{
-                    fontSize: "0.75rem", fontFamily: "'SF Mono', Consolas, monospace",
+                    fontSize: "0.75rem", fontFamily: "'Inter', system-ui, sans-serif",
                     fontWeight: 700, color: event.amountColor || "#22c55e",
                   }}>
                     {event.amount}

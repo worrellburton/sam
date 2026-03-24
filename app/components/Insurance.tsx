@@ -16,21 +16,47 @@ const carriers = [
 ];
 
 function CarrierLogo({ domain, name }: { domain: string; name: string }) {
-  const [failed, setFailed] = useState(false);
+  const [srcIdx, setSrcIdx] = useState(0);
 
-  if (failed) {
+  // Try multiple Brandfetch variants for transparent logos
+  const srcs = [
+    `https://cdn.brandfetch.io/${domain}/w/400/h/150/theme/dark/type/logo?c=1id3n10pdBTarCHI0db`,
+    `https://cdn.brandfetch.io/${domain}/w/400/h/150/theme/dark/type/symbol?c=1id3n10pdBTarCHI0db`,
+    `https://cdn.brandfetch.io/${domain}/w/400/h/150/fallback/lettermark/theme/dark?c=1id3n10pdBTarCHI0db`,
+  ];
+
+  // Light mode uses different theme
+  const lightSrcs = [
+    `https://cdn.brandfetch.io/${domain}/w/400/h/150/theme/light/type/logo?c=1id3n10pdBTarCHI0db`,
+    `https://cdn.brandfetch.io/${domain}/w/400/h/150/theme/light/type/symbol?c=1id3n10pdBTarCHI0db`,
+    `https://cdn.brandfetch.io/${domain}/w/400/h/150/fallback/lettermark/theme/light?c=1id3n10pdBTarCHI0db`,
+  ];
+
+  if (srcIdx >= srcs.length) {
     return <span className="insurance-fallback">{name}</span>;
   }
 
   return (
-    <img
-      src={`https://cdn.brandfetch.io/${domain}/w/512/h/200/fallback/lettermark/theme/dark/type/logo?c=1id3n10pdBTarCHI0db`}
-      alt={name}
-      className="insurance-logo"
-      loading="lazy"
-      referrerPolicy="origin"
-      onError={() => setFailed(true)}
-    />
+    <>
+      {/* Dark mode: light/white logos */}
+      <img
+        src={srcs[srcIdx]}
+        alt={name}
+        className="insurance-logo insurance-logo-dark"
+        loading="lazy"
+        referrerPolicy="origin"
+        onError={() => setSrcIdx(i => i + 1)}
+      />
+      {/* Light mode: dark logos */}
+      <img
+        src={lightSrcs[srcIdx]}
+        alt={name}
+        className="insurance-logo insurance-logo-light"
+        loading="lazy"
+        referrerPolicy="origin"
+        onError={() => {}}
+      />
+    </>
   );
 }
 

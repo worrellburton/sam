@@ -8,7 +8,7 @@ export function meta() {
 }
 
 const FONTS = [
-  { id: "inter", label: "Inter", family: "Inter, -apple-system, sans-serif" },
+  { id: "inter", label: "Inter (Default)", family: "Inter, -apple-system, sans-serif" },
   { id: "system", label: "System", family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" },
   { id: "mono", label: "Mono", family: "'SF Mono', 'Fira Code', 'Consolas', monospace" },
   { id: "serif", label: "Serif", family: "Georgia, 'Times New Roman', serif" },

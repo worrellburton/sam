@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
-import { useCrosshairFocus, CrosshairToggle } from "~/hooks/useCrosshairFocus";
 
 export function meta() {
   return [{ title: "Provider Information | DocZoc" }];
@@ -63,8 +62,6 @@ function InfoField({ label, value, mono }: { label: string; value: string; mono?
 export default function ProviderInfoPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
-  const facFocus = useCrosshairFocus(new Set([2, 3])); // POS Code, NPI
-  const refFocus = useCrosshairFocus(new Set([2])); // NPI
 
   return (
     <div className="dz-platform">
@@ -116,15 +113,12 @@ export default function ProviderInfoPage() {
 
         {/* Facilities */}
         <div style={{ marginTop: 24 }}>
-          <h2 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+          <h2 style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
             Facilities & Place of Service
           </h2>
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
-            <CrosshairToggle active={facFocus.focusMode} onClick={facFocus.toggleFocus} />
-          </div>
           <div className="dz-table-wrap">
             <table className="dz-table">
               <thead>
@@ -138,12 +132,10 @@ export default function ProviderInfoPage() {
                 </tr>
               </thead>
               <tbody>
-                {FACILITIES.map((f, i) => {
-                  const rid = String(i);
-                  return (
+                {FACILITIES.map((f, i) => (
                     <tr key={i}>
-                      <td onMouseEnter={() => facFocus.onCellEnter(rid, 0)} onMouseLeave={facFocus.onCellLeave} style={{ fontWeight: 600, color: "#f1f5f9", ...facFocus.getCellStyle(rid, 0), transition: "opacity 0.2s ease" }}>{f.name}</td>
-                      <td onMouseEnter={() => facFocus.onCellEnter(rid, 1)} onMouseLeave={facFocus.onCellLeave} style={{ ...facFocus.getCellStyle(rid, 1), transition: "opacity 0.2s ease" }}>
+                      <td style={{ fontWeight: 600, color: "var(--dz-text-secondary)" }}>{f.name}</td>
+                      <td>
                         <span style={{
                           display: "inline-block", padding: "3px 10px", borderRadius: 6,
                           fontSize: "0.72rem", fontWeight: 700,
@@ -153,13 +145,12 @@ export default function ProviderInfoPage() {
                           {f.type}
                         </span>
                       </td>
-                      <td onMouseEnter={() => facFocus.onCellEnter(rid, 2)} onMouseLeave={facFocus.onCellLeave} style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 700, color: "#818cf8", ...facFocus.getCellStyle(rid, 2), transition: "opacity 0.2s ease" }}>{f.pos}</td>
-                      <td onMouseEnter={() => facFocus.onCellEnter(rid, 3)} onMouseLeave={facFocus.onCellLeave} style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", color: "#94a3b8", ...facFocus.getCellStyle(rid, 3), transition: "opacity 0.2s ease" }}>{f.npi}</td>
-                      <td onMouseEnter={() => facFocus.onCellEnter(rid, 4)} onMouseLeave={facFocus.onCellLeave} style={{ fontSize: "0.82rem", color: "#94a3b8", maxWidth: 220, ...facFocus.getCellStyle(rid, 4), transition: "opacity 0.2s ease" }}>{f.address}</td>
-                      <td onMouseEnter={() => facFocus.onCellEnter(rid, 5)} onMouseLeave={facFocus.onCellLeave} style={{ fontSize: "0.82rem", color: "#94a3b8", ...facFocus.getCellStyle(rid, 5), transition: "opacity 0.2s ease" }}>{f.phone}</td>
+                      <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 700, color: "#818cf8" }}>{f.pos}</td>
+                      <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem" }}>{f.npi}</td>
+                      <td style={{ fontSize: "0.82rem", maxWidth: 220 }}>{f.address}</td>
+                      <td style={{ fontSize: "0.82rem" }}>{f.phone}</td>
                     </tr>
-                  );
-                })}
+                ))}
               </tbody>
             </table>
           </div>
@@ -167,15 +158,12 @@ export default function ProviderInfoPage() {
 
         {/* Referring Providers */}
         <div style={{ marginTop: 24 }}>
-          <h2 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#f1f5f9", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+          <h2 style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
             </svg>
             Referring Providers
           </h2>
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
-            <CrosshairToggle active={refFocus.focusMode} onClick={refFocus.toggleFocus} />
-          </div>
           <div className="dz-table-wrap">
             <table className="dz-table">
               <thead>
@@ -187,17 +175,14 @@ export default function ProviderInfoPage() {
                 </tr>
               </thead>
               <tbody>
-                {REFERRING_PROVIDERS.map((r, i) => {
-                  const rid = `ref-${i}`;
-                  return (
+                {REFERRING_PROVIDERS.map((r, i) => (
                     <tr key={i}>
-                      <td onMouseEnter={() => refFocus.onCellEnter(rid, 0)} onMouseLeave={refFocus.onCellLeave} style={{ fontWeight: 600, color: "#f1f5f9", ...refFocus.getCellStyle(rid, 0), transition: "opacity 0.2s ease" }}>{r.name}</td>
-                      <td onMouseEnter={() => refFocus.onCellEnter(rid, 1)} onMouseLeave={refFocus.onCellLeave} style={{ color: "#94a3b8", ...refFocus.getCellStyle(rid, 1), transition: "opacity 0.2s ease" }}>{r.specialty}</td>
-                      <td onMouseEnter={() => refFocus.onCellEnter(rid, 2)} onMouseLeave={refFocus.onCellLeave} style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", color: "#818cf8", ...refFocus.getCellStyle(rid, 2), transition: "opacity 0.2s ease" }}>{r.npi}</td>
-                      <td onMouseEnter={() => refFocus.onCellEnter(rid, 3)} onMouseLeave={refFocus.onCellLeave} style={{ color: "#94a3b8", ...refFocus.getCellStyle(rid, 3), transition: "opacity 0.2s ease" }}>{r.phone}</td>
+                      <td style={{ fontWeight: 600, color: "var(--dz-text-secondary)" }}>{r.name}</td>
+                      <td>{r.specialty}</td>
+                      <td style={{ fontFamily: "'SF Mono', Consolas, monospace", fontSize: "0.82rem", color: "#818cf8" }}>{r.npi}</td>
+                      <td>{r.phone}</td>
                     </tr>
-                  );
-                })}
+                ))}
               </tbody>
             </table>
           </div>

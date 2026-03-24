@@ -23,7 +23,7 @@ function InsuranceLogo({ name }: { name: string }) {
     : name.toLowerCase().includes("medicare") ? "medicare.gov"
     : null;
   const [imgFailed, setImgFailed] = useState(false);
-  const logoUrl = domain ? `https://cdn.brandfetch.io/${domain}/w/120/h/40/fallback/lettermark/theme/dark/type/logo?c=1id3n10pdBTarCHI0db` : null;
+  const logoUrl = domain ? `https://cdn.brandfetch.io/${domain}/w/120/h/40/fallback/lettermark/theme/dark/format/svg?c=1id3n10pdBTarCHI0db` : null;
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }} title={name}>
       {logoUrl && !imgFailed ? (

@@ -95,6 +95,23 @@ export default function CalendarPage() {
           </div>
           <div className="dz-platform-header-right" style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <button
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "9px 18px", borderRadius: 10,
+                border: "1px solid rgba(99,102,241,0.2)",
+                background: "rgba(99,102,241,0.08)",
+                color: "#818cf8", fontSize: "0.82rem", fontWeight: 600,
+                cursor: "pointer", transition: "all 0.15s",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.15)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "rgba(99,102,241,0.08)"; }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              Set Schedule
+            </button>
+            <button
               className="dz-add-btn"
               onClick={() => {
                 if (!selectedDate) {

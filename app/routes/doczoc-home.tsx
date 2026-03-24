@@ -165,7 +165,7 @@ export default function HomePage() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
           {/* Next Appointment Card */}
           <div className="dz-card" style={{ padding: "18px 20px", borderLeft: "3px solid #6366f1" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>Next Appointment</div>
+            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em", marginBottom: 10 }}>Next Appointment</div>
             {data.nextAppt ? (
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 10, background: "rgba(99,102,241,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -186,7 +186,7 @@ export default function HomePage() {
 
           {/* Next Surgery Card */}
           <div className="dz-card" style={{ padding: "18px 20px", borderLeft: "3px solid #ef4444" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>Next Surgery</div>
+            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em", marginBottom: 10 }}>Next Surgery</div>
             {data.nextSurgery ? (
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                 <div style={{
@@ -329,7 +329,7 @@ export default function HomePage() {
         {/* ── Row 4: Revenue + Claims + Website Analytics ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 20 }}>
           <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Revenue Collected</div>
+            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Revenue Collected</div>
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#22c55e", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
               ${(data.totalPaid / 1000).toFixed(1)}K
             </div>
@@ -338,7 +338,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Patient Balances</div>
+            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Patient Balances</div>
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#f59e0b", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
               ${(data.totalOwed / 1000).toFixed(1)}K
             </div>
@@ -347,7 +347,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Claims Pending</div>
+            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Claims Pending</div>
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#818cf8", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
               {data.pendingInvoices.length}
             </div>
@@ -356,7 +356,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Website Visits</div>
+            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Website Visits</div>
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#06b6d4", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
               2,847
             </div>
@@ -532,7 +532,7 @@ function MetricCard({ label, value, change, positive, sparkType }: { label: stri
   return (
     <div className="dz-card" style={{ padding: "16px 18px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-        <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</span>
+        <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>{label}</span>
         <span style={{
           fontSize: "0.65rem", fontWeight: 700, padding: "2px 6px", borderRadius: 6,
           background: positive ? "rgba(34,197,94,0.12)" : "rgba(245,158,11,0.12)",

@@ -73,7 +73,8 @@ export default function AppointmentsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const appointments = useMemo(() => getAllAppointments(), []);
-  const [filter, setFilter] = useState<"all" | "upcoming" | "new">("upcoming");
+  const [filter, setFilter] = useState<"all" | "upcoming" | "new" | "type">("upcoming");
+  const [typeFilter, setTypeFilter] = useState<string | null>(null);
   const DATA_COLS = useMemo(() => new Set([0, 1, 2, 3, 4]), []);
   const { focusMode, toggleFocus, onCellEnter, onCellLeave, getRowStyle } = useCrosshairFocus(DATA_COLS);
   const [search, setSearch] = useState("");
@@ -90,11 +91,22 @@ export default function AppointmentsPage() {
 
   const newCount = appointments.filter(a => !a.isPast && (a.type.toLowerCase().includes("new patient") || a.type.toLowerCase().includes("initial consultation") || a.type.toLowerCase().includes("consultation"))).length;
 
+  // Unique procedure types for type filter
+  const procedureTypes = useMemo(() => {
+    const types = new Map<string, number>();
+    for (const a of appointments) {
+      const t = a.type;
+      types.set(t, (types.get(t) || 0) + 1);
+    }
+    return Array.from(types.entries()).sort((a, b) => b[1] - a[1]);
+  }, [appointments]);
+
   const filtered = appointments
     .filter(a => {
       if (filter === "all") return true;
       if (filter === "upcoming") return !a.isPast;
       if (filter === "new") return !a.isPast && (a.type.toLowerCase().includes("new patient") || a.type.toLowerCase().includes("initial consultation") || a.type.toLowerCase().includes("consultation"));
+      if (filter === "type") return typeFilter ? a.type === typeFilter : true;
       return true;
     })
     .filter(a => !search || a.patient.name.toLowerCase().includes(search.toLowerCase()) || a.type.toLowerCase().includes(search.toLowerCase()))
@@ -162,7 +174,70 @@ export default function AppointmentsPage() {
               }}>{tab.count}</span>
             </button>
           ))}
+          <button
+            onClick={() => { setFilter(filter === "type" ? "upcoming" : "type"); setTypeFilter(null); }}
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "8px 14px", marginLeft: 8, cursor: "pointer",
+              fontSize: "0.78rem", fontWeight: 700, marginBottom: 2,
+              background: filter === "type" ? "rgba(168,85,247,0.15)" : "var(--dz-input-bg, rgba(148,163,184,0.06))",
+              color: filter === "type" ? "#c084fc" : "var(--dz-text-muted, #64748b)",
+              border: filter === "type" ? "1px solid rgba(168,85,247,0.3)" : "1px solid var(--dz-input-border, rgba(148,163,184,0.12))",
+              borderRadius: 8, transition: "all 0.15s",
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Type
+            <span style={{
+              fontSize: "0.65rem", fontWeight: 700, padding: "1px 6px", borderRadius: 10,
+              background: filter === "type" ? "rgba(168,85,247,0.15)" : "rgba(148,163,184,0.08)",
+              color: filter === "type" ? "#c084fc" : "var(--dz-text-dim, #475569)",
+            }}>{procedureTypes.length}</span>
+          </button>
         </div>
+
+        {/* Type sub-filter pills */}
+        {filter === "type" && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+            <button
+              onClick={() => setTypeFilter(null)}
+              style={{
+                padding: "5px 12px", borderRadius: 20, border: "none", cursor: "pointer",
+                fontSize: "0.72rem", fontWeight: 700,
+                background: !typeFilter ? "rgba(168,85,247,0.15)" : "var(--dz-input-bg, rgba(148,163,184,0.06))",
+                color: !typeFilter ? "#c084fc" : "var(--dz-text-muted)",
+                borderWidth: 1, borderStyle: "solid",
+                borderColor: !typeFilter ? "rgba(168,85,247,0.3)" : "var(--dz-input-border, rgba(148,163,184,0.12))",
+              }}
+            >All Types</button>
+            {procedureTypes.map(([type, count]) => {
+              const color = getTypeColor(type);
+              const active = typeFilter === type;
+              return (
+                <button
+                  key={type}
+                  onClick={() => setTypeFilter(active ? null : type)}
+                  style={{
+                    padding: "5px 12px", borderRadius: 20, cursor: "pointer",
+                    fontSize: "0.72rem", fontWeight: 600,
+                    display: "flex", alignItems: "center", gap: 5,
+                    background: active ? `${color}18` : "var(--dz-input-bg, rgba(148,163,184,0.06))",
+                    color: active ? color : "var(--dz-text-muted)",
+                    border: `1px solid ${active ? `${color}44` : "var(--dz-input-border, rgba(148,163,184,0.12))"}`,
+                    borderLeft: `3px solid ${color}`,
+                  }}
+                >
+                  {type}
+                  <span style={{
+                    fontSize: "0.6rem", fontWeight: 700, padding: "0px 5px", borderRadius: 8,
+                    background: active ? `${color}22` : "rgba(148,163,184,0.08)",
+                    color: active ? color : "var(--dz-text-dim)",
+                  }}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Search bar — full width */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>

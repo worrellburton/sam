@@ -7936,6 +7936,10 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 }
 .dz-cal-add-trigger:hover { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.4); }
 
+/* Calendar resize handle hover */
+.dz-cal-resize-handle:hover { background: rgba(99, 102, 241, 0.15) !important; }
+.dz-cal-resize-handle:hover .dz-cal-resize-icon { opacity: 0.7 !important; }
+
 .dz-cal-add-form {
   margin-top: 14px; padding: 16px; border-radius: 12px;
   background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(99, 102, 241, 0.15);

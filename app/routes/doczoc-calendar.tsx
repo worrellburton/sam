@@ -338,16 +338,27 @@ function DayView({
                     {/* Resize handle at bottom */}
                     <div
                       onMouseDown={(e) => handleResizeStart(e, appt)}
+                      className="dz-cal-resize-handle"
                       style={{
-                        position: "absolute", bottom: 0, left: 0, right: 0, height: 8,
+                        position: "absolute", bottom: 0, left: 0, right: 0, height: 14,
                         cursor: "ns-resize",
                         display: "flex", alignItems: "center", justifyContent: "center",
+                        borderRadius: "0 0 8px 8px",
+                        background: `${appt.type.color}08`,
+                        transition: "background 0.15s",
                       }}
                     >
-                      <div style={{
-                        width: 24, height: 3, borderRadius: 2,
-                        background: `${appt.type.color}40`,
-                      }} />
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                        <div style={{ width: 28, height: 2.5, borderRadius: 2, background: `${appt.type.color}50` }} />
+                        <div style={{ width: 18, height: 2.5, borderRadius: 2, background: `${appt.type.color}35` }} />
+                      </div>
+                      {/* Up/down arrows on hover */}
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={appt.type.color} strokeWidth="2.5" strokeLinecap="round" className="dz-cal-resize-icon" style={{ position: "absolute", left: 6, opacity: 0, transition: "opacity 0.15s" }}>
+                        <polyline points="18 15 12 9 6 15"/>
+                      </svg>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={appt.type.color} strokeWidth="2.5" strokeLinecap="round" className="dz-cal-resize-icon" style={{ position: "absolute", right: 6, opacity: 0, transition: "opacity 0.15s" }}>
+                        <polyline points="6 9 12 15 18 9"/>
+                      </svg>
                     </div>
                   </div>
                 );

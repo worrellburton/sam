@@ -8422,6 +8422,35 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-timeline-handle.left { left: -3px; }
 .dz-timeline-handle.right { right: -3px; }
 
+/* Timeline light mode */
+[data-theme="light"] .dz-timeline-picker {
+  background: rgba(241, 245, 249, 0.9);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+[data-theme="light"] .dz-timeline-arrow {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(148, 163, 184, 0.2);
+  color: #475569;
+}
+[data-theme="light"] .dz-timeline-arrow:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+[data-theme="light"] .dz-timeline-year { color: #94a3b8; }
+[data-theme="light"] .dz-timeline-month span { color: #94a3b8; }
+[data-theme="light"] .dz-timeline-month.in-range span { color: #4338ca; }
+[data-theme="light"] .dz-timeline-tick { background: rgba(148, 163, 184, 0.2); }
+[data-theme="light"] .dz-timeline-month.in-range .dz-timeline-tick { background: rgba(99, 102, 241, 0.4); }
+[data-theme="light"] .dz-timeline-selection {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+[data-theme="light"] .dz-timeline-range-label {
+  color: #4338ca;
+  text-shadow: none;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .dz-hero-inner { grid-template-columns: 1fr; gap: 40px; }
@@ -8822,7 +8851,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-splash-hold { opacity: 1; }
 .dz-splash-exit {
   opacity: 0;
-  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 

@@ -79,8 +79,8 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("hold"), 100);
-    const t2 = setTimeout(() => setPhase("exit"), 2200);
-    const t3 = setTimeout(() => onDone(), 2900);
+    const t2 = setTimeout(() => setPhase("exit"), 2000);
+    const t3 = setTimeout(() => onDone(), 2600);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [onDone]);
 
@@ -370,12 +370,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!showSplash && !contentReady) {
-      // Wait for splash exit transition (700ms) to fully complete before fading in content
-      const delay = fromLogin ? 750 : 0;
-      const id = setTimeout(() => setContentReady(true), delay);
-      return () => clearTimeout(id);
+      // Use double-rAF to ensure the splash DOM is removed and layout is stable before animating
+      requestAnimationFrame(() => requestAnimationFrame(() => setContentReady(true)));
     }
-  }, [showSplash, contentReady, fromLogin]);
+  }, [showSplash, contentReady]);
 
 
   return (

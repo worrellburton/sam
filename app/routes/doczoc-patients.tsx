@@ -88,19 +88,17 @@ export default function PatientsPage() {
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"table" | "grid">("table");
   const [tableFocusMode, setTableFocusMode] = useState(false);
-  const [subPage, setSubPage] = useState<"active" | "new" | "discharged" | "type">("active");
+  const [subPage, setSubPage] = useState<"all" | "new">("all");
   const { bgId } = useDzPrefs();
   const navigate = useNavigate();
 
-  const activeCount = PATIENTS.filter(p => p.status.toLowerCase() === "active").length;
   const newCount = PATIENTS.filter(p => p.status.toLowerCase() === "new").length;
-  const dischargedCount = PATIENTS.filter(p => p.status.toLowerCase() === "discharged").length;
 
   const filtered = PATIENTS.filter((p) => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.condition.toLowerCase().includes(search.toLowerCase());
     if (!matchesSearch) return false;
-    if (subPage === "type") return true;
+    if (subPage === "all") return true;
     return p.status.toLowerCase() === subPage;
   });
 
@@ -129,9 +127,8 @@ export default function PatientsPage() {
         {/* Tab Navigation */}
         <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 20, borderBottom: "1px solid rgba(148,163,184,0.08)", paddingBottom: 0 }}>
           {([
-            { key: "active" as const, label: "Active", count: activeCount, color: "#22c55e", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg> },
-            { key: "new" as const, label: "New", count: newCount, color: "#6366f1", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg> },
-            { key: "discharged" as const, label: "Discharged", count: dischargedCount, color: "#f59e0b", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> },
+            { key: "all" as const, label: "All", count: PATIENTS.length, color: "#6366f1", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
+            { key: "new" as const, label: "New", count: newCount, color: "#22c55e", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg> },
           ]).map(tab => (
             <button key={tab.key} onClick={() => setSubPage(tab.key)} style={{
               display: "flex", alignItems: "center", gap: 6,
@@ -150,23 +147,6 @@ export default function PatientsPage() {
               }}>{tab.count}</span>
             </button>
           ))}
-          <button onClick={() => setSubPage("type")} style={{
-            display: "flex", alignItems: "center", gap: 6,
-            padding: "8px 14px", marginLeft: 8, cursor: "pointer",
-            fontSize: "0.78rem", fontWeight: 700, marginBottom: 2,
-            background: subPage === "type" ? "rgba(168,85,247,0.15)" : "var(--dz-input-bg, rgba(148,163,184,0.06))",
-            color: subPage === "type" ? "#c084fc" : "var(--dz-text-muted, #64748b)",
-            border: subPage === "type" ? "1px solid rgba(168,85,247,0.3)" : "1px solid var(--dz-input-border, rgba(148,163,184,0.12))",
-            borderRadius: 8, transition: "all 0.15s",
-          }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            Type
-            <span style={{
-              fontSize: "0.65rem", fontWeight: 700, padding: "1px 6px", borderRadius: 10,
-              background: subPage === "type" ? "rgba(168,85,247,0.15)" : "rgba(148,163,184,0.08)",
-              color: subPage === "type" ? "#c084fc" : "var(--dz-text-dim, #475569)",
-            }}>{PATIENTS.length}</span>
-          </button>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>

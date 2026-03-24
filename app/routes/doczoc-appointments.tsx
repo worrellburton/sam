@@ -135,64 +135,59 @@ export default function AppointmentsPage() {
           </div>
         </div>
 
-        {/* Controls — single row */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-          <div style={{
-            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-            background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
-          }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search patients..." style={{
-              background: "transparent", border: "none", outline: "none", width: "100%",
-              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
-            }} />
-          </div>
-          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
-          <div style={{ display: "flex", gap: 6 }}>
-            {(["new", "upcoming", "all"] as const).map(f => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                style={{
-                  padding: "6px 14px", borderRadius: 8, border: "none", cursor: "pointer",
-                  fontSize: "0.75rem", fontWeight: 700, textTransform: "capitalize",
-                  background: filter === f ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-                  color: filter === f ? "var(--dz-accent)" : "var(--dz-text-muted)",
-                }}
-              >
-                {f === "all" ? `All (${appointments.length})` : f === "upcoming" ? `Upcoming (${upcomingCount})` : `New (${newCount})`}
-              </button>
-            ))}
-          </div>
-          <div style={{ display: "flex", gap: 2 }}>
-            <button onClick={() => setView("table")} style={{
-              padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
-              background: view === "table" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-              color: view === "table" ? "var(--dz-accent)" : "var(--dz-text-dim)",
-            }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        {/* Filter tabs */}
+        <div style={{ display: "flex", alignItems: "center", gap: 28, marginBottom: 16, borderBottom: "1px solid var(--dz-input-border, rgba(148,163,184,0.12))", paddingBottom: 0 }}>
+          {([
+            { key: "upcoming" as const, label: "Upcoming", count: upcomingCount, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
+            { key: "new" as const, label: "New", count: newCount, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> },
+            { key: "all" as const, label: "All", count: appointments.length, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> },
+          ]).map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setFilter(tab.key)}
+              style={{
+                display: "flex", alignItems: "center", gap: 6, padding: "10px 0", border: "none", cursor: "pointer",
+                background: "transparent", fontSize: "0.82rem", fontWeight: 600,
+                color: filter === tab.key ? "var(--dz-accent, #6366f1)" : "var(--dz-text-muted)",
+                borderBottom: filter === tab.key ? "2px solid var(--dz-accent, #6366f1)" : "2px solid transparent",
+                marginBottom: -1,
+              }}
+            >
+              {tab.icon}
+              {tab.label}
+              <span style={{
+                fontSize: "0.68rem", fontWeight: 700, padding: "1px 7px", borderRadius: 10,
+                background: filter === tab.key ? "rgba(99,102,241,0.12)" : "var(--dz-input-bg, rgba(148,163,184,0.08))",
+                color: filter === tab.key ? "var(--dz-accent, #6366f1)" : "var(--dz-text-dim)",
+              }}>{tab.count}</span>
             </button>
-            <button onClick={() => setView("list")} style={{
-              padding: "6px 8px", borderRadius: "0 6px 6px 0", border: "none", cursor: "pointer",
-              background: view === "list" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-              color: view === "list" ? "var(--dz-accent)" : "var(--dz-text-dim)",
-            }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            </button>
-          </div>
+          ))}
         </div>
 
         {/* Search bar — full width */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
           <div style={{
-            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+            display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 10,
             background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
           }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search appointments..." style={{
               background: "transparent", border: "none", outline: "none", width: "100%",
-              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+              fontSize: "0.82rem", color: "var(--dz-text-secondary)",
             }} />
+          </div>
+          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
+          <div className="dz-view-toggle">
+            <button className={`dz-view-btn${view === "table" ? " dz-view-active" : ""}`} onClick={() => setView("table")} title="Table view">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={view === "table" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            <button className={`dz-view-btn${view === "list" ? " dz-view-active" : ""}`} onClick={() => setView("list")} title="Card view">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={view === "list" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+              </svg>
+            </button>
           </div>
         </div>
 

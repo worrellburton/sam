@@ -9,8 +9,9 @@ import { useState, useCallback, useMemo } from "react";
  * @param dataColIndices - Set of column indices (or keys resolved to indices)
  *   that are "data" columns. All other columns are label and never dim.
  */
-export function useCrosshairFocus(dataColIndices: Set<number>) {
-  const [focusMode, setFocusMode] = useState(false);
+export function useCrosshairFocus(dataColIndices: Set<number>, externalFocusMode?: boolean) {
+  const [internalFocusMode, setFocusMode] = useState(false);
+  const focusMode = externalFocusMode ?? internalFocusMode;
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [hoveredCol, setHoveredCol] = useState<number | null>(null);
 
@@ -61,13 +62,13 @@ export function useCrosshairFocus(dataColIndices: Set<number>) {
  * Variant for tables with draggable/dynamic column order.
  * Pass the current column order and a set of "data" column keys.
  */
-export function useCrosshairFocusByKey<K extends string>(columns: K[], dataKeys: Set<K>) {
+export function useCrosshairFocusByKey<K extends string>(columns: K[], dataKeys: Set<K>, externalFocusMode?: boolean) {
   const dataIndices = useMemo(() => {
     const s = new Set<number>();
     columns.forEach((key, i) => { if (dataKeys.has(key)) s.add(i); });
     return s;
   }, [columns, dataKeys]);
-  return useCrosshairFocus(dataIndices);
+  return useCrosshairFocus(dataIndices, externalFocusMode);
 }
 
 /**

@@ -10,6 +10,7 @@ export function meta() {
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_HEADERS = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const DAY_HOURS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 
 const APPT_TYPES = [
@@ -280,7 +281,7 @@ export default function CalendarPage() {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
                   </button>
                   <h2 style={{ margin: 0 }}>
-                    {DAY_HEADERS[selectedDate.getDay()]}, {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}, {selectedDate.getFullYear()}
+                    {DAY_NAMES[selectedDate.getDay()]}, {MONTHS[selectedDate.getMonth()]} {selectedDate.getDate()}, {selectedDate.getFullYear()}
                   </h2>
                   <div style={{ display: "flex", gap: 4, marginLeft: "auto" }}>
                     <button className="dz-cal-btn" onClick={() => {

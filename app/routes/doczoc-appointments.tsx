@@ -240,227 +240,395 @@ export default function AppointmentsPage() {
           </button>
         </div>
 
-        {/* Type sub-filter pills */}
-        {filter === "type" && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
-            <button
-              onClick={() => setTypeFilter(null)}
-              style={{
-                padding: "5px 12px", borderRadius: 20, border: "none", cursor: "pointer",
-                fontSize: "0.72rem", fontWeight: 700,
-                background: !typeFilter ? "rgba(168,85,247,0.15)" : "var(--dz-input-bg, rgba(148,163,184,0.06))",
-                color: !typeFilter ? "#c084fc" : "var(--dz-text-muted)",
-                borderWidth: 1, borderStyle: "solid",
-                borderColor: !typeFilter ? "rgba(168,85,247,0.3)" : "var(--dz-input-border, rgba(148,163,184,0.12))",
-              }}
-            >All Types</button>
-            {procedureTypes.map(([type, count]) => {
-              const color = getTypeColor(type);
-              const active = typeFilter === type;
-              return (
-                <button
-                  key={type}
-                  onClick={() => setTypeFilter(active ? null : type)}
-                  style={{
-                    padding: "5px 12px", borderRadius: 20, cursor: "pointer",
-                    fontSize: "0.72rem", fontWeight: 600,
-                    display: "flex", alignItems: "center", gap: 5,
-                    background: active ? `${color}18` : "var(--dz-input-bg, rgba(148,163,184,0.06))",
-                    color: active ? color : "var(--dz-text-muted)",
-                    border: `1px solid ${active ? `${color}44` : "var(--dz-input-border, rgba(148,163,184,0.12))"}`,
-                    borderLeft: `3px solid ${color}`,
-                  }}
-                >
-                  {type}
-                  <span style={{
-                    fontSize: "0.6rem", fontWeight: 700, padding: "0px 5px", borderRadius: 8,
-                    background: active ? `${color}22` : "rgba(148,163,184,0.08)",
-                    color: active ? color : "var(--dz-text-dim)",
-                  }}>{count}</span>
-                </button>
-              );
-            })}
+        {/* Search bar — full width (hidden in type catalog mode without typeFilter) */}
+        {(filter !== "type" || typeFilter) && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+            <div style={{
+              display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+              background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
+            }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search appointments..." style={{
+                background: "transparent", border: "none", outline: "none", width: "100%",
+                fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+              }} />
+            </div>
+            <CrosshairToggle active={focusMode} onClick={toggleFocus} />
+            <div className="dz-view-toggle">
+              <button className={`dz-view-btn${view === "table" ? " dz-view-active" : ""}`} onClick={() => setView("table")} title="Table view">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={view === "table" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+              </button>
+              <button className={`dz-view-btn${view === "list" ? " dz-view-active" : ""}`} onClick={() => setView("list")} title="Card view">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={view === "list" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                </svg>
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Search bar — full width */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-          <div style={{
-            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-            background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
-          }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search appointments..." style={{
-              background: "transparent", border: "none", outline: "none", width: "100%",
-              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
-            }} />
-          </div>
-          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
-          <div className="dz-view-toggle">
-            <button className={`dz-view-btn${view === "table" ? " dz-view-active" : ""}`} onClick={() => setView("table")} title="Table view">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={view === "table" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-              </svg>
-            </button>
-            <button className={`dz-view-btn${view === "list" ? " dz-view-active" : ""}`} onClick={() => setView("list")} title="Card view">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={view === "list" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Table View */}
-        {view === "table" ? (
-          <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-            <div className="dz-table-wrap">
-              <table className="dz-table" style={{ margin: 0 }}>
-                <thead>
-                  <tr>
-                    {([
-                      { key: "patient" as const, label: "Patient" },
-                      { key: "type" as const, label: "Procedure" },
-                      { key: "date" as const, label: "Date" },
-                      { key: null, label: "Codes" },
-                      { key: "status" as const, label: "Status" },
-                    ] as const).map((col, i) => (
-                      <th
-                        key={i}
-                        onClick={col.key ? () => handleSort(col.key) : undefined}
-                        style={{ cursor: col.key ? "pointer" : "default", userSelect: "none", whiteSpace: "nowrap" }}
-                      >
-                        {col.label}
-                        {col.key && sortCol === col.key && (
-                          <span style={{ marginLeft: 4, fontSize: "0.65rem", opacity: 0.7 }}>
-                            {sortDir === "asc" ? "\u25B2" : "\u25BC"}
-                          </span>
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((a, i) => {
-                    const color = getTypeColor(a.type);
-                    return (
-                      <tr key={`${a.patient.id}-${a.date}-${i}`} style={{ ...getRowStyle(`${a.patient.id}-${i}`), opacity: a.isPast ? 0.7 : 1 }} onMouseEnter={() => onCellEnter(`${a.patient.id}-${i}`, 0)} onMouseLeave={onCellLeave}>
-                        <td>
-                          <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>
-                            <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
-                              {a.patient.name.split(" ").map(n => n[0]).join("")}
+        {/* Type Catalog View — shows appointment types, not individual appointments */}
+        {filter === "type" && !typeFilter ? (
+          view === "table" ? (
+            <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+              <div className="dz-table-wrap">
+                <table className="dz-table" style={{ margin: 0, width: "100%" }}>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: "left" }}>Appointment Type</th>
+                      <th style={{ textAlign: "center" }}>Total</th>
+                      <th style={{ textAlign: "center" }}>Upcoming</th>
+                      <th style={{ textAlign: "center" }}>Completed</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {procedureTypes.map(([type, count]) => {
+                      const color = getTypeColor(type);
+                      const upcoming = appointments.filter(a => a.type === type && !a.isPast).length;
+                      const completed = count - upcoming;
+                      return (
+                        <tr key={type} className="dz-row-clickable" onClick={() => setTypeFilter(type)} style={{ cursor: "pointer", borderLeft: `3px solid ${color}` }}>
+                          <td style={{ padding: "12px 16px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                              <div style={{
+                                width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                background: `${color}15`, border: `1px solid ${color}22`,
+                              }}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  {type.toLowerCase().includes("surgery")
+                                    ? <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                    : <><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></>
+                                  }
+                                </svg>
+                              </div>
+                              <div>
+                                <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{type}</div>
+                              </div>
                             </div>
-                            {a.patient.name}
-                          </Link>
-                        </td>
-                        <td style={{ fontWeight: 600, fontSize: "0.82rem", borderLeft: `3px solid ${color}` }}>{a.type}</td>
-                        <td style={{ fontSize: "0.82rem", whiteSpace: "nowrap" }}>{a.date}</td>
-                        <td>
-                          <div style={{ display: "flex", gap: 3 }}>
-                            {a.codes.slice(0, 2).map(c => (
-                              <span key={c} title={getCodeDescription(c)} style={{
-                                fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
-                                padding: "1px 6px", borderRadius: 4, fontWeight: 600,
-                                background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
-                                color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
-                              }}>{c}</span>
-                            ))}
-                          </div>
-                        </td>
-                        <td>
-                          <span style={{
-                            display: "inline-flex", alignItems: "center", gap: 5,
-                            fontSize: "0.68rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
-                            background: a.isPast ? "rgba(148,163,184,0.1)" : "rgba(34,197,94,0.12)",
-                            color: a.isPast ? "#64748b" : "#22c55e",
-                          }}>
-                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: a.isPast ? "#64748b" : "#22c55e" }} />
-                            {a.isPast ? "Completed" : "Upcoming"}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{count}</span>
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            <span style={{
+                              fontSize: "0.68rem", fontWeight: 700, padding: "2px 8px", borderRadius: 10,
+                              background: "rgba(34,197,94,0.12)", color: "#22c55e",
+                            }}>{upcoming}</span>
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            <span style={{
+                              fontSize: "0.68rem", fontWeight: 700, padding: "2px 8px", borderRadius: 10,
+                              background: "rgba(148,163,184,0.1)", color: "#64748b",
+                            }}>{completed}</span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            {filtered.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "var(--dz-text-dim)" }}>No appointments found</div>}
-          </div>
-        ) : (
-          /* Card/List View */
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {filtered.map((a, i) => {
-              const color = getTypeColor(a.type);
-              return (
-                <div
-                  key={`${a.patient.id}-${a.date}-${i}`}
-                  className="dz-card"
-                  style={{
-                    padding: "14px 18px", display: "flex", alignItems: "center", gap: 14,
-                    borderLeft: `3px solid ${color}`, opacity: a.isPast ? 0.7 : 1,
-                  }}
-                >
-                  <div style={{ width: 50, textAlign: "center", flexShrink: 0 }}>
-                    <div style={{ fontSize: "0.68rem", color: "var(--dz-text-dim)", fontWeight: 600 }}>
-                      {parseDateLoose(a.date).toLocaleDateString("en-US", { month: "short" })}
-                    </div>
-                    <div style={{ fontSize: "1.2rem", fontWeight: 800, color: a.isPast ? "var(--dz-text-dim)" : "var(--dz-text-primary)" }}>
-                      {parseDateLoose(a.date).getDate()}
-                    </div>
-                  </div>
-                  <div style={{
-                    width: 36, height: 36, borderRadius: 8, flexShrink: 0,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    background: `${color}15`, border: `1px solid ${color}22`,
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+              {procedureTypes.map(([type, count]) => {
+                const color = getTypeColor(type);
+                const upcoming = appointments.filter(a => a.type === type && !a.isPast).length;
+                const completed = count - upcoming;
+                return (
+                  <div key={type} className="dz-card" onClick={() => setTypeFilter(type)} style={{
+                    padding: "16px 18px", cursor: "pointer", borderLeft: `3px solid ${color}`,
                   }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      {a.type.toLowerCase().includes("surgery")
-                        ? <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                        : <><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></>
-                      }
-                    </svg>
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 2 }}>{a.type}</div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--dz-text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {a.notes}
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                      <div style={{
+                        width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        background: `${color}15`, border: `1px solid ${color}22`,
+                      }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          {type.toLowerCase().includes("surgery")
+                            ? <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            : <><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></>
+                          }
+                        </svg>
+                      </div>
+                      <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{type}</div>
+                    </div>
+                    <div style={{ display: "flex", gap: 12 }}>
+                      <div>
+                        <div style={{ fontSize: "1.2rem", fontWeight: 800, color }}>{count}</div>
+                        <div style={{ fontSize: "0.65rem", color: "var(--dz-text-muted)" }}>Total</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#22c55e" }}>{upcoming}</div>
+                        <div style={{ fontSize: "0.65rem", color: "var(--dz-text-muted)" }}>Upcoming</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#64748b" }}>{completed}</div>
+                        <div style={{ fontSize: "0.65rem", color: "var(--dz-text-muted)" }}>Completed</div>
+                      </div>
                     </div>
                   </div>
-                  <Link to={`/doczoc/patients/${a.patient.id}`} style={{
-                    display: "flex", alignItems: "center", gap: 6,
-                    fontSize: "0.75rem", fontWeight: 600, color: "var(--dz-accent-text)", textDecoration: "none",
-                    padding: "4px 10px", borderRadius: 6, background: "rgba(99,102,241,0.08)", whiteSpace: "nowrap",
-                  }}>
-                    <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", fontWeight: 700, flexShrink: 0 }}>
-                      {a.patient.name.split(" ").map(n => n[0]).join("")}
-                    </div>
-                    {a.patient.name}
-                  </Link>
-                  <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
-                    {a.codes.slice(0, 2).map(c => (
-                      <span key={c} title={getCodeDescription(c)} style={{
-                        fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
-                        padding: "2px 6px", borderRadius: 4, fontWeight: 600,
-                        background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
-                        color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
-                      }}>{c}</span>
-                    ))}
-                  </div>
-                  <span style={{
-                    fontSize: "0.65rem", fontWeight: 700, padding: "3px 8px", borderRadius: 20,
-                    background: a.isPast ? "rgba(148,163,184,0.1)" : "rgba(34,197,94,0.12)",
-                    color: a.isPast ? "#64748b" : "#22c55e", whiteSpace: "nowrap",
-                  }}>
-                    {a.isPast ? "Completed" : "Upcoming"}
-                  </span>
+                );
+              })}
+            </div>
+          )
+        ) : filter === "type" && typeFilter ? (
+          <>
+            {/* Back to type catalog + type filter header */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+              <button onClick={() => setTypeFilter(null)} style={{
+                display: "flex", alignItems: "center", gap: 6, padding: "6px 12px",
+                borderRadius: 8, border: "1px solid rgba(148,163,184,0.12)",
+                background: "transparent", color: "var(--dz-text-muted)", cursor: "pointer",
+                fontSize: "0.75rem", fontWeight: 600,
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+                Back
+              </button>
+              <span style={{
+                fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)",
+                borderLeft: `3px solid ${getTypeColor(typeFilter)}`, paddingLeft: 10,
+              }}>{typeFilter}</span>
+              <span style={{ fontSize: "0.68rem", color: "var(--dz-text-muted)" }}>{filtered.length} appointment{filtered.length !== 1 ? "s" : ""}</span>
+            </div>
+            {/* Table/List of filtered appointments */}
+            {view === "table" ? (
+              <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+                <div className="dz-table-wrap">
+                  <table className="dz-table" style={{ margin: 0 }}>
+                    <thead>
+                      <tr>
+                        <th>Patient</th>
+                        <th>Procedure</th>
+                        <th>Date</th>
+                        <th>Codes</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filtered.map((a, i) => {
+                        const color = getTypeColor(a.type);
+                        return (
+                          <tr key={`${a.patient.id}-${a.date}-${i}`} style={{ opacity: a.isPast ? 0.7 : 1 }}>
+                            <td>
+                              <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>
+                                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
+                                  {a.patient.name.split(" ").map(n => n[0]).join("")}
+                                </div>
+                                {a.patient.name}
+                              </Link>
+                            </td>
+                            <td style={{ fontWeight: 600, fontSize: "0.82rem", borderLeft: `3px solid ${color}` }}>{a.type}</td>
+                            <td style={{ fontSize: "0.82rem", whiteSpace: "nowrap" }}>{a.date}</td>
+                            <td>
+                              <div style={{ display: "flex", gap: 3 }}>
+                                {a.codes.slice(0, 2).map(c => (
+                                  <span key={c} title={getCodeDescription(c)} style={{
+                                    fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
+                                    padding: "1px 6px", borderRadius: 4, fontWeight: 600,
+                                    background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
+                                    color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
+                                  }}>{c}</span>
+                                ))}
+                              </div>
+                            </td>
+                            <td>
+                              <span style={{
+                                display: "inline-flex", alignItems: "center", gap: 5,
+                                fontSize: "0.68rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
+                                background: a.isPast ? "rgba(148,163,184,0.1)" : "rgba(34,197,94,0.12)",
+                                color: a.isPast ? "#64748b" : "#22c55e",
+                              }}>
+                                <span style={{ width: 6, height: 6, borderRadius: "50%", background: a.isPast ? "#64748b" : "#22c55e" }} />
+                                {a.isPast ? "Completed" : "Upcoming"}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-              );
-            })}
-            {filtered.length === 0 && (
-              <div style={{ textAlign: "center", padding: 60, color: "var(--dz-text-dim)", fontSize: "0.9rem" }}>
-                No appointments found
+                {filtered.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "var(--dz-text-dim)" }}>No appointments found</div>}
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {filtered.map((a, i) => {
+                  const color = getTypeColor(a.type);
+                  return (
+                    <div key={`${a.patient.id}-${a.date}-${i}`} className="dz-card" style={{
+                      padding: "14px 18px", display: "flex", alignItems: "center", gap: 14,
+                      borderLeft: `3px solid ${color}`, opacity: a.isPast ? 0.7 : 1,
+                    }}>
+                      <div style={{ width: 50, textAlign: "center", flexShrink: 0 }}>
+                        <div style={{ fontSize: "0.68rem", color: "var(--dz-text-dim)", fontWeight: 600 }}>{parseDateLoose(a.date).toLocaleDateString("en-US", { month: "short" })}</div>
+                        <div style={{ fontSize: "1.2rem", fontWeight: 800, color: a.isPast ? "var(--dz-text-dim)" : "var(--dz-text-primary)" }}>{parseDateLoose(a.date).getDate()}</div>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 2 }}>{a.type}</div>
+                        <div style={{ fontSize: "0.75rem", color: "var(--dz-text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.notes}</div>
+                      </div>
+                      <Link to={`/doczoc/patients/${a.patient.id}`} style={{
+                        display: "flex", alignItems: "center", gap: 6,
+                        fontSize: "0.75rem", fontWeight: 600, color: "var(--dz-accent-text)", textDecoration: "none",
+                        padding: "4px 10px", borderRadius: 6, background: "rgba(99,102,241,0.08)", whiteSpace: "nowrap",
+                      }}>
+                        <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", fontWeight: 700, flexShrink: 0 }}>
+                          {a.patient.name.split(" ").map(n => n[0]).join("")}
+                        </div>
+                        {a.patient.name}
+                      </Link>
+                      <span style={{
+                        fontSize: "0.65rem", fontWeight: 700, padding: "3px 8px", borderRadius: 20,
+                        background: a.isPast ? "rgba(148,163,184,0.1)" : "rgba(34,197,94,0.12)",
+                        color: a.isPast ? "#64748b" : "#22c55e", whiteSpace: "nowrap",
+                      }}>{a.isPast ? "Completed" : "Upcoming"}</span>
+                    </div>
+                  );
+                })}
+                {filtered.length === 0 && <div style={{ textAlign: "center", padding: 60, color: "var(--dz-text-dim)" }}>No appointments found</div>}
               </div>
             )}
-          </div>
+          </>
+        ) : (
+          /* Standard Table/List View — for Upcoming/New/All tabs */
+          view === "table" ? (
+            <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+              <div className="dz-table-wrap">
+                <table className="dz-table" style={{ margin: 0 }}>
+                  <thead>
+                    <tr>
+                      {([
+                        { key: "patient" as const, label: "Patient" },
+                        { key: "type" as const, label: "Procedure" },
+                        { key: "date" as const, label: "Date" },
+                        { key: null, label: "Codes" },
+                        { key: "status" as const, label: "Status" },
+                      ] as const).map((col, i) => (
+                        <th
+                          key={i}
+                          onClick={col.key ? () => handleSort(col.key) : undefined}
+                          style={{ cursor: col.key ? "pointer" : "default", userSelect: "none", whiteSpace: "nowrap" }}
+                        >
+                          {col.label}
+                          {col.key && sortCol === col.key && (
+                            <span style={{ marginLeft: 4, fontSize: "0.65rem", opacity: 0.7 }}>
+                              {sortDir === "asc" ? "\u25B2" : "\u25BC"}
+                            </span>
+                          )}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((a, i) => {
+                      const color = getTypeColor(a.type);
+                      return (
+                        <tr key={`${a.patient.id}-${a.date}-${i}`} style={{ ...getRowStyle(`${a.patient.id}-${i}`), opacity: a.isPast ? 0.7 : 1 }} onMouseEnter={() => onCellEnter(`${a.patient.id}-${i}`, 0)} onMouseLeave={onCellLeave}>
+                          <td>
+                            <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>
+                              <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
+                                {a.patient.name.split(" ").map(n => n[0]).join("")}
+                              </div>
+                              {a.patient.name}
+                            </Link>
+                          </td>
+                          <td style={{ fontWeight: 600, fontSize: "0.82rem", borderLeft: `3px solid ${color}` }}>{a.type}</td>
+                          <td style={{ fontSize: "0.82rem", whiteSpace: "nowrap" }}>{a.date}</td>
+                          <td>
+                            <div style={{ display: "flex", gap: 3 }}>
+                              {a.codes.slice(0, 2).map(c => (
+                                <span key={c} title={getCodeDescription(c)} style={{
+                                  fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
+                                  padding: "1px 6px", borderRadius: 4, fontWeight: 600,
+                                  background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
+                                  color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
+                                }}>{c}</span>
+                              ))}
+                            </div>
+                          </td>
+                          <td>
+                            <span style={{
+                              display: "inline-flex", alignItems: "center", gap: 5,
+                              fontSize: "0.68rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
+                              background: a.isPast ? "rgba(148,163,184,0.1)" : "rgba(34,197,94,0.12)",
+                              color: a.isPast ? "#64748b" : "#22c55e",
+                            }}>
+                              <span style={{ width: 6, height: 6, borderRadius: "50%", background: a.isPast ? "#64748b" : "#22c55e" }} />
+                              {a.isPast ? "Completed" : "Upcoming"}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {filtered.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "var(--dz-text-dim)" }}>No appointments found</div>}
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {filtered.map((a, i) => {
+                const color = getTypeColor(a.type);
+                return (
+                  <div key={`${a.patient.id}-${a.date}-${i}`} className="dz-card" style={{
+                    padding: "14px 18px", display: "flex", alignItems: "center", gap: 14,
+                    borderLeft: `3px solid ${color}`, opacity: a.isPast ? 0.7 : 1,
+                  }}>
+                    <div style={{ width: 50, textAlign: "center", flexShrink: 0 }}>
+                      <div style={{ fontSize: "0.68rem", color: "var(--dz-text-dim)", fontWeight: 600 }}>{parseDateLoose(a.date).toLocaleDateString("en-US", { month: "short" })}</div>
+                      <div style={{ fontSize: "1.2rem", fontWeight: 800, color: a.isPast ? "var(--dz-text-dim)" : "var(--dz-text-primary)" }}>{parseDateLoose(a.date).getDate()}</div>
+                    </div>
+                    <div style={{
+                      width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: `${color}15`, border: `1px solid ${color}22`,
+                    }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        {a.type.toLowerCase().includes("surgery")
+                          ? <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                          : <><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></>
+                        }
+                      </svg>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 2 }}>{a.type}</div>
+                      <div style={{ fontSize: "0.75rem", color: "var(--dz-text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.notes}</div>
+                    </div>
+                    <Link to={`/doczoc/patients/${a.patient.id}`} style={{
+                      display: "flex", alignItems: "center", gap: 6,
+                      fontSize: "0.75rem", fontWeight: 600, color: "var(--dz-accent-text)", textDecoration: "none",
+                      padding: "4px 10px", borderRadius: 6, background: "rgba(99,102,241,0.08)", whiteSpace: "nowrap",
+                    }}>
+                      <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.5rem", fontWeight: 700, flexShrink: 0 }}>
+                        {a.patient.name.split(" ").map(n => n[0]).join("")}
+                      </div>
+                      {a.patient.name}
+                    </Link>
+                    <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                      {a.codes.slice(0, 2).map(c => (
+                        <span key={c} title={getCodeDescription(c)} style={{
+                          fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace",
+                          padding: "2px 6px", borderRadius: 4, fontWeight: 600,
+                          background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)",
+                          color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
+                        }}>{c}</span>
+                      ))}
+                    </div>
+                    <span style={{
+                      fontSize: "0.65rem", fontWeight: 700, padding: "3px 8px", borderRadius: 20,
+                      background: a.isPast ? "rgba(148,163,184,0.1)" : "rgba(34,197,94,0.12)",
+                      color: a.isPast ? "#64748b" : "#22c55e", whiteSpace: "nowrap",
+                    }}>{a.isPast ? "Completed" : "Upcoming"}</span>
+                  </div>
+                );
+              })}
+              {filtered.length === 0 && <div style={{ textAlign: "center", padding: 60, color: "var(--dz-text-dim)" }}>No appointments found</div>}
+            </div>
+          )
         )}
       </main>
     </div>

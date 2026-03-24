@@ -743,9 +743,8 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
   const [sortCol, setSortCol] = useState<SurgColKey | null>("date");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
-  const crosshair = useCrosshairFocusByKey(columns, SURG_DATA_KEYS);
-  const focusMode = externalFocusMode ?? crosshair.focusMode;
-  const { onCellEnter, onCellLeave, getCellStyle, getRowStyle } = crosshair;
+  const crosshair = useCrosshairFocusByKey(columns, SURG_DATA_KEYS, externalFocusMode);
+  const { focusMode, onCellEnter, onCellLeave, getCellStyle, getRowStyle } = crosshair;
 
   const handleSort = (col: SurgColKey) => {
     if (sortCol === col) { setSortDir(d => d === "asc" ? "desc" : "asc"); }

@@ -224,9 +224,8 @@ function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { pa
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
-  const crosshair = useCrosshairFocusByKey(columns, PATIENT_DATA_KEYS);
-  const focusMode = externalFocusMode ?? crosshair.focusMode;
-  const { onCellEnter, onCellLeave, getCellStyle, getRowStyle } = crosshair;
+  const crosshair = useCrosshairFocusByKey(columns, PATIENT_DATA_KEYS, externalFocusMode);
+  const { focusMode, onCellEnter, onCellLeave, getCellStyle, getRowStyle } = crosshair;
 
   const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
   const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };

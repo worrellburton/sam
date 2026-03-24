@@ -6563,8 +6563,9 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   padding: 16px 12px;
   transition: width 0.25s ease;
   flex-shrink: 0;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 10;
 }
 .dz-sidebar-collapsed { width: 68px; }
@@ -7207,17 +7208,18 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   pointer-events: none;
 }
 .dz-platform { position: relative; }
-.dz-platform .dz-sidebar { position: sticky; top: 0; z-index: 2; align-self: flex-start; }
+.dz-platform .dz-sidebar { position: fixed; top: 0; left: 0; z-index: 2; }
 
 .dz-platform-main {
   flex: 1;
   padding: 36px 40px;
-  margin-left: 0;
+  margin-left: 240px;
   overflow-y: auto;
   transition: margin-left 0.25s ease;
   position: relative;
   z-index: 1;
 }
+.dz-main-expanded { margin-left: 68px; }
 
 /* Ambient atmosphere overlay — subtle, alive, restrained */
 .dz-platform-main::before {

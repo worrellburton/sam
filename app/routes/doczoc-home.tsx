@@ -68,12 +68,31 @@ function useHomeData() {
     // Allergies flags
     const allergyPatients = PATIENTS.filter(p => p.allergies.length > 0);
 
+    // Upcoming birthdays (next 60 days)
+    const upcomingBirthdays = PATIENTS
+      .map(p => {
+        const parts = p.dob.split("/");
+        if (parts.length !== 3) return null;
+        const month = parseInt(parts[0], 10) - 1;
+        const day = parseInt(parts[1], 10);
+        const thisYear = now.getFullYear();
+        let bday = new Date(thisYear, month, day);
+        if (bday < now) bday = new Date(thisYear + 1, month, day);
+        const diff = (bday.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+        if (diff > 60) return null;
+        const age = thisYear - parseInt(parts[2], 10) + (bday.getFullYear() > thisYear ? 0 : 0);
+        const turningAge = bday.getFullYear() - parseInt(parts[2], 10);
+        return { patient: p, birthday: bday, daysUntil: Math.ceil(diff), turningAge };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a!.daysUntil - b!.daysUntil) as { patient: Patient; birthday: Date; daysUntil: number; turningAge: number }[];
+
     return {
       nextAppt, nextSurgery, upcomingSurgeries, thisWeekSurgeries,
       unsignedCharts, missingConsent, expiringAuth,
       pendingInvoices, overdueInvoices, unbilledEncounters,
       totalCharged, totalPaid, totalOwed, collectionRate,
-      copaysToday, allergyPatients, upcomingAppts,
+      copaysToday, allergyPatients, upcomingAppts, upcomingBirthdays,
       totalPatients: PATIENTS.length,
       activePatients: PATIENTS.filter(p => p.status === "Active").length,
     };
@@ -182,7 +201,124 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ── Row 3: Revenue + Claims ── */}
+        {/* ── Row 3: Upcoming Appointments + Birthdays ── */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+          {/* Upcoming Appointments with patient cards */}
+          <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+            <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Appointments</span>
+              <Link to="/doczoc/appointments" style={{ fontSize: "0.72rem", color: "#818cf8", fontWeight: 600, textDecoration: "none" }}>View All →</Link>
+            </div>
+            <div style={{ maxHeight: 340, overflowY: "auto" }}>
+              {data.upcomingAppts.slice(0, 6).map((a, i) => {
+                const isSurgery = a.type.toLowerCase().includes("surgery");
+                const colors = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
+                const avatarColor = colors[a.patient.name.charCodeAt(0) % colors.length];
+                return (
+                  <Link
+                    key={i}
+                    to={`/doczoc/patients/${a.patient.id}`}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 12, padding: "12px 18px",
+                      textDecoration: "none", borderBottom: "1px solid rgba(99,102,241,0.05)",
+                      transition: "background 0.15s",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.04)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+                  >
+                    <div style={{
+                      width: 38, height: 38, borderRadius: 10, flexShrink: 0,
+                      background: `${avatarColor}18`, color: avatarColor,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "0.68rem", fontWeight: 700,
+                    }}>{a.patient.name.split(" ").map(n => n[0]).join("")}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{a.patient.name}</span>
+                        {isSurgery && <span style={{ fontSize: "0.58rem", fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>SURGERY</span>}
+                      </div>
+                      <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)", marginTop: 1 }}>{a.type}</div>
+                    </div>
+                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                      <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--dz-text-secondary)" }}>{a.date}</div>
+                      <div style={{ display: "flex", gap: 3, marginTop: 3, justifyContent: "flex-end" }}>
+                        {a.codes.slice(0, 2).map(c => (
+                          <span key={c} style={{
+                            fontSize: "0.58rem", fontFamily: "'SF Mono', Consolas, monospace",
+                            padding: "0px 4px", borderRadius: 3, fontWeight: 600,
+                            background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.1)" : "rgba(124,58,237,0.1)",
+                            color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
+                          }}>{c}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+              {data.upcomingAppts.length === 0 && (
+                <div style={{ padding: 24, textAlign: "center", color: "#64748b", fontSize: "0.78rem" }}>No upcoming appointments</div>
+              )}
+            </div>
+          </div>
+
+          {/* Upcoming Patient Birthdays */}
+          <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+            <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>
+                <span style={{ marginRight: 6 }}>Upcoming Birthdays</span>
+              </span>
+              <span style={{ fontSize: "0.68rem", color: "#64748b" }}>Next 60 days</span>
+            </div>
+            <div style={{ maxHeight: 340, overflowY: "auto" }}>
+              {data.upcomingBirthdays.map((b, i) => {
+                const colors = ["#ec4899", "#8b5cf6", "#06b6d4", "#f59e0b", "#22c55e", "#6366f1"];
+                const c = colors[b.patient.name.charCodeAt(0) % colors.length];
+                const isToday = b.daysUntil === 0;
+                return (
+                  <Link
+                    key={i}
+                    to={`/doczoc/patients/${b.patient.id}`}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 12, padding: "12px 18px",
+                      textDecoration: "none", borderBottom: "1px solid rgba(99,102,241,0.05)",
+                      transition: "background 0.15s",
+                      background: isToday ? "rgba(236,72,153,0.06)" : "transparent",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = isToday ? "rgba(236,72,153,0.1)" : "rgba(99,102,241,0.04)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = isToday ? "rgba(236,72,153,0.06)" : "transparent"; }}
+                  >
+                    <div style={{
+                      width: 38, height: 38, borderRadius: 10, flexShrink: 0,
+                      background: `${c}18`, color: c,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "0.68rem", fontWeight: 700,
+                    }}>{b.patient.name.split(" ").map(n => n[0]).join("")}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{b.patient.name}</div>
+                      <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
+                        {b.birthday.toLocaleDateString("en-US", { month: "short", day: "numeric" })} · Turning {b.turningAge}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                      {isToday ? (
+                        <span style={{ fontSize: "0.7rem", fontWeight: 700, padding: "3px 8px", borderRadius: 8, background: "rgba(236,72,153,0.15)", color: "#ec4899" }}>Today!</span>
+                      ) : (
+                        <span style={{ fontSize: "0.72rem", fontWeight: 600, color: b.daysUntil <= 7 ? "#f59e0b" : "#64748b" }}>
+                          {b.daysUntil === 1 ? "Tomorrow" : `${b.daysUntil} days`}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+              {data.upcomingBirthdays.length === 0 && (
+                <div style={{ padding: 24, textAlign: "center", color: "#64748b", fontSize: "0.78rem" }}>No upcoming birthdays</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Row 4: Revenue + Claims ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 20 }}>
           <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
             <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Revenue Collected</div>

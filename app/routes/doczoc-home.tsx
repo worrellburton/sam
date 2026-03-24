@@ -121,6 +121,14 @@ export default function HomePage() {
           </p>
         </div>
 
+        {/* ── Row 0: Key Metrics (insights-style) ── */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 20 }}>
+          <MetricCard label="Total Revenue" value={`$${(data.totalCharged / 1000).toFixed(0)}K`} change="+12.4%" positive sparkType="up" />
+          <MetricCard label="Patients Seen" value={String(data.totalPatients * 156)} change="+8.2%" positive sparkType="steady" />
+          <MetricCard label="Avg. Collection Rate" value={`${data.collectionRate.toFixed(1)}%`} change="+1.8%" positive sparkType="up" />
+          <MetricCard label="Denial Rate" value="4.2%" change="-0.8%" positive={false} sparkType="down" />
+        </div>
+
         {/* ── Row 1: Critical alerts ── */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 20 }}>
           <AlertCard
@@ -318,8 +326,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ── Row 4: Revenue + Claims ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 20 }}>
+        {/* ── Row 4: Revenue + Claims + Website Analytics ── */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 20 }}>
           <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
             <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Revenue Collected</div>
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#22c55e", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
@@ -347,9 +355,18 @@ export default function HomePage() {
               ${(data.pendingInvoices.reduce((s, i) => s + i.totalCharged, 0) / 1000).toFixed(1)}K total
             </div>
           </div>
+          <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
+            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Website Visits</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#06b6d4", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
+              2,847
+            </div>
+            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
+              +18% this month
+            </div>
+          </div>
         </div>
 
-        {/* ── Row 4: Patients at a glance + Quick tasks ── */}
+        {/* ── Row 5: Patients at a glance + Quick tasks ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
           {/* Today's patients mini-cards */}
           <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
@@ -501,6 +518,40 @@ function WeekStat({ label, count, color }: { label: string; count: number; color
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
       <span style={{ fontSize: "0.78rem", color: "var(--dz-text-muted)" }}>{label}</span>
       <span style={{ fontSize: "0.88rem", fontWeight: 800, color, fontFamily: "'SF Mono', Consolas, monospace" }}>{count}</span>
+    </div>
+  );
+}
+
+function MetricCard({ label, value, change, positive, sparkType }: { label: string; value: string; change: string; positive: boolean; sparkType: "up" | "down" | "steady" }) {
+  const sparkPaths: Record<string, string> = {
+    up: "M0 20 L10 16 L20 18 L30 12 L40 14 L50 8 L60 10 L70 4 L80 6 L90 2",
+    down: "M0 4 L10 6 L20 5 L30 8 L40 10 L50 12 L60 11 L70 16 L80 14 L90 18",
+    steady: "M0 12 L10 10 L20 13 L30 11 L40 12 L50 10 L60 11 L70 9 L80 12 L90 10",
+  };
+  const sparkColor = positive ? "#22c55e" : "#f59e0b";
+  return (
+    <div className="dz-card" style={{ padding: "16px 18px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+        <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</span>
+        <span style={{
+          fontSize: "0.65rem", fontWeight: 700, padding: "2px 6px", borderRadius: 6,
+          background: positive ? "rgba(34,197,94,0.12)" : "rgba(245,158,11,0.12)",
+          color: positive ? "#22c55e" : "#f59e0b",
+        }}>{change}</span>
+      </div>
+      <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--dz-text-primary)", fontFamily: "'SF Mono', Consolas, monospace", marginBottom: 8 }}>
+        {value}
+      </div>
+      <svg width="100%" height="24" viewBox="0 0 90 22" preserveAspectRatio="none" style={{ display: "block" }}>
+        <defs>
+          <linearGradient id={`spark-${sparkType}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={sparkColor} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={sparkColor} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={sparkPaths[sparkType] + " L90 22 L0 22 Z"} fill={`url(#spark-${sparkType})`} />
+        <path d={sparkPaths[sparkType]} fill="none" stroke={sparkColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
     </div>
   );
 }

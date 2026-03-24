@@ -23,14 +23,14 @@ function InsuranceLogo({ name }: { name: string }) {
     : name.toLowerCase().includes("medicare") ? "medicare.gov"
     : null;
   const [imgFailed, setImgFailed] = useState(false);
-  const logoUrl = domain ? `https://cdn.brandfetch.io/${domain}/w/56/h/56/fallback/lettermark/theme/dark/type/icon?c=1id3n10pdBTarCHI0db` : null;
+  const logoUrl = domain ? `https://cdn.brandfetch.io/${domain}/w/120/h/40/fallback/lettermark/theme/dark/type/logo?c=1id3n10pdBTarCHI0db` : null;
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }} title={name}>
       {logoUrl && !imgFailed ? (
         <img
           src={logoUrl}
           alt={name}
-          style={{ width: 28, height: 28, borderRadius: 6, objectFit: "contain", background: "#fff", padding: 2 }}
+          style={{ width: 60, height: 24, borderRadius: 4, objectFit: "contain", background: "#fff", padding: "2px 4px" }}
           onError={() => setImgFailed(true)}
         />
       ) : (

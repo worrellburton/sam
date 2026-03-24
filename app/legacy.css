@@ -6559,7 +6559,6 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   flex-shrink: 0;
   position: sticky;
   top: 0;
-  overflow: hidden;
   z-index: 10;
 }
 .dz-sidebar-collapsed { width: 68px; }
@@ -7265,6 +7264,11 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   align-items: center;
   justify-content: space-between;
   margin-bottom: 32px;
+  animation: dz-fade-in 0.5s ease-out both;
+}
+@keyframes dz-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .dz-platform-header h1 { font-size: 1.4rem; font-weight: 800; color: #f1f5f9; margin-bottom: 4px; }
 .dz-platform-header p { font-size: 0.82rem; color: #94a3b8; line-height: 1.5; }

@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Link } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { PATIENTS, type Patient } from "~/data/patients";
+import { useCrosshairFocus, CrosshairToggle } from "~/hooks/useCrosshairFocus";
 
 export function meta() {
   return [{ title: "Appointments | DocZoc" }];
@@ -22,6 +23,18 @@ function parseDateLoose(s: string) {
   return isNaN(d.getTime()) ? new Date() : d;
 }
 
+// Demo future appointments so "upcoming" isn't empty
+const FUTURE_APPTS: { patientIdx: number; type: string; daysOut: number; notes: string; codes: string[] }[] = [
+  { patientIdx: 0, type: "Post-Op Follow-up (6 weeks)", daysOut: 2, notes: "6-week check ACL reconstruction. Assess ROM and stability.", codes: ["S83.511A", "Z96.651"] },
+  { patientIdx: 1, type: "New Patient Consultation", daysOut: 3, notes: "Right shoulder pain x 2 months, MRI pending review.", codes: ["M75.111", "99203"] },
+  { patientIdx: 2, type: "Pre-Op Evaluation", daysOut: 5, notes: "Pre-op clearance for knee arthroscopy. Labs ordered.", codes: ["M23.211", "99213"] },
+  { patientIdx: 3, type: "Surgery — Hip Arthroscopy", daysOut: 7, notes: "Arthroscopic labral repair, right hip. NPO after midnight.", codes: ["M16.11", "29916"] },
+  { patientIdx: 4, type: "Follow-up — Wrist", daysOut: 10, notes: "8-week follow-up distal radius fracture. X-ray in office.", codes: ["S52.501A", "Z87.39"] },
+  { patientIdx: 5, type: "Initial Consultation", daysOut: 12, notes: "New referral — left knee meniscus tear, failed conservative tx.", codes: ["M23.211", "99203"] },
+  { patientIdx: 0, type: "Physical Therapy Eval", daysOut: 14, notes: "PT progression check, advance to phase III protocol.", codes: ["S83.511A", "97161"] },
+  { patientIdx: 6, type: "Surgery — Rotator Cuff Repair", daysOut: 16, notes: "Arthroscopic RCR, right shoulder. Nerve block planned.", codes: ["M75.111", "29827"] },
+];
+
 function getAllAppointments(): ApptRecord[] {
   const now = new Date();
   const records: ApptRecord[] = [];
@@ -31,6 +44,15 @@ function getAllAppointments(): ApptRecord[] {
       const d = parseDateLoose(v.date);
       records.push({ patient: p, date: v.date, type: v.type, notes: v.notes, codes: v.codes, isPast: d < now });
     }
+  }
+  // Add demo future appointments
+  for (const fa of FUTURE_APPTS) {
+    const p = PATIENTS[fa.patientIdx % PATIENTS.length];
+    if (!p) continue;
+    const d = new Date(now);
+    d.setDate(d.getDate() + fa.daysOut);
+    const dateStr = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    records.push({ patient: p, date: dateStr, type: fa.type, notes: fa.notes, codes: fa.codes, isPast: false });
   }
   records.sort((a, b) => parseDateLoose(b.date).getTime() - parseDateLoose(a.date).getTime());
   return records;
@@ -50,7 +72,9 @@ export default function AppointmentsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const appointments = useMemo(() => getAllAppointments(), []);
-  const [filter, setFilter] = useState<"all" | "upcoming" | "past">("all");
+  const [filter, setFilter] = useState<"all" | "upcoming" | "past">("upcoming");
+  const DATA_COLS = useMemo(() => new Set([0, 1, 2, 3, 4]), []);
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getRowStyle } = useCrosshairFocus(DATA_COLS);
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"table" | "list">("table");
   const [sortCol, setSortCol] = useState<"patient" | "type" | "date" | "status" | null>(null);
@@ -149,6 +173,7 @@ export default function AppointmentsPage() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
             </button>
           </div>
+          {view === "table" && <CrosshairToggle active={focusMode} onClick={toggleFocus} />}
         </div>
 
         {/* Table View */}
@@ -162,7 +187,6 @@ export default function AppointmentsPage() {
                       { key: "patient" as const, label: "Patient" },
                       { key: "type" as const, label: "Type" },
                       { key: "date" as const, label: "Date" },
-                      { key: null, label: "Notes" },
                       { key: null, label: "Codes" },
                       { key: "status" as const, label: "Status" },
                     ] as const).map((col, i) => (
@@ -185,7 +209,7 @@ export default function AppointmentsPage() {
                   {filtered.map((a, i) => {
                     const color = getTypeColor(a.type);
                     return (
-                      <tr key={`${a.patient.id}-${a.date}-${i}`} style={{ opacity: a.isPast ? 0.7 : 1 }}>
+                      <tr key={`${a.patient.id}-${a.date}-${i}`} style={{ ...getRowStyle(`${a.patient.id}-${i}`), opacity: a.isPast ? 0.7 : 1 }} onMouseEnter={() => onCellEnter(`${a.patient.id}-${i}`, 0)} onMouseLeave={onCellLeave}>
                         <td>
                           <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>
                             <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
@@ -196,7 +220,6 @@ export default function AppointmentsPage() {
                         </td>
                         <td style={{ fontWeight: 600, fontSize: "0.82rem", borderLeft: `3px solid ${color}` }}>{a.type}</td>
                         <td style={{ fontSize: "0.82rem", whiteSpace: "nowrap" }}>{a.date}</td>
-                        <td style={{ fontSize: "0.75rem", color: "var(--dz-text-muted)", maxWidth: 300, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.notes}</td>
                         <td>
                           <div style={{ display: "flex", gap: 3 }}>
                             {a.codes.slice(0, 2).map(c => (

@@ -325,7 +325,7 @@ function PatientDetailsSection({ patient }: { patient: Patient }) {
                 {patient.medications.length > 0 ? (
                   <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
                     {patient.medications.map((med) => (
-                      <li key={med} style={{ fontSize: "0.82rem", color: "#c4c4d4", padding: "2px 0" }}>
+                      <li key={med} style={{ fontSize: "0.82rem", color: "var(--dz-text-muted)", padding: "2px 0" }}>
                         {med}
                       </li>
                     ))}
@@ -677,7 +677,7 @@ function InvoicesSection({ patient }: { patient: Patient }) {
                   <div style={{
                     fontSize: "0.88rem", fontWeight: 800,
                     fontFamily: "'SF Mono', Consolas, monospace",
-                    color: "#e2e8f0",
+                    color: "var(--dz-text-primary)",
                   }}>${inv.totalCharged.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
 
                   {/* Status badge */}
@@ -845,7 +845,7 @@ function DocumentsSection({ patient }: { patient: Patient }) {
                       {docIcon(doc.icon)}
                     </div>
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
+                      <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-secondary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
                       <div style={{ fontSize: "0.68rem", color: "#64748b" }}>PDF</div>
                     </div>
                   </button>
@@ -854,7 +854,7 @@ function DocumentsSection({ patient }: { patient: Patient }) {
                   <div key={`upload-${i}`} style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 14px", borderRadius: 10, border: "1px solid rgba(99,102,241,0.12)", background: "rgba(99,102,241,0.04)" }}>
                     <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}>{docIcon("file")}</div>
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#e4e4ee", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
+                      <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-secondary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
                       <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{doc.size} &middot; {doc.date}</div>
                     </div>
                   </div>
@@ -906,7 +906,7 @@ function DocumentsSection({ patient }: { patient: Patient }) {
                     {docIcon(doc.icon)}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
+                    <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--dz-text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</div>
                     <div style={{ fontSize: "0.65rem", color: "#64748b" }}>{doc.size || "PDF"}{doc.date ? ` · ${doc.date}` : ""}</div>
                   </div>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>

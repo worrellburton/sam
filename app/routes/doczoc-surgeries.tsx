@@ -4,6 +4,7 @@ import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
 import { PATIENTS, type Patient } from "~/data/patients";
 import { useCrosshairFocusByKey, CrosshairToggle } from "~/hooks/useCrosshairFocus";
+import { getCodeDescription } from "~/data/medical-codes";
 
 export function meta() {
   return [{ title: "Surgeries | DocZoc" }];
@@ -122,7 +123,7 @@ export default function SurgeriesPage() {
         ) : (
           <>
             {/* Header */}
-            <div className="dz-platform-header" style={{ marginBottom: 24 }}>
+            <div className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                 <div style={{
                   width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
@@ -135,16 +136,28 @@ export default function SurgeriesPage() {
                   <p>{completedCount} completed · {upcomingCount + preOpCount} upcoming</p>
                 </div>
               </div>
-              {subPage === "database" && (
-                <button onClick={() => setShowAddForm(!showAddForm)} style={{
-                  padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer",
-                  background: "linear-gradient(135deg, #ef4444, #a855f7)", color: "#fff",
-                  fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 5,
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+                  background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 260,
                 }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  Add Surgery
-                </button>
-              )}
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search surgeries..." style={{
+                    background: "transparent", border: "none", outline: "none", width: "100%",
+                    fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+                  }} />
+                </div>
+                {subPage === "database" && (
+                  <button onClick={() => setShowAddForm(!showAddForm)} style={{
+                    padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer",
+                    background: "linear-gradient(135deg, #ef4444, #a855f7)", color: "#fff",
+                    fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 5,
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add Surgery
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* 3-Tab Navigation */}
@@ -152,7 +165,6 @@ export default function SurgeriesPage() {
               {([
                 { key: "upcoming" as const, label: "Upcoming", count: upcomingCount + preOpCount, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
                 { key: "completed" as const, label: "Completed", count: completedCount, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> },
-                { key: "database" as const, label: "Database", count: allSurgeries.length, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> },
               ]).map(tab => (
                 <button key={tab.key} onClick={() => setSubPage(tab.key)} style={{
                   display: "flex", alignItems: "center", gap: 6,
@@ -171,6 +183,23 @@ export default function SurgeriesPage() {
                   }}>{tab.count}</span>
                 </button>
               ))}
+              <button onClick={() => setSubPage("database")} style={{
+                display: "flex", alignItems: "center", gap: 6,
+                padding: "8px 14px", marginLeft: 8, cursor: "pointer",
+                fontSize: "0.78rem", fontWeight: 700, marginBottom: 2,
+                background: subPage === "database" ? "rgba(168,85,247,0.15)" : "var(--dz-input-bg, rgba(148,163,184,0.06))",
+                color: subPage === "database" ? "#c084fc" : "var(--dz-text-muted, #64748b)",
+                border: subPage === "database" ? "1px solid rgba(168,85,247,0.3)" : "1px solid var(--dz-input-border, rgba(148,163,184,0.12))",
+                borderRadius: 8, transition: "all 0.15s",
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                Procedures
+                <span style={{
+                  fontSize: "0.65rem", fontWeight: 700, padding: "1px 6px", borderRadius: 10,
+                  background: subPage === "database" ? "rgba(168,85,247,0.15)" : "rgba(148,163,184,0.08)",
+                  color: subPage === "database" ? "#c084fc" : "var(--dz-text-dim, #475569)",
+                }}>{allSurgeries.length}</span>
+              </button>
               <div style={{ flex: 1 }} />
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                 <CrosshairToggle active={focusMode} onClick={() => setFocusMode(f => !f)} />
@@ -247,18 +276,7 @@ export default function SurgeriesPage() {
             {/* Table/List View — shown on Upcoming / Completed tabs */}
             {subPage !== "database" && (
               view === "table" ? (
-                <DraggableSurgeryTable surgeries={filtered} onView={openDetail} focusMode={focusMode} searchNode={
-                  <div style={{
-                    display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-                    background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 240,
-                  }}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." style={{
-                      background: "transparent", border: "none", outline: "none", width: "100%",
-                      fontSize: "0.78rem", color: "var(--dz-text-secondary)",
-                    }} />
-                  </div>
-                } />
+                <DraggableSurgeryTable surgeries={filtered} onView={openDetail} focusMode={focusMode} />
               ) : (
                 /* List/Card View */
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 12 }}>
@@ -576,7 +594,7 @@ function SurgeryDetailView({ surgery, onBack }: { surgery: SurgeryRecord; onBack
             {s.codes.length > 0 ? (
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {s.codes.map(c => (
-                  <div key={c} style={{
+                  <div key={c} title={getCodeDescription(c)} style={{
                     padding: "8px 14px", borderRadius: 8,
                     background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.08)" : "rgba(124,58,237,0.08)",
                     border: `1px solid ${c.match(/^\d{5}$/) ? "rgba(37,99,235,0.15)" : "rgba(124,58,237,0.15)"}`,
@@ -787,7 +805,7 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
       case "date": return <td key={key} {...h} style={{ fontSize: "0.82rem", whiteSpace: "nowrap", ...cs, transition: "opacity 0.2s ease" }}>{s.date}</td>;
       case "codes": return (
         <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}><div style={{ display: "flex", gap: 3 }}>
-          {s.codes.slice(0, 3).map(c => <span key={c} style={{ fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "1px 6px", borderRadius: 4, fontWeight: 600, background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{c}</span>)}
+          {s.codes.slice(0, 3).map(c => <span key={c} title={getCodeDescription(c)} style={{ fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "1px 6px", borderRadius: 4, fontWeight: 600, background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{c}</span>)}
         </div></td>
       );
       default: return <td key={key} />;

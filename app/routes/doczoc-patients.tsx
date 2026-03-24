@@ -176,7 +176,7 @@ type ColKey = "patient" | "nextAppt" | "condition" | "age" | "phone" | "email" |
 const COL_HEADERS: Record<ColKey, { label: string; className?: string; style?: React.CSSProperties }> = {
   patient: { label: "Patient" },
   nextAppt: { label: "Next Appt" },
-  condition: { label: "Condition" },
+  condition: { label: "Procedure" },
   age: { label: "Age" },
   phone: { label: "Phone", className: "dz-col-hide-lg" },
   email: { label: "Email", className: "dz-col-hide-xl" },

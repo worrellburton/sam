@@ -145,7 +145,7 @@ function useDzPrefs() {
 
 export { useDzPrefs };
 
-function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
+function Sidebar({ collapsed, onToggle, hideThemeToggle }: { collapsed: boolean; onToggle: () => void; hideThemeToggle?: boolean }) {
   const location = useLocation();
   const path = location.pathname;
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -297,14 +297,19 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
         </button>
       </div>
     </aside>
-    <ThemeToggleFab />
+    {!hideThemeToggle && <ThemeToggleFab />}
     </>
   );
 }
 
 function ThemeToggleFab() {
   const [theme, setTheme] = useState<"dark" | "light">(() => {
-    if (typeof document !== "undefined") {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+        return stored;
+      }
       return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
     }
     return "dark";
@@ -395,7 +400,51 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <div className="dz-dash-section dz-fade-element" style={{ animationDelay: "0.4s" }}>
+        {/* Next Patient */}
+        <div className="dz-card dz-fade-element" style={{
+          animationDelay: "0.35s",
+          padding: "22px 26px",
+          marginBottom: 24,
+          borderLeft: "3px solid #6366f1",
+          background: "var(--dz-card-bg, rgba(15,23,42,0.55))",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
+              background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.15)",
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Next Patient</div>
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)" }}>James Kim</div>
+            </div>
+            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{
+                fontSize: "0.65rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
+                background: "rgba(59,130,246,0.12)", color: "#60a5fa",
+              }}>New Patient</span>
+              <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "#818cf8" }}>9:30 AM</span>
+            </div>
+          </div>
+          <div style={{
+            fontSize: "0.8rem", lineHeight: 1.65, color: "var(--dz-text-secondary, #94a3b8)",
+            padding: "12px 14px", borderRadius: 8,
+            background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.08)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+              <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
+            </div>
+            28-year-old male presenting for ACL injury follow-up. MRI confirmed complete tear of left ACL. Scheduled for reconstruction consultation. No prior surgical history.
+          </div>
+        </div>
+
+        <div className="dz-dash-section dz-fade-element" style={{ animationDelay: "0.5s" }}>
           <h2>Today's Schedule</h2>
           <div className="dz-table-wrap">
             <table className="dz-table">

@@ -111,7 +111,7 @@ export default function AppointmentsPage() {
       <PlatformBg bgId={bgId} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "32px 36px" }}>
         {/* Header */}
-        <div className="dz-platform-header" style={{ marginBottom: 24 }}>
+        <div className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <div style={{
               width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
@@ -125,6 +125,16 @@ export default function AppointmentsPage() {
               <h1>Appointments</h1>
               <p>{upcomingCount} upcoming · {pastCount} past</p>
             </div>
+          </div>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+            background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 260,
+          }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search appointments..." style={{
+              background: "transparent", border: "none", outline: "none", width: "100%",
+              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+            }} />
           </div>
         </div>
 
@@ -147,16 +157,6 @@ export default function AppointmentsPage() {
             ))}
           </div>
           <div style={{ flex: 1 }} />
-          <div style={{
-            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
-            background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", width: 220,
-          }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..." style={{
-              background: "transparent", border: "none", outline: "none", width: "100%",
-              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
-            }} />
-          </div>
           <div style={{ display: "flex", gap: 2 }}>
             <button onClick={() => setView("table")} style={{
               padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
@@ -185,7 +185,7 @@ export default function AppointmentsPage() {
                   <tr>
                     {([
                       { key: "patient" as const, label: "Patient" },
-                      { key: "type" as const, label: "Type" },
+                      { key: "type" as const, label: "Procedure" },
                       { key: "date" as const, label: "Date" },
                       { key: null, label: "Codes" },
                       { key: "status" as const, label: "Status" },

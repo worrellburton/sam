@@ -9372,15 +9372,16 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 /* ── RCM Pipeline (Kanban Board) ─────────────────────── */
 .dz-rcm-board {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
   min-height: calc(100vh - 200px);
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 .dz-rcm-column {
   display: flex;
   flex-direction: column;
-  min-width: 180px;
+  min-width: 0;
+  overflow: hidden;
 }
 .dz-rcm-col-header {
   display: flex;

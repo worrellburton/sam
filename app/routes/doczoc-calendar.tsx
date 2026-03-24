@@ -165,9 +165,9 @@ export default function CalendarPage() {
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "9px 16px", borderRadius: 10,
-                  border: "1px solid rgba(99,102,241,0.2)",
-                  background: locDropOpen ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.08)",
-                  color: "#818cf8", fontSize: "0.82rem", fontWeight: 600,
+                  border: "1px solid var(--dz-accent-border, rgba(99,102,241,0.25))",
+                  background: locDropOpen ? "var(--dz-accent-bg-active, rgba(99,102,241,0.15))" : "var(--dz-accent-bg, rgba(99,102,241,0.08))",
+                  color: "var(--dz-accent, #6366f1)", fontSize: "0.82rem", fontWeight: 600,
                   cursor: "pointer", transition: "all 0.15s",
                 }}
               >
@@ -241,9 +241,9 @@ export default function CalendarPage() {
               style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "9px 18px", borderRadius: 10,
-                border: scheduleMode ? "1px solid #34d399" : "1px solid rgba(99,102,241,0.2)",
-                background: scheduleMode ? "rgba(52,211,153,0.12)" : "rgba(99,102,241,0.08)",
-                color: scheduleMode ? "#34d399" : "#818cf8", fontSize: "0.82rem", fontWeight: 600,
+                border: scheduleMode ? "1px solid var(--dz-green-border, #059669)" : "1px solid var(--dz-accent-border, rgba(99,102,241,0.25))",
+                background: scheduleMode ? "var(--dz-green-bg, rgba(5,150,105,0.12))" : "var(--dz-accent-bg, rgba(99,102,241,0.08))",
+                color: scheduleMode ? "var(--dz-green, #059669)" : "var(--dz-accent, #6366f1)", fontSize: "0.82rem", fontWeight: 600,
                 cursor: "pointer", transition: "all 0.15s",
               }}
             >
@@ -281,9 +281,9 @@ export default function CalendarPage() {
           </div>
         </header>
 
-        <div style={{ display: "flex", gap: 16 }}>
+        <div>
           {/* Calendar grid */}
-          <div className="dz-cal-main" style={{ flex: 1, minWidth: 0 }}>
+          <div className="dz-cal-main">
             <div className="dz-cal-header">
               <h2>{MONTHS[month]} {year}</h2>
               <div className="dz-cal-nav">
@@ -364,125 +364,116 @@ export default function CalendarPage() {
             ))}
           </div>
 
-          {/* Right panel — schedule mode or appointment details */}
+          {/* Bottom panel — schedule mode or appointment details */}
           {scheduleMode ? (
-            <div className="dz-cal-side-panel" style={{
-              width: 300, flexShrink: 0,
+            <div style={{
+              marginTop: 16,
               background: "var(--dz-card-bg, rgba(15,17,30,0.6))", backdropFilter: "blur(16px)",
               border: "1px solid rgba(52,211,153,0.12)", borderRadius: 14,
-              padding: 20, alignSelf: "flex-start",
+              padding: 20,
             }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: selectedSchedDates.size > 0 ? 14 : 0 }}>
                 <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", margin: 0 }}>
                   Set Availability
                 </h3>
                 <span style={{ fontSize: "0.7rem", fontWeight: 600, padding: "2px 8px", borderRadius: 10, background: "rgba(52,211,153,0.12)", color: "#34d399" }}>
                   {selectedSchedDates.size} day{selectedSchedDates.size !== 1 ? "s" : ""} selected
                 </span>
+                {selectedSchedDates.size === 0 && (
+                  <span style={{ fontSize: "0.78rem", color: "var(--dz-text-muted, #64748b)" }}>
+                    — Click weekdays above to select them
+                  </span>
+                )}
               </div>
 
-              {selectedSchedDates.size === 0 ? (
-                <p style={{ fontSize: "0.78rem", color: "var(--dz-text-muted, #64748b)", lineHeight: 1.6 }}>
-                  Click weekdays on the calendar to select them, then choose time slots below.
-                </p>
-              ) : (
-                <>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 14 }}>
+              {selectedSchedDates.size > 0 && (
+                <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                  {/* Selected dates */}
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4, flex: "0 0 auto", maxWidth: 240 }}>
                     {[...selectedSchedDates].sort().map(dk => {
                       const [y, m, d] = dk.split("-").map(Number);
                       return (
                         <span key={dk} style={{
                           display: "inline-flex", alignItems: "center", gap: 4,
                           padding: "3px 8px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 600,
-                          background: "rgba(99,102,241,0.1)", color: "#a5b4fc",
+                          background: "rgba(99,102,241,0.1)", color: "var(--dz-accent-text, #a5b4fc)",
                         }}>
                           {MONTHS[m].slice(0, 3)} {d}
-                          <button
-                            onClick={() => toggleSchedDate(dk)}
-                            style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", padding: 0, lineHeight: 1 }}
-                          >×</button>
+                          <button onClick={() => toggleSchedDate(dk)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", padding: 0, lineHeight: 1 }}>×</button>
                         </span>
                       );
                     })}
                   </div>
 
-                  <p style={{ fontSize: "0.72rem", color: "var(--dz-text-muted, #64748b)", marginBottom: 10 }}>
-                    Set time slots for all selected days:
-                  </p>
-                  {TIME_SLOTS.map(slot => {
-                    // Active if ALL selected dates have this slot
-                    const allHave = [...selectedSchedDates].every(dk => schedule[dk]?.has(slot));
-                    const someHave = [...selectedSchedDates].some(dk => schedule[dk]?.has(slot));
-                    return (
-                      <button
-                        key={slot}
-                        onClick={() => toggleScheduleSlot(slot)}
-                        style={{
-                          display: "flex", alignItems: "center", gap: 10, width: "100%",
-                          padding: "10px 12px", marginBottom: 6, borderRadius: 8, cursor: "pointer",
-                          border: allHave ? "1px solid rgba(52,211,153,0.4)" : "1px solid var(--dz-input-border, rgba(148,163,184,0.1))",
-                          background: allHave ? "rgba(52,211,153,0.1)" : "transparent",
-                          color: allHave ? "#34d399" : "var(--dz-text-secondary, #94a3b8)",
-                          fontSize: "0.78rem", fontWeight: 500, transition: "all 0.15s",
-                        }}
-                      >
-                        <div style={{
-                          width: 18, height: 18, borderRadius: 4, flexShrink: 0,
-                          border: allHave ? "2px solid #34d399" : someHave ? "2px solid rgba(52,211,153,0.4)" : "2px solid rgba(148,163,184,0.2)",
-                          background: allHave ? "rgba(52,211,153,0.2)" : someHave ? "rgba(52,211,153,0.08)" : "transparent",
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                        }}>
-                          {allHave && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
-                          {someHave && !allHave && <div style={{ width: 8, height: 2, background: "#34d399", borderRadius: 1 }} />}
-                        </div>
-                        {slot}
-                      </button>
-                    );
-                  })}
+                  {/* Time slots — horizontal */}
+                  <div style={{ display: "flex", gap: 8, flex: 1 }}>
+                    {TIME_SLOTS.map(slot => {
+                      const allHave = [...selectedSchedDates].every(dk => schedule[dk]?.has(slot));
+                      const someHave = [...selectedSchedDates].some(dk => schedule[dk]?.has(slot));
+                      return (
+                        <button
+                          key={slot}
+                          onClick={() => toggleScheduleSlot(slot)}
+                          style={{
+                            display: "flex", alignItems: "center", gap: 8, flex: 1,
+                            padding: "10px 12px", borderRadius: 8, cursor: "pointer",
+                            border: allHave ? "1px solid rgba(52,211,153,0.4)" : "1px solid var(--dz-input-border, rgba(148,163,184,0.1))",
+                            background: allHave ? "rgba(52,211,153,0.1)" : "transparent",
+                            color: allHave ? "#34d399" : "var(--dz-text-secondary, #94a3b8)",
+                            fontSize: "0.76rem", fontWeight: 500, transition: "all 0.15s",
+                          }}
+                        >
+                          <div style={{
+                            width: 18, height: 18, borderRadius: 4, flexShrink: 0,
+                            border: allHave ? "2px solid #34d399" : someHave ? "2px solid rgba(52,211,153,0.4)" : "2px solid rgba(148,163,184,0.2)",
+                            background: allHave ? "rgba(52,211,153,0.2)" : someHave ? "rgba(52,211,153,0.08)" : "transparent",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>
+                            {allHave && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                            {someHave && !allHave && <div style={{ width: 8, height: 2, background: "#34d399", borderRadius: 1 }} />}
+                          </div>
+                          {slot}
+                        </button>
+                      );
+                    })}
+                  </div>
 
-                  <button
-                    onClick={() => setSelectedSchedDates(new Set())}
-                    style={{
-                      marginTop: 10, width: "100%", padding: "8px", borderRadius: 8, cursor: "pointer",
-                      border: "1px solid rgba(148,163,184,0.1)", background: "transparent",
-                      color: "var(--dz-text-muted, #64748b)", fontSize: "0.72rem", fontWeight: 600,
-                    }}
-                  >Clear Selection</button>
-                </>
+                  <button onClick={() => setSelectedSchedDates(new Set())} style={{
+                    padding: "8px 14px", borderRadius: 8, cursor: "pointer", flexShrink: 0,
+                    border: "1px solid rgba(148,163,184,0.1)", background: "transparent",
+                    color: "var(--dz-text-muted, #64748b)", fontSize: "0.72rem", fontWeight: 600,
+                  }}>Clear</button>
+                </div>
               )}
             </div>
           ) : panelOpen && (
-            <div className="dz-cal-side-panel" style={{
-              width: 320, flexShrink: 0,
+            <div style={{
+              marginTop: 16,
               background: "var(--dz-card-bg, rgba(15,17,30,0.6))", backdropFilter: "blur(16px)",
               border: "1px solid rgba(99,102,241,0.1)", borderRadius: 14,
-              alignSelf: "flex-start",
+              padding: "16px 20px",
             }}>
-              <div className="dz-cal-panel-header">
-                <h3>{selectedDate ? `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}` : 'Select a day'}</h3>
-                <button className="dz-cal-panel-close" onClick={() => setPanelOpen(false)}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", margin: 0 }}>
+                    {selectedDate ? `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}` : 'Select a day'}
+                  </h3>
+                  {/* Location filter */}
+                  <div style={{ display: "flex", gap: 4 }}>
+                    <button className={`dz-loc-chip${selectedLoc === "all" ? " active" : ""}`} onClick={() => setSelectedLoc("all")}>All</button>
+                    {locations.map(loc => (
+                      <button key={loc.id} className={`dz-loc-chip${selectedLoc === loc.id ? " active" : ""}`} onClick={() => setSelectedLoc(loc.id)}>{loc.label}</button>
+                    ))}
+                  </div>
+                </div>
+                <button className="dz-cal-panel-close" onClick={() => setPanelOpen(false)} style={{ flexShrink: 0 }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                   </svg>
                 </button>
               </div>
 
-              {/* Location filter inside panel */}
-              <div style={{ padding: "0 20px 16px", display: "flex", gap: 6, flexWrap: "wrap" }}>
-                <button
-                  className={`dz-loc-chip${selectedLoc === "all" ? " active" : ""}`}
-                  onClick={() => setSelectedLoc("all")}
-                >All</button>
-                {locations.map(loc => (
-                  <button
-                    key={loc.id}
-                    className={`dz-loc-chip${selectedLoc === loc.id ? " active" : ""}`}
-                    onClick={() => setSelectedLoc(loc.id)}
-                  >{loc.label}</button>
-                ))}
-              </div>
-
-              <div style={{ padding: "0 20px 20px" }}>
+              <div>
                 {selectedDate ? (
                 <>
                   {(selectedAppts.length > 0 || userAppts.length > 0) ? (

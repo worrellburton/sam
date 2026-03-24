@@ -7276,6 +7276,22 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* Staggered fade-in for home dashboard rows */
+.dz-home-row {
+  opacity: 0;
+  animation: dz-fade-in 0.45s ease-out forwards;
+}
+.dz-home-row:nth-child(1) { animation-delay: 0s; }
+.dz-home-row:nth-child(2) { animation-delay: 0.06s; }
+.dz-home-row:nth-child(3) { animation-delay: 0.12s; }
+.dz-home-row:nth-child(4) { animation-delay: 0.18s; }
+.dz-home-row:nth-child(5) { animation-delay: 0.24s; }
+.dz-home-row:nth-child(6) { animation-delay: 0.30s; }
+.dz-home-row:nth-child(7) { animation-delay: 0.36s; }
+.dz-home-row:nth-child(8) { animation-delay: 0.42s; }
+/* Drag state */
+.dz-home-row.dz-dragging { opacity: 0.4; }
+.dz-home-row.dz-drag-over { box-shadow: 0 -2px 0 0 #6366f1; }
 .dz-platform-header h1 { font-size: 1.4rem; font-weight: 800; color: #f1f5f9; margin-bottom: 4px; }
 .dz-platform-header p { font-size: 0.82rem; color: #94a3b8; line-height: 1.5; }
 .dz-platform-header-right { display: flex; align-items: center; gap: 12px; }
@@ -8443,6 +8459,12 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   --dz-text-dim: #64748b;
   --dz-accent: #818cf8;
   --dz-accent-text: #a5b4fc;
+  --dz-accent-bg: rgba(99,102,241,0.08);
+  --dz-accent-bg-active: rgba(99,102,241,0.15);
+  --dz-accent-border: rgba(99,102,241,0.2);
+  --dz-green: #34d399;
+  --dz-green-bg: rgba(52,211,153,0.12);
+  --dz-green-border: rgba(52,211,153,0.3);
   --dz-input-bg: rgba(148,163,184,0.06);
   --dz-input-border: rgba(99,102,241,0.1);
 }
@@ -8466,8 +8488,14 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   --dz-text-secondary: #334155;
   --dz-text-muted: #64748b;
   --dz-text-dim: #94a3b8;
-  --dz-accent: #6366f1;
-  --dz-accent-text: #4f46e5;
+  --dz-accent: #4f46e5;
+  --dz-accent-text: #4338ca;
+  --dz-accent-bg: rgba(79,70,229,0.08);
+  --dz-accent-bg-active: rgba(79,70,229,0.15);
+  --dz-accent-border: rgba(79,70,229,0.25);
+  --dz-green: #059669;
+  --dz-green-bg: rgba(5,150,105,0.1);
+  --dz-green-border: rgba(5,150,105,0.3);
   --dz-input-bg: rgba(0,0,0,0.03);
   --dz-input-border: rgba(0,0,0,0.08);
 }

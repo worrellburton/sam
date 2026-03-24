@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import { Link } from "react-router";
 import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
@@ -105,32 +105,35 @@ export default function HomePage() {
   const data = useHomeData();
   const now = new Date();
   const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
+  const [sectionOrder, setSectionOrder] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]);
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
+  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
 
-  return (
-    <div className="dz-platform">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      <PlatformBg bgId={bgId} />
-      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "28px 32px" }}>
-        {/* Greeting */}
-        <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--dz-text-primary)", margin: 0 }}>
-            {greeting}, Dr. Elguizaoui
-          </h1>
-          <p style={{ fontSize: "0.82rem", color: "#64748b", margin: "4px 0 0" }}>
-            {now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
-          </p>
-        </div>
+  const handleDragStart = (pos: number) => { dragItem.current = pos; setDraggingIdx(pos); };
+  const handleDragEnter = (pos: number) => { dragOverItem.current = pos; };
+  const handleDragEnd = () => {
+    if (dragItem.current !== null && dragOverItem.current !== null && dragItem.current !== dragOverItem.current) {
+      setSectionOrder(prev => {
+        const arr = [...prev];
+        const dragged = arr.splice(dragItem.current!, 1)[0];
+        arr.splice(dragOverItem.current!, 0, dragged);
+        return arr;
+      });
+    }
+    dragItem.current = null; dragOverItem.current = null; setDraggingIdx(null);
+  };
 
-        {/* ── Row 0: Key Metrics (insights-style) ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 20 }}>
+  const allSections = [
+    // Section 0: Key Metrics
+    <div key={0} style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
           <MetricCard label="Total Revenue" value={`$${(data.totalCharged / 1000).toFixed(0)}K`} change="+12.4%" positive sparkType="up" />
           <MetricCard label="Patients Seen" value={String(data.totalPatients * 156)} change="+8.2%" positive sparkType="steady" />
           <MetricCard label="Avg. Collection Rate" value={`${data.collectionRate.toFixed(1)}%`} change="+1.8%" positive sparkType="up" />
           <MetricCard label="Denial Rate" value="4.2%" change="-0.8%" positive={false} sparkType="down" />
-        </div>
-
-        {/* ── Row 1: Critical alerts ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 20 }}>
+    </div>,
+    /* Section 1: Critical alerts */
+    <div key={1} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
           <AlertCard
             icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>}
             label="Upcoming Surgeries"
@@ -159,10 +162,9 @@ export default function HomePage() {
             color="#f87171"
             linkTo="/doczoc/patients"
           />
-        </div>
-
-        {/* ── Row 2: Next Appointment + Next Surgery ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+    </div>,
+    /* Section 2 */
+    <div key={2} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           {/* Next Appointment Card */}
           <div className="dz-card" style={{ padding: "18px 20px", borderLeft: "3px solid #6366f1" }}>
             <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em", marginBottom: 10 }}>Next Appointment</div>
@@ -207,10 +209,9 @@ export default function HomePage() {
               </div>
             ) : <span style={{ fontSize: "0.82rem", color: "#64748b" }}>No upcoming surgeries</span>}
           </div>
-        </div>
-
-        {/* ── Row 3: Upcoming Appointments + Birthdays ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+    </div>,
+    /* Section 3 */
+    <div key={3} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           {/* Upcoming Appointments with patient cards */}
           <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -324,10 +325,9 @@ export default function HomePage() {
               )}
             </div>
           </div>
-        </div>
-
-        {/* ── Row 4: Revenue + Claims + Website Analytics ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 20 }}>
+    </div>,
+    /* Section 4 */
+    <div key={4} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
           <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
             <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Revenue Collected</div>
             <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#22c55e", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
@@ -364,10 +364,9 @@ export default function HomePage() {
               +18% this month
             </div>
           </div>
-        </div>
-
-        {/* ── Row 5: Patients at a glance + Quick tasks ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+    </div>,
+    /* Section 5 */
+    <div key={5} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
           {/* Today's patients mini-cards */}
           <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -436,10 +435,9 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* ── Row 5: Upcoming schedule list ── */}
-        <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+    </div>,
+    /* Section 6 */
+    <div key={6} className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
           <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Schedule</span>
             <Link to="/doczoc/appointments" style={{ fontSize: "0.72rem", color: "#818cf8", fontWeight: 600, textDecoration: "none" }}>View All →</Link>
@@ -464,7 +462,39 @@ export default function HomePage() {
               );
             })}
           </div>
+        </div>,
+  ];
+
+  return (
+    <div className="dz-platform">
+      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
+      <PlatformBg bgId={bgId} />
+      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "28px 32px" }}>
+        {/* Greeting */}
+        <div className="dz-home-row" style={{ marginBottom: 24 }}>
+          <h1 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--dz-text-primary)", margin: 0 }}>
+            {greeting}, Dr. Elguizaoui
+          </h1>
+          <p style={{ fontSize: "0.82rem", color: "#64748b", margin: "4px 0 0" }}>
+            {now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
+          </p>
         </div>
+
+        {/* Draggable sections */}
+        {sectionOrder.map((sectionIdx, pos) => (
+          <div
+            key={sectionIdx}
+            className={`dz-home-row${draggingIdx === pos ? " dz-dragging" : ""}`}
+            style={{ marginBottom: 20 }}
+            draggable
+            onDragStart={() => handleDragStart(pos)}
+            onDragEnter={() => handleDragEnter(pos)}
+            onDragEnd={handleDragEnd}
+            onDragOver={e => e.preventDefault()}
+          >
+            {allSections[sectionIdx]}
+          </div>
+        ))}
       </main>
     </div>
   );

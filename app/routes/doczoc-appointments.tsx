@@ -26,14 +26,14 @@ function parseDateLoose(s: string) {
 
 // Demo future appointments so "upcoming" isn't empty
 const FUTURE_APPTS: { patientIdx: number; type: string; daysOut: number; notes: string; codes: string[] }[] = [
-  { patientIdx: 0, type: "Post-Op Follow-up (6 weeks)", daysOut: 2, notes: "6-week check ACL reconstruction. Assess ROM and stability.", codes: ["S83.511A", "Z96.651"] },
-  { patientIdx: 1, type: "New Patient Consultation", daysOut: 3, notes: "Right shoulder pain x 2 months, MRI pending review.", codes: ["M75.111", "99203"] },
+  { patientIdx: 0, type: "Post-Op Follow-up", daysOut: 2, notes: "6-week check ACL reconstruction. Assess ROM and stability.", codes: ["S83.511A", "Z96.651"] },
+  { patientIdx: 1, type: "Initial Consultation", daysOut: 3, notes: "Right shoulder pain x 2 months, MRI pending review.", codes: ["M75.111", "99203"] },
   { patientIdx: 2, type: "Pre-Op Evaluation", daysOut: 5, notes: "Pre-op clearance for knee arthroscopy. Labs ordered.", codes: ["M23.211", "99213"] },
-  { patientIdx: 3, type: "Surgery — Hip Arthroscopy", daysOut: 7, notes: "Arthroscopic labral repair, right hip. NPO after midnight.", codes: ["M16.11", "29916"] },
-  { patientIdx: 4, type: "Follow-up — Wrist", daysOut: 10, notes: "8-week follow-up distal radius fracture. X-ray in office.", codes: ["S52.501A", "Z87.39"] },
+  { patientIdx: 3, type: "Surgery — Total Hip Arthroplasty", daysOut: 7, notes: "Total hip arthroplasty, right hip. NPO after midnight.", codes: ["M16.11", "27130"] },
+  { patientIdx: 4, type: "Follow-up Consultation", daysOut: 10, notes: "8-week follow-up distal radius fracture. X-ray in office.", codes: ["S52.501A", "Z87.39"] },
   { patientIdx: 5, type: "Initial Consultation", daysOut: 12, notes: "New referral — left knee meniscus tear, failed conservative tx.", codes: ["M23.211", "99203"] },
-  { patientIdx: 0, type: "Physical Therapy Eval", daysOut: 14, notes: "PT progression check, advance to phase III protocol.", codes: ["S83.511A", "97161"] },
-  { patientIdx: 6, type: "Surgery — Rotator Cuff Repair", daysOut: 16, notes: "Arthroscopic RCR, right shoulder. Nerve block planned.", codes: ["M75.111", "29827"] },
+  { patientIdx: 0, type: "Pre-Op Evaluation", daysOut: 14, notes: "Pre-op clearance for total knee replacement.", codes: ["S83.511A", "99213"] },
+  { patientIdx: 6, type: "Surgery — Knee Arthroscopy", daysOut: 16, notes: "Arthroscopic meniscus repair, right knee.", codes: ["M23.211", "29882"] },
 ];
 
 function getAllAppointments(): ApptRecord[] {
@@ -73,7 +73,7 @@ export default function AppointmentsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const appointments = useMemo(() => getAllAppointments(), []);
-  const [filter, setFilter] = useState<"all" | "upcoming" | "past">("upcoming");
+  const [filter, setFilter] = useState<"all" | "upcoming" | "new">("upcoming");
   const DATA_COLS = useMemo(() => new Set([0, 1, 2, 3, 4]), []);
   const { focusMode, toggleFocus, onCellEnter, onCellLeave, getRowStyle } = useCrosshairFocus(DATA_COLS);
   const [search, setSearch] = useState("");
@@ -88,8 +88,15 @@ export default function AppointmentsPage() {
     } else { setSortCol(col); setSortDir("asc"); }
   };
 
+  const newCount = appointments.filter(a => !a.isPast && (a.type.toLowerCase().includes("new patient") || a.type.toLowerCase().includes("initial consultation") || a.type.toLowerCase().includes("consultation"))).length;
+
   const filtered = appointments
-    .filter(a => filter === "all" ? true : filter === "upcoming" ? !a.isPast : a.isPast)
+    .filter(a => {
+      if (filter === "all") return true;
+      if (filter === "upcoming") return !a.isPast;
+      if (filter === "new") return !a.isPast && (a.type.toLowerCase().includes("new patient") || a.type.toLowerCase().includes("initial consultation") || a.type.toLowerCase().includes("consultation"));
+      return true;
+    })
     .filter(a => !search || a.patient.name.toLowerCase().includes(search.toLowerCase()) || a.type.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       if (!sortCol) return 0;
@@ -104,7 +111,6 @@ export default function AppointmentsPage() {
     });
 
   const upcomingCount = appointments.filter(a => !a.isPast).length;
-  const pastCount = appointments.filter(a => a.isPast).length;
 
   return (
     <div className="dz-platform">
@@ -124,15 +130,26 @@ export default function AppointmentsPage() {
             </div>
             <div>
               <h1>Appointments</h1>
-              <p>{upcomingCount} upcoming · {pastCount} past</p>
+              <p>{upcomingCount} upcoming · {newCount} new</p>
             </div>
           </div>
         </div>
 
         {/* Controls — single row */}
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
+            background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
+          }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search patients..." style={{
+              background: "transparent", border: "none", outline: "none", width: "100%",
+              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
+            }} />
+          </div>
+          <CrosshairToggle active={focusMode} onClick={toggleFocus} />
           <div style={{ display: "flex", gap: 6 }}>
-            {(["all", "upcoming", "past"] as const).map(f => (
+            {(["new", "upcoming", "all"] as const).map(f => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
@@ -143,11 +160,10 @@ export default function AppointmentsPage() {
                   color: filter === f ? "var(--dz-accent)" : "var(--dz-text-muted)",
                 }}
               >
-                {f === "all" ? `All (${appointments.length})` : f === "upcoming" ? `Upcoming (${upcomingCount})` : `Past (${pastCount})`}
+                {f === "all" ? `All (${appointments.length})` : f === "upcoming" ? `Upcoming (${upcomingCount})` : `New (${newCount})`}
               </button>
             ))}
           </div>
-          <div style={{ flex: 1 }} />
           <div style={{ display: "flex", gap: 2 }}>
             <button onClick={() => setView("table")} style={{
               padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
@@ -164,7 +180,6 @@ export default function AppointmentsPage() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
             </button>
           </div>
-          {view === "table" && <CrosshairToggle active={focusMode} onClick={toggleFocus} />}
         </div>
 
         {/* Search bar — full width */}

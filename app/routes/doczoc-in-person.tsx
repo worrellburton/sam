@@ -310,6 +310,39 @@ export default function InPersonPage() {
           </div>
         </header>
 
+        {/* Next Patient Banner */}
+        {(() => {
+          const nextAppt = APPOINTMENTS.filter(a => !a.completed).sort((a, b) => parseDateTime(a.date, a.time).getTime() - parseDateTime(b.date, b.time).getTime())[0];
+          if (!nextAppt) return null;
+          const cd = formatCountdown(now, nextAppt.date, nextAppt.time, false);
+          if (cd.past) return null;
+          return (
+            <div style={{
+              display: "flex", alignItems: "center", gap: 14, padding: "10px 18px", borderRadius: 12, marginBottom: 16,
+              background: `${cd.color}0a`, border: `1px solid ${cd.color}22`,
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={cd.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: cd.color }}>Starts in {cd.text}</span>
+              <span style={{ fontSize: "0.78rem", color: "var(--dz-text-muted)" }}>({nextAppt.time})</span>
+              <div style={{ width: 1, height: 20, background: "rgba(148,163,184,0.15)", margin: "0 4px" }} />
+              <div style={{
+                width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+                background: "rgba(99,102,241,0.12)", display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div>
+                <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em" }}>Next Patient</div>
+                <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{nextAppt.patient}</div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Tabs + sub-filter + view toggle — single toolbar row */}
         <div className="dz-toolbar-row">
           <div className="dz-toolbar-left">

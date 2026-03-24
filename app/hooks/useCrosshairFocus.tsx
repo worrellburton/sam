@@ -10,7 +10,7 @@ import { useState, useCallback, useMemo } from "react";
  *   that are "data" columns. All other columns are label and never dim.
  */
 export function useCrosshairFocus(dataColIndices: Set<number>) {
-  const [focusMode, setFocusMode] = useState(true);
+  const [focusMode, setFocusMode] = useState(false);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   const [hoveredCol, setHoveredCol] = useState<number | null>(null);
 
@@ -79,12 +79,12 @@ export function CrosshairToggle({ active, onClick }: { active: boolean; onClick:
       onClick={onClick}
       title={active ? "Disable crosshair focus" : "Enable crosshair focus"}
       style={{
-        display: "inline-flex", alignItems: "center", gap: 5,
-        padding: "6px 12px", borderRadius: 8,
+        display: "inline-flex", alignItems: "center",
+        padding: "6px 8px", borderRadius: "6px",
         border: `1px solid ${active ? "rgba(99,102,241,0.25)" : "rgba(148,163,184,0.15)"}`,
         background: active ? "rgba(99,102,241,0.1)" : "rgba(148,163,184,0.06)",
         color: active ? "#818cf8" : "#64748b",
-        fontSize: "0.75rem", fontWeight: 700, cursor: "pointer",
+        cursor: "pointer",
         transition: "all 0.2s",
       }}
     >
@@ -95,7 +95,6 @@ export function CrosshairToggle({ active, onClick }: { active: boolean; onClick:
         <line x1="12" y1="6" x2="12" y2="2" />
         <line x1="12" y1="22" x2="12" y2="18" />
       </svg>
-      Focus
     </button>
   );
 }

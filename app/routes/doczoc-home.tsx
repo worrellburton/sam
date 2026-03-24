@@ -420,16 +420,35 @@ export default function HomePage() {
 
           {/* Quick actions + stats */}
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {/* Quick actions */}
+            {/* Next Patient */}
             <div className="dz-card" style={{ padding: "18px 20px" }}>
-              <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 14 }}>Quick Actions</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                <QuickActionBtn label="New Patient" icon="user-plus" to="/doczoc/patients" color="#6366f1" />
-                <QuickActionBtn label="Schedule" icon="calendar" to="/doczoc/calendar" color="#22c55e" />
-                <QuickActionBtn label="Surgeries" icon="heart" to="/doczoc/surgeries" color="#ef4444" />
-                <QuickActionBtn label="Billing" icon="dollar" to="/doczoc/billing" color="#f59e0b" />
-                <QuickActionBtn label="Appointments" icon="clock" to="/doczoc/appointments" color="#06b6d4" />
-                <QuickActionBtn label="Reports" icon="chart" to="/doczoc/reports" color="#8b5cf6" />
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Next Patient</span>
+                <span style={{ marginLeft: "auto", fontSize: "0.68rem", fontWeight: 600, padding: "2px 8px", borderRadius: 10, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>9:30 AM</span>
+              </div>
+              <Link to="/doczoc/patients/2" style={{ textDecoration: "none" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <div style={{
+                    width: 40, height: 40, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
+                    background: "rgba(99,102,241,0.12)", color: "#818cf8", fontSize: "0.75rem", fontWeight: 700, flexShrink: 0,
+                  }}>JK</div>
+                  <div>
+                    <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>James Kim</div>
+                    <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)", marginTop: 1 }}>New Patient — Knee</div>
+                  </div>
+                </div>
+              </Link>
+              <div style={{
+                padding: "12px 14px", borderRadius: 8, fontSize: "0.75rem", lineHeight: 1.6,
+                background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.08)",
+                color: "var(--dz-text-secondary, #cbd5e1)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
+                  <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
+                </div>
+                28-year-old male presenting for ACL injury follow-up. MRI confirmed complete tear of left ACL. Scheduled for reconstruction consultation. No prior surgical history.
               </div>
             </div>
 

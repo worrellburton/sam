@@ -7234,6 +7234,27 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   mix-blend-mode: overlay;
 }
 
+/* Scroll snap for Insights page sections */
+.dz-snap-container {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+.dz-snap-section {
+  scroll-snap-align: start;
+  min-height: 100%;
+}
+.dz-snap-pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.dz-snap-pipeline .dz-card {
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 0;
+}
+
 @keyframes dz-ambient-drift {
   0% {
     background:

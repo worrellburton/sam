@@ -172,7 +172,7 @@ export default function SurgeriesPage() {
                 </button>
               ))}
               <div style={{ flex: 1 }} />
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                 <CrosshairToggle active={focusMode} onClick={() => setFocusMode(f => !f)} />
                 <div style={{ display: "flex", gap: 0 }}>
                   <button onClick={() => setView("table")} style={{
@@ -202,7 +202,7 @@ export default function SurgeriesPage() {
                     <label style={{ fontSize: "0.7rem", color: "#64748b", fontWeight: 600, display: "block", marginBottom: 4 }}>Patient</label>
                     <select value={newSurgery.patient} onChange={e => setNewSurgery({ ...newSurgery, patient: e.target.value })} style={{
                       width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)",
-                      background: "rgba(15,23,42,0.4)", color: "#e2e8f0", fontSize: "0.78rem",
+                      background: "var(--dz-input-bg, rgba(15,23,42,0.4))", color: "var(--dz-text, #e2e8f0)", fontSize: "0.78rem",
                     }}>
                       <option value="">Select patient...</option>
                       {PATIENTS.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
@@ -211,18 +211,18 @@ export default function SurgeriesPage() {
                   <div>
                     <label style={{ fontSize: "0.7rem", color: "#64748b", fontWeight: 600, display: "block", marginBottom: 4 }}>Procedure</label>
                     <input value={newSurgery.type} onChange={e => setNewSurgery({ ...newSurgery, type: e.target.value })} placeholder="e.g. ACL Reconstruction"
-                      style={{ width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "rgba(15,23,42,0.4)", color: "#e2e8f0", fontSize: "0.78rem" }} />
+                      style={{ width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "var(--dz-input-bg, rgba(15,23,42,0.4))", color: "var(--dz-text, #e2e8f0)", fontSize: "0.78rem" }} />
                   </div>
                   <div>
                     <label style={{ fontSize: "0.7rem", color: "#64748b", fontWeight: 600, display: "block", marginBottom: 4 }}>Date</label>
                     <input type="date" value={newSurgery.date} onChange={e => setNewSurgery({ ...newSurgery, date: e.target.value })}
-                      style={{ width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "rgba(15,23,42,0.4)", color: "#e2e8f0", fontSize: "0.78rem" }} />
+                      style={{ width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "var(--dz-input-bg, rgba(15,23,42,0.4))", color: "var(--dz-text, #e2e8f0)", fontSize: "0.78rem" }} />
                   </div>
                 </div>
                 <div style={{ marginTop: 10 }}>
                   <label style={{ fontSize: "0.7rem", color: "#64748b", fontWeight: 600, display: "block", marginBottom: 4 }}>Notes</label>
                   <textarea value={newSurgery.notes} onChange={e => setNewSurgery({ ...newSurgery, notes: e.target.value })} placeholder="Surgical notes..."
-                    style={{ width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "rgba(15,23,42,0.4)", color: "#e2e8f0", fontSize: "0.78rem", minHeight: 60, resize: "vertical" }} />
+                    style={{ width: "100%", padding: "8px 10px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.15)", background: "var(--dz-input-bg, rgba(15,23,42,0.4))", color: "var(--dz-text, #e2e8f0)", fontSize: "0.78rem", minHeight: 60, resize: "vertical" }} />
                 </div>
                 <div style={{ display: "flex", gap: 8, marginTop: 12, justifyContent: "flex-end" }}>
                   <button onClick={() => setShowAddForm(false)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid rgba(148,163,184,0.15)", background: "transparent", color: "#94a3b8", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer" }}>Cancel</button>
@@ -236,7 +236,7 @@ export default function SurgeriesPage() {
 
             {/* Procedure Catalog — Database tab */}
             {subPage === "database" && !selectedProcedure && (
-              <ProcedureCatalog allSurgeries={allSurgeries} onSelectProcedure={setSelectedProcedure} />
+              <ProcedureCatalog allSurgeries={allSurgeries} onSelectProcedure={setSelectedProcedure} view={view} />
             )}
 
             {/* Procedure Detail */}
@@ -333,7 +333,58 @@ function getProcedureStats(name: string, allSurgeries: SurgeryRecord[]) {
   return { total: matches.length, completed, upcoming, matches };
 }
 
-function ProcedureCatalog({ allSurgeries, onSelectProcedure }: { allSurgeries: SurgeryRecord[]; onSelectProcedure: (name: string) => void }) {
+function ProcedureCatalog({ allSurgeries, onSelectProcedure, view }: { allSurgeries: SurgeryRecord[]; onSelectProcedure: (name: string) => void; view: "table" | "list" }) {
+  if (view === "table") {
+    return (
+      <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+        <div className="dz-table-wrap">
+          <table className="dz-table" style={{ width: "100%" }}>
+            <thead>
+              <tr>
+                <th style={{ padding: "10px 16px", fontSize: "0.72rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textAlign: "left" }}>Procedure</th>
+                <th style={{ padding: "10px 16px", fontSize: "0.72rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textAlign: "left" }}>Description</th>
+                <th style={{ padding: "10px 16px", fontSize: "0.72rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textAlign: "center" }}>Total</th>
+                <th style={{ padding: "10px 16px", fontSize: "0.72rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textAlign: "center" }}>Completed</th>
+                <th style={{ padding: "10px 16px", fontSize: "0.72rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textAlign: "center" }}>Upcoming</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PROCEDURES.map(proc => {
+                const stats = getProcedureStats(proc.name, allSurgeries);
+                return (
+                  <tr
+                    key={proc.name}
+                    className="dz-surgery-btn"
+                    onClick={() => onSelectProcedure(proc.name)}
+                    style={{ cursor: "pointer", borderLeft: `3px solid ${proc.color}` }}
+                  >
+                    <td style={{ padding: "12px 16px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{
+                          width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
+                          background: `${proc.color}15`, color: proc.color, flexShrink: 0,
+                        }}>{proc.icon}</div>
+                        <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>{proc.name}</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: "12px 16px", fontSize: "0.75rem", color: "var(--dz-text-muted, #64748b)", maxWidth: 280 }}>{proc.desc}</td>
+                    <td style={{ padding: "12px 16px", textAlign: "center", fontSize: "0.9rem", fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)" }}>{stats.total}</td>
+                    <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                      {stats.completed > 0 ? <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#22c55e" }}>{stats.completed}</span> : <span style={{ color: "#475569" }}>—</span>}
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                      {stats.upcoming > 0 ? <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f59e0b" }}>{stats.upcoming}</span> : <span style={{ color: "#475569" }}>—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>

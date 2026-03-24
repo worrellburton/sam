@@ -536,16 +536,17 @@ export default function InsightsPage() {
     <div className="dz-platform">
       <PlatformBg bgId={bgId} />
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
+      <main
+        className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""} dz-snap-container`}
+      >
+        {/* ── Screen 1: Dashboard ── */}
+        <section className="dz-snap-section">
         <header className="dz-platform-header">
           <div>
             <h1>Insights</h1>
             <p>Practice analytics & performance metrics</p>
           </div>
         </header>
-
-        {/* Cash Pipeline */}
-        <CashPipeline />
 
         {/* Quick Stats — Drag & Drop */}
         <DraggableStats />
@@ -744,6 +745,12 @@ export default function InsightsPage() {
             </div>
           </div>
         </div>
+        </section>
+
+        {/* ── Screen 2: Cash Pipeline ── */}
+        <section className="dz-snap-section dz-snap-pipeline">
+          <CashPipeline />
+        </section>
       </main>
     </div>
   );

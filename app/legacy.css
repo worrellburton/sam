@@ -6559,6 +6559,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   flex-shrink: 0;
   position: sticky;
   top: 0;
+  overflow: hidden;
+  z-index: 10;
 }
 .dz-sidebar-collapsed { width: 68px; }
 .dz-sidebar-top {

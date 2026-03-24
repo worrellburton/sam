@@ -500,7 +500,7 @@ function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
-  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle } = useCrosshairFocusByKey(columns, SURG_DATA_KEYS);
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle, getRowStyle } = useCrosshairFocusByKey(columns, SURG_DATA_KEYS);
 
   const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
   const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };
@@ -550,7 +550,7 @@ function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8, marginTop: -44 }}>
         <CrosshairToggle active={focusMode} onClick={toggleFocus} />
       </div>
       <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
@@ -568,7 +568,7 @@ function DraggableSurgeryTable({ surgeries, onView }: { surgeries: SurgeryRecord
             </thead>
             <tbody>
               {surgeries.map(s => (
-                <tr key={s.id} onClick={() => onView(s)} style={{ cursor: "pointer" }}>
+                <tr key={s.id} onClick={() => onView(s)} style={{ cursor: "pointer", ...getRowStyle(s.id) }} onMouseEnter={() => onCellEnter(s.id, 0)} onMouseLeave={onCellLeave}>
                   {columns.map((key, i) => renderCell(s, key, i))}
                 </tr>
               ))}

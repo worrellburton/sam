@@ -370,7 +370,7 @@ export default function InPersonPage() {
 
             {viewMode === "table" ? (
               <div className="dz-table-wrap">
-                <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 12px 0" }}>
+                <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 12px 0", marginTop: -44 }}>
                   <CrosshairToggle active={apptCrosshair.focusMode} onClick={apptCrosshair.toggleFocus} />
                 </div>
                 <table className="dz-table">
@@ -451,7 +451,7 @@ export default function InPersonPage() {
           <>
             {viewMode === "table" ? (
               <div className="dz-table-wrap">
-                <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 12px 0" }}>
+                <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 12px 0", marginTop: -44 }}>
                   <CrosshairToggle active={surgCrosshair.focusMode} onClick={surgCrosshair.toggleFocus} />
                 </div>
                 <table className="dz-table">

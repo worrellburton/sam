@@ -23,7 +23,7 @@ function InsuranceLogo({ name }: { name: string }) {
     : name.toLowerCase().includes("medicare") ? "medicare.gov"
     : null;
   const [imgFailed, setImgFailed] = useState(false);
-  const logoUrl = domain ? `https://img.logo.dev/${domain}?token=pk_a8CO3SJdRhOFUZlNgTmVcQ&size=80&format=png` : null;
+  const logoUrl = domain ? `https://cdn.brandfetch.io/${domain}/w/56/h/56/fallback/lettermark/theme/dark/type/icon?c=1id3n10pdBTarCHI0db` : null;
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }} title={name}>
       {logoUrl && !imgFailed ? (
@@ -107,7 +107,7 @@ export default function PatientsPage() {
           </div>
         </header>
 
-        {/* Search + view toggle in one row */}
+        {/* Search + view toggle + focus in one row */}
         <div className="dz-toolbar-row">
           <input
             type="text"
@@ -191,7 +191,7 @@ function DraggablePatientTable({ patients, onRowClick }: { patients: Patient[]; 
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
-  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle } = useCrosshairFocusByKey(columns, PATIENT_DATA_KEYS);
+  const { focusMode, toggleFocus, onCellEnter, onCellLeave, getCellStyle, getRowStyle } = useCrosshairFocusByKey(columns, PATIENT_DATA_KEYS);
 
   const handleDragStart = (idx: number) => { dragCol.current = idx; setDraggingIdx(idx); };
   const handleDragEnter = (idx: number) => { dragOverCol.current = idx; };
@@ -238,7 +238,7 @@ function DraggablePatientTable({ patients, onRowClick }: { patients: Patient[]; 
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8, marginTop: -44 }}>
         <CrosshairToggle active={focusMode} onClick={toggleFocus} />
       </div>
       <div className="dz-table-wrap">
@@ -266,7 +266,7 @@ function DraggablePatientTable({ patients, onRowClick }: { patients: Patient[]; 
           </thead>
           <tbody>
             {patients.map((p) => (
-              <tr key={p.id} className="dz-row-clickable" onClick={() => onRowClick(p.id)}>
+              <tr key={p.id} className="dz-row-clickable" onClick={() => onRowClick(p.id)} style={getRowStyle(String(p.id))} onMouseEnter={() => onCellEnter(String(p.id), 0)} onMouseLeave={onCellLeave}>
                 {columns.map((key, i) => renderCell(p, key, i))}
               </tr>
             ))}

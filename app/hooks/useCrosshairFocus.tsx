@@ -35,8 +35,15 @@ export function useCrosshairFocus(dataColIndices: Set<number>) {
     if (hoveredRow === null || hoveredCol === null) return {};
     if (!dataColIndices.has(colIdx)) return {};
     if (rowId === hoveredRow || colIdx === hoveredCol) return {};
-    return { opacity: 0.2, transition: "opacity 0.2s ease" };
+    return { opacity: 0.08, transition: "opacity 0.2s ease" };
   }, [focusMode, hoveredRow, hoveredCol, dataColIndices]);
+
+  const getRowStyle = useCallback((rowId: string): React.CSSProperties => {
+    if (!focusMode) return {};
+    if (hoveredRow === null) return {};
+    if (rowId === hoveredRow) return { transition: "opacity 0.2s ease" };
+    return { opacity: 0.08, transition: "opacity 0.2s ease" };
+  }, [focusMode, hoveredRow]);
 
   const getTdProps = useCallback((rowId: string, colIdx: number) => ({
     onMouseEnter: () => onCellEnter(rowId, colIdx),
@@ -47,7 +54,7 @@ export function useCrosshairFocus(dataColIndices: Set<number>) {
     },
   }), [onCellEnter, onCellLeave, getCellStyle]);
 
-  return { focusMode, hoveredRow, hoveredCol, toggleFocus, onCellEnter, onCellLeave, getCellStyle, getTdProps };
+  return { focusMode, hoveredRow, hoveredCol, toggleFocus, onCellEnter, onCellLeave, getCellStyle, getRowStyle, getTdProps };
 }
 
 /**

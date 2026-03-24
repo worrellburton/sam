@@ -53,10 +53,30 @@ export default function AppointmentsPage() {
   const [filter, setFilter] = useState<"all" | "upcoming" | "past">("all");
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"table" | "list">("table");
+  const [sortCol, setSortCol] = useState<"patient" | "type" | "date" | "status" | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  const handleSort = (col: typeof sortCol) => {
+    if (sortCol === col) {
+      if (sortDir === "desc") { setSortCol(null); setSortDir("asc"); }
+      else setSortDir("desc");
+    } else { setSortCol(col); setSortDir("asc"); }
+  };
 
   const filtered = appointments
     .filter(a => filter === "all" ? true : filter === "upcoming" ? !a.isPast : a.isPast)
-    .filter(a => !search || a.patient.name.toLowerCase().includes(search.toLowerCase()) || a.type.toLowerCase().includes(search.toLowerCase()));
+    .filter(a => !search || a.patient.name.toLowerCase().includes(search.toLowerCase()) || a.type.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      if (!sortCol) return 0;
+      const dir = sortDir === "asc" ? 1 : -1;
+      switch (sortCol) {
+        case "patient": return a.patient.name.localeCompare(b.patient.name) * dir;
+        case "type": return a.type.localeCompare(b.type) * dir;
+        case "date": return (parseDateLoose(a.date).getTime() - parseDateLoose(b.date).getTime()) * dir;
+        case "status": return ((a.isPast ? 1 : 0) - (b.isPast ? 1 : 0)) * dir;
+        default: return 0;
+      }
+    });
 
   const upcomingCount = appointments.filter(a => !a.isPast).length;
   const pastCount = appointments.filter(a => a.isPast).length;
@@ -138,12 +158,27 @@ export default function AppointmentsPage() {
               <table className="dz-table" style={{ margin: 0 }}>
                 <thead>
                   <tr>
-                    <th>Patient</th>
-                    <th>Type</th>
-                    <th>Date</th>
-                    <th>Notes</th>
-                    <th>Codes</th>
-                    <th>Status</th>
+                    {([
+                      { key: "patient" as const, label: "Patient" },
+                      { key: "type" as const, label: "Type" },
+                      { key: "date" as const, label: "Date" },
+                      { key: null, label: "Notes" },
+                      { key: null, label: "Codes" },
+                      { key: "status" as const, label: "Status" },
+                    ] as const).map((col, i) => (
+                      <th
+                        key={i}
+                        onClick={col.key ? () => handleSort(col.key) : undefined}
+                        style={{ cursor: col.key ? "pointer" : "default", userSelect: "none", whiteSpace: "nowrap" }}
+                      >
+                        {col.label}
+                        {col.key && sortCol === col.key && (
+                          <span style={{ marginLeft: 4, fontSize: "0.65rem", opacity: 0.7 }}>
+                            {sortDir === "asc" ? "\u25B2" : "\u25BC"}
+                          </span>
+                        )}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>

@@ -12,8 +12,11 @@ export function PlatformBg({ bgId }: { bgId: string }) {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { alpha: false });
+    const gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: false });
     if (!gl) return;
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     const vs = gl.createShader(gl.VERTEX_SHADER)!;
     gl.shaderSource(vs, BG_VERT);
@@ -50,6 +53,8 @@ export function PlatformBg({ bgId }: { bgId: string }) {
       if (!gl) return;
       resize();
       gl.viewport(0, 0, canvas!.width, canvas!.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(prog);
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       gl.enableVertexAttribArray(posLoc);

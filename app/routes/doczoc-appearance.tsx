@@ -23,8 +23,11 @@ function BgPreview({ frag }: { frag: string }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { alpha: false });
+    const gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: false });
     if (!gl) return;
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     const vs = gl.createShader(gl.VERTEX_SHADER)!;
     gl.shaderSource(vs, BG_VERT);
@@ -56,6 +59,8 @@ function BgPreview({ frag }: { frag: string }) {
       if (!gl) return;
       resize();
       gl.viewport(0, 0, canvas!.width, canvas!.height);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(prog);
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       gl.enableVertexAttribArray(posLoc);
@@ -108,6 +113,42 @@ export default function AppearancePage() {
           </div>
         </header>
 
+        {/* Background Section */}
+        <div className="dz-appear-section">
+          <h2>Background</h2>
+          <p className="dz-appear-desc">Choose an animated background for your console</p>
+          <div className="dz-bg-grid">
+            {/* None option */}
+            <button
+              className={`dz-bg-card${selectedBg === "none" ? " active" : ""}`}
+              onClick={() => setSelectedBg("none")}
+            >
+              <div className="dz-bg-preview dz-bg-preview-none">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" style={{ opacity: 0.3 }}>
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                </svg>
+              </div>
+              <span className="dz-bg-label">None</span>
+              <span className="dz-bg-desc">Clean, no animation</span>
+            </button>
+            {BG_PRESETS.map((bg) => (
+              <button
+                key={bg.id}
+                className={`dz-bg-card${selectedBg === bg.id ? " active" : ""}`}
+                onClick={() => setSelectedBg(bg.id)}
+              >
+                <div className="dz-bg-preview">
+                  <BgPreview frag={bg.frag} />
+                </div>
+                <span className="dz-bg-label">{bg.label}</span>
+                <span className="dz-bg-desc">{bg.desc}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Font Section */}
         <div className="dz-appear-section">
           <h2>Font Family</h2>
           <p className="dz-appear-desc">Choose a font for your entire platform</p>
@@ -121,34 +162,6 @@ export default function AppearancePage() {
                 <span className="dz-font-preview" style={{ fontFamily: f.family }}>Aa</span>
                 <span className="dz-font-label">{f.label}</span>
                 <span className="dz-font-sample" style={{ fontFamily: f.family }}>The quick brown fox jumps over the lazy dog</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="dz-appear-section">
-          <h2>Background</h2>
-          <p className="dz-appear-desc">Choose an animated background for your console</p>
-          <div className="dz-bg-grid">
-            <button
-              className={`dz-bg-card${selectedBg === "none" ? " active" : ""}`}
-              onClick={() => setSelectedBg("none")}
-            >
-              <div className="dz-bg-preview" style={{ background: "#0f0f1e" }}>
-                <span style={{ color: "#475569", fontSize: "0.82rem" }}>None</span>
-              </div>
-              <span className="dz-bg-label">Default</span>
-            </button>
-            {BG_PRESETS.map((bg) => (
-              <button
-                key={bg.id}
-                className={`dz-bg-card${selectedBg === bg.id ? " active" : ""}`}
-                onClick={() => setSelectedBg(bg.id)}
-              >
-                <div className="dz-bg-preview">
-                  <BgPreview frag={bg.frag} />
-                </div>
-                <span className="dz-bg-label">{bg.label}</span>
               </button>
             ))}
           </div>

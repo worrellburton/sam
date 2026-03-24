@@ -1,60 +1,32 @@
-import { useState } from "react";
-
 const carriers = [
-  { name: "BlueCross BlueShield", domain: "bcbs.com" },
-  { name: "UnitedHealthcare", domain: "uhc.com" },
-  { name: "Aetna", domain: "aetna.com" },
-  { name: "Cigna", domain: "cigna.com" },
-  { name: "Humana", domain: "humana.com" },
-  { name: "Anthem", domain: "anthem.com" },
-  { name: "TRICARE", domain: "tricare.mil" },
-  { name: "Kaiser Permanente", domain: "kaiserpermanente.org" },
-  { name: "Oscar Health", domain: "hioscar.com" },
-  { name: "Oxford", domain: "oxhp.com" },
-  { name: "Empire BCBS", domain: "empireblue.com" },
-  { name: "Elevance Health", domain: "elevancehealth.com" },
+  { name: "BlueCross BlueShield", slug: "bcbs-com" },
+  { name: "UnitedHealthcare", slug: "uhc-com" },
+  { name: "Aetna", slug: "aetna-com" },
+  { name: "Cigna", slug: "cigna-com" },
+  { name: "Humana", slug: "humana-com" },
+  { name: "Anthem", slug: "anthem-com" },
+  { name: "TRICARE", slug: "tricare-mil" },
+  { name: "Kaiser Permanente", slug: "kaiserpermanente-org" },
+  { name: "Oscar Health", slug: "hioscar-com" },
+  { name: "Oxford", slug: "oxhp-com" },
+  { name: "Empire BCBS", slug: "empireblue-com" },
+  { name: "Elevance Health", slug: "elevancehealth-com" },
 ];
 
-function CarrierLogo({ domain, name }: { domain: string; name: string }) {
-  const [srcIdx, setSrcIdx] = useState(0);
-
-  // Try multiple Brandfetch variants for transparent logos
-  const srcs = [
-    `https://cdn.brandfetch.io/${domain}/w/400/h/150/theme/dark/type/logo?c=1id3n10pdBTarCHI0db`,
-    `https://cdn.brandfetch.io/${domain}/w/400/h/150/theme/dark/type/symbol?c=1id3n10pdBTarCHI0db`,
-    `https://cdn.brandfetch.io/${domain}/w/400/h/150/fallback/lettermark/theme/dark?c=1id3n10pdBTarCHI0db`,
-  ];
-
-  // Light mode uses different theme
-  const lightSrcs = [
-    `https://cdn.brandfetch.io/${domain}/w/400/h/150/theme/light/type/logo?c=1id3n10pdBTarCHI0db`,
-    `https://cdn.brandfetch.io/${domain}/w/400/h/150/theme/light/type/symbol?c=1id3n10pdBTarCHI0db`,
-    `https://cdn.brandfetch.io/${domain}/w/400/h/150/fallback/lettermark/theme/light?c=1id3n10pdBTarCHI0db`,
-  ];
-
-  if (srcIdx >= srcs.length) {
-    return <span className="insurance-fallback">{name}</span>;
-  }
-
+function CarrierLogo({ slug, name }: { slug: string; name: string }) {
   return (
     <>
-      {/* Dark mode: light/white logos */}
       <img
-        src={srcs[srcIdx]}
+        src={`/sam/logos/dark/${slug}.webp`}
         alt={name}
         className="insurance-logo insurance-logo-dark"
         loading="lazy"
-        referrerPolicy="origin"
-        onError={() => setSrcIdx(i => i + 1)}
       />
-      {/* Light mode: dark logos */}
       <img
-        src={lightSrcs[srcIdx]}
+        src={`/sam/logos/light/${slug}.webp`}
         alt={name}
         className="insurance-logo insurance-logo-light"
         loading="lazy"
-        referrerPolicy="origin"
-        onError={() => {}}
       />
     </>
   );
@@ -70,9 +42,9 @@ export function Insurance() {
           <p className="section-desc">Dr. Elguizaoui accepts most major insurance plans. <strong style={{ color: "var(--accent)" }}>99% of patients</strong> have successfully booked with their insurance.</p>
         </div>
         <div className="insurance-logo-grid">
-          {carriers.map(({ name, domain }) => (
+          {carriers.map(({ name, slug }) => (
             <div className="insurance-logo-item" key={name}>
-              <CarrierLogo domain={domain} name={name} />
+              <CarrierLogo slug={slug} name={name} />
             </div>
           ))}
         </div>

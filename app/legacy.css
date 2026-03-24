@@ -7855,6 +7855,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  position: relative;
 }
 .dz-cal-header h2 { font-size: 1rem; font-weight: 600; color: #e4e4ee; }
 .dz-cal-nav { display: flex; gap: 8px; }

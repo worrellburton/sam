@@ -114,16 +114,16 @@ export default function SurgeriesPage() {
 
   return (
     <div className="dz-platform">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <PlatformBg bgId={bgId} />
-      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "32px 36px" }}>
+      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
+      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
 
         {subPage === "detail" && selectedSurgery ? (
           <SurgeryDetailView surgery={selectedSurgery} onBack={() => setSubPage("upcoming")} />
         ) : (
           <>
             {/* Header */}
-            <div className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+            <header className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
               <div>
                 <h1>Surgeries</h1>
                 <p>{completedCount} completed · {upcomingCount + preOpCount} upcoming</p>
@@ -138,7 +138,7 @@ export default function SurgeriesPage() {
                   Add Surgery
                 </button>
               )}
-            </div>
+            </header>
 
             {/* 3-Tab Navigation */}
             <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 20, borderBottom: "1px solid rgba(148,163,184,0.08)", paddingBottom: 0 }}>
@@ -195,20 +195,16 @@ export default function SurgeriesPage() {
                 }} />
               </div>
               <CrosshairToggle active={focusMode} onClick={() => setFocusMode(f => !f)} />
-              <div style={{ display: "flex", gap: 0 }}>
-                <button onClick={() => setView("table")} style={{
-                  padding: "6px 8px", borderRadius: "6px 0 0 6px", border: "none", cursor: "pointer",
-                  background: view === "table" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-                  color: view === "table" ? "var(--dz-accent)" : "var(--dz-text-dim)",
-                }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              <div className="dz-view-toggle">
+                <button className={`dz-view-btn${view === "table" ? " dz-view-active" : ""}`} onClick={() => setView("table")} title="Table view">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={view === "table" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                  </svg>
                 </button>
-                <button onClick={() => setView("list")} style={{
-                  padding: "6px 8px", borderRadius: "0 6px 6px 0", border: "none", cursor: "pointer",
-                  background: view === "list" ? "rgba(99,102,241,0.15)" : "var(--dz-input-bg)",
-                  color: view === "list" ? "var(--dz-accent)" : "var(--dz-text-dim)",
-                }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                <button className={`dz-view-btn${view === "list" ? " dz-view-active" : ""}`} onClick={() => setView("list")} title="Card view">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={view === "list" ? "#818cf8" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                  </svg>
                 </button>
               </div>
             </div>

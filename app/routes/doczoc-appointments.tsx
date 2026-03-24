@@ -180,19 +180,19 @@ export default function AppointmentsPage() {
 
   return (
     <div className="dz-platform">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <PlatformBg bgId={bgId} />
+      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`}>
         {/* Header */}
-        <div className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+        <header className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div>
             <h1>Appointments</h1>
             <p>{upcomingCount} upcoming · {newCount} new</p>
           </div>
-        </div>
+        </header>
 
         {/* Filter tabs */}
-        <div style={{ display: "flex", alignItems: "center", gap: 28, marginBottom: 16, borderBottom: "1px solid var(--dz-input-border, rgba(148,163,184,0.12))", paddingBottom: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 20, borderBottom: "1px solid rgba(148,163,184,0.08)", paddingBottom: 0 }}>
           {([
             { key: "upcoming" as const, label: "Upcoming", count: upcomingCount, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
             { key: "new" as const, label: "New", count: newCount, icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> },
@@ -202,8 +202,8 @@ export default function AppointmentsPage() {
               key={tab.key}
               onClick={() => setFilter(tab.key)}
               style={{
-                display: "flex", alignItems: "center", gap: 6, padding: "10px 0", border: "none", cursor: "pointer",
-                background: "transparent", fontSize: "0.82rem", fontWeight: 600,
+                display: "flex", alignItems: "center", gap: 6, padding: "10px 18px", border: "none", cursor: "pointer",
+                background: "transparent", fontSize: "0.8rem", fontWeight: 600,
                 color: filter === tab.key ? "var(--dz-accent, #6366f1)" : "var(--dz-text-muted)",
                 borderBottom: filter === tab.key ? "2px solid var(--dz-accent, #6366f1)" : "2px solid transparent",
                 marginBottom: -1,
@@ -212,9 +212,9 @@ export default function AppointmentsPage() {
               {tab.icon}
               {tab.label}
               <span style={{
-                fontSize: "0.68rem", fontWeight: 700, padding: "1px 7px", borderRadius: 10,
-                background: filter === tab.key ? "rgba(99,102,241,0.12)" : "var(--dz-input-bg, rgba(148,163,184,0.08))",
-                color: filter === tab.key ? "var(--dz-accent, #6366f1)" : "var(--dz-text-dim)",
+                fontSize: "0.65rem", fontWeight: 700, padding: "1px 6px", borderRadius: 10,
+                background: filter === tab.key ? "rgba(99,102,241,0.12)" : "rgba(148,163,184,0.08)",
+                color: filter === tab.key ? "var(--dz-accent, #6366f1)" : "var(--dz-text-dim, #475569)",
               }}>{tab.count}</span>
             </button>
           ))}
@@ -286,13 +286,13 @@ export default function AppointmentsPage() {
         {/* Search bar — full width */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
           <div style={{
-            display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 10,
+            display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
             background: "var(--dz-input-bg)", border: "1px solid var(--dz-input-border)", flex: 1,
           }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--dz-text-dim)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search appointments..." style={{
               background: "transparent", border: "none", outline: "none", width: "100%",
-              fontSize: "0.82rem", color: "var(--dz-text-secondary)",
+              fontSize: "0.78rem", color: "var(--dz-text-secondary)",
             }} />
           </div>
           <CrosshairToggle active={focusMode} onClick={toggleFocus} />

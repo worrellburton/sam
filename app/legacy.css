@@ -7847,6 +7847,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-cal-cell:not(.empty):hover { background: rgba(99, 102, 241, 0.08); }
 .dz-cal-cell.has-appts { background: rgba(99, 102, 241, 0.05); }
 .dz-cal-cell.selected { background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); }
+.dz-cal-cell.schedule-mode.selected { background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.35); }
+.dz-cal-cell.schedule-mode:not(.empty):hover { background: rgba(52, 211, 153, 0.06); }
 .dz-cal-date { font-size: 0.85rem; font-weight: 600; color: #8b8ba0; }
 .dz-cal-date.today {
   background: #6366f1;

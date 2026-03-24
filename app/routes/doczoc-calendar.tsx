@@ -65,19 +65,32 @@ export default function CalendarPage() {
   const locDropRef = useRef<HTMLDivElement>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [scheduleMode, setScheduleMode] = useState(false);
+  const [selectedSchedDates, setSelectedSchedDates] = useState<Set<string>>(new Set());
   // schedule: dateKey -> set of time slots
   const [schedule, setSchedule] = useState<Record<string, Set<string>>>({});
   const TIME_SLOTS = ["Early Morning (7–9 AM)", "Late Morning (9–12 PM)", "Early Afternoon (12–3 PM)"];
 
-  const toggleScheduleSlot = useCallback((dateKey: string, slot: string) => {
-    setSchedule(prev => {
-      const next = { ...prev };
-      const existing = next[dateKey] ? new Set(next[dateKey]) : new Set<string>();
-      if (existing.has(slot)) existing.delete(slot); else existing.add(slot);
-      if (existing.size === 0) { delete next[dateKey]; } else { next[dateKey] = existing; }
+  const toggleSchedDate = useCallback((dateKey: string) => {
+    setSelectedSchedDates(prev => {
+      const next = new Set(prev);
+      if (next.has(dateKey)) next.delete(dateKey); else next.add(dateKey);
       return next;
     });
   }, []);
+
+  const toggleScheduleSlot = useCallback((slot: string) => {
+    setSchedule(prev => {
+      const next = { ...prev };
+      // Check if all selected dates have this slot — if so, remove from all; else add to all
+      const allHave = [...selectedSchedDates].every(dk => next[dk]?.has(slot));
+      for (const dk of selectedSchedDates) {
+        const existing = next[dk] ? new Set(next[dk]) : new Set<string>();
+        if (allHave) existing.delete(slot); else existing.add(slot);
+        if (existing.size === 0) delete next[dk]; else next[dk] = existing;
+      }
+      return next;
+    });
+  }, [selectedSchedDates]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -124,10 +137,10 @@ export default function CalendarPage() {
 
   function handleDateClick(date: Date) {
     if (scheduleMode) {
+      // Skip weekends
+      if (date.getDay() === 0 || date.getDay() === 6) return;
       const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-      // If no slots yet, add all by default; if already has slots, open panel to toggle
-      setSelectedDate(date);
-      setPanelOpen(true);
+      toggleSchedDate(key);
       return;
     }
     setSelectedDate(date);
@@ -174,54 +187,6 @@ export default function CalendarPage() {
                   border: "1px solid rgba(99,102,241,0.15)", borderRadius: 14,
                   padding: 8, minWidth: 340, boxShadow: "0 12px 40px rgba(0,0,0,0.4)",
                 }}>
-                  {/* Mini map */}
-                  <div style={{
-                    height: 140, borderRadius: 10, overflow: "hidden", marginBottom: 8,
-                    background: "rgba(30,41,59,0.5)", position: "relative",
-                  }}>
-                    <iframe
-                      title="Office Locations"
-                      width="100%" height="100%"
-                      style={{ border: 0, filter: "invert(90%) hue-rotate(180deg) brightness(0.9) contrast(1.1)" }}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      src={`https://www.google.com/maps/embed/v1/view?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&center=40.73,-73.98&zoom=11&maptype=roadmap`}
-                    />
-                    {/* Location pin overlays */}
-                    {locations.map(loc => {
-                      const centerLat = 40.73, centerLng = -73.98, zoom = 11;
-                      const scale = Math.pow(2, zoom) * 256 / 360;
-                      const xPct = 50 + (loc.lng - centerLng) * scale / 3.4;
-                      const latRad = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2));
-                      const yPct = 50 - (latRad(loc.lat) - latRad(centerLat)) * scale / 1.4 * (100 / 140);
-                      const isActive = selectedLoc === loc.id || selectedLoc === "all";
-                      return (
-                        <button
-                          key={loc.id}
-                          onClick={() => { setSelectedLoc(loc.id); }}
-                          style={{
-                            position: "absolute",
-                            left: `${Math.max(8, Math.min(92, xPct))}%`,
-                            top: `${Math.max(8, Math.min(88, yPct))}%`,
-                            transform: "translate(-50%, -50%)",
-                            width: 28, height: 28, borderRadius: "50%",
-                            background: isActive ? "rgba(99,102,241,0.9)" : "rgba(99,102,241,0.4)",
-                            border: isActive ? "2px solid #c7d2fe" : "2px solid rgba(199,210,254,0.3)",
-                            cursor: "pointer", transition: "all 0.2s",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            boxShadow: isActive ? "0 0 12px rgba(99,102,241,0.6)" : "none",
-                            zIndex: 5,
-                          }}
-                          title={loc.label}
-                        >
-                          <span style={{ fontSize: "0.55rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>
-                            {loc.label.charAt(0)}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
                   {/* Dropdown options */}
                   <button
                     onClick={() => { setSelectedLoc("all"); setLocDropOpen(false); }}
@@ -272,7 +237,7 @@ export default function CalendarPage() {
             </div>
 
             <button
-              onClick={() => setScheduleMode(!scheduleMode)}
+              onClick={() => { setScheduleMode(!scheduleMode); if (scheduleMode) setSelectedSchedDates(new Set()); }}
               style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "9px 18px", borderRadius: 10,
@@ -316,9 +281,9 @@ export default function CalendarPage() {
           </div>
         </header>
 
-        <div style={{ position: "relative" }}>
+        <div style={{ display: "flex", gap: 16 }}>
           {/* Calendar grid */}
-          <div className="dz-cal-main" style={{ flex: 1 }}>
+          <div className="dz-cal-main" style={{ flex: 1, minWidth: 0 }}>
             <div className="dz-cal-header">
               <h2>{MONTHS[month]} {year}</h2>
               <div className="dz-cal-nav">
@@ -341,7 +306,9 @@ export default function CalendarPage() {
                   if (!date) return <div className="dz-cal-cell empty" key={di} />;
                   const dateStr = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
                   const isToday = dateStr === todayStr;
-                  const isSelected = selectedDate && date.getTime() === selectedDate.getTime();
+                  const isSelected = scheduleMode
+                    ? selectedSchedDates.has(dateStr)
+                    : (selectedDate && date.getTime() === selectedDate.getTime());
                   const appts = getAppts(date, selectedLoc === "all" ? undefined : selectedLoc);
                   const hasSurgery = SURGERY_DATES.has(dateStr);
                   const schedSlots = schedule[dateStr];
@@ -397,72 +364,126 @@ export default function CalendarPage() {
             ))}
           </div>
 
-          {/* Right slide-out panel */}
-          <div className={`dz-cal-slide-panel${panelOpen ? " dz-cal-panel-open" : ""}`}>
-            <div className="dz-cal-panel-header">
-              <h3>{selectedDate ? `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}` : 'Select a day'}</h3>
-              <button className="dz-cal-panel-close" onClick={() => setPanelOpen(false)}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            </div>
+          {/* Right panel — schedule mode or appointment details */}
+          {scheduleMode ? (
+            <div className="dz-cal-side-panel" style={{
+              width: 300, flexShrink: 0,
+              background: "var(--dz-card-bg, rgba(15,17,30,0.6))", backdropFilter: "blur(16px)",
+              border: "1px solid rgba(52,211,153,0.12)", borderRadius: 14,
+              padding: 20, alignSelf: "flex-start",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", margin: 0 }}>
+                  Set Availability
+                </h3>
+                <span style={{ fontSize: "0.7rem", fontWeight: 600, padding: "2px 8px", borderRadius: 10, background: "rgba(52,211,153,0.12)", color: "#34d399" }}>
+                  {selectedSchedDates.size} day{selectedSchedDates.size !== 1 ? "s" : ""} selected
+                </span>
+              </div>
 
-            {/* Location filter inside panel */}
-            <div style={{ padding: "0 20px 16px", display: "flex", gap: 6, flexWrap: "wrap" }}>
-              <button
-                className={`dz-loc-chip${selectedLoc === "all" ? " active" : ""}`}
-                onClick={() => setSelectedLoc("all")}
-              >All</button>
-              {locations.map(loc => (
-                <button
-                  key={loc.id}
-                  className={`dz-loc-chip${selectedLoc === loc.id ? " active" : ""}`}
-                  onClick={() => setSelectedLoc(loc.id)}
-                >{loc.label}</button>
-              ))}
-            </div>
+              {selectedSchedDates.size === 0 ? (
+                <p style={{ fontSize: "0.78rem", color: "var(--dz-text-muted, #64748b)", lineHeight: 1.6 }}>
+                  Click weekdays on the calendar to select them, then choose time slots below.
+                </p>
+              ) : (
+                <>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 14 }}>
+                    {[...selectedSchedDates].sort().map(dk => {
+                      const [y, m, d] = dk.split("-").map(Number);
+                      return (
+                        <span key={dk} style={{
+                          display: "inline-flex", alignItems: "center", gap: 4,
+                          padding: "3px 8px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 600,
+                          background: "rgba(99,102,241,0.1)", color: "#a5b4fc",
+                        }}>
+                          {MONTHS[m].slice(0, 3)} {d}
+                          <button
+                            onClick={() => toggleSchedDate(dk)}
+                            style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", padding: 0, lineHeight: 1 }}
+                          >×</button>
+                        </span>
+                      );
+                    })}
+                  </div>
 
-            <div style={{ padding: "0 20px 20px" }}>
-              {scheduleMode && selectedDate ? (
-                <div>
-                  <p style={{ fontSize: "0.78rem", color: "var(--dz-text-muted, #64748b)", marginBottom: 12 }}>
-                    Select available time slots for this day:
+                  <p style={{ fontSize: "0.72rem", color: "var(--dz-text-muted, #64748b)", marginBottom: 10 }}>
+                    Set time slots for all selected days:
                   </p>
                   {TIME_SLOTS.map(slot => {
-                    const dateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
-                    const isActive = schedule[dateKey]?.has(slot) ?? false;
+                    // Active if ALL selected dates have this slot
+                    const allHave = [...selectedSchedDates].every(dk => schedule[dk]?.has(slot));
+                    const someHave = [...selectedSchedDates].some(dk => schedule[dk]?.has(slot));
                     return (
                       <button
                         key={slot}
-                        onClick={() => toggleScheduleSlot(dateKey, slot)}
+                        onClick={() => toggleScheduleSlot(slot)}
                         style={{
                           display: "flex", alignItems: "center", gap: 10, width: "100%",
-                          padding: "12px 14px", marginBottom: 8, borderRadius: 10, cursor: "pointer",
-                          border: isActive ? "1px solid rgba(52,211,153,0.4)" : "1px solid var(--dz-input-border, rgba(148,163,184,0.1))",
-                          background: isActive ? "rgba(52,211,153,0.1)" : "transparent",
-                          color: isActive ? "#34d399" : "var(--dz-text-secondary, #94a3b8)",
-                          fontSize: "0.82rem", fontWeight: 500, transition: "all 0.15s",
+                          padding: "10px 12px", marginBottom: 6, borderRadius: 8, cursor: "pointer",
+                          border: allHave ? "1px solid rgba(52,211,153,0.4)" : "1px solid var(--dz-input-border, rgba(148,163,184,0.1))",
+                          background: allHave ? "rgba(52,211,153,0.1)" : "transparent",
+                          color: allHave ? "#34d399" : "var(--dz-text-secondary, #94a3b8)",
+                          fontSize: "0.78rem", fontWeight: 500, transition: "all 0.15s",
                         }}
                       >
                         <div style={{
-                          width: 20, height: 20, borderRadius: 4, flexShrink: 0,
-                          border: isActive ? "2px solid #34d399" : "2px solid rgba(148,163,184,0.25)",
-                          background: isActive ? "rgba(52,211,153,0.2)" : "transparent",
+                          width: 18, height: 18, borderRadius: 4, flexShrink: 0,
+                          border: allHave ? "2px solid #34d399" : someHave ? "2px solid rgba(52,211,153,0.4)" : "2px solid rgba(148,163,184,0.2)",
+                          background: allHave ? "rgba(52,211,153,0.2)" : someHave ? "rgba(52,211,153,0.08)" : "transparent",
                           display: "flex", alignItems: "center", justifyContent: "center",
                         }}>
-                          {isActive && (
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                              <polyline points="20 6 9 17 4 12"/>
-                            </svg>
-                          )}
+                          {allHave && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                          {someHave && !allHave && <div style={{ width: 8, height: 2, background: "#34d399", borderRadius: 1 }} />}
                         </div>
                         {slot}
                       </button>
                     );
                   })}
-                </div>
-              ) : selectedDate ? (
+
+                  <button
+                    onClick={() => setSelectedSchedDates(new Set())}
+                    style={{
+                      marginTop: 10, width: "100%", padding: "8px", borderRadius: 8, cursor: "pointer",
+                      border: "1px solid rgba(148,163,184,0.1)", background: "transparent",
+                      color: "var(--dz-text-muted, #64748b)", fontSize: "0.72rem", fontWeight: 600,
+                    }}
+                  >Clear Selection</button>
+                </>
+              )}
+            </div>
+          ) : panelOpen && (
+            <div className="dz-cal-side-panel" style={{
+              width: 320, flexShrink: 0,
+              background: "var(--dz-card-bg, rgba(15,17,30,0.6))", backdropFilter: "blur(16px)",
+              border: "1px solid rgba(99,102,241,0.1)", borderRadius: 14,
+              alignSelf: "flex-start",
+            }}>
+              <div className="dz-cal-panel-header">
+                <h3>{selectedDate ? `${MONTHS[selectedDate.getMonth()]} ${selectedDate.getDate()}, ${selectedDate.getFullYear()}` : 'Select a day'}</h3>
+                <button className="dz-cal-panel-close" onClick={() => setPanelOpen(false)}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Location filter inside panel */}
+              <div style={{ padding: "0 20px 16px", display: "flex", gap: 6, flexWrap: "wrap" }}>
+                <button
+                  className={`dz-loc-chip${selectedLoc === "all" ? " active" : ""}`}
+                  onClick={() => setSelectedLoc("all")}
+                >All</button>
+                {locations.map(loc => (
+                  <button
+                    key={loc.id}
+                    className={`dz-loc-chip${selectedLoc === loc.id ? " active" : ""}`}
+                    onClick={() => setSelectedLoc(loc.id)}
+                  >{loc.label}</button>
+                ))}
+              </div>
+
+              <div style={{ padding: "0 20px 20px" }}>
+                {selectedDate ? (
                 <>
                   {(selectedAppts.length > 0 || userAppts.length > 0) ? (
                     <div className="dz-cal-appt-list">
@@ -566,8 +587,9 @@ export default function CalendarPage() {
               ) : (
                 <p className="dz-cal-no-appts">Click a date on the calendar</p>
               )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
     </div>

@@ -88,10 +88,10 @@ export default function HomePage() {
   const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="dz-layout">
+    <div className="dz-platform">
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      <PlatformBg id={bgId} />
-      <main className={`dz-main${collapsed ? " dz-main-collapsed" : ""}`} style={{ padding: "28px 32px" }}>
+      <PlatformBg bgId={bgId} />
+      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "28px 32px" }}>
         {/* Greeting */}
         <div style={{ marginBottom: 24 }}>
           <h1 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#f1f5f9", margin: 0 }}>

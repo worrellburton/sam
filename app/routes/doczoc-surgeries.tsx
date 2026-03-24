@@ -106,10 +106,10 @@ export default function SurgeriesPage() {
   };
 
   return (
-    <div className="dz-layout">
+    <div className="dz-platform">
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      <PlatformBg id={bgId} />
-      <main className={`dz-main${collapsed ? " dz-main-collapsed" : ""}`} style={{ padding: "32px 36px" }}>
+      <PlatformBg bgId={bgId} />
+      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "32px 36px" }}>
 
         {subPage === "detail" && selectedSurgery ? (
           <SurgeryDetailView surgery={selectedSurgery} onBack={() => setSubPage("main")} />

@@ -7207,7 +7207,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   pointer-events: none;
 }
 .dz-platform { position: relative; }
-.dz-platform .dz-sidebar { position: relative; z-index: 2; }
+.dz-platform .dz-sidebar { position: sticky; top: 0; z-index: 2; align-self: flex-start; }
 
 .dz-platform-main {
   flex: 1;

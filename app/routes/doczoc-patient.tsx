@@ -727,7 +727,7 @@ function InvoicesSection({ patient }: { patient: Patient }) {
 
 // ── Documents Section ──────────────────────────────────────────────
 function DocumentsSection({ patient }: { patient: Patient }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [dragOver, setDragOver] = useState(false);
   const [uploadedDocs, setUploadedDocs] = useState<{ name: string; size: string; date: string }[]>([]);

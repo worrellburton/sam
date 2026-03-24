@@ -548,36 +548,6 @@ export default function InsightsPage() {
           </div>
         </header>
 
-        {/* Quick Stats — Drag & Drop */}
-        <DraggableStats />
-
-        {/* Today's Schedule */}
-        <div className="dz-dash-section" style={{ marginBottom: 24 }}>
-          <h2>Today's Schedule</h2>
-          <div className="dz-table-wrap">
-            <table className="dz-table">
-              <thead><tr><th>Time</th><th>Patient</th><th>Type</th><th>Status</th></tr></thead>
-              <tbody>
-                {[
-                  { name: "Sarah Mitchell", type: "Follow-up — Shoulder", time: "9:00 AM", status: "Confirmed" },
-                  { name: "James Kim", type: "New Patient — Knee", time: "9:30 AM", status: "New" },
-                  { name: "Maria Lopez", type: "Post-Op — ACL", time: "10:15 AM", status: "Confirmed" },
-                  { name: "David Ross", type: "Consultation — Hip", time: "11:00 AM", status: "Pending" },
-                  { name: "Emily Chen", type: "Follow-up — Wrist", time: "1:00 PM", status: "Confirmed" },
-                  { name: "Michael Brown", type: "Sports Injury — Ankle", time: "2:30 PM", status: "New" },
-                ].map((p) => (
-                  <tr key={p.name}>
-                    <td className="dz-table-time">{p.time}</td>
-                    <td className="dz-table-name">{p.name}</td>
-                    <td>{p.type}</td>
-                    <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         {/* Timeline Range Picker */}
         <TimelineRangePicker
           startIdx={rangeStart}

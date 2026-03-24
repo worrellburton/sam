@@ -491,6 +491,52 @@ export default function HomePage() {
             })}
           </div>
         </div>,
+    /* Section 7: Today's Schedule + Quick Stats */
+    <div key={7} style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+      {/* Quick Stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+        {[
+          { label: "Today's Appointments", value: String(data.upcomingAppts.filter(a => { const d = new Date(a.date); const t = new Date(); return d.toDateString() === t.toDateString(); }).length || 6), change: "+3", color: "#6366f1" },
+          { label: "New Patients (Week)", value: String(data.newPatients?.length ?? 4), change: "+5", color: "#22c55e" },
+          { label: "Show Rate", value: "96%", change: "+2%", color: "#a78bfa" },
+          { label: "Pending Reviews", value: "7", change: "-2", color: "#f59e0b" },
+        ].map(s => (
+          <div key={s.label} className="dz-card" style={{ padding: "16px 18px" }}>
+            <div style={{ fontSize: "0.68rem", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>{s.label}</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: s.color, margin: "4px 0 2px" }}>{s.value}</div>
+            <div style={{ fontSize: "0.72rem", color: "#22c55e" }}>{s.change} from last week</div>
+          </div>
+        ))}
+      </div>
+      {/* Today's Schedule table */}
+      <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
+        <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Today's Schedule</span>
+        </div>
+        <div className="dz-table-wrap">
+          <table className="dz-table" style={{ margin: 0 }}>
+            <thead><tr><th>Time</th><th>Patient</th><th>Procedure</th><th>Status</th></tr></thead>
+            <tbody>
+              {[
+                { name: "Sarah Mitchell", type: "Follow-up — Shoulder", time: "9:00 AM", status: "Confirmed" },
+                { name: "James Kim", type: "New Patient — Knee", time: "9:30 AM", status: "New" },
+                { name: "Maria Lopez", type: "Post-Op — ACL", time: "10:15 AM", status: "Confirmed" },
+                { name: "David Ross", type: "Consultation — Hip", time: "11:00 AM", status: "Pending" },
+                { name: "Emily Chen", type: "Follow-up — Wrist", time: "1:00 PM", status: "Confirmed" },
+                { name: "Michael Brown", type: "Sports Injury — Ankle", time: "2:30 PM", status: "New" },
+              ].map(p => (
+                <tr key={p.name}>
+                  <td style={{ fontWeight: 600, fontSize: "0.78rem" }}>{p.time}</td>
+                  <td style={{ fontWeight: 600, fontSize: "0.78rem" }}>{p.name}</td>
+                  <td style={{ fontSize: "0.78rem" }}>{p.type}</td>
+                  <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>,
   ];
 
   return (

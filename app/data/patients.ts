@@ -453,6 +453,88 @@ export const PATIENTS: Patient[] = [
       { date: "Nov 24, 2025", type: "claim_filed", description: "Claim CLM-2025-4598 filed to Medicare for pre-op eval", claimId: "CLM-2025-4598" },
     ],
   },
+  // ── Additional patients ────────────────────────────────────────
+  ...(function generatePatients(): Patient[] {
+    const names: [string, "Male"|"Female"][] = [
+      ["Marcus Rivera", "Male"], ["Emily Chen", "Female"], ["Robert Williams", "Male"],
+      ["Priya Patel", "Female"], ["Derek Johnson", "Male"], ["Lisa Nakamura", "Female"],
+      ["Anthony Morales", "Male"], ["Rachel Goldstein", "Female"], ["William Park", "Male"],
+      ["Sophia Ramirez", "Female"], ["Thomas O'Brien", "Male"], ["Amara Okafor", "Female"],
+      ["Kevin Truong", "Male"], ["Catherine Brooks", "Female"], ["Daniel Fitzgerald", "Male"],
+      ["Maria Santos", "Female"], ["Brian Callahan", "Male"], ["Jasmine Washington", "Female"],
+      ["Gregory Petrov", "Male"], ["Natasha Ivanova", "Female"], ["Carlos Mendez", "Male"],
+      ["Hannah Levine", "Female"], ["Patrick Doyle", "Male"], ["Aisha Rahman", "Female"],
+      ["Steven Kozlov", "Male"], ["Victoria Huang", "Female"], ["Jason Campbell", "Male"],
+      ["Michelle Torres", "Female"], ["Andrew Bergman", "Male"], ["Olivia Duarte", "Female"],
+    ];
+    const conditions = [
+      "ACL Tear", "Meniscus Tear", "Rotator Cuff Tear", "Hip Osteoarthritis",
+      "Carpal Tunnel Syndrome", "Spinal Stenosis", "Ankle Fracture", "Tennis Elbow",
+      "Shoulder Impingement", "Labral Tear", "Patella Dislocation", "Achilles Tendonitis",
+      "Stress Fracture", "Knee Osteoarthritis", "Biceps Tendon Tear",
+    ];
+    const insurances = ["UnitedHealthcare PPO", "Aetna HMO", "Cigna PPO", "Blue Cross Blue Shield", "Medicare", "Humana Gold", "Oscar Health"];
+    const statuses: ("Active"|"New"|"Discharged")[] = [
+      "Active","Active","Active","Active","Active","Active","Active","Active","Active","Active",
+      "Active","Active","Active","Active","Active","New","New","New","New","New",
+      "New","New","New","Discharged","Discharged","Discharged","Discharged","Discharged","Discharged","Discharged",
+    ];
+    const visitTypes = [
+      "Surgery — ACL Reconstruction", "Surgery — Arthroscopic Rotator Cuff Repair",
+      "Surgery — Knee Arthroscopy", "Surgery — Total Hip Arthroplasty",
+      "Surgery — Carpal Tunnel Release", "Post-Op Follow-up",
+      "Initial Consultation", "Pre-Op Evaluation", "Follow-up — Shoulder",
+      "Follow-up — Knee", "Surgery — Meniscus Repair", "Surgery — Total Knee Replacement",
+    ];
+    const codesets: [string, string][] = [
+      ["S83.511A", "29888"], ["M75.111", "29827"], ["M23.211", "29881"],
+      ["M16.11", "27130"], ["G56.00", "64721"], ["M47.816", "99213"],
+      ["S82.001A", "27236"], ["M77.11", "99213"], ["M75.41", "29826"],
+      ["S43.401A", "23472"], ["S83.001A", "27422"], ["M76.51", "27650"],
+      ["M84.361A", "99214"], ["M17.11", "27447"], ["S46.11", "29828"],
+    ];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return names.map(([name, sex], i): Patient => {
+      const id = 9 + i;
+      const age = 22 + ((i * 7 + 3) % 56);
+      const birthYear = 2026 - age;
+      const condIdx = i % conditions.length;
+      const insIdx = i % insurances.length;
+      const codeIdx = i % codesets.length;
+      const vtIdx = i % visitTypes.length;
+      const m1 = months[(i * 3 + 1) % 12];
+      const m2 = months[(i * 3 + 4) % 12];
+      const d1 = 1 + (i % 28);
+      const d2 = 1 + ((i + 14) % 28);
+      const initials = name.split(" ").map(n => n[0]).join("");
+      return {
+        id, name, age, dob: `${String((i % 12) + 1).padStart(2, "0")}/${String(d1).padStart(2, "0")}/${birthYear}`, sex,
+        phone: `(${917 + (i % 3)}) 555-${String(1000 + id).padStart(4, "0")}`,
+        email: `${name.split(" ")[0].toLowerCase()}.${name.split(" ")[1][0].toLowerCase()}@email.com`,
+        address: `${100 + id * 3} ${["Broadway", "Park Ave", "Lexington Ave", "Madison Ave", "5th Ave"][i % 5]}, New York, NY ${10001 + (i % 70)}`,
+        insurance: insurances[insIdx], memberId: `${insurances[insIdx].substring(0, 3).toUpperCase()}-${600000000 + id * 1117}`,
+        groupNumber: `GRP-${70000 + id * 13}`,
+        aobSigned: true, aobDate: `${months[(i + 8) % 12]} ${d1}, 2025`,
+        roiSigned: true, roiDate: `${months[(i + 8) % 12]} ${d1}, 2025`,
+        lastVisit: `${m1} ${d1}, 2026`, nextAppt: `${m2} ${d2}, 2026`,
+        condition: conditions[condIdx], status: statuses[i],
+        provider: "Sameh Elguizaoui, M.D.", referredBy: `Dr. ${["Smith", "Lee", "Garcia", "Brown", "Wilson", "Taylor", "Anderson"][i % 7]} (PCP)`,
+        allergies: i % 4 === 0 ? ["Penicillin"] : i % 4 === 1 ? ["Sulfa"] : [],
+        medications: [`${["Ibuprofen 600mg", "Acetaminophen 500mg", "Naproxen 250mg", "Meloxicam 15mg"][i % 4]} PRN`],
+        visits: [
+          { date: `${m1} ${d1}, 2026`, type: visitTypes[vtIdx], notes: `${conditions[condIdx]} — ${statuses[i] === "Discharged" ? "Final follow-up, cleared for discharge." : statuses[i] === "New" ? "Initial evaluation and workup." : "Ongoing treatment and monitoring."}`, codes: [codesets[codeIdx][0], codesets[codeIdx][1]] },
+        ],
+        signedUpDate: `${months[(i + 6) % 12]} ${d1}, 2025`,
+        introMessage: `Hi, I'm ${name}. I was referred for ${conditions[condIdx].toLowerCase()} evaluation.`,
+        invoices: [
+          { id: `INV-2026-${String(100 + id).padStart(4, "0")}`, date: `${m1} ${d1 + 2 > 28 ? 1 : d1 + 2}, 2026`, description: `${visitTypes[vtIdx]} (${codesets[codeIdx][1]})`, totalCharged: 2500 + (i * 317 % 12000), insurancePaid: 2000 + (i * 253 % 9600), deductibleApplied: 0, copay: 40, patientOwes: 460 + (i * 64 % 2400), status: statuses[i] === "Discharged" ? "Paid" : i % 3 === 0 ? "Pending" : "Paid", claimId: `CLM-2026-${String(200 + id).padStart(4, "0")}` },
+        ],
+        billingEvents: [
+          { date: `${m1} ${d1 + 1 > 28 ? 1 : d1 + 1}, 2026`, type: "claim_filed", description: `Claim filed to ${insurances[insIdx]}`, claimId: `CLM-2026-${String(200 + id).padStart(4, "0")}` },
+        ],
+      };
+    });
+  })(),
 ];
 
 export function getPatientById(id: number): Patient | undefined {

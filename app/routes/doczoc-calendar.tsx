@@ -1130,7 +1130,8 @@ export default function CalendarPage() {
 
             {/* Hover tooltip for day overview */}
             {hoveredCell && (() => {
-              const hAppts = getAppts(hoveredCell.date, selectedLoc === "all" ? undefined : selectedLoc);
+              const hAppts = getAppts(hoveredCell.date, selectedLoc === "all" ? undefined : selectedLoc)
+                .slice().sort((a, b) => a.startMin - b.startMin);
               if (hAppts.length === 0) return null;
               const r = hoveredCell.rect;
               return (
@@ -1148,36 +1149,72 @@ export default function CalendarPage() {
                     boxShadow: "0 12px 40px rgba(0,0,0,0.4)",
                     pointerEvents: "none",
                   }}
-                  onMouseEnter={() => {}}
                 >
                   <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)", marginBottom: 8 }}>
                     {DAY_NAMES[hoveredCell.date.getDay()]}, {MONTHS[hoveredCell.date.getMonth()]} {hoveredCell.date.getDate()}
                     <span style={{ fontWeight: 500, color: "var(--dz-text-muted, #64748b)", marginLeft: 6 }}>{hAppts.length} appt{hAppts.length !== 1 ? "s" : ""}</span>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    {hAppts.map((a, i) => (
-                      <div key={i} style={{
-                        display: "flex", alignItems: "center", gap: 8,
-                        padding: "6px 8px", borderRadius: 6,
-                        background: `${a.type.color}0a`,
-                        borderLeft: `3px solid ${a.type.color}`,
-                      }}>
-                        <div style={{
-                          width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
-                          background: `${a.type.color}20`, color: a.type.color,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          fontSize: "0.5rem", fontWeight: 700,
-                        }}>
-                          {a.patient.split(" ").map(n => n[0]).join("")}
-                        </div>
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{a.patient}</div>
-                          <div style={{ fontSize: "0.6rem", color: "var(--dz-text-muted, #64748b)" }}>
-                            {minToTime(a.startMin)} – {minToTime(a.startMin + a.duration)} · {a.type.label}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                    {hAppts.map((a, i) => {
+                      // Calculate break from previous appointment
+                      const prevEnd = i > 0 ? hAppts[i - 1].startMin + hAppts[i - 1].duration : null;
+                      const breakMin = prevEnd !== null ? a.startMin - prevEnd : null;
+                      return (
+                        <div key={i}>
+                          {breakMin !== null && breakMin > 0 && (
+                            <div style={{
+                              display: "flex", alignItems: "center", gap: 6,
+                              padding: "3px 8px", margin: "2px 0",
+                            }}>
+                              <div style={{ flex: 1, height: 1, background: "rgba(148,163,184,0.12)" }} />
+                              <span style={{
+                                fontSize: "0.55rem", fontWeight: 700, color: "var(--dz-text-dim, #475569)",
+                                whiteSpace: "nowrap",
+                              }}>
+                                {breakMin >= 60 ? `${Math.floor(breakMin / 60)}h ${breakMin % 60 > 0 ? `${breakMin % 60}m` : ""}` : `${breakMin}m`} break
+                              </span>
+                              <div style={{ flex: 1, height: 1, background: "rgba(148,163,184,0.12)" }} />
+                            </div>
+                          )}
+                          {breakMin !== null && breakMin <= 0 && (
+                            <div style={{
+                              display: "flex", alignItems: "center", gap: 6,
+                              padding: "3px 8px", margin: "2px 0",
+                            }}>
+                              <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+                              <span style={{
+                                fontSize: "0.55rem", fontWeight: 700, color: "#f87171",
+                                whiteSpace: "nowrap",
+                              }}>
+                                {breakMin === 0 ? "back-to-back" : "overlap"}
+                              </span>
+                              <div style={{ flex: 1, height: 1, background: "rgba(239,68,68,0.2)" }} />
+                            </div>
+                          )}
+                          <div style={{
+                            display: "flex", alignItems: "center", gap: 8,
+                            padding: "6px 8px", borderRadius: 6,
+                            background: `${a.type.color}0a`,
+                            borderLeft: `3px solid ${a.type.color}`,
+                          }}>
+                            <div style={{
+                              width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
+                              background: `${a.type.color}20`, color: a.type.color,
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              fontSize: "0.5rem", fontWeight: 700,
+                            }}>
+                              {a.patient.split(" ").map(n => n[0]).join("")}
+                            </div>
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--dz-text-primary, #f1f5f9)" }}>{a.patient}</div>
+                              <div style={{ fontSize: "0.6rem", color: "var(--dz-text-muted, #64748b)" }}>
+                                {minToTime(a.startMin)} – {minToTime(a.startMin + a.duration)} · {a.type.label}
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );

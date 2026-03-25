@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { Route } from "./+types/home";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
@@ -201,23 +201,6 @@ export default function Home() {
   const recentPosts = blogPosts.slice(0, 3);
   const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
 
-  // Parallax effect for about photo
-  const aboutPhotoRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    function handleScroll() {
-      if (!aboutPhotoRef.current) return;
-      const rect = aboutPhotoRef.current.getBoundingClientRect();
-      const viewH = window.innerHeight;
-      if (rect.top < viewH && rect.bottom > 0) {
-        const progress = (viewH - rect.top) / (viewH + rect.height);
-        const offset = (progress - 0.5) * 60;
-        aboutPhotoRef.current.style.transform = `translateY(${offset}px)`;
-      }
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Reviews carousel — shuffle on mount so order varies each page load
   const allReviews = (() => {
@@ -286,7 +269,7 @@ export default function Home() {
       <section className="section about reveal" id="about">
         <div className="container">
           <div className="about-layout">
-            <div className="about-photo" ref={aboutPhotoRef}>
+            <div className="about-photo">
               <picture>
                 <source srcSet="/sam/header.webp" type="image/webp" />
                 <img src="/sam/header.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" loading="lazy" width="1200" height="669" />

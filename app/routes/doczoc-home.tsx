@@ -1,8 +1,8 @@
-import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router";
-import { Sidebar, useDzPrefs, AiSummaryExpand } from "./doczoc-dashboard";
+import { Sidebar, useDzPrefs } from "./doczoc-dashboard";
 import { PlatformBg } from "~/components/PlatformBg";
-import { PATIENTS, type Patient } from "~/data/patients";
+import { PATIENTS } from "~/data/patients";
 
 export function meta() {
   return [{ title: "Home | DocZoc" }];
@@ -13,819 +13,417 @@ function parseDateLoose(s: string) {
   return isNaN(d.getTime()) ? new Date() : d;
 }
 
-// ── Google Reviews ──────────────────────────────────────────────────
-const GOOGLE_PLACE_ID = "ChIJOwg_06VPwokRYv534QaPC8g"; // Dr. Elguizaoui's practice
-const GOOGLE_API_KEY = typeof window !== "undefined" ? (window as any).__GOOGLE_PLACES_API_KEY ?? "" : "";
-
-type GoogleReview = {
-  author_name: string;
-  rating: number;
-  text: string;
-  relative_time_description: string;
-  time: number;
-  profile_photo_url?: string;
-};
-
-function useGoogleReviews() {
-  const [reviews, setReviews] = useState<GoogleReview[]>([]);
-  const [rating, setRating] = useState<number>(4.9);
-  const [totalReviews, setTotalReviews] = useState<number>(127);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!GOOGLE_API_KEY) {
-      // Use demo data when no API key is configured
-      setReviews(DEMO_REVIEWS);
-      return;
-    }
-
-    setLoading(true);
-    // Google Places API - Details request with reviews field
-    fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${GOOGLE_PLACE_ID}&fields=rating,user_ratings_total,reviews&key=${GOOGLE_API_KEY}`)
-      .then(r => r.json())
-      .then(data => {
-        if (data.result) {
-          setRating(data.result.rating ?? 4.9);
-          setTotalReviews(data.result.user_ratings_total ?? 127);
-          setReviews(data.result.reviews ?? []);
-        }
-      })
-      .catch(() => {
-        setError("Failed to fetch reviews");
-        setReviews(DEMO_REVIEWS);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { reviews, rating, totalReviews, loading, error };
-}
-
-const DEMO_REVIEWS: GoogleReview[] = [
-  {
-    author_name: "Jennifer M.",
-    rating: 5,
-    text: "Dr. Elguizaoui is an exceptional surgeon. He repaired my torn ACL and I was back on my feet faster than expected. His entire team was caring and professional throughout the process.",
-    relative_time_description: "2 days ago",
-    time: Date.now() / 1000 - 172800,
-  },
-  {
-    author_name: "Robert K.",
-    rating: 5,
-    text: "Best orthopedic experience I've had. Dr. Elguizaoui took the time to explain everything about my shoulder surgery options. Highly recommend!",
-    relative_time_description: "a week ago",
-    time: Date.now() / 1000 - 604800,
-  },
-  {
-    author_name: "Patricia S.",
-    rating: 4,
-    text: "Very knowledgeable doctor. The wait time was a bit long but the care was worth it. My knee replacement went smoothly.",
-    relative_time_description: "2 weeks ago",
-    time: Date.now() / 1000 - 1209600,
-  },
-];
-
-function StarRating({ rating, size = 10 }: { rating: number; size?: number }) {
-  return (
-    <div style={{ display: "flex", gap: 1 }}>
-      {[1, 2, 3, 4, 5].map(i => (
-        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= rating ? "#fbbf24" : "none"} stroke="#fbbf24" strokeWidth="2">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-      ))}
-    </div>
-  );
-}
-
-function GoogleReviewCard() {
-  const { reviews, rating, totalReviews } = useGoogleReviews();
-  const newest = reviews[0];
-
-  return (
-    <div className="dz-card" style={{ padding: "16px 18px", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-        </svg>
-        <span style={{ fontSize: "0.68rem", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>Google Reviews</span>
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4 }}>
-          <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#fbbf24" }}>{rating}</span>
-          <StarRating rating={Math.round(rating)} size={9} />
-        </div>
-      </div>
-      <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f59e0b", margin: "0 0 2px" }}>{totalReviews} <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#94a3b8" }}>reviews</span></div>
-      {newest && (
-        <div style={{
-          marginTop: 6, padding: "8px 10px", borderRadius: 8,
-          background: "var(--dz-input-bg, rgba(148,163,184,0.06))",
-          border: "1px solid rgba(148,163,184,0.06)",
-          flex: 1,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-            <div style={{
-              width: 18, height: 18, borderRadius: "50%", background: "rgba(251,191,36,0.15)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "0.5rem", fontWeight: 700, color: "#fbbf24", flexShrink: 0,
-            }}>{newest.author_name.charAt(0)}</div>
-            <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--dz-text-primary)" }}>{newest.author_name}</span>
-            <StarRating rating={newest.rating} size={8} />
-            <span style={{ fontSize: "0.6rem", color: "var(--dz-text-muted)", marginLeft: "auto" }}>{newest.relative_time_description}</span>
-          </div>
-          <div style={{
-            fontSize: "0.68rem", color: "var(--dz-text-muted)", lineHeight: 1.4,
-            overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as any,
-          }}>{newest.text}</div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ── Data helpers ─────────────────────────────────────────────────────
+// ── Data ──────────────────────────────────────────────────────────────
 function useHomeData() {
   return useMemo(() => {
     const now = new Date();
-    const todayStr = now.toISOString().split("T")[0];
-
-    // Surgery counts
+    const allAppts = PATIENTS.flatMap(p =>
+      p.visits
+        .filter(v => !v.type.startsWith("claim_") && !v.type.startsWith("payment_") && !v.type.startsWith("invoice_") && !v.type.startsWith("prior_auth"))
+        .map(v => ({ ...v, patient: p }))
+    );
+    const upcomingAppts = allAppts.filter(a => parseDateLoose(a.date) >= now).sort((a, b) => parseDateLoose(a.date).getTime() - parseDateLoose(b.date).getTime());
     const allSurgeries = PATIENTS.flatMap(p => p.visits.filter(v => v.type.toLowerCase().includes("surgery")).map(v => ({ ...v, patient: p })));
     const upcomingSurgeries = allSurgeries.filter(s => parseDateLoose(s.date) > now);
-    const thisWeekSurgeries = allSurgeries.filter(s => {
-      const d = parseDateLoose(s.date);
-      const diff = (d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-      return diff >= 0 && diff <= 7;
-    });
 
-    // Appointments
-    const allAppts = PATIENTS.flatMap(p => p.visits.filter(v => !v.type.startsWith("claim_") && !v.type.startsWith("payment_") && !v.type.startsWith("invoice_") && !v.type.startsWith("prior_auth")).map(v => ({ ...v, patient: p })));
-    const upcomingAppts = allAppts.filter(a => parseDateLoose(a.date) >= now).sort((a, b) => parseDateLoose(a.date).getTime() - parseDateLoose(b.date).getTime());
-    const nextAppt = upcomingAppts[0];
-    const nextSurgery = upcomingSurgeries.sort((a, b) => parseDateLoose(a.date).getTime() - parseDateLoose(b.date).getTime())[0];
-
-    // Unsigned charts
-    const unsignedCharts = PATIENTS.filter(p => !p.surgicalConsentSigned && p.visits.some(v => v.type.toLowerCase().includes("surgery")));
-
-    // Missing consent
-    const missingConsent = PATIENTS.filter(p => {
-      const total = [p.aobSigned, p.roiSigned, p.hipaaSigned, p.financialSigned, p.surgicalConsentSigned].filter(Boolean).length;
-      return total < 5;
-    });
-
-    // Prior auth expiring
-    const expiringAuth = PATIENTS.filter(p => {
-      if (!p.priorAuthExpiration) return false;
-      const exp = parseDateLoose(p.priorAuthExpiration);
-      const diff = (exp.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-      return diff >= 0 && diff <= 30;
-    });
-
-    // Claims
-    const pendingInvoices = PATIENTS.flatMap(p => p.invoices.filter(i => i.status === "Pending" || i.status === "Insurance Processing").map(i => ({ ...i, patient: p })));
-    const overdueInvoices = PATIENTS.flatMap(p => p.invoices.filter(i => i.status === "Overdue").map(i => ({ ...i, patient: p })));
-    const unbilledEncounters = PATIENTS.flatMap(p => p.visits.filter(v => v.type.toLowerCase().includes("surgery") && !p.invoices.some(i => i.description.toLowerCase().includes(v.type.split("—")[1]?.trim().toLowerCase().slice(0, 10) || "zzz"))).map(v => ({ ...v, patient: p })));
-
-    // Revenue
     const totalCharged = PATIENTS.reduce((s, p) => s + p.invoices.reduce((s2, i) => s2 + i.totalCharged, 0), 0);
     const totalPaid = PATIENTS.reduce((s, p) => s + p.invoices.reduce((s2, i) => s2 + i.insurancePaid, 0), 0);
     const totalOwed = PATIENTS.reduce((s, p) => s + p.invoices.reduce((s2, i) => s2 + i.patientOwes, 0), 0);
-    const collectionRate = totalCharged > 0 ? (totalPaid / totalCharged * 100) : 0;
-
-    // Copays to collect
-    const copaysToday = PATIENTS.filter(p => p.copayAmount && parseFloat(p.copayAmount) > 0 && upcomingAppts.some(a => a.patient.id === p.id));
-
-    // Allergies flags
-    const allergyPatients = PATIENTS.filter(p => p.allergies.length > 0);
-
-    // Upcoming birthdays (next 60 days)
-    const upcomingBirthdays = PATIENTS
-      .map(p => {
-        const parts = p.dob.split("/");
-        if (parts.length !== 3) return null;
-        const month = parseInt(parts[0], 10) - 1;
-        const day = parseInt(parts[1], 10);
-        const thisYear = now.getFullYear();
-        let bday = new Date(thisYear, month, day);
-        if (bday < now) bday = new Date(thisYear + 1, month, day);
-        const diff = (bday.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
-        if (diff > 60) return null;
-        const age = thisYear - parseInt(parts[2], 10) + (bday.getFullYear() > thisYear ? 0 : 0);
-        const turningAge = bday.getFullYear() - parseInt(parts[2], 10);
-        return { patient: p, birthday: bday, daysUntil: Math.ceil(diff), turningAge };
-      })
-      .filter(Boolean)
-      .sort((a, b) => a!.daysUntil - b!.daysUntil) as { patient: Patient; birthday: Date; daysUntil: number; turningAge: number }[];
+    const pendingInvoices = PATIENTS.flatMap(p => p.invoices.filter(i => i.status === "Pending" || i.status === "Insurance Processing").map(i => ({ ...i, patient: p })));
+    const overdueInvoices = PATIENTS.flatMap(p => p.invoices.filter(i => i.status === "Overdue").map(i => ({ ...i, patient: p })));
+    const paidInvoices = PATIENTS.flatMap(p => p.invoices.filter(i => i.status === "Paid").map(i => ({ ...i, patient: p })));
 
     return {
-      nextAppt, nextSurgery, upcomingSurgeries, thisWeekSurgeries,
-      unsignedCharts, missingConsent, expiringAuth,
-      pendingInvoices, overdueInvoices, unbilledEncounters,
-      totalCharged, totalPaid, totalOwed, collectionRate,
-      copaysToday, allergyPatients, upcomingAppts, upcomingBirthdays,
+      totalCharged, totalPaid, totalOwed,
+      pendingInvoices, overdueInvoices, paidInvoices,
+      upcomingAppts, upcomingSurgeries,
       totalPatients: PATIENTS.length,
       activePatients: PATIENTS.filter(p => p.status === "Active").length,
     };
   }, []);
 }
 
+// ── Sparkline chart (SVG) ─────────────────────────────────────────────
+function BalanceChart() {
+  // Generate mock 30-day revenue data
+  const points = useMemo(() => {
+    const data: number[] = [];
+    let val = 48000;
+    for (let i = 0; i < 30; i++) {
+      val += (Math.random() - 0.42) * 3200;
+      val = Math.max(30000, Math.min(75000, val));
+      data.push(val);
+    }
+    data[data.length - 1] = 64424;
+    return data;
+  }, []);
+
+  const min = Math.min(...points) - 2000;
+  const max = Math.max(...points) + 2000;
+  const w = 380;
+  const h = 140;
+
+  const toX = (i: number) => (i / (points.length - 1)) * w;
+  const toY = (v: number) => h - ((v - min) / (max - min)) * h;
+
+  const linePath = points.map((v, i) => `${i === 0 ? "M" : "L"}${toX(i).toFixed(1)},${toY(v).toFixed(1)}`).join(" ");
+  const areaPath = linePath + ` L${w},${h} L0,${h} Z`;
+
+  const labels = ["Feb 27", "Mar 4", "Mar 9", "Mar 14", "Mar 19"];
+
+  return (
+    <div style={{ marginTop: 16 }}>
+      <svg viewBox={`0 0 ${w} ${h + 24}`} width="100%" style={{ display: "block" }}>
+        <defs>
+          <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#818cf8" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#818cf8" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={areaPath} fill="url(#chart-grad)" />
+        <path d={linePath} fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        {/* X labels */}
+        {labels.map((l, i) => (
+          <text key={l} x={toX(i * 7.25)} y={h + 18} fill="#64748b" fontSize="10" textAnchor="middle" fontFamily="Inter, sans-serif">{l}</text>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────
 export default function HomePage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const data = useHomeData();
-  const now = new Date();
-  const greeting = now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
-  const [sectionOrder, setSectionOrder] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]);
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
-  const dragItem = useRef<number | null>(null);
-  const dragOverItem = useRef<number | null>(null);
-  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+  const [balanceView, setBalanceView] = useState<"chart" | "table">("chart");
 
-  const handleDragStart = (pos: number) => { dragItem.current = pos; setDraggingIdx(pos); };
-  const handleDragEnter = (pos: number) => { dragOverItem.current = pos; };
-  const handleDragEnd = () => {
-    if (dragItem.current !== null && dragOverItem.current !== null && dragItem.current !== dragOverItem.current) {
-      setSectionOrder(prev => {
-        const arr = [...prev];
-        const dragged = arr.splice(dragItem.current!, 1)[0];
-        arr.splice(dragOverItem.current!, 0, dragged);
-        return arr;
-      });
-    }
-    dragItem.current = null; dragOverItem.current = null; setDraggingIdx(null);
-  };
-
-  const allSections = [
-    // Section 0: Key Metrics
-    <div key={0} style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
-          <MetricCard label="Total Revenue" value={`$${(data.totalCharged / 1000).toFixed(0)}K`} change="+12.4%" positive sparkType="up" />
-          <MetricCard label="Patients Seen" value={String(data.totalPatients * 156)} change="+8.2%" positive sparkType="steady" />
-          <MetricCard label="Avg. Collection Rate" value={`${data.collectionRate.toFixed(1)}%`} change="+1.8%" positive sparkType="up" />
-          <MetricCard label="Denial Rate" value="4.2%" change="-0.8%" positive={false} sparkType="down" />
-    </div>,
-    /* Section 1: Critical alerts */
-    <div key={1} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
-          <AlertCard
-            icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>}
-            label="Upcoming Surgeries"
-            count={data.upcomingSurgeries.length}
-            color="#ef4444"
-            linkTo="/doczoc/surgeries"
-          />
-          <AlertCard
-            icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>}
-            label="Unsigned Charts"
-            count={data.unsignedCharts.length}
-            color="#f59e0b"
-            linkTo="/doczoc/patients"
-          />
-          <AlertCard
-            icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>}
-            label="Missing Consents"
-            count={data.missingConsent.length}
-            color="#818cf8"
-            linkTo="/doczoc/patients"
-          />
-          <AlertCard
-            icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>}
-            label="Expiring Auth"
-            count={data.expiringAuth.length}
-            color="#f87171"
-            linkTo="/doczoc/patients"
-          />
-    </div>,
-    /* Section 2 */
-    <div key={2} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          {/* Next Appointment Card */}
-          <div className="dz-card" style={{ padding: "18px 20px", borderLeft: "3px solid #6366f1" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em", marginBottom: 10 }}>Next Appointment</div>
-            {data.nextAppt ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 10, background: "rgba(99,102,241,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-                  </svg>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{data.nextAppt.type}</div>
-                  <div style={{ fontSize: "0.75rem", color: "var(--dz-text-muted)" }}>
-                    <Link to={`/doczoc/patients/${data.nextAppt.patient.id}`} style={{ color: "var(--dz-accent-text)", textDecoration: "none" }}>{data.nextAppt.patient.name}</Link>
-                    {" · "}{data.nextAppt.date}
-                  </div>
-                </div>
-              </div>
-            ) : <span style={{ fontSize: "0.82rem", color: "#64748b" }}>No upcoming appointments</span>}
-          </div>
-
-          {/* Next Surgery Card */}
-          <div className="dz-card" style={{ padding: "18px 20px", borderLeft: "3px solid #ef4444" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em", marginBottom: 10 }}>Next Surgery</div>
-            {data.nextSurgery ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: 10, flexShrink: 0,
-                  background: "linear-gradient(135deg, rgba(239,68,68,0.15), rgba(168,85,247,0.15))",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  animation: "dz-surgery-pulse 2s ease-in-out infinite",
-                }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{data.nextSurgery.type}</div>
-                  <div style={{ fontSize: "0.75rem", color: "var(--dz-text-muted)" }}>
-                    <Link to={`/doczoc/patients/${data.nextSurgery.patient.id}`} style={{ color: "var(--dz-accent-text)", textDecoration: "none" }}>{data.nextSurgery.patient.name}</Link>
-                    {" · "}{data.nextSurgery.date}
-                  </div>
-                </div>
-              </div>
-            ) : <span style={{ fontSize: "0.82rem", color: "#64748b" }}>No upcoming surgeries</span>}
-          </div>
-    </div>,
-    /* Section 3 */
-    <div key={3} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          {/* Upcoming Appointments with patient cards */}
-          <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-            <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Appointments</span>
-              <Link to="/doczoc/appointments" style={{ fontSize: "0.72rem", color: "#818cf8", fontWeight: 600, textDecoration: "none" }}>View All →</Link>
-            </div>
-            <div style={{ maxHeight: 340, overflowY: "auto" }}>
-              {data.upcomingAppts.slice(0, 6).map((a, i) => {
-                const isSurgery = a.type.toLowerCase().includes("surgery");
-                const colors = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
-                const avatarColor = colors[a.patient.name.charCodeAt(0) % colors.length];
-                return (
-                  <Link
-                    key={i}
-                    to={`/doczoc/patients/${a.patient.id}`}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 12, padding: "12px 18px",
-                      textDecoration: "none", borderBottom: "1px solid rgba(99,102,241,0.05)",
-                      transition: "background 0.15s",
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.04)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-                  >
-                    <div style={{
-                      width: 38, height: 38, borderRadius: 10, flexShrink: 0,
-                      background: `${avatarColor}18`, color: avatarColor,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: "0.68rem", fontWeight: 700,
-                    }}>{a.patient.name.split(" ").map(n => n[0]).join("")}</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{a.patient.name}</span>
-                        {isSurgery && <span style={{ fontSize: "0.58rem", fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>SURGERY</span>}
-                      </div>
-                      <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)", marginTop: 1 }}>{a.type}</div>
-                    </div>
-                    <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--dz-text-secondary)" }}>{a.date}</div>
-                      <div style={{ display: "flex", gap: 3, marginTop: 3, justifyContent: "flex-end" }}>
-                        {a.codes.slice(0, 2).map(c => (
-                          <span key={c} style={{
-                            fontSize: "0.58rem", fontFamily: "'SF Mono', Consolas, monospace",
-                            padding: "0px 4px", borderRadius: 3, fontWeight: 600,
-                            background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.1)" : "rgba(124,58,237,0.1)",
-                            color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa",
-                          }}>{c}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-              {data.upcomingAppts.length === 0 && (
-                <div style={{ padding: 24, textAlign: "center", color: "#64748b", fontSize: "0.78rem" }}>No upcoming appointments</div>
-              )}
-            </div>
-          </div>
-
-          {/* Upcoming Patient Birthdays */}
-          <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-            <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>
-                <span style={{ marginRight: 6 }}>Upcoming Birthdays</span>
-              </span>
-              <span style={{ fontSize: "0.68rem", color: "#64748b" }}>Next 60 days</span>
-            </div>
-            <div style={{ maxHeight: 340, overflowY: "auto" }}>
-              {data.upcomingBirthdays.map((b, i) => {
-                const colors = ["#ec4899", "#8b5cf6", "#06b6d4", "#f59e0b", "#22c55e", "#6366f1"];
-                const c = colors[b.patient.name.charCodeAt(0) % colors.length];
-                const isToday = b.daysUntil === 0;
-                return (
-                  <Link
-                    key={i}
-                    to={`/doczoc/patients/${b.patient.id}`}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 12, padding: "12px 18px",
-                      textDecoration: "none", borderBottom: "1px solid rgba(99,102,241,0.05)",
-                      transition: "background 0.15s",
-                      background: isToday ? "rgba(236,72,153,0.06)" : "transparent",
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = isToday ? "rgba(236,72,153,0.1)" : "rgba(99,102,241,0.04)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = isToday ? "rgba(236,72,153,0.06)" : "transparent"; }}
-                  >
-                    <div style={{
-                      width: 38, height: 38, borderRadius: 10, flexShrink: 0,
-                      background: `${c}18`, color: c,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: "0.68rem", fontWeight: 700,
-                    }}>{b.patient.name.split(" ").map(n => n[0]).join("")}</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{b.patient.name}</div>
-                      <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
-                        {b.birthday.toLocaleDateString("en-US", { month: "short", day: "numeric" })} · Turning {b.turningAge}
-                      </div>
-                    </div>
-                    <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      {isToday ? (
-                        <span style={{ fontSize: "0.7rem", fontWeight: 700, padding: "3px 8px", borderRadius: 8, background: "rgba(236,72,153,0.15)", color: "#ec4899" }}>Today!</span>
-                      ) : (
-                        <span style={{ fontSize: "0.72rem", fontWeight: 600, color: b.daysUntil <= 7 ? "#f59e0b" : "#64748b" }}>
-                          {b.daysUntil === 1 ? "Tomorrow" : `${b.daysUntil} days`}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
-              {data.upcomingBirthdays.length === 0 && (
-                <div style={{ padding: 24, textAlign: "center", color: "#64748b", fontSize: "0.78rem" }}>No upcoming birthdays</div>
-              )}
-            </div>
-          </div>
-    </div>,
-    /* Section 4 */
-    <div key={4} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
-          <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Revenue Collected</div>
-            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#22c55e", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
-              ${(data.totalPaid / 1000).toFixed(1)}K
-            </div>
-            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
-              {data.collectionRate.toFixed(1)}% collection rate
-            </div>
-          </div>
-          <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Patient Balances</div>
-            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#f59e0b", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
-              ${(data.totalOwed / 1000).toFixed(1)}K
-            </div>
-            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
-              {data.overdueInvoices.length} overdue
-            </div>
-          </div>
-          <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Claims Pending</div>
-            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#818cf8", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
-              {data.pendingInvoices.length}
-            </div>
-            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
-              ${(data.pendingInvoices.reduce((s, i) => s + i.totalCharged, 0) / 1000).toFixed(1)}K total
-            </div>
-          </div>
-          <div className="dz-card" style={{ padding: "18px 20px", textAlign: "center" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>Website Visits</div>
-            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "#06b6d4", fontFamily: "'SF Mono', Consolas, monospace", margin: "6px 0" }}>
-              2,847
-            </div>
-            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)" }}>
-              +18% this month
-            </div>
-          </div>
-    </div>,
-    /* Section 5 */
-    <div key={5} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          {/* Upcoming Schedule — appointments + surgeries */}
-          <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-            <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Schedule</span>
-              <Link to="/doczoc/calendar" style={{ fontSize: "0.72rem", color: "var(--dz-accent, #818cf8)", fontWeight: 600, textDecoration: "none" }}>View Calendar →</Link>
-            </div>
-            <div style={{ maxHeight: 360, overflowY: "auto" }}>
-              {data.upcomingAppts.slice(0, 10).map((a, i) => {
-                const isSurgery = a.type.toLowerCase().includes("surgery");
-                const isPreOp = a.type.toLowerCase().includes("pre-op");
-                const colors = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
-                const avatarColor = colors[a.patient.name.charCodeAt(0) % colors.length];
-                return (
-                  <Link
-                    key={i}
-                    to={`/doczoc/patients/${a.patient.id}`}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 12, padding: "10px 18px",
-                      textDecoration: "none", borderBottom: "1px solid rgba(99,102,241,0.05)",
-                      transition: "background 0.15s",
-                      borderLeft: isSurgery ? "3px solid #ef4444" : isPreOp ? "3px solid #818cf8" : "3px solid transparent",
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(99,102,241,0.04)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-                  >
-                    <div style={{
-                      width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
-                      background: `${avatarColor}18`, color: avatarColor,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: "0.6rem", fontWeight: 700,
-                    }}>{a.patient.name.split(" ").map(n => n[0]).join("")}</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-secondary)" }}>{a.patient.name}</span>
-                        {isSurgery && <span style={{ fontSize: "0.55rem", fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: "rgba(239,68,68,0.12)", color: "#f87171" }}>SURGERY</span>}
-                        {isPreOp && <span style={{ fontSize: "0.55rem", fontWeight: 700, padding: "1px 5px", borderRadius: 4, background: "rgba(129,140,248,0.12)", color: "#818cf8" }}>PRE-OP</span>}
-                      </div>
-                      <div style={{ fontSize: "0.68rem", color: "#64748b" }}>{a.type}</div>
-                    </div>
-                    <div style={{ textAlign: "right", flexShrink: 0 }}>
-                      <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--dz-accent-text, #818cf8)" }}>{a.date}</div>
-                    </div>
-                  </Link>
-                );
-              })}
-              {data.upcomingAppts.length === 0 && (
-                <div style={{ padding: 24, textAlign: "center", color: "#64748b", fontSize: "0.78rem" }}>No upcoming appointments or surgeries</div>
-              )}
-            </div>
-          </div>
-
-          {/* Quick actions + stats */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {/* Next Patient */}
-            <div className="dz-card" style={{ padding: "18px 20px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Next Patient</span>
-                <span style={{
-                  marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 4,
-                  fontSize: "0.65rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
-                  background: "rgba(99,102,241,0.1)", color: "#818cf8",
-                }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-                  Appointment
-                </span>
-                <span style={{ fontSize: "0.68rem", fontWeight: 600, padding: "2px 8px", borderRadius: 10, background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>9:30 AM</span>
-              </div>
-              <Link to="/doczoc/patients/2" style={{ textDecoration: "none" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                  <div style={{
-                    width: 40, height: 40, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
-                    background: "rgba(99,102,241,0.12)", color: "#818cf8", fontSize: "0.75rem", fontWeight: 700, flexShrink: 0,
-                  }}>JK</div>
-                  <div>
-                    <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>James Kim</div>
-                    <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)", marginTop: 1 }}>New Patient — Knee</div>
-                  </div>
-                </div>
-              </Link>
-              <div style={{
-                padding: "12px 14px", borderRadius: 8, fontSize: "0.75rem", lineHeight: 1.6,
-                background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.08)",
-                color: "var(--dz-text-secondary, #cbd5e1)",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
-                  <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
-                </div>
-                ACL tear (left), positive Lachman. Scheduled for reconstruction consult.
-                <AiSummaryExpand>
-                  MRI confirmed complete tear with lateral meniscus involvement. Anterior drawer test positive. Reports instability during lateral movements, unable to return to sports. Conservative management (bracing + PT x 8 weeks) showed minimal improvement. Recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
-                </AiSummaryExpand>
-              </div>
-              <div style={{
-                display: "flex", alignItems: "center", gap: 8, marginTop: 10,
-                padding: "8px 12px", borderRadius: 8,
-                background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.12)",
-              }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                </svg>
-                <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#f87171" }}>Starts in 25 minutes</span>
-                <span style={{ fontSize: "0.65rem", color: "var(--dz-text-dim)", marginLeft: 4 }}>(9:30 AM)</span>
-              </div>
-            </div>
-
-            {/* This week */}
-            <div className="dz-card" style={{ padding: "18px 20px" }}>
-              <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)", marginBottom: 12 }}>This Week</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <WeekStat label="Surgeries" count={data.thisWeekSurgeries.length} color="#ef4444" />
-                <WeekStat label="Active Patients" count={data.activePatients} color="#22c55e" />
-                <WeekStat label="Claims to Submit" count={data.pendingInvoices.length} color="#f59e0b" />
-                <WeekStat label="Auth Expiring (30d)" count={data.expiringAuth.length} color="#f87171" />
-              </div>
-            </div>
-          </div>
-    </div>,
-    /* Section 6 */
-    <div key={6} className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-          <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Schedule</span>
-            <Link to="/doczoc/appointments" style={{ fontSize: "0.72rem", color: "#818cf8", fontWeight: 600, textDecoration: "none" }}>View All →</Link>
-          </div>
-          <div style={{ maxHeight: 300, overflowY: "auto" }}>
-            {data.upcomingAppts.slice(0, 8).map((a, i) => {
-              const isSurgery = a.type.toLowerCase().includes("surgery");
-              return (
-                <div key={i} style={{
-                  display: "flex", alignItems: "center", gap: 12, padding: "10px 18px",
-                  borderBottom: "1px solid rgba(99,102,241,0.05)",
-                }}>
-                  <div style={{
-                    width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-                    background: isSurgery ? "#ef4444" : "#818cf8",
-                    boxShadow: isSurgery ? "0 0 6px rgba(239,68,68,0.4)" : undefined,
-                  }} />
-                  <span style={{ fontSize: "0.75rem", color: "#818cf8", fontWeight: 600, width: 90, flexShrink: 0 }}>{a.date}</span>
-                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--dz-text-secondary)", flex: 1 }}>{a.type}</span>
-                  <Link to={`/doczoc/patients/${a.patient.id}`} style={{ fontSize: "0.72rem", color: "var(--dz-accent-text)", textDecoration: "none", fontWeight: 600 }}>{a.patient.name}</Link>
-                </div>
-              );
-            })}
-          </div>
-        </div>,
-    /* Section 7: Upcoming Schedule + Quick Stats */
-    <div key={7} style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
-      {/* Quick Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
-        {[
-          { label: "Today's Appointments", value: String(data.upcomingAppts.filter(a => { const d = new Date(a.date); const t = new Date(); return d.toDateString() === t.toDateString(); }).length || 6), change: "+3", color: "#6366f1" },
-          { label: "New Patients (Week)", value: String(data.newPatients?.length ?? 4), change: "+5", color: "#22c55e" },
-          { label: "Show Rate", value: "96%", change: "+2%", color: "#a78bfa" },
-        ].map(s => (
-          <div key={s.label} className="dz-card" style={{ padding: "16px 18px" }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>{s.label}</div>
-            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: s.color, margin: "4px 0 2px" }}>{s.value}</div>
-            <div style={{ fontSize: "0.72rem", color: "#22c55e" }}>{s.change} from last week</div>
-          </div>
-        ))}
-        <GoogleReviewCard />
-      </div>
-      {/* Upcoming Schedule table */}
-      <div className="dz-card" style={{ padding: 0, overflow: "hidden" }}>
-        <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(99,102,241,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>Upcoming Schedule</span>
-        </div>
-        <div className="dz-table-wrap">
-          <table className="dz-table" style={{ margin: 0 }}>
-            <thead><tr><th>Time</th><th>In</th><th>Patient</th><th>Type / Procedure</th><th>Summary Notes</th></tr></thead>
-            <tbody>
-              {(() => {
-                const scheduleRows = [
-                  { name: "Sarah Mitchell", type: "Follow-up — Shoulder", time: "9:00 AM", minutesUntil: 25, notes: "6-week post-op check, ROM assessment", overview: "Patient is 6 weeks post arthroscopic shoulder surgery (rotator cuff repair). Presenting for routine follow-up to assess range of motion, pain levels, and progress with physical therapy. Previous visit noted good healing with mild stiffness." },
-                  { name: "James Kim", type: "New Patient — Knee", time: "9:30 AM", minutesUntil: 55, notes: "Initial eval, MRI review", overview: "New patient referral from Dr. Patel for right knee pain persisting 3 months after a basketball injury. MRI results available for review showing possible meniscal tear. Patient reports intermittent locking and swelling." },
-                  { name: "Maria Lopez", type: "Post-Op — ACL Reconstruction", time: "10:15 AM", minutesUntil: 100, notes: "2-week post-op, suture removal", overview: "2-week follow-up after left ACL reconstruction using patellar tendon autograft. Scheduled for suture removal and wound check. Patient to begin supervised physical therapy next week. No complications reported at discharge." },
-                  { name: "David Ross", type: "Consultation — Hip", time: "11:00 AM", minutesUntil: 145, notes: "Hip replacement candidacy eval", overview: "62-year-old male presenting for total hip replacement consultation. Chronic right hip osteoarthritis with failed conservative management (PT, cortisone injections x3). X-rays show significant joint space narrowing. Discuss surgical options and timeline." },
-                  { name: "Emily Chen", type: "Follow-up — Wrist Fracture", time: "1:00 PM", minutesUntil: 265, notes: "Cast removal, X-ray review", overview: "8-week follow-up for distal radius fracture (non-displaced). Scheduled for cast removal and repeat X-ray to confirm bone healing. If healed, will transition to removable splint and begin gentle ROM exercises." },
-                  { name: "Michael Brown", type: "Sports Injury — Ankle Sprain", time: "2:30 PM", minutesUntil: 355, notes: "Grade II sprain, rehab progress", overview: "28-year-old athlete with grade II lateral ankle sprain sustained during soccer 4 weeks ago. Returning to assess ligament stability and rehab progress. Goal is to clear for gradual return to sport. May need bracing recommendation." },
-                ];
-                return scheduleRows.map((p, idx) => (
-                  <>
-                    <tr key={p.name} onClick={() => setExpandedRow(expandedRow === idx ? null : idx)} style={{ cursor: "pointer", transition: "background 0.15s" }}>
-                      <td style={{ fontWeight: 600, fontSize: "0.78rem" }}>{p.time}</td>
-                      <td style={{ fontSize: "0.78rem", color: p.minutesUntil <= 30 ? "#ef4444" : p.minutesUntil <= 60 ? "#f59e0b" : "#64748b", fontWeight: p.minutesUntil <= 60 ? 700 : 500 }}>{p.minutesUntil < 60 ? `${p.minutesUntil}m` : `${Math.floor(p.minutesUntil / 60)}h ${p.minutesUntil % 60}m`}</td>
-                      <td style={{ fontWeight: 600, fontSize: "0.78rem" }}>{p.name}</td>
-                      <td style={{ fontSize: "0.78rem" }}>{p.type}</td>
-                      <td style={{ fontSize: "0.75rem", color: "#64748b", maxWidth: 200, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.notes}</td>
-                    </tr>
-                    {expandedRow === idx && (
-                      <tr key={`${p.name}-detail`}>
-                        <td colSpan={5} style={{ padding: "12px 18px", background: "rgba(99,102,241,0.04)", borderTop: "none" }}>
-                          <div style={{ fontSize: "0.78rem", color: "var(--dz-text-primary)", lineHeight: 1.6 }}>
-                            <strong style={{ color: "#6366f1", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.03em" }}>Appointment Overview</strong>
-                            <p style={{ margin: "6px 0 0" }}>{p.overview}</p>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </>
-                ));
-              })()}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>,
+  const accounts = [
+    { name: "Patient Copays", amount: data.totalOwed, icon: "💳" },
+    { name: "Private Pay AR", amount: 0, icon: "🏦" },
+    { name: "Insurance AR", amount: data.pendingInvoices.reduce((s, i) => s + i.totalCharged, 0), icon: "🏦" },
+    { name: "Operating", amount: 64424.29, icon: "🏦" },
+    { name: "Checking ••6071", amount: 0, icon: "🏦" },
   ];
+
+  const inflow = data.totalPaid;
+  const outflow = data.totalCharged - data.totalPaid;
 
   return (
     <div className="dz-platform">
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <PlatformBg bgId={bgId} />
-      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: "28px 32px" }}>
-        {/* Greeting */}
-        <div className="dz-home-row" style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--dz-text-primary)", margin: 0 }}>
-            {greeting}, Dr. Elguizaoui
-          </h1>
-          <p style={{ fontSize: "0.82rem", color: "#64748b", margin: "4px 0 0" }}>
-            {now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
-          </p>
+      <main className={`dz-platform-main${collapsed ? " dz-main-expanded" : ""}`} style={{ padding: 0 }}>
+        {/* Top bar */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: 16, padding: "14px 32px",
+          borderBottom: "1px solid var(--glass-border)",
+          position: "sticky", top: 0, zIndex: 5,
+          background: "rgba(6,6,18,0.7)", backdropFilter: "blur(20px)",
+        }}>
+          <div style={{
+            flex: 1, maxWidth: 480, display: "flex", alignItems: "center", gap: 10,
+            background: "var(--dz-input-bg)", border: "1px solid var(--glass-border)",
+            borderRadius: 10, padding: "9px 14px",
+          }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span style={{ fontSize: "0.85rem", color: "#64748b", flex: 1 }}>Search for anything</span>
+            <span style={{ fontSize: "0.7rem", color: "#475569", background: "rgba(148,163,184,0.1)", padding: "2px 6px", borderRadius: 4, fontFamily: "monospace" }}>⌘ K</span>
+          </div>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+            <button style={{
+              display: "flex", alignItems: "center", gap: 8, padding: "9px 18px",
+              background: "var(--glass-bg)", border: "1px solid var(--glass-border)",
+              borderRadius: 10, color: "var(--dz-text-primary)", fontSize: "0.85rem",
+              fontWeight: 600, cursor: "pointer",
+            }}>
+              New appointment
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <button style={{
+              width: 38, height: 38, borderRadius: 10, border: "1px solid var(--glass-border)",
+              background: "transparent", color: "#94a3b8", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.15.65.65 1.15 1.24 1.27h.27a2 2 0 0 1 0 4h-.09"/></svg>
+            </button>
+            <button style={{
+              width: 38, height: 38, borderRadius: 10, border: "1px solid var(--glass-border)",
+              background: "transparent", color: "#94a3b8", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span style={{ position: "absolute", top: 6, right: 6, width: 8, height: 8, borderRadius: "50%", background: "#ef4444", border: "2px solid #0f0f1e" }} />
+            </button>
+            <div style={{
+              width: 38, height: 38, borderRadius: 10,
+              background: "linear-gradient(135deg, #4f46e5, #6366f1)",
+              color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "0.75rem", fontWeight: 700, cursor: "pointer",
+            }}>SE</div>
+          </div>
         </div>
 
-        {/* Draggable sections */}
-        {sectionOrder.map((sectionIdx, pos) => (
-          <div
-            key={sectionIdx}
-            className={`dz-home-row${draggingIdx === pos ? " dz-dragging" : ""}`}
-            style={{ marginBottom: 20 }}
-            draggable
-            onDragStart={() => handleDragStart(pos)}
-            onDragEnter={() => handleDragEnter(pos)}
-            onDragEnd={handleDragEnd}
-            onDragOver={e => e.preventDefault()}
-          >
-            {allSections[sectionIdx]}
+        {/* Content */}
+        <div style={{ padding: "32px 32px 48px" }}>
+          {/* Welcome */}
+          <h1 style={{ fontSize: "1.6rem", fontWeight: 700, color: "var(--dz-text-primary)", margin: "0 0 24px", letterSpacing: "-0.02em" }}>
+            Welcome, Dr. Elguizaoui
+          </h1>
+
+          {/* Quick actions */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 28 }}>
+            {[
+              { label: "New Patient", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>, active: true },
+              { label: "Schedule", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg> },
+              { label: "Submit Claim", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> },
+              { label: "Referral", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> },
+              { label: "Upload Chart", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+            ].map(btn => (
+              <button key={btn.label} style={{
+                display: "flex", alignItems: "center", gap: 7, padding: "8px 16px",
+                borderRadius: 8, fontSize: "0.82rem", fontWeight: 500, cursor: "pointer",
+                background: btn.active ? "var(--dz-accent)" : "transparent",
+                color: btn.active ? "#fff" : "var(--dz-text-secondary)",
+                border: btn.active ? "none" : "1px solid var(--glass-border)",
+                transition: "all 0.15s",
+              }}>
+                {btn.icon}
+                {btn.label}
+              </button>
+            ))}
+            <span style={{ marginLeft: "auto", fontSize: "0.82rem", color: "#64748b", cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+              Customize
+            </span>
           </div>
-        ))}
+
+          {/* Main row: Balance + Accounts */}
+          <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 16, marginBottom: 16 }}>
+            {/* Balance card */}
+            <div className="dz-card" style={{ padding: "24px 28px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--dz-text-primary)" }}>Practice balance</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div style={{ display: "flex", gap: 2 }}>
+                  <button onClick={() => setBalanceView("chart")} style={{
+                    width: 32, height: 28, borderRadius: "6px 0 0 6px", border: "1px solid var(--glass-border)",
+                    background: balanceView === "chart" ? "var(--dz-accent-bg-active)" : "transparent",
+                    color: balanceView === "chart" ? "var(--dz-accent)" : "#64748b", cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  </button>
+                  <button onClick={() => setBalanceView("table")} style={{
+                    width: 32, height: 28, borderRadius: "0 6px 6px 0", border: "1px solid var(--glass-border)", borderLeft: "none",
+                    background: balanceView === "table" ? "var(--dz-accent-bg-active)" : "transparent",
+                    color: balanceView === "table" ? "var(--dz-accent)" : "#64748b", cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div style={{ fontSize: "2.4rem", fontWeight: 700, color: "var(--dz-text-primary)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                $64,424<span style={{ fontSize: "1.4rem", color: "#64748b" }}>.29</span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.82rem", color: "#64748b" }}>
+                  Last 30 days
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginLeft: "auto" }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.82rem", color: "var(--dz-text-secondary)" }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3"><polyline points="18 15 12 9 6 15"/></svg>
+                    ${(inflow / 1000).toFixed(0)}K
+                  </span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.82rem", color: "var(--dz-text-secondary)" }}>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="3"><polyline points="6 9 12 15 18 9"/></svg>
+                    −${(outflow / 1000).toFixed(0)}K
+                  </span>
+                </div>
+              </div>
+
+              <BalanceChart />
+            </div>
+
+            {/* Accounts card */}
+            <div className="dz-card" style={{ padding: "24px 28px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+                <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--dz-text-primary)" }}>Accounts</span>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                {accounts.map((acc, i) => (
+                  <div key={i} style={{
+                    display: "flex", alignItems: "center", gap: 12, padding: "12px 0",
+                    borderBottom: i < accounts.length - 1 ? "1px solid var(--glass-border)" : "none",
+                    cursor: "pointer",
+                  }}>
+                    <div style={{
+                      width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+                      background: "var(--dz-input-bg)", border: "1px solid var(--glass-border)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: "0.85rem",
+                    }}>{acc.icon}</div>
+                    <span style={{ fontSize: "0.88rem", color: "var(--dz-text-primary)", fontWeight: 500, flex: 1 }}>{acc.name}</span>
+                    <span style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--dz-text-primary)", fontFamily: "'SF Mono', Consolas, monospace" }}>
+                      ${acc.amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).split(".")[0]}
+                      <span style={{ color: "#64748b" }}>.{acc.amount.toFixed(2).split(".")[1]}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 12, cursor: "pointer" }}>
+                <span style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--dz-input-bg)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", color: "#64748b", fontWeight: 600 }}>+3</span>
+                <span style={{ fontSize: "0.85rem", color: "#64748b", fontWeight: 500 }}>View all accounts</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom row: 3 cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 32 }}>
+            {/* Patient Payments */}
+            <div className="dz-card" style={{ padding: "22px 24px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <span style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--dz-text-primary)" }}>Patient Payments</span>
+                <div style={{ display: "flex", gap: 4 }}>
+                  <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                  </button>
+                  <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div style={{ fontSize: "1.8rem", fontWeight: 700, color: "var(--dz-text-primary)", letterSpacing: "-0.02em", marginBottom: 12 }}>
+                ${(data.totalOwed / 1000).toFixed(1)}K<span style={{ fontSize: "1rem", color: "#64748b" }}>.{(data.totalOwed % 1000).toFixed(0).padStart(2, "0").slice(0, 2)}</span>
+              </div>
+              {/* Mini progress bar */}
+              <div style={{ height: 4, borderRadius: 2, background: "var(--glass-border)", marginBottom: 10 }}>
+                <div style={{ height: 4, borderRadius: 2, background: "#818cf8", width: "35%" }} />
+              </div>
+              <div style={{ display: "flex", gap: 16, fontSize: "0.78rem", color: "#64748b", marginBottom: 16 }}>
+                <span>Balance <span style={{ color: "#818cf8" }}>●</span></span>
+                <span>Pending <span style={{ color: "#475569" }}>●</span></span>
+                <span style={{ marginLeft: "auto", color: "var(--dz-text-secondary)" }}>${(data.totalOwed * 3.2).toLocaleString("en-US", { maximumFractionDigits: 0 })} available</span>
+              </div>
+              <div style={{ borderTop: "1px solid var(--glass-border)", paddingTop: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.82rem", color: "#64748b" }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
+                  Autopay
+                </div>
+                <span style={{ fontSize: "0.82rem", color: "var(--dz-text-secondary)" }}>Apr 20</span>
+                <button style={{ padding: "5px 16px", borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "var(--dz-text-primary)", fontSize: "0.82rem", fontWeight: 600, cursor: "pointer" }}>
+                  Pay
+                </button>
+              </div>
+            </div>
+
+            {/* Claims */}
+            <div className="dz-card" style={{ padding: "22px 24px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                <span style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--dz-text-primary)" }}>Claims</span>
+                <div style={{ display: "flex", gap: 4 }}>
+                  <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                  </button>
+                  <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 24, marginBottom: 20 }}>
+                <div>
+                  <div style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: 4 }}>Outstanding</div>
+                  <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{data.pendingInvoices.length}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: 4 }}>Overdue</div>
+                  <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{data.overdueInvoices.length > 0 ? data.overdueInvoices.length : "–"}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: 4 }}>Due soon</div>
+                  <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>{Math.min(data.pendingInvoices.length, 3)}</div>
+                </div>
+              </div>
+              <div style={{ borderTop: "1px solid var(--glass-border)", paddingTop: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <div style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: 2 }}>Inbox</div>
+                  <div style={{ fontSize: "0.82rem", color: "var(--dz-text-secondary)" }}>{data.pendingInvoices.length} items · ${(data.pendingInvoices.reduce((s, i) => s + i.totalCharged, 0) / 1000).toFixed(1)}K</div>
+                </div>
+                <Link to="/doczoc/billing" style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.85rem", color: "var(--dz-text-primary)", fontWeight: 600, textDecoration: "none" }}>
+                  View
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </Link>
+              </div>
+            </div>
+
+            {/* Invoicing */}
+            <div className="dz-card" style={{ padding: "22px 24px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                <span style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--dz-text-primary)" }}>Invoicing</span>
+                <div style={{ display: "flex", gap: 4 }}>
+                  <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: 24, marginBottom: 20 }}>
+                <div>
+                  <div style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: 4 }}>Overdue</div>
+                  <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>
+                    {data.overdueInvoices.length} · <span style={{ fontWeight: 500 }}>${(data.overdueInvoices.reduce((s, i) => s + i.totalCharged, 0) / 1000).toFixed(1)}K</span>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: 4 }}>Paid</div>
+                  <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--dz-text-primary)" }}>
+                    {data.paidInvoices.length} · <span style={{ fontWeight: 500 }}>${(data.totalPaid / 1000000).toFixed(1)}M</span>
+                  </div>
+                </div>
+              </div>
+              <div style={{ borderTop: "1px solid var(--glass-border)", paddingTop: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <div style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: 2 }}>Open</div>
+                  <div style={{ fontSize: "0.82rem", color: "var(--dz-text-secondary)" }}>{data.pendingInvoices.length} items · ${(data.pendingInvoices.reduce((s, i) => s + i.totalCharged, 0) / 1000).toFixed(1)}K</div>
+                </div>
+                <Link to="/doczoc/rcm" style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.85rem", color: "var(--dz-text-primary)", fontWeight: 600, textDecoration: "none" }}>
+                  View
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Money movement / Revenue section */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--dz-text-primary)", margin: 0 }}>Revenue movement</h2>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <span style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--dz-text-primary)" }}>Mar 2026</span>
+              <button style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid var(--glass-border)", background: "transparent", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
       </main>
-    </div>
-  );
-}
-
-// ── Subcomponents ────────────────────────────────────────────────────
-function AlertCard({ icon, label, count, color, linkTo }: { icon: React.ReactNode; label: string; count: number; color: string; linkTo: string }) {
-  return (
-    <Link to={linkTo} className="dz-card" style={{
-      padding: "16px 18px", display: "flex", alignItems: "center", gap: 12,
-      textDecoration: "none", borderLeft: `3px solid ${color}`,
-      transition: "all 0.15s",
-    }}>
-      <div style={{ width: 36, height: 36, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", background: `${color}15`, flexShrink: 0 }}>
-        {icon}
-      </div>
-      <div>
-        <div style={{ fontSize: "1.2rem", fontWeight: 800, color: count > 0 ? color : "#64748b", fontFamily: "'SF Mono', Consolas, monospace" }}>{count}</div>
-        <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--dz-text-muted)" }}>{label}</div>
-      </div>
-    </Link>
-  );
-}
-
-function QuickActionBtn({ label, icon, to, color }: { label: string; icon: string; to: string; color: string }) {
-  const icons: Record<string, React.ReactNode> = {
-    "user-plus": <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>,
-    calendar: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>,
-    heart: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
-    dollar: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
-    clock: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-    chart: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
-  };
-  return (
-    <Link to={to} style={{
-      display: "flex", alignItems: "center", gap: 8, padding: "10px 12px",
-      borderRadius: 8, background: `${color}08`, border: `1px solid ${color}18`,
-      textDecoration: "none", transition: "all 0.15s",
-    }}
-    onMouseEnter={e => { e.currentTarget.style.background = `${color}15`; }}
-    onMouseLeave={e => { e.currentTarget.style.background = `${color}08`; }}
-    >
-      {icons[icon]}
-      <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--dz-text-secondary)" }}>{label}</span>
-    </Link>
-  );
-}
-
-function WeekStat({ label, count, color }: { label: string; count: number; color: string }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-      <span style={{ fontSize: "0.78rem", color: "var(--dz-text-muted)" }}>{label}</span>
-      <span style={{ fontSize: "0.88rem", fontWeight: 800, color, fontFamily: "'SF Mono', Consolas, monospace" }}>{count}</span>
-    </div>
-  );
-}
-
-function MetricCard({ label, value, change, positive, sparkType }: { label: string; value: string; change: string; positive: boolean; sparkType: "up" | "down" | "steady" }) {
-  const sparkPaths: Record<string, string> = {
-    up: "M0 20 L10 16 L20 18 L30 12 L40 14 L50 8 L60 10 L70 4 L80 6 L90 2",
-    down: "M0 4 L10 6 L20 5 L30 8 L40 10 L50 12 L60 11 L70 16 L80 14 L90 18",
-    steady: "M0 12 L10 10 L20 13 L30 11 L40 12 L50 10 L60 11 L70 9 L80 12 L90 10",
-  };
-  const sparkColor = positive ? "#22c55e" : "#f59e0b";
-  return (
-    <div className="dz-card" style={{ padding: "16px 18px" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-        <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", letterSpacing: "0.01em" }}>{label}</span>
-        <span style={{
-          fontSize: "0.65rem", fontWeight: 700, padding: "2px 6px", borderRadius: 6,
-          background: positive ? "rgba(34,197,94,0.12)" : "rgba(245,158,11,0.12)",
-          color: positive ? "#22c55e" : "#f59e0b",
-        }}>{change}</span>
-      </div>
-      <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--dz-text-primary)", fontFamily: "'SF Mono', Consolas, monospace", marginBottom: 8 }}>
-        {value}
-      </div>
-      <svg width="100%" height="24" viewBox="0 0 90 22" preserveAspectRatio="none" style={{ display: "block" }}>
-        <defs>
-          <linearGradient id={`spark-${sparkType}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={sparkColor} stopOpacity="0.3" />
-            <stop offset="100%" stopColor={sparkColor} stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d={sparkPaths[sparkType] + " L90 22 L0 22 Z"} fill={`url(#spark-${sparkType})`} />
-        <path d={sparkPaths[sparkType]} fill="none" stroke={sparkColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
     </div>
   );
 }

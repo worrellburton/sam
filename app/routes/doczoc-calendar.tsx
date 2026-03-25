@@ -1113,6 +1113,20 @@ export default function CalendarPage() {
                                   </div>
                                   <span className="dz-cal-shift-count has">{appts.length} appt{appts.length !== 1 ? "s" : ""}</span>
                                 </>
+                              ) : hasSchedule ? (
+                                <>
+                                  <div style={{ display: "flex", gap: 3, marginTop: 2 }}>
+                                    {TIME_SLOTS.map((slot, si) => (
+                                      <div key={si} style={{
+                                        width: 6, height: 6, borderRadius: "50%",
+                                        background: schedSlots!.has(slot) ? "#34d399" : "rgba(148,163,184,0.15)",
+                                      }} title={slot} />
+                                    ))}
+                                  </div>
+                                  <span className="dz-cal-shift-count" style={{ color: "#34d399" }}>
+                                    Avail.
+                                  </span>
+                                </>
                               ) : (
                                 <span className="dz-cal-shift-count">
                                   {date.getDay() === 0 || date.getDay() === 6 ? '' : 'No avail.'}

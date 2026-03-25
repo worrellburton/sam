@@ -7561,10 +7561,10 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-table .dz-col-notes { white-space: normal; max-width: 200px; }
 
 /* Hide lower-priority columns on smaller screens */
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .dz-table .dz-col-hide-xl { display: none; }
 }
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .dz-table .dz-col-hide-lg { display: none; }
 }
 @media (max-width: 800px) {

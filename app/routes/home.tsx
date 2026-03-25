@@ -278,7 +278,7 @@ export default function Home() {
             <div className="about-right">
               <div className="about-header">
                 <p className="section-label">About Dr. Elguizaoui</p>
-                <h2>Orthopedic Excellence, <span className="text-accent">Patient-First Approach</span></h2>
+                <h2>Orthopedic Excellence,<br /><span className="text-accent">Patient-First Approach</span></h2>
               </div>
               <div className="about-content">
                 <p className="about-lead">Board-certified orthopedic surgeon and fellowship-trained sports medicine specialist in New York City, combining world-class surgical training with conservative, patient-centered care.</p>

@@ -78,6 +78,48 @@
 [data-theme="light"] .theme-toggle .icon-sun { display: none; }
 [data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
+/* Fixed theme toggle — bottom right */
+.theme-toggle-fixed {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.theme-toggle-fixed:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: var(--primary);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+[data-theme="light"] .theme-toggle-fixed {
+  background: rgba(255,255,255,0.85);
+  border-color: rgba(0,0,0,0.12);
+  color: #555;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+[data-theme="light"] .theme-toggle-fixed:hover {
+  background: #fff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.theme-toggle-fixed .icon-sun,
+.theme-toggle-fixed .icon-moon { display: none; }
+[data-theme="dark"] .theme-toggle-fixed .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle-fixed .icon-moon { display: block; }
+
 html {
   scroll-behavior: smooth;
   font-size: 16px;
@@ -240,25 +282,26 @@ img { max-width: 100%; display: block; }
   transform: translateY(-100%);
 }
 
+/* nav-solid: dark mode (default) — dark bg, light text */
 .nav.nav-solid {
   position: fixed !important;
-  background: rgba(255,255,255,0.95) !important;
+  background: rgba(0,0,0,0.85) !important;
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.nav.nav-solid .logo-name { color: #1a1a2e; }
+.nav.nav-solid .logo-name { color: #f0f0f5; }
 .nav.nav-solid .nav-links > li > a,
-.nav.nav-solid .nav-mega-toggle { color: rgba(0,0,0,0.75); }
+.nav.nav-solid .nav-mega-toggle { color: rgba(255,255,255,0.8); }
 .nav.nav-solid .nav-links > li > a:hover,
 .nav.nav-solid .nav-mega-toggle:hover { color: var(--primary); }
-.nav.nav-solid .nav-btn-contact { color: #1a1a2e !important; }
-.nav.nav-solid .theme-toggle { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color: #555; }
-.nav.nav-solid .theme-toggle:hover { background: rgba(0,0,0,0.1); color: var(--primary); }
+.nav.nav-solid .nav-btn-contact { color: #f0f0f5 !important; }
+/* nav-solid: light mode — white bg, dark text */
 [data-theme="light"] .nav.nav-solid {
   background: rgba(255,255,255,0.92) !important;
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
+[data-theme="light"] .nav.nav-solid .logo-name { color: #1a1a2e; }
 [data-theme="light"] .nav.nav-solid .logo-name { color: var(--text); }
 [data-theme="light"] .nav.nav-solid .nav-links > li > a,
 [data-theme="light"] .nav.nav-solid .nav-mega-toggle { color: rgba(0,0,0,0.8); }
@@ -1861,6 +1904,11 @@ a.nav-btn-book,
   flex-direction: column;
   min-height: 200px;
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+[data-theme="light"] .google-review-card {
+  background: #fff;
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .google-review-card:hover {
   border-color: rgba(26,58,92,0.2);
@@ -3756,15 +3804,15 @@ img.insurance-logo {
   opacity: 0.8;
   transition: opacity 0.2s;
 }
-/* Dark mode: show light logos, hide dark logos */
-img.insurance-logo-dark { display: block; }
+/* Dark mode: show dark logos (forced white), hide light logos */
+img.insurance-logo-dark { display: block; filter: brightness(0) invert(1); }
 img.insurance-logo-light { display: none; }
 img.insurance-logo:hover {
   opacity: 1;
 }
-/* Light mode: show dark logos, hide light logos */
+/* Light mode: show light logos (natural color), hide dark logos */
 [data-theme="light"] img.insurance-logo-dark { display: none; }
-[data-theme="light"] img.insurance-logo-light { display: block; }
+[data-theme="light"] img.insurance-logo-light { display: block; filter: none; }
 [data-theme="light"] img.insurance-logo {
   opacity: 0.55;
 }

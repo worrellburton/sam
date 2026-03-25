@@ -430,6 +430,7 @@ function DashNextPatient() {
   // Demo: appointment is always 1:30 from now
   const [secondsLeft, setSecondsLeft] = useState(90);
   const [insightHovered, setInsightHovered] = useState(false);
+  const [insightExpanded, setInsightExpanded] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -493,29 +494,44 @@ function DashNextPatient() {
               Initial Consultation — Knee (ACL)
             </div>
 
-            {/* AI Insight — More insight only on hover */}
+            {/* AI Insight — entire row hoverable with Show insight CTA */}
             <div
+              className="dz-ai-row"
               onMouseEnter={() => setInsightHovered(true)}
               onMouseLeave={() => setInsightHovered(false)}
+              onClick={() => setInsightExpanded(!insightExpanded)}
               style={{
                 fontSize: "0.78rem", lineHeight: 1.6, color: "var(--dz-text-secondary)",
                 padding: "10px 12px", borderRadius: 8,
-                background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.08)",
+                background: insightHovered ? "rgba(99,102,241,0.08)" : "rgba(99,102,241,0.04)",
+                border: insightHovered ? "1px solid rgba(99,102,241,0.18)" : "1px solid rgba(99,102,241,0.08)",
+                cursor: "pointer",
+                transition: "all 0.15s",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
-                <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
+                  <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
+                </div>
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 4,
+                  fontSize: "0.62rem", fontWeight: 700, color: "#818cf8",
+                  opacity: insightHovered || insightExpanded ? 1 : 0,
+                  transition: "opacity 0.15s",
+                }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: insightExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                  {insightExpanded ? "Hide insight" : "Show insight"}
+                </span>
               </div>
               ACL tear (left), positive Lachman. Scheduled for reconstruction consult.
-              <span style={{
-                display: insightHovered ? "inline" : "none",
-                marginLeft: 4,
-              }}>
-                <AiSummaryExpand>
+              {insightExpanded && (
+                <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid rgba(99,102,241,0.1)" }}>
                   MRI confirmed complete tear with lateral meniscus involvement. Anterior drawer test positive. Reports instability during lateral movements, unable to return to sports. Conservative management (bracing + PT x 8 weeks) showed minimal improvement. Recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
-                </AiSummaryExpand>
-              </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -22,7 +22,7 @@
         "/services/sports-medicine","/services/arthroscopic-surgery","/services/regenerative-medicine",
         "/services/joint-preservation","/services/cartilage-repair","/services/shoulder-knee-surgery"];
       var path = window.location.pathname.replace(/\/sam\/?/, "/").replace(/\/$/, "") || "/";
-      if (defined.indexOf(path) !== -1 || path.startsWith("/blog/") || path.startsWith("/services/") || path.startsWith("/conditions/")) {
+      if (defined.indexOf(path) !== -1 || path.startsWith("/blog/") || path.startsWith("/services/") || path.startsWith("/conditions/") || path.startsWith("/doczoc")) {
         window.location.replace("/sam" + path);
       }
     })();

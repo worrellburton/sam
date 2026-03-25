@@ -7285,7 +7285,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   z-index: 1;
 }
 .dz-platform-main > * {
-  max-width: 1120px;
+  max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
 }

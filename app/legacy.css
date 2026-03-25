@@ -6661,16 +6661,16 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-sidebar-link {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 14px 16px;
+  gap: 12px;
+  padding: 10px 14px;
   border-radius: 10px;
   color: #94a3b8;
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 500;
   transition: all 0.15s;
 }
-.dz-sidebar-link svg { width: 22px; height: 22px; flex-shrink: 0; }
+.dz-sidebar-link svg { width: 18px; height: 18px; flex-shrink: 0; }
 .dz-sidebar-link:hover { background: rgba(99, 102, 241, 0.08); color: #f1f5f9; }
 .dz-sidebar-link.active { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; font-weight: 600; }
 .dz-sidebar-parent { justify-content: flex-start; cursor: pointer; border: none; width: 100%; text-align: left; }
@@ -7277,7 +7277,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 
 .dz-platform-main {
   flex: 1;
-  padding: 36px 64px;
+  padding: 36px 96px;
   margin-left: 240px;
   overflow-y: auto;
   transition: margin-left 0.25s ease;

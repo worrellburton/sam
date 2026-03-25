@@ -10,17 +10,22 @@ export interface BlogPost {
   content: string;
   contentHtml?: string;
   relatedService?: string;
+  episode?: number;
+  seriesTitle?: string;
+  comingSoon?: boolean;
 }
 
 export const blogPosts: BlogPost[] = [
   {
     slug: "5-signs-orthopedic-surgeon",
-    title: "5 Signs You Need to See an Orthopedic Surgeon",
+    title: "The 5 Warning Signs Your Body Is Sending You",
     excerpt:
-      "Don't ignore these warning signs. Learn when it's time to consult an orthopedic specialist about your joint pain or injury.",
-    tag: "Orthopedic Health",
+      "Your joints are talking. Are you listening? An investigation into the signals most people ignore — until it's too late for the easy fix.",
+    tag: "The Inquiry",
     date: "March 10, 2026",
     readTime: "8 min read",
+    episode: 1,
+    seriesTitle: "Clinical Clarity",
     image:
       "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&h=600&fit=crop&q=80",
     imageAlt: "Doctor examining a patient's knee",
@@ -297,12 +302,14 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "acl-tear-recovery",
-    title: "ACL Tear Recovery: What to Expect After Surgery",
+    title: "The ACL Files: What Actually Happens After Reconstruction",
     excerpt:
-      "A comprehensive guide to ACL reconstruction recovery, from the first week through return to sports.",
-    tag: "Recovery",
+      "Everyone talks about 'the surgery.' Nobody talks about month three, when your brain still doesn't trust your knee. A timeline investigation from the OR to the field.",
+    tag: "The Investigation",
     date: "February 24, 2026",
     readTime: "9 min read",
+    episode: 2,
+    seriesTitle: "Clinical Clarity",
     image:
       "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=600&fit=crop&q=80",
     imageAlt: "Athlete performing rehabilitation exercises",
@@ -557,10 +564,12 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "prp-therapy-sports-medicine",
-    title: "How PRP Therapy Is Changing Sports Medicine",
+    title: "PRP Therapy: Miracle Cure or Expensive Placebo?",
     excerpt:
-      "Platelet-rich plasma therapy is revolutionizing how we treat sports injuries. Learn how this regenerative treatment works.",
-    tag: "Regenerative Medicine",
+      "Celebrities swear by it. Instagram influencers sell it. But what does the data actually say? I've injected hundreds of joints with PRP — here's the unfiltered truth.",
+    tag: "Myth Busting",
+    episode: 3,
+    seriesTitle: "Clinical Clarity",
     date: "January 28, 2026",
     readTime: "9 min read",
     image:
@@ -851,12 +860,14 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "arthroscopic-vs-open-surgery",
-    title: "Arthroscopic vs. Open Surgery: Which Is Right for You?",
+    title: "The Small Incision Myth: When 'Minimally Invasive' Isn't",
     excerpt:
-      "Understanding the differences between minimally invasive arthroscopic surgery and traditional open surgery.",
-    tag: "Surgery",
+      "Every surgeon advertises arthroscopy. But bigger isn't always worse, and smaller isn't always better. An inside look at when I choose the scope — and when I don't.",
+    tag: "From the OR",
     date: "January 10, 2026",
     readTime: "9 min read",
+    episode: 4,
+    seriesTitle: "Clinical Clarity",
     image:
       "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=1200&h=600&fit=crop&q=80",
     imageAlt: "Surgical procedure in operating room",
@@ -1134,12 +1145,14 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "cartilage-damage-treatment",
-    title: "Understanding Cartilage Damage: Causes and Modern Treatments",
+    title: "The Cartilage Crisis: Why Your Body Can't Fix Its Own Shock Absorbers",
     excerpt:
-      "Cartilage damage doesn't have to mean the end of an active lifestyle. Explore the latest treatment options.",
-    tag: "Joint Health",
+      "Cartilage doesn't have a blood supply. Once it's gone, it's gone. So why are people still being told to 'walk it off'? The science of what's really happening inside a damaged joint.",
+    tag: "The Science",
     date: "December 15, 2025",
     readTime: "9 min read",
+    episode: 5,
+    seriesTitle: "Clinical Clarity",
     image:
       "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200&h=600&fit=crop&q=80",
     imageAlt: "X-ray of knee joint showing cartilage",
@@ -1467,12 +1480,14 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "protecting-joints-active-adults",
-    title: "Protecting Your Joints: A Guide for Active Adults",
+    title: "The Prevention Paradox: Why 'Active' People Destroy Their Joints Fastest",
     excerpt:
-      "Simple strategies to keep your joints healthy and prevent injuries as you stay active.",
-    tag: "Prevention",
+      "You run, you lift, you stretch. You're doing everything right — or so you think. The counterintuitive truth about how fitness culture is creating orthopedic patients.",
+    tag: "The Verdict",
     date: "November 20, 2025",
     readTime: "5 min read",
+    episode: 6,
+    seriesTitle: "Clinical Clarity",
     image:
       "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop",
     imageAlt: "Active adult stretching before exercise",
@@ -1512,6 +1527,21 @@ Appropriate footwear, properly fitted equipment, and correct technique can signi
 
 If you're experiencing persistent joint pain, swelling, or limited mobility despite these preventive measures, it may be time to consult an orthopedic specialist. Early intervention often leads to better outcomes and more treatment options.
     `,
+  },
+  {
+    slug: "stem-cell-therapy-investigation",
+    title: "The Stem Cell Hustle: Separating Breakthrough Science from Back-Alley Medicine",
+    excerpt:
+      "Unregulated clinics are charging $10,000+ for 'stem cell injections' that may contain no viable stem cells at all. Next episode: I investigate the most overpromised treatment in orthopedics.",
+    tag: "Coming Soon",
+    date: "April 2026",
+    readTime: "10 min read",
+    episode: 7,
+    seriesTitle: "Clinical Clarity",
+    comingSoon: true,
+    image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Laboratory microscope and stem cells",
+    content: "",
   },
 ];
 

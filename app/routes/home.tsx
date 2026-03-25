@@ -448,14 +448,26 @@ export default function Home() {
       <section className="section blog-home reveal" id="blog">
         <div className="container">
           <div className="section-header">
-            <p className="section-label">From the Blog</p>
-            <h2>Orthopedic <span className="text-accent">Insights</span></h2>
-            <p className="section-desc">Expert tips on joint health, recovery, and sports medicine from Dr. Elguizaoui.</p>
+            <p className="section-label">Clinical Clarity</p>
+            <h2>Investigating Modern <span className="text-accent">Orthopedics</span></h2>
+            <p className="section-desc">No fluff. No fads. Deep-dive investigative reports from the surgeon who actually sees the inside of the joints.</p>
           </div>
           <div className="blog-home-grid">
             {recentPosts.map((post) => (
               <Link to={`/blog/${post.slug}`} className="blog-card" key={post.slug}>
-                <img className="blog-card-img" src={post.image} alt={post.imageAlt} loading="lazy" />
+                <div style={{ position: "relative" }}>
+                  <img className="blog-card-img" src={post.image} alt={post.imageAlt} loading="lazy" />
+                  {post.episode && (
+                    <span style={{
+                      position: "absolute", top: 12, left: 12,
+                      background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)",
+                      color: "#fff", fontSize: "0.62rem", fontWeight: 800,
+                      padding: "3px 8px", borderRadius: 5,
+                      fontFamily: "'SF Mono', Consolas, monospace",
+                      letterSpacing: "0.05em",
+                    }}>EP. {post.episode}</span>
+                  )}
+                </div>
                 <div className="blog-card-body">
                   <span className="blog-card-tag">{post.tag}</span>
                   <h3>{post.title}</h3>
@@ -465,7 +477,7 @@ export default function Home() {
             ))}
           </div>
           <div style={{ textAlign: "center", marginTop: "40px" }}>
-            <Link to="/blog" className="btn btn-outline">View All Articles &rarr;</Link>
+            <Link to="/blog" className="btn btn-outline">View All Episodes &rarr;</Link>
           </div>
         </div>
       </section>

@@ -14,11 +14,34 @@ type SurgeryRecord = {
   id: string;
   patient: Patient;
   date: string;
+  time: string;
   type: string;
   notes: string;
   codes: string[];
   status: "completed" | "upcoming" | "pre-op";
 };
+
+const SURGERY_TIMES = ["7:00 AM", "7:30 AM", "8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM"];
+
+function getCountdown(dateStr: string, timeStr: string): string {
+  const d = parseDateLoose(dateStr);
+  const [timePart, ampm] = timeStr.split(" ");
+  const [h, m] = timePart.split(":").map(Number);
+  let hours = h;
+  if (ampm === "PM" && h !== 12) hours += 12;
+  if (ampm === "AM" && h === 12) hours = 0;
+  d.setHours(hours, m, 0, 0);
+  const now = new Date();
+  const diff = d.getTime() - now.getTime();
+  if (diff <= 0) return "";
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  if (days > 30) { const months = Math.floor(days / 30); return `in ${months}mo`; }
+  if (days > 0) return `in ${days}d ${hrs}h`;
+  if (hrs > 0) { const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); return `in ${hrs}h ${mins}m`; }
+  const mins = Math.floor(diff / (1000 * 60));
+  return `in ${mins}m`;
+}
 
 function parseDateLoose(s: string) {
   const d = new Date(s);
@@ -38,7 +61,8 @@ function getAllSurgeries(): SurgeryRecord[] {
       let status: SurgeryRecord["status"] = "completed";
       if (isPreOp && !isSurgery) status = "pre-op";
       else if (d > now) status = "upcoming";
-      records.push({ id: `surg-${p.id}-${idx++}`, patient: p, date: v.date, type: v.type, notes: v.notes, codes: v.codes, status });
+      const time = SURGERY_TIMES[idx % SURGERY_TIMES.length];
+      records.push({ id: `surg-${p.id}-${idx++}`, patient: p, date: v.date, time, type: v.type, notes: v.notes, codes: v.codes, status });
     }
   }
   records.sort((a, b) => parseDateLoose(b.date).getTime() - parseDateLoose(a.date).getTime());
@@ -106,6 +130,7 @@ export default function SurgeriesPage() {
       id: `surg-new-${Date.now()}`,
       patient: matchedPatient,
       date: new Date(newSurgery.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      time: "9:00 AM",
       type: `Surgery — ${newSurgery.type}`,
       notes: newSurgery.notes || "Scheduled procedure",
       codes: [],
@@ -798,8 +823,8 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
   };
 
   const headers: Record<SurgColKey, { label: string; style?: React.CSSProperties }> = {
-    patient: { label: "Patient" }, status: { label: "Status" }, procedure: { label: "Procedure" },
-    date: { label: "Date" }, codes: { label: "Codes" },
+    patient: { label: "Patient" }, status: { label: "Status" }, procedure: { label: "Type" },
+    date: { label: "Date & Time" }, codes: { label: "Codes" },
   };
 
   const renderCell = (s: SurgeryRecord, key: SurgColKey, colIdx: number) => {
@@ -832,7 +857,13 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
           </Link>
         </td>
       );
-      case "date": return <td key={key} {...h} style={{ fontSize: "0.82rem", whiteSpace: "nowrap", ...cs, transition: "opacity 0.2s ease" }}>{s.date}</td>;
+      case "date": {
+        const countdown = s.status === "upcoming" ? getCountdown(s.date, s.time) : "";
+        return <td key={key} {...h} style={{ fontSize: "0.82rem", whiteSpace: "nowrap", ...cs, transition: "opacity 0.2s ease" }}>
+          <div>{s.date} · {s.time}</div>
+          {countdown && <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "#f59e0b", marginTop: 2 }}>{countdown}</div>}
+        </td>;
+      }
       case "codes": return (
         <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}><div style={{ display: "flex", gap: 3 }}>
           {s.codes.slice(0, 3).map(c => <span key={c} title={getCodeDescription(c)} style={{ fontSize: "0.65rem", fontFamily: "'SF Mono', Consolas, monospace", padding: "1px 6px", borderRadius: 4, fontWeight: 600, background: c.match(/^\d{5}$/) ? "rgba(37,99,235,0.12)" : "rgba(124,58,237,0.12)", color: c.match(/^\d{5}$/) ? "#60a5fa" : "#a78bfa" }}>{c}</span>)}

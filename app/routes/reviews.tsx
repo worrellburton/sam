@@ -12,11 +12,11 @@ export function meta() {
 }
 
 const platforms = [
-  { name: "Zocdoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", color: "#FF7043", icon: "Z", logo: "https://logos-world.net/wp-content/uploads/2021/08/Zocdoc-Symbol.png" },
-  { name: "Google", rating: "4.8", reviews: "150+", url: "https://www.google.com/search?q=Dr+Sam+Elguizaoui+orthopedic+surgeon+NYC", color: "#4285F4", icon: "G", logo: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" },
-  { name: "Healthgrades", rating: "5.0", reviews: "50+", url: "https://www.healthgrades.com/physician/dr-sam-elguizaoui", color: "#1976D2", icon: "H", logo: "https://www.healthgrades.com/images/hg-share-image.jpg" },
-  { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", color: "#00BFA5", icon: "V", logo: "https://www.vitals.com/static/images/vitals-logo.svg" },
-  { name: "U.S. News", rating: "Top", reviews: "Doctor Rankings", url: "https://health.usnews.com/doctors", color: "#1B3A5C", icon: "U", logo: "https://www.usnews.com/static/img/usn-logo-large.svg" },
+  { name: "Zocdoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", icon: "Z", logo: "https://cdn.zocdoc.com/about/images/og-image.png" },
+  { name: "Google", rating: "4.8", reviews: "150+", url: "https://www.google.com/search?q=Dr+Sam+Elguizaoui+orthopedic+surgeon+NYC", icon: "G", logo: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" },
+  { name: "Healthgrades", rating: "5.0", reviews: "50+", url: "https://www.healthgrades.com/physician/dr-sam-elguizaoui", icon: "H", logo: "https://d1ffig5gps1mwv.cloudfront.net/prod/assets/images/healthgrades-logo-color.svg" },
+  { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", icon: "V", logo: "https://www.vitals.com/static/images/vitals-logo.svg" },
+  { name: "U.S. News", rating: "Top", reviews: "Doctor Rankings", url: "https://health.usnews.com/doctors", icon: "U", logo: "https://www.usnews.com/static/img/usn-logo-large.svg" },
 ];
 
 const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
@@ -82,8 +82,8 @@ export default function ReviewsPage() {
           <div className="platform-cards-grid">
             {platforms.map((p) => (
               <a key={p.name} href={p.url} target="_blank" rel="noopener" className="platform-card">
-                <div className="platform-icon" style={{ background: p.color }}>
-                  <img src={p.logo} alt={p.name} style={{ width: 28, height: 28, objectFit: "contain", borderRadius: 4 }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.textContent = p.icon; }} />
+                <div className="platform-icon" style={{ background: "transparent" }}>
+                  <img src={p.logo} alt={p.name} style={{ width: 44, height: 44, objectFit: "contain" }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.textContent = p.icon; }} />
                 </div>
                 <div className="platform-info">
                   <div className="platform-name">{p.name}</div>

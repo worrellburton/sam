@@ -660,7 +660,6 @@ function InvoicesSection({ patient }: { patient: Patient }) {
                     {/* Corner fold */}
                     <div style={{
                       position: "absolute", top: 0, right: 0, width: 12, height: 12,
-                      borderBottomLeft: `1px solid ${statusColor}30`,
                       background: `linear-gradient(135deg, transparent 50%, ${statusColor}15 50%)`,
                       borderRadius: "0 6px 0 0",
                     }} />

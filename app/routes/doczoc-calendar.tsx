@@ -1063,7 +1063,7 @@ export default function CalendarPage() {
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                             <span className={`dz-cal-date${isToday ? ' today' : ''}`}>{date.getDate()}</span>
                             {hasSurgery && (
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f472b6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" title="Surgery scheduled" style={{ flexShrink: 0, opacity: 0.85 }}>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f472b6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-label="Surgery scheduled" style={{ flexShrink: 0, opacity: 0.85 }}>
                                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                               </svg>
                             )}

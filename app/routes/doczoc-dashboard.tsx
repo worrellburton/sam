@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router";
-import { useState, useRef, useEffect, type ReactNode } from "react";
+import { useState, useRef, useEffect, useMemo, type ReactNode } from "react";
 import { PlatformBg } from "~/components/PlatformBg";
+import { PATIENTS } from "~/data/patients";
 
 export function AiSummaryExpand({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -593,17 +594,267 @@ function DashNextPatient() {
   );
 }
 
+// ── Appointment Type Over Time Graph ──────────────────────────────────
+const APPT_TYPE_COLORS: Record<string, string> = {
+  "Surgery": "#ef4444",
+  "Post-Op Follow-up": "#22c55e",
+  "Initial Consultation": "#6366f1",
+  "Pre-Op Evaluation": "#f59e0b",
+  "Follow-up": "#06b6d4",
+  "Other": "#a78bfa",
+};
+
+function categorizeVisitType(type: string): string {
+  const t = type.toLowerCase();
+  if (t.includes("surgery")) return "Surgery";
+  if (t.includes("post-op") || t.includes("final post-op")) return "Post-Op Follow-up";
+  if (t.includes("initial") || t.includes("new patient") || t.includes("consultation")) return "Initial Consultation";
+  if (t.includes("pre-op")) return "Pre-Op Evaluation";
+  if (t.includes("follow-up") || t.includes("follow up")) return "Follow-up";
+  return "Other";
+}
+
+function getMonthlyApptData() {
+  const now = new Date();
+  const months: { label: string; key: string }[] = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({
+      label: d.toLocaleDateString("en-US", { month: "short" }),
+      key: `${d.getFullYear()}-${d.getMonth()}`,
+    });
+  }
+
+  const categories = Object.keys(APPT_TYPE_COLORS);
+  const data: Record<string, number[]> = {};
+  for (const cat of categories) data[cat] = new Array(12).fill(0);
+
+  for (const p of PATIENTS) {
+    for (const v of p.visits) {
+      const d = new Date(v.date);
+      if (isNaN(d.getTime())) continue;
+      const key = `${d.getFullYear()}-${d.getMonth()}`;
+      const idx = months.findIndex(m => m.key === key);
+      if (idx === -1) continue;
+      const cat = categorizeVisitType(v.type);
+      data[cat][idx]++;
+    }
+  }
+
+  // Compute total per month for the avg line
+  const totals = months.map((_, i) => categories.reduce((sum, cat) => sum + data[cat][i], 0));
+  const avg = totals.reduce((s, v) => s + v, 0) / 12;
+
+  return { months, data, categories, totals, avg };
+}
+
+function AppointmentGraph() {
+  const [animated, setAnimated] = useState(false);
+  const [hoveredCat, setHoveredCat] = useState<string | null>(null);
+  const [tooltip, setTooltip] = useState<{ x: number; y: number; cat: string; month: string; value: number } | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  const { months, data, categories, totals, avg } = useMemo(() => getMonthlyApptData(), []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimated(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const W = 720, H = 260, PL = 40, PR = 16, PT = 16, PB = 32;
+  const chartW = W - PL - PR;
+  const chartH = H - PT - PB;
+  const maxVal = Math.max(...totals, ...categories.flatMap(c => data[c]), 1);
+  const yMax = Math.ceil(maxVal / 5) * 5 || 5;
+
+  const xStep = chartW / (months.length - 1);
+  const yScale = (v: number) => PT + chartH - (v / yMax) * chartH;
+  const xPos = (i: number) => PL + i * xStep;
+
+  const buildPath = (values: number[]) =>
+    values.map((v, i) => `${i === 0 ? "M" : "L"}${xPos(i).toFixed(1)},${yScale(v).toFixed(1)}`).join(" ");
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const idx = Math.round((x - PL) / xStep);
+    if (idx < 0 || idx >= months.length) { setTooltip(null); return; }
+    // Find the category closest to the y position
+    const y = e.clientY - rect.top;
+    let closestCat = categories[0];
+    let closestDist = Infinity;
+    for (const cat of categories) {
+      const val = data[cat][idx];
+      const cy = yScale(val);
+      const dist = Math.abs(y - cy);
+      if (dist < closestDist) { closestDist = dist; closestCat = cat; }
+    }
+    if (closestDist < 40) {
+      setTooltip({ x: xPos(idx), y: yScale(data[closestCat][idx]), cat: closestCat, month: months[idx].label, value: data[closestCat][idx] });
+    } else {
+      setTooltip(null);
+    }
+  };
+
+  const yTicks = 5;
+
+  return (
+    <div className="dz-card" style={{ padding: "20px 24px", overflow: "hidden" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        <div>
+          <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>Appointment Types Over Time</div>
+          <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)", marginTop: 2 }}>Last 12 months · Avg {avg.toFixed(1)}/mo</div>
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 14px" }}>
+          {categories.filter(c => data[c].some(v => v > 0)).map(cat => (
+            <button
+              key={cat}
+              onMouseEnter={() => setHoveredCat(cat)}
+              onMouseLeave={() => setHoveredCat(null)}
+              style={{
+                display: "flex", alignItems: "center", gap: 5, background: "none", border: "none", cursor: "pointer", padding: "2px 0",
+                opacity: hoveredCat && hoveredCat !== cat ? 0.3 : 1, transition: "opacity 0.2s",
+              }}
+            >
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: APPT_TYPE_COLORS[cat] }} />
+              <span style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--dz-text-muted, #94a3b8)" }}>{cat}</span>
+            </button>
+          ))}
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ width: 16, height: 2, background: "#64748b", display: "inline-block", borderTop: "1px dashed #64748b" }} />
+            <span style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--dz-text-muted, #64748b)" }}>Avg</span>
+          </div>
+        </div>
+      </div>
+
+      <svg
+        ref={svgRef}
+        viewBox={`0 0 ${W} ${H}`}
+        width="100%"
+        style={{ display: "block", overflow: "visible" }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setTooltip(null)}
+      >
+        <defs>
+          {categories.map(cat => (
+            <linearGradient key={cat} id={`grad-${cat.replace(/\s+/g, "")}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={APPT_TYPE_COLORS[cat]} stopOpacity="0.25" />
+              <stop offset="100%" stopColor={APPT_TYPE_COLORS[cat]} stopOpacity="0" />
+            </linearGradient>
+          ))}
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Y-axis grid lines */}
+        {Array.from({ length: yTicks + 1 }, (_, i) => {
+          const val = (yMax / yTicks) * i;
+          const y = yScale(val);
+          return (
+            <g key={i}>
+              <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="var(--dz-border, rgba(148,163,184,0.08))" strokeWidth="1" />
+              <text x={PL - 6} y={y + 3} textAnchor="end" fontSize="9" fill="var(--dz-text-muted, #64748b)" fontFamily="inherit">{Math.round(val)}</text>
+            </g>
+          );
+        })}
+
+        {/* X-axis labels */}
+        {months.map((m, i) => (
+          <text key={m.key} x={xPos(i)} y={H - 6} textAnchor="middle" fontSize="9" fill="var(--dz-text-muted, #64748b)" fontFamily="inherit">{m.label}</text>
+        ))}
+
+        {/* Average line */}
+        <line
+          x1={PL} y1={yScale(avg)} x2={W - PR} y2={yScale(avg)}
+          stroke="#64748b" strokeWidth="1" strokeDasharray="6 4"
+          opacity={animated ? 0.6 : 0}
+          style={{ transition: "opacity 0.8s ease 0.6s" }}
+        />
+
+        {/* Area fills + lines for each category */}
+        {categories.filter(c => data[c].some(v => v > 0)).map(cat => {
+          const path = buildPath(data[cat]);
+          const areaPath = `${path} L${xPos(11).toFixed(1)},${yScale(0).toFixed(1)} L${xPos(0).toFixed(1)},${yScale(0).toFixed(1)} Z`;
+          const isHovered = hoveredCat === cat;
+          const dimmed = hoveredCat && !isHovered;
+          return (
+            <g key={cat} style={{ transition: "opacity 0.25s", opacity: dimmed ? 0.12 : 1 }}>
+              {/* Area fill */}
+              <path
+                d={areaPath}
+                fill={`url(#grad-${cat.replace(/\s+/g, "")})`}
+                opacity={animated ? (isHovered ? 0.5 : 0.2) : 0}
+                style={{ transition: "opacity 0.8s ease" }}
+              />
+              {/* Glow line */}
+              <path
+                d={path}
+                fill="none"
+                stroke={APPT_TYPE_COLORS[cat]}
+                strokeWidth={isHovered ? 3.5 : 2.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                filter="url(#glow)"
+                strokeDasharray={animated ? "0" : "2000"}
+                strokeDashoffset={animated ? "0" : "2000"}
+                style={{ transition: "stroke-dasharray 1.2s ease, stroke-dashoffset 1.2s ease, stroke-width 0.2s" }}
+              />
+              {/* Solid line */}
+              <path
+                d={path}
+                fill="none"
+                stroke={APPT_TYPE_COLORS[cat]}
+                strokeWidth={isHovered ? 2.5 : 1.8}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray={animated ? "0" : "2000"}
+                strokeDashoffset={animated ? "0" : "2000"}
+                style={{ transition: "stroke-dasharray 1.2s ease, stroke-dashoffset 1.2s ease, stroke-width 0.2s" }}
+              />
+              {/* Data points */}
+              {data[cat].map((v, i) => (
+                <circle
+                  key={i}
+                  cx={xPos(i)} cy={yScale(v)}
+                  r={isHovered ? 4 : 2.5}
+                  fill={APPT_TYPE_COLORS[cat]}
+                  stroke="var(--dz-card-bg, #0f1021)"
+                  strokeWidth={1.5}
+                  opacity={animated ? 1 : 0}
+                  style={{ transition: `opacity 0.5s ease ${0.8 + i * 0.05}s, r 0.2s` }}
+                />
+              ))}
+            </g>
+          );
+        })}
+
+        {/* Tooltip */}
+        {tooltip && (
+          <g>
+            <line x1={tooltip.x} y1={PT} x2={tooltip.x} y2={PT + chartH} stroke="var(--dz-text-muted, #64748b)" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
+            <circle cx={tooltip.x} cy={tooltip.y} r={5} fill={APPT_TYPE_COLORS[tooltip.cat]} stroke="white" strokeWidth="2" />
+            <rect x={tooltip.x - 50} y={tooltip.y - 34} width={100} height={24} rx={6} fill="var(--dz-card-bg, #1a1a2e)" stroke="var(--dz-border, rgba(148,163,184,0.15))" strokeWidth="1" />
+            <text x={tooltip.x} y={tooltip.y - 19} textAnchor="middle" fontSize="10" fontWeight="700" fill="var(--dz-text-primary, #f1f5f9)" fontFamily="inherit">
+              {tooltip.cat}: {tooltip.value} ({tooltip.month})
+            </text>
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const location = useLocation();
   const [showSplash, setShowSplash] = useState(() => !!(location.state as any)?.fromLogin);
-
-  const stats = [
-    { label: "Today's Appointments", value: "24", change: "+3", color: "#6366f1" },
-    { label: "New Patients (Week)", value: "18", change: "+5", color: "#22c55e" },
-    { label: "Show Rate", value: "96%", change: "+2%", color: "#a78bfa" },
-  ];
 
   const recentPatients = [
     { name: "Sarah Mitchell", type: "Follow-up — Shoulder", time: "9:00 AM", status: "Confirmed" },
@@ -633,14 +884,8 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div className="dz-stats-grid">
-          {stats.map((s) => (
-            <div key={s.label} className="dz-stat-card">
-              <div className="dz-stat-card-label">{s.label}</div>
-              <div className="dz-stat-card-value" style={{ color: s.color }}>{s.value}</div>
-              <div className="dz-stat-card-change" style={{ color: "#22c55e" }}>{s.change} from last week</div>
-            </div>
-          ))}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 16, alignItems: "start" }}>
+          <AppointmentGraph />
           <DashGoogleReviews />
         </div>
 
@@ -654,20 +899,30 @@ export default function DashboardPage() {
               <thead>
                 <tr>
                   <th>Time</th>
-                  <th>Patient</th>
+                  <th className="dz-col-patient">Patient</th>
                   <th>Type</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {recentPatients.map((p) => (
-                  <tr key={p.name}>
-                    <td className="dz-table-time">{p.time}</td>
-                    <td className="dz-table-name">{p.name}</td>
-                    <td>{p.type}</td>
-                    <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
-                  </tr>
-                ))}
+                {recentPatients.map((p) => {
+                  const initials = p.name.split(" ").map(n => n[0]).join("");
+                  const colors = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#ec4899", "#14b8a6"];
+                  const cidx = p.name.charCodeAt(0) % colors.length;
+                  return (
+                    <tr key={p.name}>
+                      <td className="dz-table-time">{p.time}</td>
+                      <td className="dz-col-patient">
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, background: `${colors[cidx]}18`, color: colors[cidx], display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700 }}>{initials}</div>
+                          <span className="dz-table-name" style={{ fontSize: "0.82rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
+                        </div>
+                      </td>
+                      <td>{p.type}</td>
+                      <td><span className={`dz-status-badge dz-status-${p.status.toLowerCase()}`}>{p.status}</span></td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

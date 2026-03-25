@@ -883,7 +883,7 @@ export default function BillingPage() {
                     <thead>
                       <tr>
                         <th>Claim ID</th>
-                        <th>Patient</th>
+                        <th className="dz-col-patient">Patient</th>
                         <th>Payer</th>
                         <th style={{ textAlign: "right" }}>Amount</th>
                         <th>Status</th>
@@ -901,10 +901,16 @@ export default function BillingPage() {
                             {claim.id}
                           </td>
                           <td
+                            className="dz-col-patient"
                             onMouseEnter={() => claimsCrosshair.onCellEnter(claim.id, 1)}
                             onMouseLeave={claimsCrosshair.onCellLeave}
-                            style={{ fontWeight: 600, color: "#e4e4ee", ...claimsCrosshair.getCellStyle(claim.id, 1), transition: "opacity 0.2s ease" }}
-                          >{claim.patient}</td>
+                            style={{ ...claimsCrosshair.getCellStyle(claim.id, 1), transition: "opacity 0.2s ease" }}
+                          >
+                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <div style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, background: "rgba(99,102,241,0.12)", color: "var(--dz-accent, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700 }}>{claim.patient.split(" ").map((n: string) => n[0]).join("")}</div>
+                              <span style={{ fontWeight: 600, fontSize: "0.82rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{claim.patient}</span>
+                            </div>
+                          </td>
                           <td
                             onMouseEnter={() => claimsCrosshair.onCellEnter(claim.id, 2)}
                             onMouseLeave={claimsCrosshair.onCellLeave}

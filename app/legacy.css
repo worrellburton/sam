@@ -7497,9 +7497,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
 }
-.dz-table .dz-col-patient { width: 200px; }
+.dz-table .dz-col-patient { width: 200px; min-width: 160px; max-width: 220px; }
 .dz-table .dz-col-status { width: 110px; }
 .dz-table .dz-col-type { width: 220px; }
 .dz-table .dz-col-date { width: 190px; }

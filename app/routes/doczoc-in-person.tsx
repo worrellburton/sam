@@ -408,7 +408,7 @@ export default function InPersonPage() {
                 </div>
                 <table className="dz-table">
                   <thead>
-                    <tr><th>Patient</th><th>Date</th><th>Time</th><th>Countdown</th><th>Type</th><th className="dz-col-hide-lg">Location</th><th>Status</th><th className="dz-col-hide-xl dz-col-notes">Notes</th></tr>
+                    <tr><th className="dz-col-patient">Patient</th><th>Date</th><th>Time</th><th>Countdown</th><th>Type</th><th className="dz-col-hide-lg">Location</th><th>Status</th><th className="dz-col-hide-xl dz-col-notes">Notes</th></tr>
                   </thead>
                   <tbody>
                     {filteredAppts.map((a, index) => {
@@ -416,7 +416,12 @@ export default function InPersonPage() {
                       const rowId = String(index);
                       return (
                         <tr key={a.id} style={a.completed ? { opacity: 0.6 } : undefined}>
-                          <td {...apptCrosshair.getTdProps(rowId, 0)} style={{ ...apptCrosshair.getTdProps(rowId, 0).style, fontWeight: 600, whiteSpace: "nowrap" }}>{a.patient}</td>
+                          <td className="dz-col-patient" {...apptCrosshair.getTdProps(rowId, 0)} style={{ ...apptCrosshair.getTdProps(rowId, 0).style }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <div style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, background: "rgba(99,102,241,0.12)", color: "var(--dz-accent, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700 }}>{a.patient.split(" ").map((n: string) => n[0]).join("")}</div>
+                              <span style={{ fontWeight: 600, fontSize: "0.82rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.patient}</span>
+                            </div>
+                          </td>
                           <td {...apptCrosshair.getTdProps(rowId, 1)} style={{ ...apptCrosshair.getTdProps(rowId, 1).style, fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{a.date}</td>
                           <td {...apptCrosshair.getTdProps(rowId, 2)} style={{ ...apptCrosshair.getTdProps(rowId, 2).style, fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, whiteSpace: "nowrap" }}>{a.time}</td>
                           <td {...apptCrosshair.getTdProps(rowId, 3)}><CountdownBadge text={cd.text} color={cd.color} /></td>
@@ -491,7 +496,7 @@ export default function InPersonPage() {
                   <thead>
                     <tr>
                       <th>Procedure</th>
-                      <th>Patient</th>
+                      <th className="dz-col-patient">Patient</th>
                       <th>Date</th>
                       <th>Time</th>
                       <th>Countdown</th>
@@ -509,7 +514,12 @@ export default function InPersonPage() {
                       return (
                         <tr key={s.id}>
                           <td {...surgCrosshair.getTdProps(rowId, 0)} style={{ ...surgCrosshair.getTdProps(rowId, 0).style, fontWeight: 700, maxWidth: 220 }}>{s.procedure}</td>
-                          <td {...surgCrosshair.getTdProps(rowId, 1)} style={{ ...surgCrosshair.getTdProps(rowId, 1).style, whiteSpace: "nowrap" }}>{s.patient}</td>
+                          <td className="dz-col-patient" {...surgCrosshair.getTdProps(rowId, 1)} style={{ ...surgCrosshair.getTdProps(rowId, 1).style }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <div style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, background: "rgba(99,102,241,0.12)", color: "var(--dz-accent, #6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700 }}>{s.patient.split(" ").map((n: string) => n[0]).join("")}</div>
+                              <span style={{ fontWeight: 600, fontSize: "0.82rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.patient}</span>
+                            </div>
+                          </td>
                           <td {...surgCrosshair.getTdProps(rowId, 2)} style={{ ...surgCrosshair.getTdProps(rowId, 2).style, fontWeight: 600, color: "#818cf8", whiteSpace: "nowrap" }}>{s.date}</td>
                           <td {...surgCrosshair.getTdProps(rowId, 3)} style={{ ...surgCrosshair.getTdProps(rowId, 3).style, fontFamily: "'SF Mono', Consolas, monospace", fontWeight: 600, whiteSpace: "nowrap" }}>{s.time}</td>
                           <td {...surgCrosshair.getTdProps(rowId, 4)}><CountdownBadge text={cd.text} color={cd.color} /></td>

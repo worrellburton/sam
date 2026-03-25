@@ -521,6 +521,13 @@ function DashNextPatient() {
         </div>
       </div>
 
+      {/* Time gap */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, padding: "0 4px", flexShrink: 0 }}>
+        <div style={{ width: 1, flex: 1, background: "rgba(148,163,184,0.15)" }} />
+        <span style={{ fontSize: "0.65rem", fontWeight: 600, color: "#64748b", whiteSpace: "nowrap" }}>45 min</span>
+        <div style={{ width: 1, flex: 1, background: "rgba(148,163,184,0.15)" }} />
+      </div>
+
       {/* After Next — secondary card */}
       <div className="dz-card" style={{ flex: "1 1 45%", padding: 0, overflow: "hidden", opacity: 0.85 }}>
         <div style={{ display: "flex", height: "100%" }}>

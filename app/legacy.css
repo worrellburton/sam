@@ -6657,7 +6657,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   transition: all 0.2s;
 }
 .dz-sidebar-toggle:hover { color: #e2e8f0; border-color: rgba(99, 102, 241, 0.4); }
-.dz-sidebar-nav { display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: auto; min-height: 0; }
+.dz-sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; overflow-y: auto; min-height: 0; }
 .dz-sidebar-link {
   display: flex;
   align-items: center;

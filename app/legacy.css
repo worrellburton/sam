@@ -7262,6 +7262,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   flex: 1;
   padding: 36px 40px;
   margin-left: 240px;
+  max-width: 1120px;
   overflow-y: auto;
   transition: margin-left 0.25s ease;
   position: relative;

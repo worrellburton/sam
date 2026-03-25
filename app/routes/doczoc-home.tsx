@@ -165,7 +165,7 @@ export default function HomePage() {
         </div>
 
         {/* Content */}
-        <div style={{ maxWidth: 1120, padding: "32px 32px 48px" }}>
+        <div style={{ padding: "32px 32px 48px" }}>
           {/* Welcome */}
           <h1 style={{ fontSize: "1.6rem", fontWeight: 700, color: "var(--dz-text-primary)", margin: "0 0 24px", letterSpacing: "-0.02em" }}>
             Welcome, Dr. Elguizaoui

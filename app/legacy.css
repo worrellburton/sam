@@ -7497,7 +7497,20 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
+.dz-table .dz-col-patient { width: 200px; }
+.dz-table .dz-col-status { width: 110px; }
+.dz-table .dz-col-type { width: 220px; }
+.dz-table .dz-col-date { width: 190px; }
+.dz-table .dz-col-codes { width: 140px; }
+.dz-table .dz-col-age { width: 60px; }
+.dz-table .dz-col-phone { width: 140px; }
+.dz-table .dz-col-email { width: 200px; }
+.dz-table .dz-col-insurance { width: 120px; }
+.dz-table .dz-col-visits { width: 70px; }
+.dz-table .dz-col-nextappt { width: 130px; }
+.dz-table .dz-col-condition { width: 180px; }
 .dz-table th {
   text-align: left;
   padding: 7px 12px;
@@ -7523,6 +7536,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   border-bottom: 1px solid rgba(148, 163, 184, 0.06);
   border-right: 1px solid rgba(148, 163, 184, 0.03);
   transition: background 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .dz-table td:last-child { border-right: none; }
 /* Alternate row shading */

@@ -822,9 +822,9 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
     dragCol.current = null; dragOverCol.current = null; setDraggingIdx(null);
   };
 
-  const headers: Record<SurgColKey, { label: string; style?: React.CSSProperties }> = {
-    patient: { label: "Patient" }, status: { label: "Status" }, procedure: { label: "Type" },
-    date: { label: "Date & Time" }, codes: { label: "Codes" },
+  const headers: Record<SurgColKey, { label: string; className?: string; style?: React.CSSProperties }> = {
+    patient: { label: "Patient", className: "dz-col-patient" }, status: { label: "Status", className: "dz-col-status" }, procedure: { label: "Type", className: "dz-col-type" },
+    date: { label: "Date & Time", className: "dz-col-date" }, codes: { label: "Codes", className: "dz-col-codes" },
   };
 
   const renderCell = (s: SurgeryRecord, key: SurgColKey, colIdx: number) => {
@@ -848,12 +848,12 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
         </td>;
       }
       case "patient": return (
-        <td key={key} {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}>
-          <Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>
+        <td key={key} className="dz-col-patient" {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}>
+          <Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem", overflow: "hidden" }}>
             <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
               {s.patient.name.split(" ").map(n => n[0]).join("")}
             </div>
-            {s.patient.name}
+            <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.patient.name}</span>
           </Link>
         </td>
       );
@@ -886,7 +886,7 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
             <thead>
               <tr>
                 {columns.map((key, i) => (
-                  <th key={key} style={{ ...headers[key].style, cursor: "pointer", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
+                  <th key={key} className={headers[key].className} style={{ ...headers[key].style, cursor: "pointer", opacity: draggingIdx === i ? 0.4 : 1, transition: "opacity 0.15s", userSelect: "none" }}
                     draggable onDragStart={() => handleDragStart(i)} onDragEnter={() => handleDragEnter(i)} onDragEnd={handleDragEnd} onDragOver={e => e.preventDefault()}
                     onClick={() => handleSort(key)}
                   >

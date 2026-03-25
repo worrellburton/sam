@@ -503,14 +503,15 @@ export default function AppointmentsPage() {
                   <thead>
                     <tr>
                       {([
-                        { key: "patient" as const, label: "Patient" },
-                        { key: "type" as const, label: "Procedure" },
-                        { key: "date" as const, label: "Date" },
-                        { key: null, label: "Codes" },
-                        { key: "status" as const, label: "Status" },
+                        { key: "patient" as const, label: "Patient", className: "dz-col-patient" },
+                        { key: "type" as const, label: "Procedure", className: "dz-col-type" },
+                        { key: "date" as const, label: "Date", className: "dz-col-date" },
+                        { key: null, label: "Codes", className: "dz-col-codes" },
+                        { key: "status" as const, label: "Status", className: "dz-col-status" },
                       ] as const).map((col, i) => (
                         <th
                           key={i}
+                          className={col.className}
                           onClick={col.key ? () => handleSort(col.key) : undefined}
                           style={{ cursor: col.key ? "pointer" : "default", userSelect: "none", whiteSpace: "nowrap" }}
                         >
@@ -529,12 +530,12 @@ export default function AppointmentsPage() {
                       const color = getTypeColor(a.type);
                       return (
                         <tr key={`${a.patient.id}-${a.date}-${i}`} style={{ ...getRowStyle(`${a.patient.id}-${i}`), opacity: a.isPast ? 0.7 : 1 }} onMouseEnter={() => onCellEnter(`${a.patient.id}-${i}`, 0)} onMouseLeave={onCellLeave}>
-                          <td>
-                            <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>
+                          <td className="dz-col-patient">
+                            <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem", overflow: "hidden" }}>
                               <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
                                 {a.patient.name.split(" ").map(n => n[0]).join("")}
                               </div>
-                              {a.patient.name}
+                              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.patient.name}</span>
                             </Link>
                           </td>
                           <td style={{ fontWeight: 600, fontSize: "0.82rem", borderLeft: `3px solid ${color}` }}>{a.type}</td>

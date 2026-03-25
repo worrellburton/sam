@@ -46,7 +46,7 @@ function PatientInitials({ name }: { name: string }) {
   const idx = name.charCodeAt(0) % colors.length;
   return (
     <div style={{
-      width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+      width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
       background: `${colors[idx]}18`, color: colors[idx],
       display: "flex", alignItems: "center", justifyContent: "center",
       fontSize: "0.6rem", fontWeight: 700,
@@ -215,14 +215,14 @@ export default function PatientsPage() {
 type ColKey = "patient" | "nextAppt" | "condition" | "age" | "phone" | "email" | "insurance" | "visits";
 
 const COL_HEADERS: Record<ColKey, { label: string; className?: string; style?: React.CSSProperties }> = {
-  patient: { label: "Patient" },
-  nextAppt: { label: "Next Appt" },
-  condition: { label: "Procedure" },
-  age: { label: "Age" },
-  phone: { label: "Phone", className: "dz-col-hide-lg" },
-  email: { label: "Email", className: "dz-col-hide-xl" },
-  insurance: { label: "Insurance", className: "dz-col-hide-lg", style: { textAlign: "center" } },
-  visits: { label: "Visits", style: { textAlign: "center" } },
+  patient: { label: "Patient", className: "dz-col-patient" },
+  nextAppt: { label: "Next Appt", className: "dz-col-nextappt" },
+  condition: { label: "Procedure", className: "dz-col-condition" },
+  age: { label: "Age", className: "dz-col-age" },
+  phone: { label: "Phone", className: "dz-col-hide-lg dz-col-phone" },
+  email: { label: "Email", className: "dz-col-hide-xl dz-col-email" },
+  insurance: { label: "Insurance", className: "dz-col-hide-lg dz-col-insurance", style: { textAlign: "center" } },
+  visits: { label: "Visits", className: "dz-col-visits", style: { textAlign: "center" } },
 };
 
 const DEFAULT_COLS: ColKey[] = ["patient", "visits", "nextAppt", "condition", "age", "phone", "email", "insurance"];
@@ -256,10 +256,10 @@ function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { pa
     const handlers = { onMouseEnter: () => onCellEnter(rowId, colIdx), onMouseLeave: onCellLeave };
     switch (key) {
       case "patient": return (
-        <td key={key} {...handlers} style={{ ...cellStyle, transition: "opacity 0.2s ease" }}>
+        <td key={key} className="dz-col-patient" {...handlers} style={{ ...cellStyle, transition: "opacity 0.2s ease" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <PatientInitials name={p.name} />
-            <div className="dz-table-name" style={{ fontSize: "0.78rem" }}>{p.name}</div>
+            <div className="dz-table-name" style={{ fontSize: "0.82rem", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
           </div>
         </td>
       );

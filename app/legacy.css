@@ -1569,6 +1569,661 @@ a.nav-btn-book,
   transform: translateY(0);
 }
 
+/* ===== About Page Redesign ===== */
+.abt-hero {
+  position: relative;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 120px 0 80px;
+}
+.abt-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(10,10,30,0.95) 0%, rgba(20,20,50,0.85) 50%, rgba(37,99,235,0.15) 100%);
+  z-index: 0;
+}
+[data-theme="light"] .abt-hero-bg {
+  background: linear-gradient(135deg, rgba(248,250,252,0.98) 0%, rgba(240,245,255,0.95) 50%, rgba(37,99,235,0.08) 100%);
+}
+.abt-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+}
+.abt-hero-title {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -0.03em;
+}
+.abt-hero-sub {
+  font-size: 1.15rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.abt-hero-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-outline:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* Stats Bar */
+.abt-stats-bar {
+  background: var(--bg-alt);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 0;
+}
+.abt-stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.abt-stat {
+  text-align: center;
+  min-width: 120px;
+}
+.abt-stat-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+.abt-stat-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* Split Layout */
+.abt-split {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
+  align-items: center;
+}
+.abt-split-reverse {
+  grid-template-columns: 1.2fr 1fr;
+}
+.abt-split-reverse .abt-split-text {
+  order: -1;
+}
+.abt-portrait {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 3px solid var(--primary);
+}
+.abt-split-text h2 {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+.abt-lead-text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+.abt-philosophy-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+.abt-point {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.abt-point-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Timeline */
+.abt-timeline-section {
+  background: var(--bg-alt);
+}
+.abt-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.abt-tl-item {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 20px;
+  position: relative;
+  padding-bottom: 32px;
+}
+.abt-tl-item:last-child { padding-bottom: 0; }
+.abt-tl-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.abt-tl-line::after {
+  content: '';
+  position: absolute;
+  top: 56px;
+  bottom: -32px;
+  width: 2px;
+  background: var(--border);
+}
+.abt-tl-item:last-child .abt-tl-line::after { display: none; }
+.abt-tl-dot {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(var(--primary-rgb, 37,99,235), 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+  transition: all 0.3s;
+}
+.abt-tl-item:hover .abt-tl-dot {
+  background: var(--primary);
+  color: #fff;
+  transform: scale(1.08);
+}
+.abt-tl-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.abt-tl-item:hover .abt-tl-card {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+.abt-tl-year {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.abt-tl-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-left: 10px;
+}
+.abt-tl-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 6px 0 4px;
+  color: var(--text);
+}
+.abt-tl-place {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  font-weight: 500;
+  margin: 0;
+}
+.abt-tl-detail {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 8px 0 0;
+}
+
+/* Expertise Grid */
+.abt-expertise-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.abt-expertise-full {
+  grid-column: 1 / -1;
+}
+.abt-expertise-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.abt-expertise-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+.abt-expertise-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.abt-expertise-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(var(--primary-rgb, 37,99,235), 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.abt-expertise-icon-accent {
+  background: rgba(var(--accent-rgb, 234,179,8), 0.12);
+  color: var(--accent);
+}
+.abt-expertise-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+}
+.abt-proc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.abt-proc {
+  padding: 12px 16px;
+  background: var(--bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.abt-proc-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.abt-proc-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.abt-bio-desc {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin: 0 0 20px;
+  line-height: 1.7;
+}
+.abt-bio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.abt-bio-item {
+  padding: 16px;
+  background: var(--bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.abt-bio-item strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.abt-bio-item span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Teams */
+.abt-teams-section {
+  background: var(--bg-alt);
+}
+.abt-teams-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.abt-team-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.abt-team-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+.abt-team-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+.abt-team-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.abt-team-card p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Research */
+.abt-research-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.abt-research-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.abt-research-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+.abt-research-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(var(--primary-rgb, 37,99,235), 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.abt-research-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 8px;
+}
+.abt-research-journal {
+  font-size: 0.78rem;
+  color: var(--primary);
+  font-weight: 600;
+  font-style: italic;
+  margin: 0 0 8px;
+}
+.abt-research-impact {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Global Health */
+.abt-global-section {
+  background: var(--bg-alt);
+}
+.abt-global-points {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+.abt-global-point {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.abt-global-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(var(--primary-rgb, 37,99,235), 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.abt-global-point strong {
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 2px;
+}
+.abt-global-point p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+.abt-globe-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+}
+.abt-globe-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(var(--primary-rgb, 37,99,235), 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+.abt-globe-icon svg { width: 36px; height: 36px; }
+.abt-globe-countries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.abt-globe-countries span {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(var(--primary-rgb, 37,99,235), 0.08);
+  color: var(--primary);
+}
+.abt-globe-card > p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Personal */
+.abt-personal {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+}
+.abt-personal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(var(--primary-rgb, 37,99,235), 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.abt-personal-icon svg { width: 32px; height: 32px; }
+.abt-personal-text h2 {
+  font-size: 1.3rem;
+  margin: 0 0 8px;
+}
+.abt-personal-text p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Reputation */
+.abt-reputation-section {
+  background: var(--bg-alt);
+}
+.abt-reputation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.abt-rep-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.abt-rep-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+.abt-rep-icon {
+  color: var(--accent);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+}
+.abt-rep-stat {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+}
+.abt-rep-source {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.abt-rep-card p {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Affiliations */
+.abt-affiliations {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.abt-affil-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.abt-affil-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+.abt-affil-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(var(--primary-rgb, 37,99,235), 0.1);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+.abt-affil-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.abt-affil-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* About Page Responsive */
+@media (max-width: 1024px) {
+  .abt-split, .abt-split-reverse { grid-template-columns: 1fr; gap: 32px; }
+  .abt-split-reverse .abt-split-text { order: 0; }
+  .abt-expertise-grid { grid-template-columns: 1fr; }
+  .abt-bio-grid { grid-template-columns: 1fr; }
+  .abt-teams-grid { grid-template-columns: 1fr; }
+  .abt-research-grid { grid-template-columns: 1fr; }
+  .abt-reputation-grid { grid-template-columns: 1fr; }
+  .abt-affiliations { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .abt-hero { min-height: 360px; padding: 100px 0 60px; }
+  .abt-stats-row { gap: 24px; }
+  .abt-stat-value { font-size: 1.6rem; }
+  .abt-philosophy-points { grid-template-columns: 1fr; }
+  .abt-tl-item { grid-template-columns: 48px 1fr; gap: 14px; }
+  .abt-tl-dot { width: 44px; height: 44px; border-radius: 12px; }
+  .abt-tl-dot svg { width: 22px; height: 22px; }
+  .abt-tl-card { padding: 18px; }
+  .abt-personal { flex-direction: column; text-align: center; }
+}
+@media (max-width: 480px) {
+  .abt-hero { padding: 90px 0 50px; }
+  .abt-hero-title { font-size: 1.6rem; }
+  .abt-stats-row { gap: 16px; }
+  .abt-stat { min-width: 80px; }
+  .abt-stat-value { font-size: 1.3rem; }
+  .abt-portrait { max-height: 320px; }
+}
+
 /* ===== Credentials ===== */
 /* -- Mobile-first: vertical timeline -- */
 .credentials-timeline {

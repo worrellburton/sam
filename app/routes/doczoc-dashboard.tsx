@@ -614,10 +614,14 @@ function categorizeVisitType(type: string): string {
   return "Other";
 }
 
-function getMonthlyApptData() {
+type TimeRange = "3mo" | "6mo" | "1yr";
+type GraphMode = "appt-types" | "total-volume" | "new-vs-returning";
+
+function getMonthlyApptData(range: TimeRange) {
   const now = new Date();
+  const monthCount = range === "3mo" ? 3 : range === "6mo" ? 6 : 12;
   const months: { label: string; key: string }[] = [];
-  for (let i = 11; i >= 0; i--) {
+  for (let i = monthCount - 1; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     months.push({
       label: d.toLocaleDateString("en-US", { month: "short" }),
@@ -627,47 +631,100 @@ function getMonthlyApptData() {
 
   const categories = Object.keys(APPT_TYPE_COLORS);
   const data: Record<string, number[]> = {};
-  for (const cat of categories) data[cat] = new Array(12).fill(0);
+  for (const cat of categories) data[cat] = new Array(monthCount).fill(0);
+
+  // Also track total and new vs returning
+  const totalByMonth = new Array(monthCount).fill(0);
+  const newByMonth = new Array(monthCount).fill(0);
+  const returningByMonth = new Array(monthCount).fill(0);
 
   for (const p of PATIENTS) {
+    let visitCount = 0;
     for (const v of p.visits) {
       const d = new Date(v.date);
       if (isNaN(d.getTime())) continue;
       const key = `${d.getFullYear()}-${d.getMonth()}`;
       const idx = months.findIndex(m => m.key === key);
+      visitCount++;
       if (idx === -1) continue;
       const cat = categorizeVisitType(v.type);
       data[cat][idx]++;
+      totalByMonth[idx]++;
+      if (visitCount === 1) newByMonth[idx]++;
+      else returningByMonth[idx]++;
     }
   }
 
-  // Compute total per month for the avg line
   const totals = months.map((_, i) => categories.reduce((sum, cat) => sum + data[cat][i], 0));
-  const avg = totals.reduce((s, v) => s + v, 0) / 12;
+  const avg = totals.reduce((s, v) => s + v, 0) / monthCount;
 
-  return { months, data, categories, totals, avg };
+  return { months, data, categories, totals, avg, totalByMonth, newByMonth, returningByMonth, monthCount };
 }
+
+const GRAPH_MODES: { key: GraphMode; label: string }[] = [
+  { key: "appt-types", label: "Appointment Types" },
+  { key: "total-volume", label: "Total Volume" },
+  { key: "new-vs-returning", label: "New vs Returning" },
+];
+const TIME_RANGES: { key: TimeRange; label: string }[] = [
+  { key: "3mo", label: "3M" },
+  { key: "6mo", label: "6M" },
+  { key: "1yr", label: "1Y" },
+];
+
+const NVR_COLORS: Record<string, string> = { "New Patients": "#8b5cf6", "Returning": "#22c55e" };
 
 function AppointmentGraph() {
   const [animated, setAnimated] = useState(false);
   const [hoveredCat, setHoveredCat] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; cat: string; month: string; value: number } | null>(null);
+  const [range, setRange] = useState<TimeRange>("1yr");
+  const [mode, setMode] = useState<GraphMode>("appt-types");
   const svgRef = useRef<SVGSVGElement>(null);
+  const pathRefs = useRef<Map<string, SVGPathElement>>(new Map());
 
-  const { months, data, categories, totals, avg } = useMemo(() => getMonthlyApptData(), []);
+  const { months, data, categories, avg, totalByMonth, newByMonth, returningByMonth, monthCount } = useMemo(() => getMonthlyApptData(range), [range]);
 
+  // Build lines based on mode
+  const lines: { key: string; values: number[]; color: string }[] = useMemo(() => {
+    if (mode === "appt-types") return categories.filter(c => data[c].some(v => v > 0)).map(c => ({ key: c, values: data[c], color: APPT_TYPE_COLORS[c] }));
+    if (mode === "total-volume") return [{ key: "Total", values: totalByMonth, color: "#6366f1" }];
+    return [{ key: "New Patients", values: newByMonth, color: "#8b5cf6" }, { key: "Returning", values: returningByMonth, color: "#22c55e" }];
+  }, [mode, data, categories, totalByMonth, newByMonth, returningByMonth]);
+
+  const colorMap: Record<string, string> = useMemo(() => {
+    const m: Record<string, string> = {};
+    lines.forEach(l => { m[l.key] = l.color; });
+    return m;
+  }, [lines]);
+
+  // Animate on mount and when range/mode changes
   useEffect(() => {
-    const timer = setTimeout(() => setAnimated(true), 100);
+    setAnimated(false);
+    const timer = setTimeout(() => setAnimated(true), 80);
     return () => clearTimeout(timer);
-  }, []);
+  }, [range, mode]);
 
-  const W = 800, H = 280, PL = 40, PR = 16, PT = 16, PB = 32;
+  // Measure path lengths for left-to-right animation
+  useEffect(() => {
+    if (!animated) return;
+    pathRefs.current.forEach((el) => {
+      const len = el.getTotalLength();
+      el.style.strokeDasharray = `${len}`;
+      el.style.strokeDashoffset = `${len}`;
+      el.getBoundingClientRect(); // force reflow
+      el.style.transition = "stroke-dashoffset 2.2s cubic-bezier(0.25, 0.1, 0.25, 1)";
+      el.style.strokeDashoffset = "0";
+    });
+  }, [animated, lines]);
+
+  const W = 800, H = 280, PL = 40, PR = 16, PT = 20, PB = 32;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
-  const maxVal = Math.max(...totals, ...categories.flatMap(c => data[c]), 1);
+  const allVals = lines.flatMap(l => l.values);
+  const maxVal = Math.max(...allVals, 1);
   const yMax = Math.ceil(maxVal / 5) * 5 || 5;
-
-  const xStep = chartW / (months.length - 1);
+  const xStep = chartW / Math.max(monthCount - 1, 1);
   const yScale = (v: number) => PT + chartH - (v / yMax) * chartH;
   const xPos = (i: number) => PL + i * xStep;
 
@@ -677,57 +734,76 @@ function AppointmentGraph() {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!svgRef.current) return;
     const rect = svgRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
+    const scaleX = W / rect.width;
+    const x = (e.clientX - rect.left) * scaleX;
     const idx = Math.round((x - PL) / xStep);
-    if (idx < 0 || idx >= months.length) { setTooltip(null); return; }
-    // Find the category closest to the y position
-    const y = e.clientY - rect.top;
-    let closestCat = categories[0];
+    if (idx < 0 || idx >= monthCount) { setTooltip(null); return; }
+    const scaleY = H / rect.height;
+    const y = (e.clientY - rect.top) * scaleY;
+    let closestLine = lines[0];
     let closestDist = Infinity;
-    for (const cat of categories) {
-      const val = data[cat][idx];
-      const cy = yScale(val);
+    for (const line of lines) {
+      const cy = yScale(line.values[idx]);
       const dist = Math.abs(y - cy);
-      if (dist < closestDist) { closestDist = dist; closestCat = cat; }
+      if (dist < closestDist) { closestDist = dist; closestLine = line; }
     }
-    if (closestDist < 40) {
-      setTooltip({ x: xPos(idx), y: yScale(data[closestCat][idx]), cat: closestCat, month: months[idx].label, value: data[closestCat][idx] });
+    if (closestDist < 50) {
+      setTooltip({ x: xPos(idx), y: yScale(closestLine.values[idx]), cat: closestLine.key, month: months[idx].label, value: closestLine.values[idx] });
     } else {
       setTooltip(null);
     }
   };
 
   const yTicks = 5;
+  const modeLabel = GRAPH_MODES.find(m => m.key === mode)?.label || "";
+  const rangeLabel = range === "3mo" ? "3 months" : range === "6mo" ? "6 months" : "12 months";
+
+  const pillStyle = (active: boolean): React.CSSProperties => ({
+    padding: "4px 12px", borderRadius: 20, border: "1px solid " + (active ? "var(--dz-accent, #6366f1)" : "rgba(148,163,184,0.15)"),
+    background: active ? "rgba(99,102,241,0.15)" : "transparent",
+    color: active ? "var(--dz-accent, #818cf8)" : "var(--dz-text-muted, #64748b)",
+    fontSize: "0.62rem", fontWeight: 700, cursor: "pointer", transition: "all 0.15s", fontFamily: "inherit",
+  });
 
   return (
-    <div className="dz-card" style={{ padding: "20px 24px", overflow: "hidden", minHeight: 360 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
+    <div className="dz-card" style={{ padding: "24px 28px", overflow: "hidden", minHeight: 380 }}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
         <div>
-          <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>Appointment Types Over Time</div>
-          <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)", marginTop: 2 }}>Last 12 months · Avg {avg.toFixed(1)}/mo</div>
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 14px" }}>
-          {categories.filter(c => data[c].some(v => v > 0)).map(cat => (
-            <button
-              key={cat}
-              onMouseEnter={() => setHoveredCat(cat)}
-              onMouseLeave={() => setHoveredCat(null)}
-              style={{
-                display: "flex", alignItems: "center", gap: 5, background: "none", border: "none", cursor: "pointer", padding: "2px 0",
-                opacity: hoveredCat && hoveredCat !== cat ? 0.3 : 1, transition: "opacity 0.2s",
-              }}
-            >
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: APPT_TYPE_COLORS[cat] }} />
-              <span style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--dz-text-muted, #94a3b8)" }}>{cat}</span>
-            </button>
-          ))}
-          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-            <span style={{ width: 16, height: 2, background: "#64748b", display: "inline-block", borderTop: "1px dashed #64748b" }} />
-            <span style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--dz-text-muted, #64748b)" }}>Avg</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+            {GRAPH_MODES.map(m => (
+              <button key={m.key} onClick={() => setMode(m.key)} style={pillStyle(mode === m.key)}>{m.label}</button>
+            ))}
           </div>
+          <div style={{ fontSize: "0.68rem", color: "var(--dz-text-muted, #64748b)", marginTop: 6 }}>Last {rangeLabel} · Avg {avg.toFixed(1)}/mo</div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          {TIME_RANGES.map(t => (
+            <button key={t.key} onClick={() => setRange(t.key)} style={pillStyle(range === t.key)}>{t.label}</button>
+          ))}
         </div>
       </div>
 
+      {/* Legend */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", marginBottom: 14 }}>
+        {lines.map(line => (
+          <button
+            key={line.key}
+            onMouseEnter={() => setHoveredCat(line.key)}
+            onMouseLeave={() => setHoveredCat(null)}
+            style={{ display: "flex", alignItems: "center", gap: 5, background: "none", border: "none", cursor: "pointer", padding: "2px 0", opacity: hoveredCat && hoveredCat !== line.key ? 0.3 : 1, transition: "opacity 0.2s", fontFamily: "inherit" }}
+          >
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: line.color }} />
+            <span style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--dz-text-muted, #94a3b8)" }}>{line.key}</span>
+          </button>
+        ))}
+        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ width: 16, height: 2, background: "#64748b", display: "inline-block", borderTop: "1px dashed #64748b" }} />
+          <span style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--dz-text-muted, #64748b)" }}>Avg</span>
+        </div>
+      </div>
+
+      {/* Chart */}
       <svg
         ref={svgRef}
         viewBox={`0 0 ${W} ${H}`}
@@ -737,22 +813,19 @@ function AppointmentGraph() {
         onMouseLeave={() => setTooltip(null)}
       >
         <defs>
-          {categories.map(cat => (
-            <linearGradient key={cat} id={`grad-${cat.replace(/\s+/g, "")}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={APPT_TYPE_COLORS[cat]} stopOpacity="0.25" />
-              <stop offset="100%" stopColor={APPT_TYPE_COLORS[cat]} stopOpacity="0" />
+          {lines.map(line => (
+            <linearGradient key={line.key} id={`grad-${line.key.replace(/\s+/g, "")}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={line.color} stopOpacity="0.25" />
+              <stop offset="100%" stopColor={line.color} stopOpacity="0" />
             </linearGradient>
           ))}
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
 
-        {/* Y-axis grid lines */}
+        {/* Y-axis grid */}
         {Array.from({ length: yTicks + 1 }, (_, i) => {
           const val = (yMax / yTicks) * i;
           const y = yScale(val);
@@ -774,60 +847,40 @@ function AppointmentGraph() {
           x1={PL} y1={yScale(avg)} x2={W - PR} y2={yScale(avg)}
           stroke="#64748b" strokeWidth="1" strokeDasharray="6 4"
           opacity={animated ? 0.6 : 0}
-          style={{ transition: "opacity 0.8s ease 0.6s" }}
+          style={{ transition: "opacity 1s ease 1s" }}
         />
 
-        {/* Area fills + lines for each category */}
-        {categories.filter(c => data[c].some(v => v > 0)).map(cat => {
-          const path = buildPath(data[cat]);
-          const areaPath = `${path} L${xPos(11).toFixed(1)},${yScale(0).toFixed(1)} L${xPos(0).toFixed(1)},${yScale(0).toFixed(1)} Z`;
-          const isHovered = hoveredCat === cat;
+        {/* Lines */}
+        {lines.map(line => {
+          const path = buildPath(line.values);
+          const lastIdx = monthCount - 1;
+          const areaPath = `${path} L${xPos(lastIdx).toFixed(1)},${yScale(0).toFixed(1)} L${xPos(0).toFixed(1)},${yScale(0).toFixed(1)} Z`;
+          const isHovered = hoveredCat === line.key;
           const dimmed = hoveredCat && !isHovered;
           return (
-            <g key={cat} style={{ transition: "opacity 0.25s", opacity: dimmed ? 0.12 : 1 }}>
-              {/* Area fill */}
+            <g key={line.key} style={{ transition: "opacity 0.25s", opacity: dimmed ? 0.12 : 1 }}>
+              <path d={areaPath} fill={`url(#grad-${line.key.replace(/\s+/g, "")})`} opacity={animated ? (isHovered ? 0.5 : 0.2) : 0} style={{ transition: "opacity 1.2s ease 0.5s" }} />
+              {/* Glow */}
               <path
-                d={areaPath}
-                fill={`url(#grad-${cat.replace(/\s+/g, "")})`}
-                opacity={animated ? (isHovered ? 0.5 : 0.2) : 0}
-                style={{ transition: "opacity 0.8s ease" }}
-              />
-              {/* Glow line */}
-              <path
-                d={path}
-                fill="none"
-                stroke={APPT_TYPE_COLORS[cat]}
-                strokeWidth={isHovered ? 3.5 : 2.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                ref={el => { if (el) pathRefs.current.set(`glow-${line.key}`, el); }}
+                d={path} fill="none" stroke={line.color}
+                strokeWidth={isHovered ? 3.5 : 2.5} strokeLinecap="round" strokeLinejoin="round"
                 filter="url(#glow)"
-                strokeDasharray={animated ? "0" : "2000"}
-                strokeDashoffset={animated ? "0" : "2000"}
-                style={{ transition: "stroke-dasharray 1.2s ease, stroke-dashoffset 1.2s ease, stroke-width 0.2s" }}
+                strokeDasharray="2000" strokeDashoffset="2000"
               />
-              {/* Solid line */}
+              {/* Solid */}
               <path
-                d={path}
-                fill="none"
-                stroke={APPT_TYPE_COLORS[cat]}
-                strokeWidth={isHovered ? 2.5 : 1.8}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray={animated ? "0" : "2000"}
-                strokeDashoffset={animated ? "0" : "2000"}
-                style={{ transition: "stroke-dasharray 1.2s ease, stroke-dashoffset 1.2s ease, stroke-width 0.2s" }}
+                ref={el => { if (el) pathRefs.current.set(`line-${line.key}`, el); }}
+                d={path} fill="none" stroke={line.color}
+                strokeWidth={isHovered ? 2.5 : 1.8} strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray="2000" strokeDashoffset="2000"
               />
-              {/* Data points */}
-              {data[cat].map((v, i) => (
-                <circle
-                  key={i}
-                  cx={xPos(i)} cy={yScale(v)}
-                  r={isHovered ? 4 : 2.5}
-                  fill={APPT_TYPE_COLORS[cat]}
-                  stroke="var(--dz-card-bg, #0f1021)"
-                  strokeWidth={1.5}
+              {/* Dots */}
+              {line.values.map((v, i) => (
+                <circle key={i} cx={xPos(i)} cy={yScale(v)} r={isHovered ? 4 : 2.5}
+                  fill={line.color} stroke="var(--dz-card-bg, #0f1021)" strokeWidth={1.5}
                   opacity={animated ? 1 : 0}
-                  style={{ transition: `opacity 0.5s ease ${0.8 + i * 0.05}s, r 0.2s` }}
+                  style={{ transition: `opacity 0.4s ease ${1.2 + i * 0.08}s, r 0.2s` }}
                 />
               ))}
             </g>
@@ -838,8 +891,8 @@ function AppointmentGraph() {
         {tooltip && (
           <g>
             <line x1={tooltip.x} y1={PT} x2={tooltip.x} y2={PT + chartH} stroke="var(--dz-text-muted, #64748b)" strokeWidth="1" strokeDasharray="3 3" opacity="0.4" />
-            <circle cx={tooltip.x} cy={tooltip.y} r={5} fill={APPT_TYPE_COLORS[tooltip.cat]} stroke="white" strokeWidth="2" />
-            <rect x={tooltip.x - 50} y={tooltip.y - 34} width={100} height={24} rx={6} fill="var(--dz-card-bg, #1a1a2e)" stroke="var(--dz-border, rgba(148,163,184,0.15))" strokeWidth="1" />
+            <circle cx={tooltip.x} cy={tooltip.y} r={5} fill={colorMap[tooltip.cat] || "#818cf8"} stroke="white" strokeWidth="2" />
+            <rect x={tooltip.x - 60} y={tooltip.y - 34} width={120} height={24} rx={6} fill="var(--dz-card-bg, #1a1a2e)" stroke="var(--dz-border, rgba(148,163,184,0.15))" strokeWidth="1" />
             <text x={tooltip.x} y={tooltip.y - 19} textAnchor="middle" fontSize="10" fontWeight="700" fill="var(--dz-text-primary, #f1f5f9)" fontFamily="inherit">
               {tooltip.cat}: {tooltip.value} ({tooltip.month})
             </text>
@@ -884,7 +937,7 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 20, alignItems: "start" }}>
           <AppointmentGraph />
           <DashGoogleReviews />
         </div>

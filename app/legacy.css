@@ -172,7 +172,7 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   padding: 14px 32px;
-  border-radius: 980px;
+  border-radius: 980px !important;
   font-family: inherit;
   font-weight: 500;
   font-size: 0.95rem;

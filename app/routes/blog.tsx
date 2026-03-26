@@ -50,7 +50,7 @@ export default function BlogPage() {
               position: "relative", overflow: "hidden", borderRadius: "var(--radius)",
               background: "linear-gradient(135deg, rgba(37,99,235,0.08), rgba(245,158,11,0.08))",
               border: "1px solid rgba(245,158,11,0.2)",
-              padding: "clamp(24px, 4vw, 40px)",
+              padding: "clamp(32px, 5vw, 56px)",
               display: "grid", gridTemplateColumns: "1fr auto", gap: 32, alignItems: "center",
             }}>
               <div>

@@ -8,8 +8,6 @@ const carriers = [
   { name: "TRICARE", slug: "tricare-mil" },
   { name: "Kaiser Permanente", slug: "kaiserpermanente-org" },
   { name: "Oscar Health", slug: "hioscar-com" },
-  { name: "Oxford", slug: "oxhp-com" },
-  { name: "Empire BCBS", slug: "empireblue-com" },
   { name: "Elevance Health", slug: "elevancehealth-com" },
 ];
 

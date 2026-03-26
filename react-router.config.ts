@@ -44,6 +44,7 @@ export default {
     "/conditions/biceps-tendon-injuries",
     // DocZoc platform
     "/doczoc",
+    "/doczoc/v2",
     "/doczoc/signin",
     "/doczoc/home",
     "/doczoc/dashboard",

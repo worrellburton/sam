@@ -12,6 +12,7 @@ export default [
   route("services/:slug", "routes/service.tsx"),
   route("conditions/:slug", "routes/condition.tsx"),
   route("doczoc", "routes/doczoc.tsx"),
+  route("doczoc/v2", "routes/doczoc-v2.tsx"),
   route("doczoc/signin", "routes/doczoc-signin.tsx"),
   route("doczoc/home", "routes/doczoc-home.tsx"),
   route("doczoc/dashboard", "routes/doczoc-dashboard.tsx"),

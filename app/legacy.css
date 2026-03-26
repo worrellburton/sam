@@ -4140,7 +4140,7 @@ img.insurance-logo:hover {
   .hero-rating-card { min-width: auto; }
   .about-layout { grid-template-columns: 1fr; gap: 40px; }
   .about-photo { position: static; }
-  .about-portrait { height: 400px; max-width: 400px; margin: 0 auto; }
+  .about-portrait { height: auto; max-height: 400px; max-width: 100%; margin: 0 auto; display: block; }
   .specialties-grid { grid-template-columns: repeat(2, 1fr); }
   .testimonials-grid { grid-template-columns: 1fr; }
   .locations-grid { grid-template-columns: repeat(2, 1fr); }
@@ -4431,7 +4431,7 @@ img.insurance-logo:hover {
 
 @media (max-width: 480px) {
   .about-highlights { grid-template-columns: 1fr; }
-  .about-photo { width: 160px; }
+  .about-photo { width: 100%; max-width: 320px; margin: 0 auto; }
   .locations-grid { grid-template-columns: 1fr; }
   .location-map { height: 200px; }
   .container { padding: 0 14px; }

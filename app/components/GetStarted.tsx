@@ -8,7 +8,7 @@ export function GetStarted() {
           <div className="contact-text">
             <p className="section-label">Get Started</p>
             <h2>
-              Ready to Move <span className="text-accent">Without Pain?</span>
+              Get Back to <span className="text-accent">What You Love</span>
             </h2>
             <p>
               Take the first step toward recovery. Schedule a consultation with Dr. Elguizaoui to discuss your condition

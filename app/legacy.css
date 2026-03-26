@@ -11548,6 +11548,29 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .v2-loaded .v2-anim-fade { animation: dzFadeIn 0.6s ease forwards; }
 .v2-loaded .v2-anim-up { animation: dzSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
+/* Landing → Chat transition */
+.v2-landing-exit {
+  animation: v2LandingExit 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+@keyframes v2LandingExit {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(0.97); filter: blur(6px); }
+}
+.v2-footer-exit {
+  animation: v2FooterExit 0.4s ease forwards !important;
+}
+@keyframes v2FooterExit {
+  to { opacity: 0; transform: translateY(20px); }
+}
+.v2-chat-enter {
+  animation: v2ChatEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes v2ChatEnter {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .v2-nav { padding: 12px 16px; }

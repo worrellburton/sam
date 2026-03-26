@@ -200,10 +200,11 @@ export default function DocZocV2() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [phase, setPhase] = useState<"landing" | "transitioning" | "chat">("landing");
   const [loaded, setLoaded] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { requestAnimationFrame(() => setLoaded(true)); }, []);
 
@@ -218,12 +219,26 @@ export default function DocZocV2() {
     const query = text.trim();
     setInput("");
     setIsSearching(true);
-    setHasSearched(true);
 
-    setMessages(prev => [...prev, { type: "user", text: query }, { type: "thinking" }]);
-    scrollToBottom();
+    if (phase === "landing") {
+      // Start transition: fade out landing, then show chat
+      setPhase("transitioning");
+      setTimeout(() => {
+        setPhase("chat");
+        setMessages([{ type: "user", text: query }, { type: "thinking" }]);
+        // Focus the chat input after transition
+        setTimeout(() => {
+          chatInputRef.current?.focus();
+          scrollToBottom();
+        }, 100);
+      }, 600); // match the CSS exit animation duration
+    } else {
+      setMessages(prev => [...prev, { type: "user", text: query }, { type: "thinking" }]);
+      scrollToBottom();
+    }
 
     // Simulate AI processing
+    const delay = phase === "landing" ? 2100 : 1500;
     setTimeout(() => {
       const results = matchDoctors(query);
       setMessages(prev => {
@@ -235,13 +250,17 @@ export default function DocZocV2() {
       });
       setIsSearching(false);
       scrollToBottom();
-    }, 1500);
-  }, [isSearching, scrollToBottom]);
+    }, delay);
+  }, [isSearching, scrollToBottom, phase]);
 
   const handleSuggestion = (text: string) => {
     setInput(text);
     handleSubmit(text);
   };
+
+  const isLandingVisible = phase === "landing";
+  const isChatVisible = phase === "chat";
+  const isExiting = phase === "transitioning";
 
   return (
     <div className={`v2-page${loaded ? " v2-loaded" : ""}`}>
@@ -266,11 +285,12 @@ export default function DocZocV2() {
         </div>
       </nav>
 
-      {/* Main Content */}
+      {/* Main Content — single continuous layout */}
       <main className="v2-main">
-        {!hasSearched ? (
-          /* ── Landing State ─────────────────────────────────── */
-          <div className="v2-landing">
+
+        {/* ── Landing Content (fades out on search) ───────── */}
+        {(isLandingVisible || isExiting) && (
+          <div className={`v2-landing${isExiting ? " v2-landing-exit" : ""}`}>
             <div className="v2-landing-content">
               <div className="v2-badge v2-anim-up" style={{ animationDelay: "0.1s" }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -332,9 +352,11 @@ export default function DocZocV2() {
               </div>
             </div>
           </div>
-        ) : (
-          /* ── Chat State ────────────────────────────────────── */
-          <div className="v2-chat-container">
+        )}
+
+        {/* ── Chat (slides in after transition) ──────────── */}
+        {isChatVisible && (
+          <div className="v2-chat-container v2-chat-enter">
             <div className="v2-chat-scroll" ref={chatRef}>
               <div className="v2-chat-messages">
                 {messages.map((msg, i) => {
@@ -396,6 +418,7 @@ export default function DocZocV2() {
             <div className="v2-chat-input-bar">
               <div className="v2-search-box v2-chat-input-box">
                 <input
+                  ref={chatInputRef}
                   className="v2-search-input"
                   value={input}
                   onChange={e => setInput(e.target.value)}
@@ -418,9 +441,9 @@ export default function DocZocV2() {
         )}
       </main>
 
-      {/* Footer */}
-      {!hasSearched && (
-        <footer className="v2-footer v2-anim-fade" style={{ animationDelay: "0.7s" }}>
+      {/* Footer — fades out with landing */}
+      {(isLandingVisible || isExiting) && (
+        <footer className={`v2-footer v2-anim-fade${isExiting ? " v2-footer-exit" : ""}`} style={{ animationDelay: "0.7s" }}>
           <div className="v2-footer-inner">
             <p>&copy; {new Date().getFullYear()} DocZoc. All rights reserved.</p>
             <div className="v2-footer-links">

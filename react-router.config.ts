@@ -45,6 +45,7 @@ export default {
     // DocZoc platform
     "/doczoc",
     "/doczoc/v2",
+    "/doczoc/deck",
     "/doczoc/signin",
     "/doczoc/home",
     "/doczoc/dashboard",

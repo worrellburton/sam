@@ -12,11 +12,11 @@ export function meta() {
 }
 
 const platforms = [
-  { name: "Zocdoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", icon: "Z", logo: "https://cdn.zocdoc.com/about/images/og-image.png" },
+  { name: "Zocdoc", rating: "4.78", reviews: "1,400+", url: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423", icon: "Z", logo: "https://logo.clearbit.com/zocdoc.com" },
   { name: "Google", rating: "4.8", reviews: "150+", url: "https://www.google.com/search?q=Dr+Sam+Elguizaoui+orthopedic+surgeon+NYC", icon: "G", logo: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" },
-  { name: "Healthgrades", rating: "5.0", reviews: "50+", url: "https://www.healthgrades.com/physician/dr-sam-elguizaoui", icon: "H", logo: "https://d1ffig5gps1mwv.cloudfront.net/prod/assets/images/healthgrades-logo-color.svg" },
-  { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", icon: "V", logo: "https://www.vitals.com/static/images/vitals-logo.svg" },
-  { name: "U.S. News", rating: "Top", reviews: "Doctor Rankings", url: "https://health.usnews.com/doctors", icon: "U", logo: "https://www.usnews.com/static/img/usn-logo-large.svg" },
+  { name: "Healthgrades", rating: "5.0", reviews: "50+", url: "https://www.healthgrades.com/physician/dr-sam-elguizaoui", icon: "H", logo: "https://logo.clearbit.com/healthgrades.com" },
+  { name: "Vitals", rating: "4.9", reviews: "200+", url: "https://www.vitals.com/doctors/Dr_Sam_Elguizaoui.html", icon: "V", logo: "https://logo.clearbit.com/vitals.com" },
+  { name: "U.S. News", rating: "Top", reviews: "Doctor Rankings", url: "https://health.usnews.com/doctors", icon: "U", logo: "https://logo.clearbit.com/usnews.com" },
 ];
 
 const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';

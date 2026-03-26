@@ -661,7 +661,7 @@ function AppointmentGraph() {
     return () => clearTimeout(timer);
   }, []);
 
-  const W = 720, H = 260, PL = 40, PR = 16, PT = 16, PB = 32;
+  const W = 800, H = 280, PL = 40, PR = 16, PT = 16, PB = 32;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
   const maxVal = Math.max(...totals, ...categories.flatMap(c => data[c]), 1);
@@ -700,8 +700,8 @@ function AppointmentGraph() {
   const yTicks = 5;
 
   return (
-    <div className="dz-card" style={{ padding: "20px 24px", overflow: "hidden" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+    <div className="dz-card" style={{ padding: "20px 24px", overflow: "hidden", minHeight: 360 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
         <div>
           <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>Appointment Types Over Time</div>
           <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted, #64748b)", marginTop: 2 }}>Last 12 months · Avg {avg.toFixed(1)}/mo</div>
@@ -884,7 +884,7 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 16, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16, alignItems: "start" }}>
           <AppointmentGraph />
           <DashGoogleReviews />
         </div>

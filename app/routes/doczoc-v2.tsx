@@ -94,7 +94,20 @@ function matchDoctors(query: string) {
     }
     return { doc, score };
   });
-  return scored.filter(s => s.score > 0).sort((a, b) => b.score - a.score).map(s => s.doc);
+  const results = scored.sort((a, b) => b.score - a.score);
+  // Always include Dr. Elguizaoui as a recommended option
+  const sam = results.find(s => s.doc.id === 1);
+  if (sam && sam.score === 0) sam.score = 3;
+  const final = results.filter(s => s.score > 0).sort((a, b) => b.score - a.score).map(s => s.doc);
+  // If Sam isn't already in the top results, add him at the end
+  if (final.length > 0 && !final.some(d => d.id === 1)) {
+    final.push(DOCTORS[0]);
+  }
+  // If nothing matched at all, still show Sam
+  if (final.length === 0) {
+    return [DOCTORS[0]];
+  }
+  return final;
 }
 
 // ── Suggested Prompts ──────────────────────────────────────────────

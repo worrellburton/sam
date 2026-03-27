@@ -8359,10 +8359,11 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 /* Dragging column */
 .dz-th-dragging { opacity: 0.5; background: rgba(99, 102, 241, 0.15) !important; }
 .dz-th-dragover { border-left: 2px solid #818cf8 !important; }
-.dz-row-clickable { cursor: pointer; }
-.dz-row-clickable:hover td {
-  background: rgba(99, 102, 241, 0.04) !important;
+.dz-row-clickable, .dz-table-row-link { cursor: pointer; }
+.dz-row-clickable:hover td, .dz-table-row-link:hover td {
+  background: rgba(99, 102, 241, 0.06) !important;
 }
+.dz-table-row-link:hover .dz-table-name { color: #818cf8; }
 [data-theme="light"] .dz-table th {
   background: rgba(248, 250, 252, 0.9);
   color: #64748b;

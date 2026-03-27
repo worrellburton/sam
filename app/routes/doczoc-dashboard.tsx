@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useState, useRef, useEffect, useMemo, type ReactNode } from "react";
 import { PlatformBg } from "~/components/PlatformBg";
 import { PATIENTS } from "~/data/patients";
@@ -867,15 +867,16 @@ export default function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const location = useLocation();
+  const navigate = useNavigate();
   const [showSplash, setShowSplash] = useState(() => !!(location.state as any)?.fromLogin);
 
   const recentPatients = [
-    { name: "Sarah Mitchell", type: "Follow-up — Shoulder", time: "9:00 AM", status: "Confirmed" },
-    { name: "James Kim", type: "New Patient — Knee", time: "9:30 AM", status: "New" },
-    { name: "Maria Lopez", type: "Post-Op — ACL", time: "10:15 AM", status: "Confirmed" },
-    { name: "David Ross", type: "Consultation — Hip", time: "11:00 AM", status: "Pending" },
-    { name: "Emily Chen", type: "Follow-up — Wrist", time: "1:00 PM", status: "Confirmed" },
-    { name: "Michael Brown", type: "Sports Injury — Ankle", time: "2:30 PM", status: "New" },
+    { id: 1, name: "Sarah Mitchell", type: "Follow-up — Shoulder", time: "9:00 AM", status: "Confirmed" },
+    { id: 2, name: "James Kim", type: "New Patient — Knee", time: "9:30 AM", status: "New" },
+    { id: 3, name: "Maria Lopez", type: "Post-Op — ACL", time: "10:15 AM", status: "Confirmed" },
+    { id: 4, name: "David Ross", type: "Consultation — Hip", time: "11:00 AM", status: "Pending" },
+    { id: 5, name: "Emily Chen", type: "Follow-up — Wrist", time: "1:00 PM", status: "Confirmed" },
+    { id: 6, name: "Michael Brown", type: "Sports Injury — Ankle", time: "2:30 PM", status: "New" },
   ];
 
   const fromLogin = !!(location.state as any)?.fromLogin;
@@ -926,7 +927,7 @@ export default function DashboardPage() {
                   const colors = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#ec4899", "#14b8a6"];
                   const cidx = p.name.charCodeAt(0) % colors.length;
                   return (
-                    <tr key={p.name}>
+                    <tr key={p.name} onClick={() => navigate(`/doczoc/patients/${p.id}`)} style={{ cursor: "pointer" }} className="dz-table-row-link">
                       <td className="dz-table-time">{p.time}</td>
                       <td className="dz-col-patient">
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

@@ -440,9 +440,7 @@ function DashGoogleReviews() {
 
 // ── Next Patient with live countdown ────────────────────────────────
 function DashNextPatient() {
-  // Demo: appointment is always 1:30 from now
   const [secondsLeft, setSecondsLeft] = useState(90);
-  const [insightHovered, setInsightHovered] = useState(false);
   const [insightExpanded, setInsightExpanded] = useState(false);
 
   useEffect(() => {
@@ -460,153 +458,106 @@ function DashNextPatient() {
   return (
     <div style={{ marginTop: 24, marginBottom: 24 }}>
       <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 12, color: "var(--dz-text-primary, #f1f5f9)" }}>Upcoming Patients</h2>
-      <div style={{ display: "flex", gap: 14 }}>
-      {/* Next Patient — primary card */}
-      <div className="dz-card" style={{ flex: "1 1 55%", padding: 0, overflow: "hidden" }}>
-        <div style={{ display: "flex" }}>
-          {/* Left: countdown */}
-          <div style={{
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            padding: "20px 24px", minWidth: 100,
-            background: urgent ? "rgba(239,68,68,0.08)" : "rgba(99,102,241,0.06)",
-            borderRight: `1px solid ${urgent ? "rgba(239,68,68,0.12)" : "rgba(99,102,241,0.08)"}`,
-          }}>
-            <div style={{
-              fontSize: "1.6rem", fontWeight: 900, fontVariantNumeric: "tabular-nums",
-              color: urgent ? "#f87171" : "#818cf8",
-              fontFamily: "'SF Mono', Consolas, monospace",
-            }}>{countdownText}</div>
-            <div style={{ fontSize: "0.62rem", fontWeight: 600, color: "var(--dz-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 2 }}>
-              until start
+      <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 14, alignItems: "start" }}>
+
+        {/* ── Next Patient Card ─────────────────────────── */}
+        <div className="dz-card" style={{ padding: "18px 20px" }}>
+          {/* Top row: avatar, name, time, countdown */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(59,130,246,0.12)", color: "#60a5fa", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", fontWeight: 700, flexShrink: 0 }}>JK</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Next Patient</span>
+                <span style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: "rgba(59,130,246,0.12)", color: "#60a5fa" }}>New Patient</span>
+              </div>
+              <div style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)" }}>James Kim</div>
+            </div>
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#818cf8", fontFamily: "'SF Mono', Consolas, monospace" }}>9:30 AM</div>
+              <div style={{
+                fontSize: "0.65rem", fontWeight: 700, color: urgent ? "#f87171" : "var(--dz-text-muted, #64748b)",
+                fontFamily: "'SF Mono', Consolas, monospace",
+              }}>in {countdownText}</div>
             </div>
           </div>
 
-          {/* Right: patient info */}
-          <div style={{ flex: 1, padding: "16px 22px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(59,130,246,0.12)", color: "#60a5fa", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", fontWeight: 700, flexShrink: 0 }}>JK</div>
-              <div>
-                <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "var(--dz-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>Next Patient</div>
-                <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--dz-text-primary)" }}>James Kim</div>
-              </div>
-              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{
-                  display: "inline-flex", alignItems: "center", gap: 4,
-                  fontSize: "0.62rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
-                  background: "rgba(99,102,241,0.1)", color: "#818cf8",
-                }}>
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-                  Appointment
-                </span>
-                <span style={{
-                  fontSize: "0.62rem", fontWeight: 700, padding: "3px 10px", borderRadius: 20,
-                  background: "rgba(59,130,246,0.12)", color: "#60a5fa",
-                }}>New Patient</span>
-                <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#818cf8" }}>9:30 AM</span>
-              </div>
-            </div>
+          {/* Type + tags */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <span style={{ fontSize: "0.75rem", color: "var(--dz-text-secondary, #94a3b8)" }}>Initial Consultation — Knee (ACL)</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.58rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: "rgba(99,102,241,0.1)", color: "#818cf8" }}>
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              Appointment
+            </span>
+          </div>
 
-            <div style={{ fontSize: "0.72rem", color: "var(--dz-text-muted)", marginBottom: 8 }}>
-              Initial Consultation — Knee (ACL)
+          {/* AI Summary */}
+          <div
+            onClick={() => setInsightExpanded(!insightExpanded)}
+            style={{
+              fontSize: "0.72rem", lineHeight: 1.6, color: "var(--dz-text-secondary, #94a3b8)",
+              padding: "10px 12px", borderRadius: 8,
+              background: "rgba(99,102,241,0.04)",
+              border: "1px solid rgba(99,102,241,0.08)",
+              cursor: "pointer", transition: "all 0.15s",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
+              <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2.5" style={{ marginLeft: "auto", transform: insightExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
             </div>
-
-            {/* AI Insight — entire row hoverable with Show insight CTA */}
-            <div
-              className="dz-ai-row"
-              onMouseEnter={() => setInsightHovered(true)}
-              onMouseLeave={() => setInsightHovered(false)}
-              onClick={() => setInsightExpanded(!insightExpanded)}
-              style={{
-                fontSize: "0.78rem", lineHeight: 1.6, color: "var(--dz-text-secondary)",
-                padding: "10px 12px", borderRadius: 8,
-                background: insightHovered ? "rgba(99,102,241,0.08)" : "rgba(99,102,241,0.04)",
-                border: insightHovered ? "1px solid rgba(99,102,241,0.18)" : "1px solid rgba(99,102,241,0.08)",
-                cursor: "pointer",
-                transition: "all 0.15s",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
-                  <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "#818cf8", textTransform: "uppercase", letterSpacing: "0.03em" }}>AI Summary</span>
-                </div>
-                <span style={{
-                  display: "inline-flex", alignItems: "center", gap: 4,
-                  fontSize: "0.62rem", fontWeight: 700, color: "#818cf8",
-                  opacity: insightHovered || insightExpanded ? 1 : 0,
-                  transition: "opacity 0.15s",
-                }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: insightExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                  {insightExpanded ? "Hide insight" : "Show insight"}
-                </span>
+            ACL tear (left), positive Lachman. Scheduled for reconstruction consult.
+            {insightExpanded && (
+              <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid rgba(99,102,241,0.1)", fontSize: "0.68rem" }}>
+                MRI confirmed complete tear with lateral meniscus involvement. Anterior drawer test positive. Conservative management (bracing + PT x 8 weeks) showed minimal improvement. Recommend discussing autograft vs allograft options. Insurance pre-auth submitted to UHC (pending).
               </div>
-              ACL tear (left), positive Lachman. Scheduled for reconstruction consult.
-              {insightExpanded && (
-                <div style={{ marginTop: 6, paddingTop: 6, borderTop: "1px solid rgba(99,102,241,0.1)" }}>
-                  MRI confirmed complete tear with lateral meniscus involvement. Anterior drawer test positive. Reports instability during lateral movements, unable to return to sports. Conservative management (bracing + PT x 8 weeks) showed minimal improvement. Recommend discussing autograft vs allograft options. BMI 24.2, no prior surgical history, cleared by PCP for anesthesia. Insurance pre-auth submitted to UnitedHealthcare (pending).
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Time gap */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, padding: "0 4px", flexShrink: 0 }}>
-        <div style={{ width: 1, flex: 1, background: "rgba(148,163,184,0.15)" }} />
-        <span style={{ fontSize: "0.65rem", fontWeight: 600, color: "#64748b", whiteSpace: "nowrap" }}>45 min</span>
-        <div style={{ width: 1, flex: 1, background: "rgba(148,163,184,0.15)" }} />
-      </div>
+        {/* ── Time Gap ──────────────────────────────────── */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, padding: "20px 4px", alignSelf: "stretch" }}>
+          <div style={{ width: 1, flex: 1, background: "rgba(148,163,184,0.12)" }} />
+          <span style={{ fontSize: "0.6rem", fontWeight: 600, color: "#475569", whiteSpace: "nowrap" }}>45 min</span>
+          <div style={{ width: 1, flex: 1, background: "rgba(148,163,184,0.12)" }} />
+        </div>
 
-      {/* After Next — secondary card */}
-      <div className="dz-card" style={{ flex: "1 1 45%", padding: 0, overflow: "hidden", opacity: 0.85 }}>
-        <div style={{ display: "flex", height: "100%" }}>
-          <div style={{
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-            padding: "20px 20px", minWidth: 80,
-            background: "rgba(34,197,94,0.06)",
-            borderRight: "1px solid rgba(34,197,94,0.08)",
-          }}>
-            <div style={{
-              fontSize: "0.82rem", fontWeight: 800, color: "#22c55e",
-              fontFamily: "'SF Mono', Consolas, monospace",
-            }}>10:15</div>
-            <div style={{ fontSize: "0.58rem", fontWeight: 600, color: "var(--dz-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginTop: 2 }}>AM</div>
+        {/* ── After Next Card ───────────────────────────── */}
+        <div className="dz-card" style={{ padding: "18px 20px", opacity: 0.85 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(34,197,94,0.12)", color: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", fontWeight: 700, flexShrink: 0 }}>ML</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "var(--dz-text-muted, #64748b)", textTransform: "uppercase", letterSpacing: "0.04em" }}>After Next</span>
+                <span style={{ fontSize: "0.55rem", fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: "rgba(34,197,94,0.1)", color: "#22c55e" }}>Confirmed</span>
+              </div>
+              <div style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--dz-text-primary, #f1f5f9)" }}>Maria Lopez</div>
+            </div>
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#22c55e", fontFamily: "'SF Mono', Consolas, monospace" }}>10:15 AM</div>
+            </div>
           </div>
-          <div style={{ flex: 1, padding: "16px 20px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(34,197,94,0.12)", color: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700, flexShrink: 0 }}>ML</div>
-              <div>
-                <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "var(--dz-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>After Next</div>
-                <div style={{ fontSize: "0.92rem", fontWeight: 800, color: "var(--dz-text-primary)" }}>Maria Lopez</div>
-              </div>
-              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{
-                  fontSize: "0.6rem", fontWeight: 700, padding: "3px 8px", borderRadius: 20,
-                  background: "rgba(34,197,94,0.1)", color: "#22c55e",
-                }}>Confirmed</span>
-              </div>
+
+          <div style={{ fontSize: "0.75rem", color: "var(--dz-text-secondary, #94a3b8)", marginBottom: 12 }}>
+            Post-Op — ACL Reconstruction
+          </div>
+
+          <div style={{
+            fontSize: "0.72rem", lineHeight: 1.5, color: "var(--dz-text-secondary, #94a3b8)",
+            padding: "10px 12px", borderRadius: 8,
+            background: "rgba(34,197,94,0.04)", border: "1px solid rgba(34,197,94,0.06)",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
+              <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase" }}>AI Summary</span>
             </div>
-            <div style={{ fontSize: "0.7rem", color: "var(--dz-text-muted)", marginBottom: 6 }}>
-              Post-Op — ACL
-            </div>
-            <div style={{
-              fontSize: "0.7rem", lineHeight: 1.5, color: "var(--dz-text-secondary)",
-              padding: "8px 10px", borderRadius: 6,
-              background: "rgba(34,197,94,0.04)", border: "1px solid rgba(34,197,94,0.06)",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
-                <span style={{ fontSize: "0.6rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase" }}>AI Summary</span>
-              </div>
-              6-week post-op ACL reconstruction. ROM improving, PT reports good progress.
-            </div>
+            6-week post-op ACL reconstruction. ROM improving, PT reports good progress.
           </div>
         </div>
+
       </div>
-    </div>
     </div>
   );
 }

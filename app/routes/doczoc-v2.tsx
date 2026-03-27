@@ -19,7 +19,7 @@ const DOCTORS = [
     bio: "Fellowship-trained at Lenox Hill Hospital. Former NY Jets & Islanders team physician. Specializes in joint preservation and biologics.",
     nextAvailable: "Tomorrow, 9:30 AM",
     insurance: ["Aetna", "UHC", "Cigna", "BCBS", "Anthem", "Oscar"],
-    website: "/about",
+    website: "https://worrellburton.github.io/sam/",
   },
   {
     id: 2, name: "Dr. Rachel Kim", title: "Primary Care Physician", rating: 4.9, reviews: 820, image: null,
@@ -190,7 +190,7 @@ function DoctorCard({ doc, delay }: { doc: typeof DOCTORS[0]; delay: number }) {
       </div>
       <div className="v2-doc-actions">
         <Link to="/book" className="v2-doc-book">Book Appointment</Link>
-        {doc.website && <Link to={doc.website} className="v2-doc-website">Go to Website</Link>}
+        {doc.website && <a href={doc.website} className="v2-doc-website" target="_blank" rel="noopener noreferrer">Go to Website</a>}
         <button className="v2-doc-profile">View Profile</button>
       </div>
     </div>

@@ -8241,7 +8241,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 [data-theme="light"] .dz-table tbody tr:nth-child(even) td { background: rgba(248, 250, 252, 0.5); }
 [data-theme="light"] .dz-table tr:hover td { background: rgba(99, 102, 241, 0.04); }
 [data-theme="light"] .dz-row-clickable:hover td { background: rgba(99, 102, 241, 0.06) !important; }
-.dz-table-name { font-weight: 600; color: #f1f5f9; white-space: nowrap; font-size: 0.72rem; }
+.dz-table-name { font-weight: 600; color: #f1f5f9; white-space: nowrap; font-size: 0.7rem; }
 .dz-table-sub { font-size: 0.68rem; color: #64748b; }
 .dz-table-time { font-weight: 600; color: #818cf8; font-size: 0.76rem; white-space: nowrap; }
 .dz-table td { white-space: nowrap; }

@@ -8114,6 +8114,24 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-stat-card-value { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; color: #f1f5f9; }
 .dz-stat-card-change { font-size: 0.72rem; }
 
+/* Dashboard graph + reviews row */
+.dz-dash-graph-row {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+.dz-dash-reviews-col {
+  width: 280px;
+  flex-shrink: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.dz-dash-graph-row > div:first-child {
+  margin-right: 296px; /* 280 + 16 gap */
+}
+
 /* Table */
 .dz-dash-section h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; color: #f1f5f9; }
 .dz-table-wrap {

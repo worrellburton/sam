@@ -946,9 +946,11 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 16, gridTemplateRows: "1fr", overflow: "hidden" }}>
-          <AppointmentGraph />
-          <div style={{ minHeight: 0, overflow: "hidden" }}>
+        <div className="dz-dash-graph-row">
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <AppointmentGraph />
+          </div>
+          <div className="dz-dash-reviews-col">
             <DashGoogleReviews />
           </div>
         </div>

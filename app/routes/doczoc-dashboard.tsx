@@ -937,15 +937,15 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 20, alignItems: "start" }}>
-          <AppointmentGraph />
+        <AppointmentGraph />
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 20, alignItems: "start", marginTop: 20 }}>
+          {/* Next Patient */}
+          <DashNextPatient />
           <DashGoogleReviews />
         </div>
 
-        {/* Next Patient */}
-        <DashNextPatient />
-
-        <div className="dz-dash-section">
+        <div className="dz-dash-section" style={{ marginTop: 20 }}>
           <h2>Today's Schedule</h2>
           <div className="dz-table-wrap">
             <table className="dz-table">

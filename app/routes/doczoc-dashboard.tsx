@@ -418,7 +418,10 @@ function DashGoogleReviews() {
             borderBottom: i < 7 ? "1px solid rgba(148,163,184,0.04)" : "none",
           }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 }}>
-              <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>{review.author_name}</span>
+              <div>
+                <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>{review.author_name}</span>
+                <span style={{ fontSize: "0.55rem", color: "var(--dz-text-dim, #475569)", marginLeft: 6 }}>{new Date(review.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+              </div>
               <StarRating rating={review.rating} size={7} />
             </div>
             <div style={{
@@ -454,7 +457,7 @@ function DashNextPatient() {
   const urgent = secondsLeft < 60;
 
   return (
-    <div style={{ marginBottom: 24 }}>
+    <div style={{ marginTop: 24, marginBottom: 24 }}>
       <h2 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: 12, color: "var(--dz-text-primary, #f1f5f9)" }}>Upcoming Patients</h2>
       <div style={{ display: "flex", gap: 14 }}>
       {/* Next Patient — primary card */}
@@ -610,20 +613,14 @@ function DashNextPatient() {
 // ── Appointment Type Over Time Graph ──────────────────────────────────
 const APPT_TYPE_COLORS: Record<string, string> = {
   "Surgery": "#ef4444",
-  "Post-Op Follow-up": "#22c55e",
   "Initial Consultation": "#6366f1",
-  "Pre-Op Evaluation": "#f59e0b",
-  "Follow-up": "#06b6d4",
   "Other": "#a78bfa",
 };
 
 function categorizeVisitType(type: string): string {
   const t = type.toLowerCase();
   if (t.includes("surgery")) return "Surgery";
-  if (t.includes("post-op") || t.includes("final post-op")) return "Post-Op Follow-up";
   if (t.includes("initial") || t.includes("new patient") || t.includes("consultation")) return "Initial Consultation";
-  if (t.includes("pre-op")) return "Pre-Op Evaluation";
-  if (t.includes("follow-up") || t.includes("follow up")) return "Follow-up";
   return "Other";
 }
 
@@ -950,9 +947,11 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 16, alignItems: "stretch" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 16, gridTemplateRows: "1fr", overflow: "hidden" }}>
           <AppointmentGraph />
-          <DashGoogleReviews />
+          <div style={{ minHeight: 0, overflow: "hidden" }}>
+            <DashGoogleReviews />
+          </div>
         </div>
 
         <DashNextPatient />

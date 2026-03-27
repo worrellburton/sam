@@ -352,7 +352,7 @@ img { max-width: 100%; display: block; }
 }
 [data-theme="light"] .nav.scrolled .logo-name { color: var(--text); }
 [data-theme="light"] .nav.scrolled .nav-links > li > a { color: rgba(0,0,0,0.8); }
-[data-theme="light"] .nav.scrolled .nav-links > li > a:hover { color: #000; }
+[data-theme="light"] .nav.scrolled .nav-links > li > a:hover { color: var(--primary); }
 [data-theme="light"] .nav.scrolled .nav-btn-contact { color: var(--text) !important; }
 
 .nav-container {

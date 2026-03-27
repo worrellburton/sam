@@ -727,12 +727,12 @@ function AppointmentGraph() {
     });
   }, [animated, lines]);
 
-  const W = 800, H = 220, PL = 36, PR = 12, PT = 12, PB = 24;
+  const W = 800, H = 200, PL = 32, PR = 12, PT = 8, PB = 22;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
   const allVals = lines.flatMap(l => l.values);
   const maxVal = Math.max(...allVals, 1);
-  const yMax = Math.ceil(maxVal / 5) * 5 || 5;
+  const yMax = maxVal <= 3 ? Math.ceil(maxVal) + 1 : maxVal <= 10 ? Math.ceil(maxVal / 2) * 2 : Math.ceil(maxVal / 5) * 5;
   const xStep = chartW / Math.max(monthCount - 1, 1);
   const yScale = (v: number) => PT + chartH - (v / yMax) * chartH;
   const xPos = (i: number) => PL + i * xStep;
@@ -763,7 +763,7 @@ function AppointmentGraph() {
     }
   };
 
-  const yTicks = 5;
+  const yTicks = 4;
   const modeLabel = GRAPH_MODES.find(m => m.key === mode)?.label || "";
   const rangeLabel = range === "3mo" ? "3 months" : range === "6mo" ? "6 months" : "12 months";
 

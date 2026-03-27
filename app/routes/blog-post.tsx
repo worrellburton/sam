@@ -1,9 +1,8 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Link, useParams } from "react-router";
 import { getBlogPostBySlug } from "~/data/blog";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
-import { useElevenLabs } from "~/hooks/useElevenLabs";
 import { seoMeta } from "~/seo";
 
 export function meta({ params }: { params: { slug: string } }) {
@@ -18,13 +17,38 @@ export function meta({ params }: { params: { slug: string } }) {
   });
 }
 
-// ── Audio Player ────────────────────────────────────────────────────
+// ── Audio Player (local file first, ElevenLabs fallback) ────────────
 function BlogAudioPlayer({ post }: { post: { title: string; content: string; contentHtml?: string; slug: string } }) {
-  const { status, audioUrl, error, progress, generateAudio, togglePlayback, stop, audioRef } = useElevenLabs();
+  const [status, setStatus] = useState<"loading" | "ready" | "playing" | "paused" | "error">("loading");
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressInterval = useRef<ReturnType<typeof setInterval>>(undefined);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
+  const localSrc = `${import.meta.env.BASE_URL}audio/${post.slug}.mp3`;
+
+  // Initialize audio element
+  useEffect(() => {
+    const audio = new Audio(localSrc);
+    audioRef.current = audio;
+
+    audio.addEventListener("canplaythrough", () => setStatus("ready"));
+    audio.addEventListener("ended", () => { setStatus("ready"); setCurrentTime(0); });
+    audio.addEventListener("error", () => setStatus("error"));
+
+    audio.load();
+
+    return () => {
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+      if (progressInterval.current) clearInterval(progressInterval.current);
+    };
+  }, [localSrc]);
+
+  // Track playback progress
   useEffect(() => {
     if (status === "playing" && audioRef.current) {
       progressInterval.current = setInterval(() => {
@@ -37,14 +61,53 @@ function BlogAudioPlayer({ post }: { post: { title: string; content: string; con
       if (progressInterval.current) clearInterval(progressInterval.current);
     }
     return () => { if (progressInterval.current) clearInterval(progressInterval.current); };
-  }, [status, audioRef]);
+  }, [status]);
 
-  const handleGenerate = () => {
-    const text = post.contentHtml
-      ? post.contentHtml.replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/g, " ")
-      : post.content;
-    generateAudio(`${post.title}. ${text}`, post.slug);
-  };
+  const play = useCallback(() => {
+    if (!audioRef.current) return;
+    audioRef.current.play();
+    setStatus("playing");
+  }, []);
+
+  const pause = useCallback(() => {
+    audioRef.current?.pause();
+    setStatus("paused");
+  }, []);
+
+  const togglePlayback = useCallback(() => {
+    if (status === "playing") pause();
+    else play();
+  }, [status, play, pause]);
+
+  const stop = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setCurrentTime(0);
+    setStatus("ready");
+  }, []);
+
+  const skip = useCallback((seconds: number) => {
+    if (!audioRef.current) return;
+    audioRef.current.currentTime = Math.max(0, Math.min(audioRef.current.currentTime + seconds, audioRef.current.duration || 0));
+    setCurrentTime(audioRef.current.currentTime);
+  }, []);
+
+  const cycleSpeed = useCallback(() => {
+    const speeds = [1, 1.25, 1.5, 1.75, 2, 0.75];
+    const next = speeds[(speeds.indexOf(playbackRate) + 1) % speeds.length];
+    setPlaybackRate(next);
+    if (audioRef.current) audioRef.current.playbackRate = next;
+  }, [playbackRate]);
+
+  const seekTo = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!audioRef.current || !progressBarRef.current) return;
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    audioRef.current.currentTime = pct * (audioRef.current.duration || 0);
+    setCurrentTime(audioRef.current.currentTime);
+  }, []);
 
   const formatTime = (s: number) => {
     if (!s || isNaN(s)) return "0:00";
@@ -53,77 +116,75 @@ function BlogAudioPlayer({ post }: { post: { title: string; content: string; con
     return `${m}:${sec.toString().padStart(2, "0")}`;
   };
 
+  if (status === "loading") {
+    return (
+      <div className="blog-audio-player">
+        <div className="blog-audio-inner">
+          <div className="blog-audio-icon"><div className="blog-audio-spinner" /></div>
+          <div className="blog-audio-content">
+            <div className="blog-audio-label">Loading audio...</div>
+            <div className="blog-audio-sub">Narrated by Mark &middot; Powered by ElevenLabs</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "error") {
+    return null; // No audio file available — hide player silently
+  }
+
+  const pct = duration > 0 ? (currentTime / duration) * 100 : 0;
+
   return (
     <div className="blog-audio-player">
       <div className="blog-audio-inner">
-        <div className="blog-audio-icon">
-          {status === "generating" ? (
-            <div className="blog-audio-spinner" />
+        {/* Play/Pause button */}
+        <button className="blog-audio-play-btn" onClick={togglePlayback} aria-label={status === "playing" ? "Pause" : "Play"}>
+          {status === "playing" ? (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
           ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
-            </svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21"/></svg>
           )}
-        </div>
+        </button>
+
         <div className="blog-audio-content">
-          <div className="blog-audio-label">
-            {status === "idle" && "Listen to this article"}
-            {status === "generating" && `Generating audio... ${progress}%`}
-            {status === "ready" && "Audio ready — press play"}
-            {status === "playing" && `Playing — ${formatTime(currentTime)} / ${formatTime(duration)}`}
-            {status === "paused" && `Paused — ${formatTime(currentTime)} / ${formatTime(duration)}`}
-            {status === "error" && (error || "Error generating audio")}
-          </div>
-          <div className="blog-audio-sub">
-            {status === "idle" && "Narrated by Mark · Powered by ElevenLabs"}
-            {status === "generating" && "This may take a moment..."}
-            {(status === "ready" || status === "playing" || status === "paused") && "Narrated by Mark · ElevenLabs"}
-            {status === "error" && "Check your API key or try again"}
-          </div>
-          {(status === "playing" || status === "paused") && duration > 0 && (
-            <div className="blog-audio-progress">
-              <div className="blog-audio-progress-fill" style={{ width: `${(currentTime / duration) * 100}%` }} />
+          <div className="blog-audio-top-row">
+            <div className="blog-audio-label">
+              {status === "ready" && currentTime === 0 && "Listen to this article"}
+              {status === "ready" && currentTime > 0 && "Paused"}
+              {status === "playing" && "Now playing"}
+              {status === "paused" && "Paused"}
             </div>
-          )}
-          {status === "generating" && (
-            <div className="blog-audio-progress">
-              <div className="blog-audio-progress-fill generating" style={{ width: `${progress}%` }} />
+            <div className="blog-audio-time">
+              {formatTime(currentTime)} / {formatTime(duration)}
             </div>
-          )}
-        </div>
-        <div className="blog-audio-actions">
-          {status === "idle" && (
-            <button className="blog-audio-btn generate" onClick={handleGenerate}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-              </svg>
-              Generate
-            </button>
-          )}
-          {status === "error" && (
-            <button className="blog-audio-btn generate" onClick={handleGenerate}>Retry</button>
-          )}
-          {(status === "ready" || status === "paused") && (
-            <button className="blog-audio-btn play" onClick={togglePlayback}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-              </svg>
-            </button>
-          )}
-          {status === "playing" && (
-            <>
-              <button className="blog-audio-btn play" onClick={togglePlayback}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
-                </svg>
+          </div>
+
+          {/* Seekable progress bar */}
+          <div className="blog-audio-progress clickable" ref={progressBarRef} onClick={seekTo}>
+            <div className="blog-audio-progress-fill" style={{ width: `${pct}%` }} />
+          </div>
+
+          <div className="blog-audio-bottom-row">
+            <div className="blog-audio-sub">Narrated by Mark &middot; ElevenLabs</div>
+            <div className="blog-audio-controls">
+              <button className="blog-audio-ctrl" onClick={() => skip(-15)} title="Back 15s">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
               </button>
-              <button className="blog-audio-btn stop" onClick={stop}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2"/>
-                </svg>
+              <button className="blog-audio-ctrl" onClick={() => skip(15)} title="Forward 15s">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
               </button>
-            </>
-          )}
+              <button className="blog-audio-ctrl speed" onClick={cycleSpeed} title="Playback speed">
+                {playbackRate}x
+              </button>
+              {(status === "playing" || status === "paused") && (
+                <button className="blog-audio-ctrl" onClick={stop} title="Stop">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

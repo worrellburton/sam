@@ -390,7 +390,7 @@ function DashGoogleReviews() {
   const latest = GOOGLE_REVIEWS[0];
 
   return (
-    <Link to="/doczoc/google-reviews" className="dz-stat-card" style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }}>
+    <Link to="/doczoc/google-reviews" className="dz-stat-card" style={{ cursor: "pointer", textDecoration: "none", color: "inherit", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
       <div className="dz-stat-card-label" style={{ display: "flex", alignItems: "center", gap: 5 }}>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -937,15 +937,14 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <AppointmentGraph />
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 20, alignItems: "start", marginTop: 20 }}>
-          {/* Next Patient */}
-          <DashNextPatient />
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 16, alignItems: "stretch" }}>
+          <AppointmentGraph />
           <DashGoogleReviews />
         </div>
 
-        <div className="dz-dash-section" style={{ marginTop: 20 }}>
+        <DashNextPatient />
+
+        <div className="dz-dash-section" style={{ marginTop: 16 }}>
           <h2>Today's Schedule</h2>
           <div className="dz-table-wrap">
             <table className="dz-table">

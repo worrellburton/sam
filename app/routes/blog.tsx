@@ -1,5 +1,6 @@
+import { useRef, useCallback, useState, useEffect } from "react";
 import { Link } from "react-router";
-import { blogPosts, allBlogPosts } from "~/data/blog";
+import { blogPosts, allBlogPosts, type BlogPost } from "~/data/blog";
 import { GetStarted } from "~/components/GetStarted";
 import { Locations } from "~/components/Locations";
 import { seoMeta } from "~/seo";
@@ -12,116 +13,142 @@ export function meta() {
   });
 }
 
+// ── Mini audio player for blog cards ────────────────────────────────
+function CardAudioBtn({ slug }: { slug: string }) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [available, setAvailable] = useState<boolean | null>(null);
+  const src = `${import.meta.env.BASE_URL}audio/${slug}.mp3`;
+
+  useEffect(() => {
+    const audio = new Audio();
+    audioRef.current = audio;
+    audio.preload = "none";
+    audio.src = src;
+
+    // Check if file exists via canplaythrough / error
+    const onCanPlay = () => setAvailable(true);
+    const onError = () => setAvailable(false);
+    audio.addEventListener("canplaythrough", onCanPlay);
+    audio.addEventListener("error", onError);
+    audio.addEventListener("ended", () => setPlaying(false));
+
+    // Trigger a HEAD-like check
+    audio.load();
+
+    return () => {
+      audio.pause();
+      audio.removeEventListener("canplaythrough", onCanPlay);
+      audio.removeEventListener("error", onError);
+      audio.removeAttribute("src");
+    };
+  }, [src]);
+
+  const toggle = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!audioRef.current) return;
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+    } else {
+      // Pause any other playing audio on the page
+      document.querySelectorAll("audio").forEach((a) => { a.pause(); });
+      audioRef.current.play().catch(() => {});
+      setPlaying(true);
+    }
+  }, [playing]);
+
+  if (available === false || available === null) return null;
+
+  return (
+    <button
+      className={`blog-card-play${playing ? " is-playing" : ""}`}
+      onClick={toggle}
+      aria-label={playing ? "Pause audio" : "Listen to article"}
+      title={playing ? "Pause" : "Listen"}
+    >
+      {playing ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="4" width="4" height="16" rx="1" />
+          <rect x="14" y="4" width="4" height="16" rx="1" />
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="6 3 20 12 6 21" />
+        </svg>
+      )}
+      <span>{playing ? "Playing" : "Listen"}</span>
+    </button>
+  );
+}
+
+// ── Blog card component ─────────────────────────────────────────────
+function BlogCard({ post, showEpisode }: { post: BlogPost; showEpisode?: boolean }) {
+  const isComingSoon = post.comingSoon;
+
+  return (
+    <div className={`blog-card${isComingSoon ? " coming-soon" : ""}`}>
+      <Link to={isComingSoon ? "#" : `/blog/${post.slug}`} className="blog-card-link">
+        <div className="blog-card-img-wrap">
+          <img className="blog-card-img" src={post.image} alt={post.imageAlt} loading="lazy" />
+          {showEpisode && post.episode && (
+            <span className="blog-card-ep">EP. {post.episode}</span>
+          )}
+          {isComingSoon && <span className="blog-card-coming">Coming {post.date}</span>}
+        </div>
+        <div className="blog-card-body">
+          <div className="blog-card-tag-row">
+            <span className="blog-card-tag">{post.tag}</span>
+            {post.readTime && <span className="blog-card-meta">{post.readTime}</span>}
+          </div>
+          <h3>{post.title}</h3>
+          <p>{post.excerpt}</p>
+          <div className="blog-card-footer">
+            <span className="blog-card-meta">{post.date}</span>
+            {!isComingSoon && <CardAudioBtn slug={post.slug} />}
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
 export default function BlogPage() {
-  // Series posts (with episode numbers), sorted by episode
   const seriesPosts = blogPosts
-    .filter(p => p.episode)
+    .filter((p) => p.episode)
     .sort((a, b) => (b.episode || 0) - (a.episode || 0));
 
-  // Condition guides (from condition-blogs, no episode number)
-  const guidePosts = allBlogPosts.filter(p => !p.episode);
-
-  const latestEpisode = seriesPosts.find(p => !p.comingSoon);
-  const comingSoonPost = seriesPosts.find(p => p.comingSoon);
+  const guidePosts = allBlogPosts.filter((p) => !p.episode);
 
   return (
     <>
-      <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=1600&h=600&fit=crop&q=80')" }}>
+      {/* Hero */}
+      <section className="blog-hero">
         <div className="container">
-          <div style={{ marginBottom: 8 }}>
-            <span style={{
-              display: "inline-block", fontSize: "0.72rem", fontWeight: 700,
-              letterSpacing: "0.1em", textTransform: "uppercase", color: "#f59e0b",
-              borderBottom: "2px solid #f59e0b", paddingBottom: 4,
-            }}>Investigative Medical Series</span>
-          </div>
-          <h1 style={{ lineHeight: 1.15 }}>Clinical <span className="text-accent">Clarity</span></h1>
-          <p className="service-hero-desc" style={{ maxWidth: 640, opacity: 0.9 }}>
-            Investigating modern orthopedics with Dr. Elguizaoui. No fluff. No fads. Just hard truths from the surgeon who actually sees the inside of the joints.
+          <span className="blog-hero-label">Investigative Medical Series</span>
+          <h1>
+            Clinical <span className="text-accent">Clarity</span>
+          </h1>
+          <p className="blog-hero-desc">
+            No fluff. No fads. Deep-dive investigative reports from the surgeon who actually sees the inside of the joints.
           </p>
         </div>
       </section>
 
-      {/* Coming Soon Banner */}
-      {comingSoonPost && (
-        <section className="section" style={{ paddingBottom: 0 }}>
-          <div className="container">
-            <div style={{
-              position: "relative", overflow: "hidden", borderRadius: "var(--radius)",
-              background: "linear-gradient(135deg, rgba(37,99,235,0.08), rgba(245,158,11,0.08))",
-              border: "1px solid rgba(245,158,11,0.2)",
-              padding: "clamp(32px, 5vw, 56px)",
-              display: "grid", gridTemplateColumns: "1fr auto", gap: 32, alignItems: "center",
-            }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                  <span style={{
-                    fontSize: "0.68rem", fontWeight: 800, letterSpacing: "0.08em",
-                    textTransform: "uppercase", color: "#f59e0b",
-                    background: "rgba(245,158,11,0.12)", padding: "4px 12px", borderRadius: 20,
-                  }}>Coming Soon</span>
-                  <span style={{
-                    fontSize: "0.72rem", fontWeight: 700, color: "var(--text-muted)",
-                    fontFamily: "'SF Mono', Consolas, monospace",
-                  }}>EP. {comingSoonPost.episode}</span>
-                </div>
-                <h2 style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", lineHeight: 1.25, marginBottom: 12 }}>
-                  {comingSoonPost.title}
-                </h2>
-                <p style={{ color: "var(--text-light)", fontSize: "0.95rem", lineHeight: 1.6, maxWidth: 560 }}>
-                  {comingSoonPost.excerpt}
-                </p>
-                <div style={{ marginTop: 16, fontSize: "0.82rem", color: "var(--text-muted)" }}>
-                  Dropping {comingSoonPost.date}
-                </div>
-              </div>
-              <div style={{
-                width: 120, height: 120, borderRadius: "50%",
-                background: "rgba(245,158,11,0.1)", border: "2px dashed rgba(245,158,11,0.3)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0,
-              }}>
-                <span style={{ fontSize: "2.4rem", fontWeight: 900, color: "#f59e0b", fontFamily: "'SF Mono', Consolas, monospace" }}>
-                  {comingSoonPost.episode}
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Series Episodes */}
+      {/* Episodes */}
       <section className="section">
         <div className="container">
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-            <h2 style={{ margin: 0 }}>The <span className="text-accent">Investigation</span></h2>
+          <div className="blog-section-header">
+            <h2>
+              The <span className="text-accent">Investigation</span>
+            </h2>
+            <p>Each episode is a deep-dive report. Start from the beginning or jump to any case file.</p>
           </div>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 600 }}>
-            Each episode is a deep-dive report. Start from the beginning or jump to any case file.
-          </p>
 
           <div className="blog-home-grid">
-            {seriesPosts.filter(p => !p.comingSoon).map((post) => (
-              <Link to={`/blog/${post.slug}`} className="blog-card" key={post.slug}>
-                <div style={{ position: "relative" }}>
-                  <img className="blog-card-img" src={post.image} alt={post.imageAlt} loading="lazy" />
-                  {/* Episode badge */}
-                  <span style={{
-                    position: "absolute", top: 12, left: 12,
-                    background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)",
-                    color: "#fff", fontSize: "0.65rem", fontWeight: 800,
-                    padding: "4px 10px", borderRadius: 6,
-                    fontFamily: "'SF Mono', Consolas, monospace",
-                    letterSpacing: "0.05em",
-                  }}>EP. {post.episode}</span>
-                </div>
-                <div className="blog-card-body">
-                  <span className="blog-card-tag">{post.tag}</span>
-                  <h3>{post.title}</h3>
-                  <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", marginTop: "8px", lineHeight: 1.5 }}>{post.excerpt}</p>
-                  <span className="blog-card-meta">{post.date} &bull; {post.readTime}</span>
-                </div>
-              </Link>
+            {seriesPosts.map((post) => (
+              <BlogCard key={post.slug} post={post} showEpisode />
             ))}
           </div>
         </div>
@@ -131,24 +158,16 @@ export default function BlogPage() {
       {guidePosts.length > 0 && (
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="container">
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-              <h2 style={{ margin: 0 }}>Condition <span className="text-accent">Guides</span></h2>
+            <div className="blog-section-header">
+              <h2>
+                Condition <span className="text-accent">Guides</span>
+              </h2>
+              <p>In-depth guides on specific injuries and conditions — written with clarity and compassion.</p>
             </div>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 600 }}>
-              In-depth guides on specific injuries and conditions — written with clarity and compassion.
-            </p>
 
             <div className="blog-home-grid">
               {guidePosts.map((post) => (
-                <Link to={`/blog/${post.slug}`} className="blog-card" key={post.slug}>
-                  <img className="blog-card-img" src={post.image} alt={post.imageAlt} loading="lazy" />
-                  <div className="blog-card-body">
-                    <span className="blog-card-tag">{post.tag}</span>
-                    <h3>{post.title}</h3>
-                    <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", marginTop: "8px", lineHeight: 1.5 }}>{post.excerpt}</p>
-                    <span className="blog-card-meta">{post.date} &bull; {post.readTime}</span>
-                  </div>
-                </Link>
+                <BlogCard key={post.slug} post={post} />
               ))}
             </div>
           </div>

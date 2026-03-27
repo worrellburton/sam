@@ -727,7 +727,7 @@ function AppointmentGraph() {
     });
   }, [animated, lines]);
 
-  const W = 800, H = 280, PL = 40, PR = 16, PT = 20, PB = 32;
+  const W = 800, H = 220, PL = 36, PR = 12, PT = 12, PB = 24;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
   const allVals = lines.flatMap(l => l.values);
@@ -775,9 +775,9 @@ function AppointmentGraph() {
   });
 
   return (
-    <div className="dz-card" style={{ padding: "24px 28px", overflow: "hidden", minHeight: 380 }}>
+    <div className="dz-card" style={{ padding: "14px 18px", overflow: "hidden" }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
             {GRAPH_MODES.map(m => (
@@ -794,7 +794,7 @@ function AppointmentGraph() {
       </div>
 
       {/* Legend */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", marginBottom: 14 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", marginBottom: 6 }}>
         {lines.map(line => (
           <button
             key={line.key}

@@ -421,6 +421,7 @@ function DashGoogleReviews() {
               <div>
                 <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "var(--dz-text-primary, #f1f5f9)" }}>{review.author_name}</span>
                 <span style={{ fontSize: "0.55rem", color: "var(--dz-text-dim, #475569)", marginLeft: 6 }}>{new Date(review.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                <span style={{ fontSize: "0.5rem", color: "var(--dz-text-dim, #475569)", marginLeft: 4, opacity: 0.7 }}>· {review.location}</span>
               </div>
               <StarRating rating={review.rating} size={7} />
             </div>
@@ -614,14 +615,12 @@ function DashNextPatient() {
 const APPT_TYPE_COLORS: Record<string, string> = {
   "Surgery": "#ef4444",
   "Initial Consultation": "#6366f1",
-  "Other": "#a78bfa",
 };
 
 function categorizeVisitType(type: string): string {
   const t = type.toLowerCase();
   if (t.includes("surgery")) return "Surgery";
-  if (t.includes("initial") || t.includes("new patient") || t.includes("consultation")) return "Initial Consultation";
-  return "Other";
+  return "Initial Consultation";
 }
 
 type TimeRange = "3mo" | "6mo" | "1yr";

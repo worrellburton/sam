@@ -453,24 +453,6 @@ export default function Home() {
             <h2>Investigating Modern <span className="text-accent">Orthopedics</span></h2>
             <p className="section-desc">No fluff. No fads. Deep-dive investigative reports from the surgeon who actually sees the inside of the joints.</p>
           </div>
-          {/* Coming Soon Banner */}
-          {comingSoonPost && (
-            <div className="blog-coming-soon-banner">
-              <div className="blog-coming-soon-inner">
-                <div className="blog-coming-soon-content">
-                  <div className="blog-coming-soon-badges">
-                    <span className="blog-coming-soon-badge">Coming Soon</span>
-                    <span className="blog-coming-soon-ep">EP. {comingSoonPost.episode}</span>
-                  </div>
-                  <h3>{comingSoonPost.title}</h3>
-                  <p>{comingSoonPost.excerpt}</p>
-                  <span className="blog-coming-soon-date">Dropping {comingSoonPost.date}</span>
-                </div>
-                <div className="blog-coming-soon-num">{comingSoonPost.episode}</div>
-              </div>
-            </div>
-          )}
-
           <div className="blog-home-grid">
             {recentPosts.map((post) => (
               <Link to={`/blog/${post.slug}`} className="blog-card" key={post.slug}>
@@ -494,6 +476,21 @@ export default function Home() {
                 </div>
               </Link>
             ))}
+            {comingSoonPost && (
+              <div className="blog-card blog-card-coming-soon">
+                <div style={{ position: "relative" }}>
+                  <img className="blog-card-img" src={comingSoonPost.image} alt={comingSoonPost.imageAlt} loading="lazy" />
+                  <div className="blog-card-coming-overlay">
+                    <span className="blog-card-coming-badge">Coming Soon</span>
+                  </div>
+                </div>
+                <div className="blog-card-body">
+                  <span className="blog-card-tag">{comingSoonPost.tag}</span>
+                  <h3>{comingSoonPost.title}</h3>
+                  <span className="blog-card-meta">{comingSoonPost.date}</span>
+                </div>
+              </div>
+            )}
           </div>
           <div style={{ textAlign: "center", marginTop: "40px" }}>
             <Link to="/blog" className="btn btn-outline">View All Episodes &rarr;</Link>

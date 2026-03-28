@@ -10377,32 +10377,30 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-rcm-col-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 10px;
+  gap: 6px;
+  padding: 10px 8px;
   border-radius: 12px 12px 0 0;
   border: 1px solid rgba(99, 102, 241, 0.1);
   border-bottom: 2px solid var(--col-color, #6366f1);
   background: rgba(15, 23, 42, 0.6);
 }
 .dz-rcm-col-num {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
   flex-shrink: 0;
 }
 .dz-rcm-col-info { min-width: 0; flex: 1; }
 .dz-rcm-col-title {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: #e2e8f0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 .dz-rcm-col-timeline {
   font-size: 0.62rem;
@@ -10572,8 +10570,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   font-weight: 600;
 }
 .dz-rcm-info-btn {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   border-radius: 8px;
   border: 1px solid rgba(99, 102, 241, 0.15);
   background: transparent;

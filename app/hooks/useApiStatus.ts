@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { checkStediApi } from "./useStedi";
+import { checkAthenaApi } from "./useAthena";
 
 export interface ApiStatus {
   name: string;
@@ -83,6 +84,7 @@ async function checkCmsMpfsApi(): Promise<ApiStatus> {
 
 export function useApiStatus(pollInterval = 60000) {
   const [statuses, setStatuses] = useState<ApiStatus[]>([
+    { name: "athenahealth", url: "https://api.platform.athenahealth.com", status: "checking" },
     { name: "ICD-10 API", url: "https://clinicaltables.nlm.nih.gov", status: "checking" },
     { name: "Brandfetch", url: "https://cdn.brandfetch.io", status: "checking" },
     { name: "Stedi", url: "https://healthcare.us.stedi.com", status: "checking" },
@@ -90,7 +92,14 @@ export function useApiStatus(pollInterval = 60000) {
   ]);
 
   const checkAll = useCallback(async () => {
-    const [nlm, brandfetch, stedi, cms] = await Promise.all([
+    const [athena, nlm, brandfetch, stedi, cms] = await Promise.all([
+      checkAthenaApi().then((r): ApiStatus => ({
+        name: "athenahealth",
+        url: "https://api.platform.athenahealth.com",
+        status: r.status === "no_key" ? "offline" : r.status,
+        latency: r.latency,
+        lastChecked: new Date(),
+      })),
       checkNlmApi(),
       checkBrandfetch(),
       checkStediApi().then((r): ApiStatus => ({
@@ -102,7 +111,7 @@ export function useApiStatus(pollInterval = 60000) {
       })),
       checkCmsMpfsApi(),
     ]);
-    setStatuses([nlm, brandfetch, stedi, cms]);
+    setStatuses([athena, nlm, brandfetch, stedi, cms]);
   }, []);
 
   useEffect(() => {

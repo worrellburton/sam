@@ -38,6 +38,9 @@ function extractPosts() {
       else if (plainMatch) text = plainMatch[1];
       if (!text.trim()) continue;
 
+      // Strip TOC section (In This Article) before converting
+      text = text.replace(/<div class="blog-toc">[\s\S]*?<\/div>\s*/g, "");
+
       text = text.replace(/<[^>]+>/g, " ").replace(/&mdash;/g, " — ").replace(/&ndash;/g, " – ")
         .replace(/&[a-z]+;/g, " ").replace(/&#\d+;/g, " ").replace(/\s+/g, " ").trim();
 

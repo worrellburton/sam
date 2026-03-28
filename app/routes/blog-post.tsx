@@ -123,7 +123,7 @@ function BlogAudioPlayer({ post }: { post: { title: string; content: string; con
           <div className="blog-audio-icon"><div className="blog-audio-spinner" /></div>
           <div className="blog-audio-content">
             <div className="blog-audio-label">Loading audio...</div>
-            <div className="blog-audio-sub">Narrated by Mark &middot; Powered by ElevenLabs</div>
+            <div className="blog-audio-sub">Clinical Clarity &middot; Audio Edition</div>
           </div>
         </div>
       </div>
@@ -167,7 +167,7 @@ function BlogAudioPlayer({ post }: { post: { title: string; content: string; con
           </div>
 
           <div className="blog-audio-bottom-row">
-            <div className="blog-audio-sub">Narrated by Mark &middot; ElevenLabs</div>
+            <div className="blog-audio-sub">Clinical Clarity &middot; Audio Edition</div>
             <div className="blog-audio-controls">
               <button className="blog-audio-ctrl" onClick={() => skip(-15)} title="Back 15s">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>

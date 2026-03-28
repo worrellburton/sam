@@ -6284,6 +6284,44 @@ img.insurance-logo:hover {
 .dz-light .dz-theme-toggle { border-color: rgba(0,0,0,0.1); color: #999; }
 .dz-light .dz-theme-toggle:hover { border-color: #2563eb; color: #2563eb; }
 
+/* Fixed bottom-right theme toggle for /book page */
+.dz-book-theme-fixed {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  z-index: 9999;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.dz-book-theme-fixed:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: #6366f1;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.dz-light .dz-book-theme-fixed {
+  background: rgba(255,255,255,0.85);
+  border-color: rgba(0,0,0,0.12);
+  color: #555;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+.dz-light .dz-book-theme-fixed:hover {
+  background: #fff;
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
 /* Light mode overrides */
 .dz-light { background: #f8f9fb !important; color: #1a1a2e !important; }
 .dz-light .dz-nav { background: rgba(255,255,255,0.9); border-bottom-color: #e5e7eb; }

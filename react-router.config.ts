@@ -61,6 +61,7 @@ export default {
     "/doczoc/apis",
     "/doczoc/reports",
     "/doczoc/rcm",
+    "/doczoc/calculator",
     "/doczoc/team",
     "/doczoc/google-reviews",
     "/doczoc/clients",

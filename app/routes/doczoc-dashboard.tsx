@@ -203,6 +203,7 @@ function Sidebar({ collapsed, onToggle, hideThemeToggle }: { collapsed: boolean;
   const billingSublinks = [
     { to: "/doczoc/billing", label: "Claims", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
     { to: "/doczoc/rcm", label: "Pipeline", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> },
+    { to: "/doczoc/calculator", label: "Calculator", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg> },
   ];
 
   const afterBillingLinks: typeof links = [];
@@ -231,7 +232,7 @@ function Sidebar({ collapsed, onToggle, hideThemeToggle }: { collapsed: boolean;
         {!collapsed ? (
           <>
             <button
-              className={`dz-sidebar-link dz-sidebar-parent${billingOpen ? " open" : ""}${path.startsWith("/doczoc/billing") || path.startsWith("/doczoc/rcm") ? " active" : ""}`}
+              className={`dz-sidebar-link dz-sidebar-parent${billingOpen ? " open" : ""}${path.startsWith("/doczoc/billing") || path.startsWith("/doczoc/rcm") || path.startsWith("/doczoc/calculator") ? " active" : ""}`}
               onClick={() => setBillingOpen(!billingOpen)}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>

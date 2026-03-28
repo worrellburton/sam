@@ -31,6 +31,7 @@ export default [
   route("doczoc/apis", "routes/doczoc-apis.tsx"),
   route("doczoc/reports", "routes/doczoc-reports.tsx"),
   route("doczoc/rcm", "routes/doczoc-rcm.tsx"),
+  route("doczoc/calculator", "routes/doczoc-calculator.tsx"),
   route("doczoc/team", "routes/doczoc-team.tsx"),
   route("doczoc/google-reviews", "routes/doczoc-reviews.tsx"),
   route("doczoc/team/:id", "routes/doczoc-team-member.tsx"),

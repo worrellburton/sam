@@ -415,7 +415,7 @@ export default function AppointmentsPage() {
                         return (
                           <tr key={`${a.patient.id}-${a.date}-${i}`} style={{ opacity: a.isPast ? 0.7 : 1 }}>
                             <td>
-                              <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem" }}>
+                              <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-text-primary, #f1f5f9)", textDecoration: "none", fontSize: "0.82rem" }}>
                                 <div style={{ width: 28, height: 28, borderRadius: "50%", background: `${["#6366f1","#22c55e","#f59e0b","#ef4444","#8b5cf6","#06b6d4","#ec4899","#14b8a6"][a.patient.name.charCodeAt(0) % 8]}18`, color: ["#6366f1","#22c55e","#f59e0b","#ef4444","#8b5cf6","#06b6d4","#ec4899","#14b8a6"][a.patient.name.charCodeAt(0) % 8], display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
                                   {a.patient.name.split(" ").map(n => n[0]).join("")}
                                 </div>
@@ -531,7 +531,7 @@ export default function AppointmentsPage() {
                       return (
                         <tr key={`${a.patient.id}-${a.date}-${i}`} style={{ ...getRowStyle(`${a.patient.id}-${i}`), opacity: a.isPast ? 0.7 : 1 }} onMouseEnter={() => onCellEnter(`${a.patient.id}-${i}`, 0)} onMouseLeave={onCellLeave}>
                           <td className="dz-col-patient">
-                            <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem", overflow: "hidden" }}>
+                            <Link to={`/doczoc/patients/${a.patient.id}`} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-text-primary, #f1f5f9)", textDecoration: "none", fontSize: "0.82rem", overflow: "hidden" }}>
                               <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
                                 {a.patient.name.split(" ").map(n => n[0]).join("")}
                               </div>

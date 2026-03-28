@@ -133,11 +133,11 @@ const patientReviews = [
 
 
 const timeline = [
-  { label: "Undergraduate", title: "Bachelor of Science, Biology", place: "The Ohio State University", detail: "Graduated magna cum laude, Psychology minor" },
-  { label: "Medical School", title: "Doctor of Medicine (M.D.)", place: "The Ohio State University College of Medicine", detail: "Graduated cum laude" },
-  { label: "Residency", title: "Orthopedic Surgery Residency", place: "Cleveland Clinic Akron General Hospital" },
-  { label: "Fellowship", title: "Sports Medicine Fellowship", place: "Lenox Hill Hospital, New York City", detail: "Advanced training in minimally invasive and arthroscopic techniques. Care of NY Jets and NY Islanders athletes." },
-  { label: "International Fellowship", title: "Joint Preservation Traveling Fellowship", place: "Switzerland, Netherlands & Italy", detail: "Specialized training in cartilage repair and transplant techniques at leading European clinics." },
+  { year: "2007", label: "Undergraduate", title: "B.S. Biology", place: "The Ohio State University", detail: "Magna cum laude, Psychology minor" },
+  { year: "2011", label: "Medical School", title: "Doctor of Medicine", place: "Ohio State College of Medicine", detail: "Graduated cum laude" },
+  { year: "2016", label: "Residency", title: "Orthopedic Surgery", place: "Cleveland Clinic Akron General", detail: "High-volume trauma in the Cleveland Clinic system" },
+  { year: "2017", label: "Fellowship", title: "Sports Medicine", place: "Lenox Hill Hospital, NYC", detail: "NY Jets & NY Islanders team physician" },
+  { year: "2018", label: "International", title: "Joint Preservation", place: "Switzerland, Netherlands & Italy", detail: "European cartilage repair & transplant techniques" },
 ];
 
 const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
@@ -363,15 +363,30 @@ export default function Home() {
             <p className="section-label">Training &amp; Credentials</p>
             <h2>World-Class <span className="text-accent">Education &amp; Training</span></h2>
           </div>
-          <div className="credentials-timeline">
+          <div className="cred-track">
             {timeline.map((item, i) => (
-              <div className="timeline-item" key={i}>
-                <div className="timeline-marker"></div>
-                <div className="timeline-content">
-                  <span className="timeline-label">{item.label}</span>
+              <div className="cred-step" key={i}>
+                <div className="cred-icon-wrap">
+                  <svg className="cred-icon-ring" viewBox="0 0 60 60">
+                    <circle cx="30" cy="30" r="27" fill="none" stroke="var(--border)" strokeWidth="2" />
+                    <circle className="cred-ring-fill" cx="30" cy="30" r="27" fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="170" strokeDashoffset="170" />
+                  </svg>
+                  <span className="cred-step-num">{i + 1}</span>
+                </div>
+                {i < timeline.length - 1 && (
+                  <div className="cred-connector">
+                    <svg viewBox="0 0 80 12" preserveAspectRatio="none" className="cred-connector-svg">
+                      <line x1="0" y1="6" x2="70" y2="6" stroke="var(--primary)" strokeWidth="2" strokeDasharray="70" strokeDashoffset="70" />
+                      <polygon points="68,2 76,6 68,10" fill="var(--primary)" opacity="0" className="cred-arrow" />
+                    </svg>
+                  </div>
+                )}
+                <div className="cred-card">
+                  <span className="cred-year">{item.year}</span>
+                  <span className="cred-label">{item.label}</span>
                   <h3>{item.title}</h3>
-                  <p>{item.place}</p>
-                  {item.detail && <p className="timeline-detail">{item.detail}</p>}
+                  <p className="cred-place">{item.place}</p>
+                  {item.detail && <p className="cred-detail">{item.detail}</p>}
                 </div>
               </div>
             ))}

@@ -634,7 +634,7 @@ const TIME_RANGES: { key: TimeRange; label: string }[] = [
 
 const NVR_COLORS: Record<string, string> = { "New Patients": "#8b5cf6", "Returning": "#22c55e" };
 
-function AppointmentGraph() {
+function AppointmentGraph({ ready = true }: { ready?: boolean }) {
   const [animated, setAnimated] = useState(false);
   const [hoveredCat, setHoveredCat] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; cat: string; month: string; value: number } | null>(null);
@@ -658,12 +658,13 @@ function AppointmentGraph() {
     return m;
   }, [lines]);
 
-  // Animate on mount and when range/mode changes
+  // Animate on mount and when range/mode changes — wait for splash to finish
   useEffect(() => {
+    if (!ready) { setAnimated(false); return; }
     setAnimated(false);
     const timer = setTimeout(() => setAnimated(true), 80);
     return () => clearTimeout(timer);
-  }, [range, mode]);
+  }, [range, mode, ready]);
 
   // Measure path lengths for left-to-right animation
   useEffect(() => {
@@ -900,7 +901,7 @@ export default function DashboardPage() {
 
         <div className="dz-dash-graph-row">
           <div style={{ flex: 1, minWidth: 0 }}>
-            <AppointmentGraph />
+            <AppointmentGraph ready={!showSplash} />
           </div>
           <div className="dz-dash-reviews-col">
             <DashGoogleReviews />

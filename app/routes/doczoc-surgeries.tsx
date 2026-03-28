@@ -849,7 +849,7 @@ function DraggableSurgeryTable({ surgeries, onView, searchNode, focusMode: exter
       }
       case "patient": return (
         <td key={key} className="dz-col-patient" {...h} style={{ ...cs, transition: "opacity 0.2s ease" }}>
-          <Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-accent-text)", textDecoration: "none", fontSize: "0.82rem", overflow: "hidden" }}>
+          <Link to={`/doczoc/patients/${s.patient.id}`} onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--dz-text-primary, #f1f5f9)", textDecoration: "none", fontSize: "0.82rem", overflow: "hidden" }}>
             <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
               {s.patient.name.split(" ").map(n => n[0]).join("")}
             </div>

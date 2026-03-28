@@ -130,14 +130,19 @@ function TimelineRangePicker({
   onChange: (start: number, end: number) => void;
 }) {
   const now = new Date();
-  // 2-year span: 1 year back + 1 year forward
   const timeline = useMemo(() => buildTimeline(now.getFullYear() - 1, now.getFullYear() + 1), []);
   const containerRef = useRef<HTMLDivElement>(null);
+  const selectionRef = useRef<HTMLDivElement>(null);
   const dragging = useRef<"start" | "end" | "range" | null>(null);
   const dragOffset = useRef(0);
+  const liveStart = useRef(startIdx);
+  const liveEnd = useRef(endIdx);
   const rafRef = useRef<number>(0);
-  const pendingUpdate = useRef<{ s: number; e: number } | null>(null);
   const CELL_W = 52;
+
+  // Keep refs in sync with props
+  useEffect(() => { liveStart.current = startIdx; }, [startIdx]);
+  useEffect(() => { liveEnd.current = endIdx; }, [endIdx]);
 
   // Scroll to center the selection on mount
   useEffect(() => {
@@ -147,7 +152,6 @@ function TimelineRangePicker({
     }
   }, []);
 
-  // Sub-pixel index from pointer position for smooth dragging
   const getPreciseIdx = useCallback((clientX: number) => {
     if (!containerRef.current) return 0;
     const rect = containerRef.current.getBoundingClientRect();
@@ -158,69 +162,85 @@ function TimelineRangePicker({
 
   const snapIdx = (v: number) => Math.max(0, Math.min(timeline.length - 1, Math.round(v)));
 
-  // Batched RAF update for 120fps smoothness
-  const flushUpdate = useCallback(() => {
-    if (pendingUpdate.current) {
-      onChange(pendingUpdate.current.s, pendingUpdate.current.e);
-      pendingUpdate.current = null;
+  // Direct DOM update for 120fps — bypasses React render cycle during drag
+  const updateSelectionDOM = useCallback((s: number, e: number) => {
+    const sel = selectionRef.current;
+    if (!sel) return;
+    sel.style.left = `${s * CELL_W}px`;
+    sel.style.width = `${(e - s + 1) * CELL_W}px`;
+    // Update in-range highlighting on month ticks
+    const track = sel.parentElement;
+    if (track) {
+      const months = track.querySelectorAll<HTMLElement>('.dz-timeline-month');
+      months.forEach((el, i) => {
+        if (i >= s && i <= e) el.classList.add('in-range');
+        else el.classList.remove('in-range');
+      });
     }
-    rafRef.current = 0;
-  }, [onChange]);
-
-  const scheduleUpdate = useCallback((s: number, e: number) => {
-    pendingUpdate.current = { s, e };
-    if (!rafRef.current) {
-      rafRef.current = requestAnimationFrame(flushUpdate);
+    // Update label text
+    const label = sel.querySelector<HTMLElement>('.dz-timeline-range-label');
+    if (label) {
+      const sm = timeline[s], em = timeline[e];
+      if (sm && em) {
+        label.textContent = `${MONTH_ABBRS[sm.month]} ${sm.year === em.year ? '' : sm.year + ' '}${sm.month === em.month && sm.year === em.year ? String(sm.year) : `- ${MONTH_ABBRS[em.month]} ${em.year}`}`;
+      }
     }
-  }, [flushUpdate]);
+    liveStart.current = s;
+    liveEnd.current = e;
+  }, [timeline]);
 
   useEffect(() => () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); }, []);
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     const idx = getPreciseIdx(e.clientX);
-    const snapped = snapIdx(idx);
-    // Wider hit zone for handles (within 1.2 cells)
-    if (Math.abs(idx - startIdx) <= 1.2) {
+    const s = liveStart.current, en = liveEnd.current;
+    if (Math.abs(idx - s) <= 1.2) {
       dragging.current = "start";
-    } else if (Math.abs(idx - endIdx) <= 1.2) {
+    } else if (Math.abs(idx - en) <= 1.2) {
       dragging.current = "end";
-    } else if (snapped > startIdx && snapped < endIdx) {
+    } else if (snapIdx(idx) > s && snapIdx(idx) < en) {
       dragging.current = "range";
-      dragOffset.current = idx - startIdx;
+      dragOffset.current = idx - s;
     } else {
-      const rangeSize = endIdx - startIdx;
+      const rangeSize = en - s;
       const newStart = Math.max(0, Math.min(timeline.length - 1 - rangeSize, snapIdx(idx - rangeSize / 2)));
-      onChange(newStart, newStart + rangeSize);
+      updateSelectionDOM(newStart, newStart + rangeSize);
       dragging.current = "range";
       dragOffset.current = idx - newStart;
     }
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-  }, [startIdx, endIdx, getPreciseIdx, onChange, timeline.length]);
+  }, [getPreciseIdx, updateSelectionDOM, timeline.length]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     if (!dragging.current) return;
-    const idx = getPreciseIdx(e.clientX);
-    if (dragging.current === "start") {
-      const s = snapIdx(idx);
-      if (s < endIdx) scheduleUpdate(s, endIdx);
-    } else if (dragging.current === "end") {
-      const eIdx = snapIdx(idx);
-      if (eIdx > startIdx) scheduleUpdate(startIdx, eIdx);
-    } else if (dragging.current === "range") {
-      const rangeSize = endIdx - startIdx;
-      const newStart = snapIdx(Math.max(0, idx - dragOffset.current));
-      const newEnd = Math.min(timeline.length - 1, newStart + rangeSize);
-      const adjustedStart = newEnd - rangeSize;
-      scheduleUpdate(adjustedStart, newEnd);
-    }
-  }, [startIdx, endIdx, getPreciseIdx, scheduleUpdate, timeline.length]);
+    // Cancel any pending frame and schedule a new one for this pointer event
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    const clientX = e.clientX;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = 0;
+      const idx = getPreciseIdx(clientX);
+      const s = liveStart.current, en = liveEnd.current;
+      if (dragging.current === "start") {
+        const ns = snapIdx(idx);
+        if (ns < en) updateSelectionDOM(ns, en);
+      } else if (dragging.current === "end") {
+        const ne = snapIdx(idx);
+        if (ne > s) updateSelectionDOM(s, ne);
+      } else if (dragging.current === "range") {
+        const rangeSize = en - s;
+        const newStart = snapIdx(Math.max(0, idx - dragOffset.current));
+        const newEnd = Math.min(timeline.length - 1, newStart + rangeSize);
+        updateSelectionDOM(newEnd - rangeSize, newEnd);
+      }
+    });
+  }, [getPreciseIdx, updateSelectionDOM, timeline.length]);
 
   const handlePointerUp = useCallback(() => {
-    dragging.current = null;
-    // Flush any pending update
-    if (pendingUpdate.current) {
-      onChange(pendingUpdate.current.s, pendingUpdate.current.e);
-      pendingUpdate.current = null;
+    if (dragging.current) {
+      dragging.current = null;
+      if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = 0; }
+      // Commit final position to React state
+      onChange(liveStart.current, liveEnd.current);
     }
   }, [onChange]);
 
@@ -277,6 +297,7 @@ function TimelineRangePicker({
           ))}
           {/* Selection range overlay */}
           <div
+            ref={selectionRef}
             className="dz-timeline-selection"
             style={{
               left: startIdx * CELL_W,

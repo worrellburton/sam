@@ -81,8 +81,8 @@
 /* Fixed theme toggle — bottom right */
 .theme-toggle-fixed {
   position: fixed;
-  bottom: 80px;
-  right: 24px;
+  bottom: 24px;
+  left: 24px;
   z-index: 9999;
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(12px);
@@ -96,8 +96,12 @@
   justify-content: center;
   cursor: pointer;
   color: #fff;
-  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, bottom 0.4s cubic-bezier(0.16,1,0.3,1);
   box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+/* Push up when sticky bar is visible */
+.sticky-bottom-bar.visible ~ .theme-toggle-fixed {
+  bottom: 80px;
 }
 .theme-toggle-fixed:hover {
   background: rgba(255,255,255,0.2);

@@ -638,7 +638,7 @@ function AppointmentGraph() {
   const [animated, setAnimated] = useState(false);
   const [hoveredCat, setHoveredCat] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; cat: string; month: string; value: number } | null>(null);
-  const [range, setRange] = useState<TimeRange>("1yr");
+  const [range, setRange] = useState<TimeRange>("6mo");
   const [mode, setMode] = useState<GraphMode>("appt-types");
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRefs = useRef<Map<string, SVGPathElement>>(new Map());

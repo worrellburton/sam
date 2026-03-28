@@ -199,6 +199,7 @@ function starsHTML(rating: number) {
 
 export default function Home() {
   const recentPosts = blogPosts.slice(0, 3);
+  const comingSoonPost = blogPosts.find(p => p.comingSoon);
   const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
 
 
@@ -452,6 +453,24 @@ export default function Home() {
             <h2>Investigating Modern <span className="text-accent">Orthopedics</span></h2>
             <p className="section-desc">No fluff. No fads. Deep-dive investigative reports from the surgeon who actually sees the inside of the joints.</p>
           </div>
+          {/* Coming Soon Banner */}
+          {comingSoonPost && (
+            <div className="blog-coming-soon-banner">
+              <div className="blog-coming-soon-inner">
+                <div className="blog-coming-soon-content">
+                  <div className="blog-coming-soon-badges">
+                    <span className="blog-coming-soon-badge">Coming Soon</span>
+                    <span className="blog-coming-soon-ep">EP. {comingSoonPost.episode}</span>
+                  </div>
+                  <h3>{comingSoonPost.title}</h3>
+                  <p>{comingSoonPost.excerpt}</p>
+                  <span className="blog-coming-soon-date">Dropping {comingSoonPost.date}</span>
+                </div>
+                <div className="blog-coming-soon-num">{comingSoonPost.episode}</div>
+              </div>
+            </div>
+          )}
+
           <div className="blog-home-grid">
             {recentPosts.map((post) => (
               <Link to={`/blog/${post.slug}`} className="blog-card" key={post.slug}>

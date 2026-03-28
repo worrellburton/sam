@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Extracts blog post text for TTS generation, outputs JSON array
+// Extract blog texts with intro lines for TTS, outputs JSON array
 import { readFileSync, existsSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -28,6 +28,9 @@ function extractPosts() {
       const titleMatch = block.match(/title:\s*"([^"]+)"/);
       const title = titleMatch ? titleMatch[1] : slug;
 
+      const episodeMatch = block.match(/episode:\s*(\d+)/);
+      const episode = episodeMatch ? parseInt(episodeMatch[1]) : null;
+
       let text = "";
       const htmlMatch = block.match(/contentHtml:\s*`([\s\S]*?)`\s*,/);
       const plainMatch = block.match(/content:\s*`([\s\S]*?)`\s*,/);
@@ -38,9 +41,17 @@ function extractPosts() {
       text = text.replace(/<[^>]+>/g, " ").replace(/&mdash;/g, " — ").replace(/&ndash;/g, " – ")
         .replace(/&[a-z]+;/g, " ").replace(/&#\d+;/g, " ").replace(/\s+/g, " ").trim();
 
-      // Prepend title, truncate to 5000
-      const full = `${title}. ${text}`;
-      posts.push({ slug, text: full.length > 5000 ? full.slice(0, 5000) + "..." : full });
+      // Build intro + content
+      let intro;
+      if (episode) {
+        intro = `You're listening to Clinical Clarity by Dr. Sam Elguizaoui, M.D. Episode ${episode}: ${title}.`;
+      } else {
+        intro = `You're listening to Clinical Clarity by Dr. Sam Elguizaoui, M.D. ${title}.`;
+      }
+
+      const full = `${intro} ... ${text}`;
+      // Truncate to 5000 chars
+      posts.push({ slug, title, episode, text: full.length > 5000 ? full.slice(0, 5000) + "..." : full });
     }
   }
   return posts;

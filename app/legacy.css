@@ -8377,8 +8377,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 .dz-table th:hover { background: rgba(99, 102, 241, 0.08); }
 .dz-table th .dz-sort-icon { margin-left: 4px; font-size: 0.6rem; opacity: 0.5; }
 .dz-table td {
-  padding: 6px 10px;
-  font-size: 0.7rem;
+  padding: 10px 14px;
+  font-size: 0.75rem;
   color: #94a3b8;
   border-bottom: 1px solid rgba(148, 163, 184, 0.06);
   border-right: 1px solid rgba(148, 163, 184, 0.03);

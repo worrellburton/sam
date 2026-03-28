@@ -551,7 +551,7 @@ function ProcedureDetail({ procedureName, allSurgeries, onBack }: { procedureNam
               const sc = s.status === "completed" ? "#22c55e" : s.status === "upcoming" ? "#f59e0b" : "#818cf8";
               return (
                 <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(99,102,241,0.04)" }}>
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(99,102,241,0.12)", color: "var(--dz-accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: `${["#6366f1","#22c55e","#f59e0b","#ef4444","#8b5cf6","#06b6d4","#ec4899","#14b8a6"][s.patient.name.charCodeAt(0) % 8]}18`, color: ["#6366f1","#22c55e","#f59e0b","#ef4444","#8b5cf6","#06b6d4","#ec4899","#14b8a6"][s.patient.name.charCodeAt(0) % 8], display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 700, flexShrink: 0 }}>
                     {s.patient.name.split(" ").map(n => n[0]).join("")}
                   </div>
                   <div style={{ flex: 1 }}>

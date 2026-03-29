@@ -3,10 +3,37 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import ClientLayout from "@/components/ClientLayout";
 import "./globals.css";
 
+const SITE_URL = "https://samelguizaoui.vercel.app";
+
 export const metadata: Metadata = {
   title: "Sameh Elguizaoui, M.D. | Orthopedic Surgeon & Sports Medicine | NYC",
   description:
     "Board-certified orthopedic surgeon Dr. Sameh Elguizaoui specializes in sports medicine, knee & shoulder surgery, and cartilage repair in NYC.",
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
+    description:
+      "Board-certified orthopedic surgeon specializing in sports medicine, knee & shoulder surgery, and cartilage repair in Manhattan, Brooklyn & Scarsdale.",
+    url: SITE_URL,
+    siteName: "Dr. Sameh Elguizaoui, M.D.",
+    type: "website",
+    images: [
+      {
+        url: "/header.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Dr. Sameh Elguizaoui - Orthopedic Surgeon NYC",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
+    description:
+      "Board-certified orthopedic surgeon specializing in sports medicine, knee & shoulder surgery, and cartilage repair in NYC.",
+    images: ["/header.jpg"],
+  },
 };
 
 const structuredData = {
@@ -15,7 +42,7 @@ const structuredData = {
   name: "Dr. Sameh Elguizaoui, M.D.",
   description:
     "Board-certified orthopedic surgeon specializing in sports medicine, knee & shoulder surgery, cartilage repair, and joint preservation in NYC.",
-  url: "https://sam-elguizaoui.vercel.app",
+  url: SITE_URL,
   telephone: "+1-212-828-3838",
   image:
     "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200&h=630&fit=crop&q=80",

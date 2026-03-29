@@ -2968,7 +2968,7 @@
         const criticals = allFindings.filter(f => f.type === 'critical');
         const warns = allFindings.filter(f => f.type === 'warning');
 
-        let prompt = `Fix all SEO issues on my website. The site is a static HTML site for a medical/dental practice. Here are the issues found by an SEO audit:\n\n`;
+        let prompt = `Fix all SEO issues on my website. The site is a Next.js 16 App Router site for an orthopedic surgery practice. Here are the issues found by an SEO audit:\n\n`;
 
         if (criticals.length > 0) {
           prompt += `CRITICAL ISSUES (fix these first):\n`;

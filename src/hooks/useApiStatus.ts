@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect, useCallback } from "react";
 import { checkStediApi } from "./useStedi";
 import { checkAthenaApi } from "./useAthena";

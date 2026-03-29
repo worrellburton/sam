@@ -11,7 +11,7 @@ const API_DETAILS: Record<string, { description: string; docs: string; usage: st
     description: "athenahealth EHR API (athenaOne) — full practice management integration for patients, appointments, providers, insurance eligibility, and clinical data via OAuth 2.0.",
     docs: "https://docs.athenahealth.com/api",
     usage: "Patient records, appointment scheduling, insurance eligibility, provider & department lookup",
-    auth: "OAuth 2.0 Client Credentials (env: VITE_ATHENA_CLIENT_ID, VITE_ATHENA_CLIENT_SECRET)",
+    auth: "OAuth 2.0 Client Credentials (env: NEXT_PUBLIC_ATHENA_CLIENT_ID, NEXT_PUBLIC_ATHENA_CLIENT_SECRET)",
   },
   "ICD-10 API": {
     description: "NLM Clinical Tables API — search ICD-10-CM diagnosis codes in real-time for claim coding and patient charting.",
@@ -29,7 +29,7 @@ const API_DETAILS: Record<string, { description: string; docs: string; usage: st
     description: "Stedi Healthcare API — submit HIPAA-compliant 837P professional claims electronically to insurance clearinghouses.",
     docs: "https://www.stedi.com/docs",
     usage: "Electronic claim submission from Billing & Claims page",
-    auth: "API key (env: VITE_STEDI_API_KEY)",
+    auth: "API key (env: NEXT_PUBLIC_STEDI_API_KEY)",
   },
   "CMS MPFS": {
     description: "CMS Medicare Physician Fee Schedule (MPFS) API — look up Medicare reimbursement rates by CPT code, locality, and modifier.",

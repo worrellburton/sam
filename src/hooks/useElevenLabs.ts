@@ -1,3 +1,4 @@
+"use client";
 import { useState, useCallback, useRef } from "react";
 
 const API_BASE = "https://api.elevenlabs.io/v1";
@@ -5,11 +6,7 @@ const VOICE_ID = "UgBBYS2sOqTuMpoF3BR0"; // Mark - Natural Conversations
 const MODEL_ID = "eleven_multilingual_v2";
 
 function getApiKey(): string {
-  return (
-    (typeof import.meta !== "undefined" &&
-      (import.meta as any).env?.VITE_ELEVENLABS_API_KEY) ||
-    ""
-  );
+  return process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY || "";
 }
 
 export interface AudioState {

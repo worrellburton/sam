@@ -1,7 +1,8 @@
+"use client";
 import { useState, useCallback, useRef } from "react";
 
 // ── Config ───────────────────────────────────────────────────────────
-const ATHENA_ENV = (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_ATHENA_ENV) || "preview";
+const ATHENA_ENV = process.env.NEXT_PUBLIC_ATHENA_ENV || "preview";
 
 const BASE_URLS: Record<string, string> = {
   production: "https://api.platform.athenahealth.com",
@@ -12,13 +13,13 @@ const BASE_URL = BASE_URLS[ATHENA_ENV] || BASE_URLS.preview;
 const TOKEN_URL = `${BASE_URL}/oauth2/v1/token`;
 
 function getClientId(): string {
-  return ((typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_ATHENA_CLIENT_ID) || "");
+  return process.env.NEXT_PUBLIC_ATHENA_CLIENT_ID || "";
 }
 function getClientSecret(): string {
-  return ((typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_ATHENA_CLIENT_SECRET) || "");
+  return process.env.NEXT_PUBLIC_ATHENA_CLIENT_SECRET || "";
 }
 function getPracticeId(): string {
-  return ((typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_ATHENA_PRACTICE_ID) || "");
+  return process.env.NEXT_PUBLIC_ATHENA_PRACTICE_ID || "";
 }
 
 // ── Types ────────────────────────────────────────────────────────────

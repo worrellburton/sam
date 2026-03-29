@@ -1,14 +1,11 @@
+"use client";
 import { useState, useCallback } from "react";
 
 const STEDI_BASE_URL =
   "https://healthcare.us.stedi.com/2024-04-01/change/medicalnetwork/professionalclaims/v3";
 
 function getApiKey(): string {
-  return (
-    (typeof import.meta !== "undefined" &&
-      (import.meta as any).env?.VITE_STEDI_API_KEY) ||
-    ""
-  );
+  return process.env.NEXT_PUBLIC_STEDI_API_KEY || "";
 }
 
 // ── Types ───────────────────────────────────────────────────────────
@@ -336,7 +333,7 @@ export function useStediClaims() {
           response: {
             success: false,
             message:
-              "No Stedi API key configured. Set VITE_STEDI_API_KEY in .env",
+              "No Stedi API key configured. Set NEXT_PUBLIC_STEDI_API_KEY in .env",
           },
         };
         setClaims((prev) =>

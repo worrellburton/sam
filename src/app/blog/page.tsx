@@ -109,8 +109,40 @@ export default function BlogPage() {
 
   const guidePosts = allBlogPosts.filter((p) => !p.episode);
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Where can I find reliable information about orthopedic injuries and treatments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui's Clinical Clarity blog provides evidence-based, investigative reports on orthopedic topics written by a board-certified orthopedic surgeon. Each article offers deep-dive analysis of modern treatments, injury prevention, and surgical techniques without marketing fluff or unproven fads."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When should I see an orthopedic surgeon for joint pain?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You should see an orthopedic surgeon if you experience persistent joint pain lasting more than a few weeks, swelling that does not improve with rest and ice, mechanical symptoms like locking or catching in a joint, instability or giving way, or pain that limits your daily activities or athletic performance. Early evaluation can prevent further damage and expand treatment options."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the most common sports injuries treated by orthopedic surgeons?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most common sports injuries include ACL and meniscus tears in the knee, rotator cuff and labral tears in the shoulder, ankle sprains and fractures, and tennis or golfer's elbow. Dr. Elguizaoui specializes in minimally invasive arthroscopic treatment of these injuries, often allowing athletes to return to sport faster with less scarring."
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="blog-hero">
         <div className="container">
           <span className="blog-hero-label">Investigative Medical Series</span>

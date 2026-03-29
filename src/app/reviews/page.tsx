@@ -91,8 +91,40 @@ export default function ReviewsPage() {
     fetchReviews();
   }, []);
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What do patients say about Dr. Elguizaoui?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Patients consistently praise Dr. Elguizaoui for his thorough explanations, empathetic bedside manner, and excellent surgical outcomes. With a 4.78 out of 5 rating on Zocdoc from over 1,400 reviews and a 5.0 on Healthgrades, patients frequently highlight that he listens carefully and takes a conservative, patient-first approach to treatment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where can I find reviews for Dr. Elguizaoui?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can find verified patient reviews for Dr. Elguizaoui on Zocdoc (1,400+ reviews), Google (150+ reviews), Healthgrades (50+ reviews), and Vitals (200+ reviews). He is also recognized in U.S. News Doctor Rankings. Links to all platforms are available on our reviews page."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is Dr. Elguizaoui rated compared to other NYC orthopedic surgeons?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui is consistently rated among the top orthopedic surgeons in New York City. He holds a 4.8-star overall rating across major review platforms, has received the Patient Choice Award, and 91% of patients report waiting less than 30 minutes at his offices."
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&h=600&fit=crop&q=80')" }}>
         <div className="container">
           <p className="hero-label">Patient Feedback</p>

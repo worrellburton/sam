@@ -562,8 +562,48 @@ export default function BookPage() {
 
   const tabs = ['Highlights', 'About', 'Insurances', 'Locations', 'Reviews', 'FAQs'];
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I schedule an appointment with Dr. Elguizaoui?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can book an appointment online through our scheduling page, call our office at (917) 905-9370, or use platforms like Zocdoc. We offer appointments at our Upper East Side, Greenwich Village, and Brooklyn Heights locations Monday through Friday."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What should I expect at my first visit with Dr. Elguizaoui?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your first visit includes a comprehensive evaluation with a physical examination, review of any imaging or prior medical records, a clear diagnosis, and a personalized treatment plan. Dr. Elguizaoui takes time to explain your condition, answer all questions, and discuss both surgical and non-surgical options. Most first visits last 20 to 30 minutes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Dr. Elguizaoui offer same-week appointments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, same-week and often next-day appointments are available depending on the location and schedule. We understand that orthopedic injuries require timely evaluation, so we make every effort to see patients as quickly as possible."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Dr. Elguizaoui offer telehealth or virtual consultations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Dr. Elguizaoui offers telehealth consultations for select appointment types including initial evaluations, second opinions, and post-operative follow-ups. Virtual visits are a convenient option for patients who cannot easily travel to one of our NYC office locations."
+        }
+      }
+    ]
+  };
+
   return (
     <div className={`dz${dzTheme === 'light' ? ' dz-light' : ''}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <canvas ref={canvasRef} className="dz-webgl-bg" />
 
       {/* Top Nav */}

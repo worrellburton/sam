@@ -213,8 +213,48 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [allReviews.length, totalReviewPages]);
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I choose the right orthopedic surgeon in NYC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Look for a board-certified orthopedic surgeon with fellowship training in your specific area of concern. Dr. Sameh Elguizaoui, M.D. is board-certified by the American Board of Orthopaedic Surgery, fellowship-trained in sports medicine at Lenox Hill Hospital, and has additional international training in joint preservation across Switzerland, the Netherlands, and Italy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What conditions does Dr. Elguizaoui treat?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui treats a wide range of orthopedic conditions including ACL tears, meniscus injuries, rotator cuff tears, shoulder instability, cartilage damage, arthritis, sports injuries, and fractures. He specializes in joint preservation, arthroscopic surgery, and regenerative medicine including PRP therapy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Dr. Elguizaoui accept insurance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Dr. Elguizaoui accepts most major insurance plans. His office staff can verify your coverage and benefits before your appointment. Contact the office at (917) 905-9370 for specific insurance inquiries."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where are Dr. Elguizaoui's office locations in NYC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui has three convenient office locations across New York City: Upper East Side in Manhattan, Greenwich Village in Manhattan, and Brooklyn Heights in Brooklyn. All locations offer the same comprehensive orthopedic services."
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
       <header className="hero" id="hero">
         <img className="hero-bg-img loaded" src="/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" />

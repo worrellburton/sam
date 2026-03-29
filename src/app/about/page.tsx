@@ -139,8 +139,48 @@ const researchPubs = [
 ];
 
 export default function AboutPage() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Where did Dr. Elguizaoui complete his orthopedic training?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui earned his medical degree from The Ohio State University College of Medicine, completed his orthopedic surgery residency at Cleveland Clinic Akron General Hospital, and his sports medicine fellowship at Lenox Hill Hospital (NISMAT) in NYC. He also completed an international joint preservation traveling fellowship across Switzerland, the Netherlands, and Italy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Dr. Elguizaoui board certified?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Dr. Sameh Elguizaoui is board certified by the American Board of Orthopaedic Surgery. He is also fellowship-trained in sports medicine, making him doubly qualified to treat complex musculoskeletal and athletic injuries."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What professional sports teams has Dr. Elguizaoui worked with?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui served as a team physician for the New York Jets (NFL) and the New York Islanders (NHL) during his fellowship at Lenox Hill Hospital. He also provided coverage for collegiate athletics programs including Manhattanville College and Hunter College."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Dr. Elguizaoui's approach to orthopedic care?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui prioritizes a joint preservation and biology-first approach. Rather than defaulting to joint replacement, he uses cutting-edge biologics, cartilage repair techniques, and minimally invasive arthroscopic surgery to extend the natural joint's lifespan, especially for young active patients with high functional demands."
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* ── Hero ───────────────────────────────────────────────── */}
       <section className="abt-hero">
         <div className="abt-hero-bg" />

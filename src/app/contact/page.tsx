@@ -12,8 +12,48 @@ export default function ContactPage() {
     setSubmitted(true);
   }
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Where are Dr. Elguizaoui's orthopedic offices located?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui has three office locations in the New York City area: Upper East Side (Manhattan), Greenwich Village (Manhattan), and Brooklyn Heights (Brooklyn). All offices are easily accessible by public transportation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I schedule an appointment with Dr. Elguizaoui?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can schedule an appointment by calling (917) 905-9370, booking online through our website, or using the contact form on this page. Our team typically responds within one business day. Same-week appointments are often available."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What insurance plans does Dr. Elguizaoui accept?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dr. Elguizaoui accepts most major insurance plans. Our office staff can verify your specific coverage and benefits before your visit. Please call (917) 905-9370 or submit an inquiry through our contact form for insurance verification."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What should new patients expect at their first visit?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "New patients should bring their insurance card, photo ID, any relevant imaging (X-rays or MRI), and a list of current medications. Your first visit will include a thorough evaluation, review of imaging, a diagnosis, and a personalized treatment plan. Dr. Elguizaoui takes time to explain all options and answer questions."
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="service-hero has-bg" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&h=600&fit=crop&q=80')" }}>
         <div className="container">
           <p className="hero-label">Get in Touch</p>

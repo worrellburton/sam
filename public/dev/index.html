@@ -2474,19 +2474,24 @@
 
     // ===== SEO AUDIT ENGINE =====
     (function() {
-      const BASE_URL = 'https://rwb8771.github.io/sammd';
+      const BASE_URL = window.location.origin;
       const PAGES = [
-        { url: 'index.html', label: 'Homepage' },
-        { url: 'blog.html', label: 'Blog' },
-        { url: 'reviews.html', label: 'Reviews' },
-        { url: 'faq.html', label: 'FAQ' },
-        { url: 'sports-medicine.html', label: 'Sports Medicine' },
-        { url: 'arthroscopic-surgery.html', label: 'Arthroscopic Surgery' },
-        { url: 'cartilage-repair.html', label: 'Cartilage Repair' },
-        { url: 'joint-preservation.html', label: 'Joint Preservation' },
-        { url: 'regenerative-medicine.html', label: 'Regenerative Medicine' },
-        { url: 'shoulder-knee-surgery.html', label: 'Shoulder & Knee Surgery' },
-        { url: 'blog-5-signs-orthopedic-surgeon.html', label: 'Blog: 5 Signs' }
+        { url: '/', label: 'Homepage' },
+        { url: '/blog', label: 'Blog' },
+        { url: '/reviews', label: 'Reviews' },
+        { url: '/faq', label: 'FAQ' },
+        { url: '/about', label: 'About' },
+        { url: '/contact', label: 'Contact' },
+        { url: '/book', label: 'Book Appointment' },
+        { url: '/services/sports-medicine', label: 'Sports Medicine' },
+        { url: '/services/arthroscopic-surgery', label: 'Arthroscopic Surgery' },
+        { url: '/services/cartilage-repair', label: 'Cartilage Repair' },
+        { url: '/services/joint-preservation', label: 'Joint Preservation' },
+        { url: '/services/regenerative-medicine', label: 'Regenerative Medicine' },
+        { url: '/services/shoulder-knee-surgery', label: 'Shoulder & Knee Surgery' },
+        { url: '/blog/5-signs-orthopedic-surgeon', label: 'Blog: 5 Signs' },
+        { url: '/blog/acl-tear-recovery', label: 'Blog: ACL Recovery' },
+        { url: '/conditions/acl-tears', label: 'Condition: ACL Tears' }
       ];
 
       const runBtn = document.getElementById('seoRunBtn');
@@ -2692,7 +2697,7 @@
         // 9. Robots meta
         const robots = doc.querySelector('meta[name="robots"]');
         if (robots && robots.content.includes('noindex')) {
-          if (page.url !== 'admin.html') {
+          if (page.url !== '/dev/') {
             allFindings.push({ type: 'critical', title: 'Page set to noindex', page: page.label, detail: `<code>robots: ${robots.content}</code> — This page will NOT appear in search results.`, fix: 'Remove the noindex directive unless you intentionally want this page hidden from search.' });
           }
         } else if (robots) {
@@ -2705,7 +2710,7 @@
           const href = a.getAttribute('href');
           return href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('#');
         });
-        if (internalLinks.length < 3 && page.url !== 'admin.html') {
+        if (internalLinks.length < 3 && page.url !== '/dev/') {
           allFindings.push({ type: 'warning', title: `Low internal linking (${internalLinks.length} links)`, page: page.label, detail: 'Pages with few internal links are harder for search engines to discover and crawl. They also pass less authority.', fix: 'Add relevant internal links to other service pages, blog posts, or key pages.' });
         } else {
           allFindings.push({ type: 'info', title: `${internalLinks.length} internal links found`, page: page.label, detail: 'Good internal linking helps distribute page authority and aids navigation.' });
@@ -2714,7 +2719,7 @@
         // 11. Content length
         const bodyText = doc.body ? doc.body.textContent.replace(/\s+/g, ' ').trim() : '';
         const wordCount = bodyText.split(' ').length;
-        if (wordCount < 300 && page.url !== 'admin.html') {
+        if (wordCount < 300 && page.url !== '/dev/') {
           allFindings.push({ type: 'warning', title: `Thin content (~${wordCount} words)`, page: page.label, detail: 'Pages with less than 300 words may be considered thin content by search engines and rank poorly.', fix: 'Expand the content with relevant, helpful information. Aim for 800+ words on key service pages.' });
         } else {
           allFindings.push({ type: 'info', title: `Content length: ~${wordCount} words`, page: page.label, detail: 'Sufficient content length for search engine indexing.' });
@@ -2827,17 +2832,16 @@
       }
 
       function getPageMeta(url) {
-        if (url === 'index.html') return { group: 'root', priority: '1.0', freq: 'weekly', dot: '', label: 'Homepage' };
-        if (url === 'sports-medicine.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Sports Medicine' };
-        if (url === 'arthroscopic-surgery.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Arthroscopic Surgery' };
-        if (url === 'joint-preservation.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Joint Preservation' };
-        if (url === 'cartilage-repair.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Cartilage Repair' };
-        if (url === 'regenerative-medicine.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Regenerative Medicine' };
-        if (url === 'shoulder-knee-surgery.html') return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: 'Shoulder & Knee Surgery' };
-        if (url === 'reviews.html') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'Patient Reviews' };
-        if (url === 'faq.html') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'FAQ' };
-        if (url === 'blog.html') return { group: 'blog', priority: '0.7', freq: 'weekly', dot: 'blog', label: 'Blog Index' };
-        if (url.startsWith('blog-')) return { group: 'blog', priority: '0.6', freq: 'yearly', dot: 'blog', label: url.replace('blog-','').replace('.html','').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) };
+        if (url === '/') return { group: 'root', priority: '1.0', freq: 'weekly', dot: '', label: 'Homepage' };
+        if (url.startsWith('/services/')) return { group: 'services', priority: '0.8', freq: 'monthly', dot: 'service', label: url.split('/').pop().replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) };
+        if (url === '/reviews') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'Patient Reviews' };
+        if (url === '/faq') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'FAQ' };
+        if (url === '/about') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'About' };
+        if (url === '/contact') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'Contact' };
+        if (url === '/book') return { group: 'resources', priority: '0.7', freq: 'monthly', dot: 'resource', label: 'Book Appointment' };
+        if (url === '/blog') return { group: 'blog', priority: '0.7', freq: 'weekly', dot: 'blog', label: 'Blog Index' };
+        if (url.startsWith('/blog/')) return { group: 'blog', priority: '0.6', freq: 'yearly', dot: 'blog', label: url.split('/').pop().replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) };
+        if (url.startsWith('/conditions/')) return { group: 'resources', priority: '0.6', freq: 'monthly', dot: 'resource', label: url.split('/').pop().replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) };
         return { group: 'resources', priority: '0.5', freq: 'monthly', dot: 'resource', label: url };
       }
 
@@ -2849,7 +2853,7 @@
         const pageData = PAGES.map(page => {
           const meta = getPageMeta(page.url);
           xml += `  <url>\n`;
-          xml += `    <loc>${BASE_URL}/${page.url}</loc>\n`;
+          xml += `    <loc>${BASE_URL}${page.url}</loc>\n`;
           xml += `    <lastmod>${today}</lastmod>\n`;
           xml += `    <changefreq>${meta.freq}</changefreq>\n`;
           xml += `    <priority>${meta.priority}</priority>\n`;
@@ -3018,24 +3022,28 @@
 
     // ===== GEO AUDIT ENGINE =====
     (function() {
-      const BASE_URL = 'https://rwb8771.github.io/sammd';
+      const BASE_URL = window.location.origin;
       const PAGES = [
-        { url: 'index.html', label: 'Homepage' },
-        { url: 'blog.html', label: 'Blog Index' },
-        { url: 'reviews.html', label: 'Reviews' },
-        { url: 'faq.html', label: 'FAQ' },
-        { url: 'sports-medicine.html', label: 'Sports Medicine' },
-        { url: 'arthroscopic-surgery.html', label: 'Arthroscopic Surgery' },
-        { url: 'cartilage-repair.html', label: 'Cartilage Repair' },
-        { url: 'joint-preservation.html', label: 'Joint Preservation' },
-        { url: 'regenerative-medicine.html', label: 'Regenerative Medicine' },
-        { url: 'shoulder-knee-surgery.html', label: 'Shoulder & Knee Surgery' },
-        { url: 'blog/5-signs-orthopedic-surgeon.html', label: 'Blog: 5 Signs' },
-        { url: 'blog/acl-tear-recovery.html', label: 'Blog: ACL Recovery' },
-        { url: 'blog/arthroscopic-vs-open-surgery.html', label: 'Blog: Arthroscopic vs Open' },
-        { url: 'blog/prp-therapy-sports-medicine.html', label: 'Blog: PRP Therapy' },
-        { url: 'blog/protecting-joints-active-adults.html', label: 'Blog: Joint Protection' },
-        { url: 'blog/cartilage-damage-treatment.html', label: 'Blog: Cartilage Damage' }
+        { url: '/', label: 'Homepage' },
+        { url: '/blog', label: 'Blog Index' },
+        { url: '/reviews', label: 'Reviews' },
+        { url: '/faq', label: 'FAQ' },
+        { url: '/about', label: 'About' },
+        { url: '/contact', label: 'Contact' },
+        { url: '/book', label: 'Book Appointment' },
+        { url: '/services/sports-medicine', label: 'Sports Medicine' },
+        { url: '/services/arthroscopic-surgery', label: 'Arthroscopic Surgery' },
+        { url: '/services/cartilage-repair', label: 'Cartilage Repair' },
+        { url: '/services/joint-preservation', label: 'Joint Preservation' },
+        { url: '/services/regenerative-medicine', label: 'Regenerative Medicine' },
+        { url: '/services/shoulder-knee-surgery', label: 'Shoulder & Knee Surgery' },
+        { url: '/blog/5-signs-orthopedic-surgeon', label: 'Blog: 5 Signs' },
+        { url: '/blog/acl-tear-recovery', label: 'Blog: ACL Recovery' },
+        { url: '/blog/arthroscopic-vs-open-surgery', label: 'Blog: Arthroscopic vs Open' },
+        { url: '/blog/prp-therapy-sports-medicine', label: 'Blog: PRP Therapy' },
+        { url: '/blog/protecting-joints-active-adults', label: 'Blog: Joint Protection' },
+        { url: '/blog/cartilage-damage-treatment', label: 'Blog: Cartilage Damage' },
+        { url: '/conditions/acl-tears', label: 'Condition: ACL Tears' }
       ];
 
       const runBtn = document.getElementById('geoRunBtn');

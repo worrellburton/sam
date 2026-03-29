@@ -217,7 +217,7 @@ export default function Home() {
     <>
       {/* Hero */}
       <header className="hero" id="hero">
-        <img className="hero-bg-img loaded" src="/header.jpg" alt="" aria-hidden="true" />
+        <img className="hero-bg-img loaded" src="/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <div className="hero-text">

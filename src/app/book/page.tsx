@@ -641,7 +641,7 @@ export default function BookPage() {
                 return photoReview ? (
                   <div className="dz-review-snippet" onClick={randomizeReview} style={{ cursor: 'pointer' }} title="Click for another review">
                     <div className="dz-snippet-author">
-                      <img src={photoReview.authorAttribution!.photoUri!} alt="" className="dz-snippet-avatar" />
+                      <img src={photoReview.authorAttribution!.photoUri!} alt={photoReview.authorAttribution?.displayName || "Patient"} className="dz-snippet-avatar" />
                     </div>
                     <p>&ldquo;{photoReview.text?.text?.slice(0, 180)}{(photoReview.text?.text?.length || 0) > 180 ? '...' : ''}&rdquo;</p>
                     <span className="dz-review-meta">{photoReview.authorAttribution?.displayName} &middot; {photoReview.relativePublishTimeDescription} &middot; {photoReview.locationLabel}</span>
@@ -1206,8 +1206,8 @@ export default function BookPage() {
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     Board Certified
                   </span>
-                  <span><img src="https://cdn.brandfetch.io/newyorkjets.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="" className="sticky-team-logo" referrerPolicy="origin" /> NY Jets Team Physician</span>
-                  <span><img src="https://cdn.brandfetch.io/newyorkislanders.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="" className="sticky-team-logo" referrerPolicy="origin" /> NY Islanders Team Physician</span>
+                  <span><img src="https://cdn.brandfetch.io/newyorkjets.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="New York Jets logo" className="sticky-team-logo" referrerPolicy="origin" /> NY Jets Team Physician</span>
+                  <span><img src="https://cdn.brandfetch.io/newyorkislanders.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="New York Islanders logo" className="sticky-team-logo" referrerPolicy="origin" /> NY Islanders Team Physician</span>
                   <span>Lenox Hill Fellowship</span>
                   <span>Minimally Invasive Surgery</span>
                   <span>Ohio State Magna Cum Laude</span>

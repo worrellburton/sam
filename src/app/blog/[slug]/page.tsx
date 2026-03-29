@@ -226,9 +226,22 @@ export default function BlogPostPage() {
     datePublished: post.date,
   };
 
+  const blogPostingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.image,
+    author: { "@type": "Person", name: "Dr. Sameh Elguizaoui, M.D.", jobTitle: "Orthopedic Surgeon" },
+    publisher: { "@type": "Organization", name: "Dr. Sameh Elguizaoui, M.D." },
+    datePublished: post.date,
+    url: `https://www.samelguizaoui.com/blog/${post.slug}`,
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }} />
       <section className="blog-post-hero" style={{ backgroundImage: `url('${post.image}')` }}>
         <div className="container">
           <div className="blog-breadcrumb">

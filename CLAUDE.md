@@ -2,68 +2,92 @@
 
 ## Project Overview
 
-Website for **Dr. Sameh Elguizaoui, M.D.** — a board-certified orthopedic surgeon & sports medicine specialist in NYC (Manhattan, Brooklyn, Scarsdale).
+Website for **Dr. Sameh Elguizaoui, M.D.** — a board-certified orthopedic surgeon & sports medicine specialist in NYC (Manhattan, Brooklyn, Scarsdale). Includes a companion SaaS platform called **DocZoc** at `/doczoc/*`.
 
 ## Tech Stack
 
-- **React Router v7** (framework mode, SPA)
+- **Next.js 16** (App Router, Turbopack)
 - **React 19** + **TypeScript**
-- **Vite 7** build tool
-- **Tailwind CSS v4** + legacy CSS (`app/legacy.css`)
-- GitHub Pages deployment via `.github/workflows/deploy.yml`
+- **Tailwind CSS v4** + legacy CSS (`src/app/legacy.css`)
+- **Vercel** deployment
 
 ## Commands
 
-- `npm run dev` — Start dev server
-- `npm run build` — Production build (outputs to `build/client/`)
+- `npm run dev` — Start dev server (Turbopack)
+- `npm run build` — Production build
 - `npm run start` — Start production server
 - `npm run typecheck` — Run TypeScript checks
 
 ## Project Structure
 
 ```
-app/
-├── root.tsx              — Root layout (Nav + StickyBar + Footer)
-├── routes.ts             — Route configuration
-├── app.css               — Tailwind + legacy CSS import
-├── legacy.css            — Original site styles (3400 lines)
+src/
+├── app/
+│   ├── layout.tsx            — Root server layout (metadata, fonts, JSON-LD)
+│   ├── page.tsx              — Homepage (/)
+│   ├── globals.css           — Tailwind + legacy CSS import
+│   ├── legacy.css            — Original site styles (3400 lines)
+│   ├── about/page.tsx        — About page
+│   ├── contact/page.tsx      — Contact page
+│   ├── reviews/page.tsx      — Reviews page
+│   ├── faq/page.tsx          — FAQ page
+│   ├── book/page.tsx         — Booking page
+│   ├── blog/page.tsx         — Blog listing
+│   ├── blog/[slug]/page.tsx  — Blog post
+│   ├── services/[slug]/page.tsx    — Service page
+│   ├── conditions/[slug]/page.tsx  — Condition page
+│   └── doczoc/              — DocZoc SaaS platform (24 pages)
+│       ├── dashboard/page.tsx — Dashboard + shared Sidebar/useDzPrefs
+│       ├── patients/page.tsx  — Patient list
+│       ├── billing/page.tsx   — Claims & billing
+│       └── ...               — Other DocZoc pages
 ├── components/
-│   ├── Navigation.tsx    — Mega menu + mobile nav + theme toggle
-│   ├── Footer.tsx        — Site footer
-│   ├── StickyBar.tsx     — Floating bottom bar with rating
-│   ├── GetStarted.tsx    — CTA section
-│   └── Locations.tsx     — Google Maps locations section
+│   ├── ClientLayout.tsx      — Client layout wrapper (BookingContext, nav, footer, theme)
+│   ├── Navigation.tsx        — Mega menu + mobile nav + theme toggle
+│   ├── Footer.tsx            — Site footer
+│   ├── StickyBar.tsx         — Floating bottom bar with rating
+│   ├── GetStarted.tsx        — CTA section
+│   └── Locations.tsx         — Google Maps locations section
 ├── data/
-│   ├── services.ts       — 6 service pages content
-│   ├── blog.ts           — 6 blog posts content
-│   └── locations.ts      — 3 office locations
-├── hooks/
-│   ├── useTheme.ts       — Dark/light theme with localStorage
-│   └── useScrollPosition.ts — Scroll position + direction
-└── routes/
-    ├── home.tsx           — Homepage (/)
-    ├── about.tsx          — About page (/about)
-    ├── contact.tsx        — Contact page (/contact)
-    ├── reviews.tsx        — Reviews page (/reviews)
-    ├── faq.tsx            — FAQ page (/faq)
-    ├── blog.tsx           — Blog listing (/blog)
-    ├── blog-post.tsx      — Blog post (/blog/:slug)
-    ├── book.tsx           — Booking page (/book)
-    └── service.tsx        — Service page (/services/:slug)
+│   ├── services.ts           — 6 service pages content
+│   ├── blog.ts               — Blog posts content
+│   ├── conditions.ts         — Condition pages content
+│   └── locations.ts          — 3 office locations
+└── hooks/
+    ├── useTheme.ts           — Dark/light theme with localStorage
+    ├── useScrollPosition.ts  — Scroll position + direction
+    ├── useAthena.ts          — athenahealth EHR API integration
+    ├── useStedi.ts           — Stedi claims API
+    ├── useApiStatus.ts       — API status monitoring
+    ├── useCrosshairFocus.tsx  — Table focus/crosshair UI
+    ├── useDragReorder.ts     — Drag reorder lists
+    ├── useDraggableColumns.ts — Draggable table columns
+    └── useElevenLabs.ts      — ElevenLabs TTS API
 ```
 
 ## Deployment
 
-- Auto-deploys to GitHub Pages on push to `main` or `claude/**` branches
-- Build step: `npm ci && npm run build`
-- Serves from `build/client/`
-- Live URL: https://rwb8771.github.io/sammd/
-- `basename: "/sammd/"` configured in `react-router.config.ts`
+- Deploys to **Vercel** automatically on push
+- Build command: `npm run build`
+- Framework: Next.js (auto-detected)
+
+## Environment Variables
+
+Set in Vercel dashboard or `.env.local`:
+
+- `NEXT_PUBLIC_ATHENA_ENV` — athenahealth environment (preview/production)
+- `NEXT_PUBLIC_ATHENA_CLIENT_ID` — athenahealth OAuth client ID
+- `NEXT_PUBLIC_ATHENA_CLIENT_SECRET` — athenahealth OAuth client secret
+- `NEXT_PUBLIC_ATHENA_PRACTICE_ID` — athenahealth practice ID
+- `NEXT_PUBLIC_STEDI_API_KEY` — Stedi healthcare API key
+- `NEXT_PUBLIC_ELEVENLABS_API_KEY` — ElevenLabs TTS API key
 
 ## Development Notes
 
-- SPA mode (`ssr: false` in react-router.config.ts)
+- All page components use `"use client"` directive (client-side rendering)
 - Theme toggle saves to localStorage, default is light
 - Legacy CSS uses CSS variables for theming (`:root` and `[data-theme="light"]`)
 - Navigation auto-closes on route change
-- Service and blog pages are data-driven from `app/data/` files
+- Service, blog, and condition pages are data-driven from `src/data/` files
+- DocZoc pages share `Sidebar` and `useDzPrefs` exported from `doczoc/dashboard/page.tsx`
+- `BookingContext` exported from `src/components/ClientLayout.tsx`

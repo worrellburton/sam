@@ -749,6 +749,7 @@ a.nav-btn-book,
 
 /* Hidden on desktop */
 .mobile-nav { display: none; }
+.mobile-nav { display: none; }
 .mnav-header, .mnav-body, .mnav-footer, .mnav-links, .mnav-services, .mnav-link, .mnav-service-item, .mnav-close, .mnav-theme-btn, .mnav-logo, .mnav-header-actions, .mnav-book-btn, .mnav-phone, .mnav-locations, .mnav-loc-dot, .mnav-service-name, .mnav-service-desc, .mnav-link-expand { display: none; }
 
 .nav-toggle {

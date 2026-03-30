@@ -477,6 +477,7 @@
       margin: 0 auto 16px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 
     /* Mobile responsive */
     @media (max-width: 768px) {
@@ -2141,24 +2142,128 @@
           </div>
         </div>
 
-        <!-- Quick links -->
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
-          <a href="https://analytics.google.com/analytics/web/#/p/G-HP23C836XM/reports/reportshub" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;color:var(--text);text-decoration:none;font-size:0.9rem;font-weight:500;transition:border-color 0.2s;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-            Reports Dashboard
-          </a>
-          <a href="https://analytics.google.com/analytics/web/#/p/G-HP23C836XM/realtime/overview" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;color:var(--text);text-decoration:none;font-size:0.9rem;font-weight:500;transition:border-color 0.2s;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Realtime
-          </a>
-          <a href="https://analytics.google.com/analytics/web/#/p/G-HP23C836XM/reports/explorer?params=_u..nav%3Dmaui&ruid=lifecycle-traffic-acquisition-v2&r=lifecycle-traffic-acquisition-v2" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;color:var(--text);text-decoration:none;font-size:0.9rem;font-weight:500;transition:border-color 0.2s;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v-2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
-            Acquisition
-          </a>
+        <!-- Sign-in to unlock live data -->
+        <div id="gaSignInPanel" style="margin-bottom:24px;">
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" style="margin-bottom:12px;"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            <h3 style="margin-bottom:8px;font-size:1.1rem;">Connect Google Analytics</h3>
+            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;max-width:480px;margin-left:auto;margin-right:auto;">Sign in with the Google account that has access to your GA4 property to view realtime visitors, page views, top pages, and traffic sources — all live.</p>
+            <button id="gaOAuthBtn" style="display:inline-flex;align-items:center;gap:10px;background:#fff;color:#333;border:1px solid #dadce0;border-radius:8px;padding:12px 24px;font-size:0.92rem;font-weight:500;cursor:pointer;transition:box-shadow 0.2s;font-family:inherit;">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              Sign in with Google
+            </button>
+            <p style="font-size:0.75rem;color:var(--text-muted);margin-top:14px;">Read-only access &middot; Scope: analytics.readonly</p>
+          </div>
         </div>
 
-        <!-- GA4 Measurement Info -->
-        <div class="core-section">
+        <!-- Live dashboard (hidden until signed in) -->
+        <div id="gaLiveDashboard" style="display:none;">
+          <!-- User bar -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span id="gaUserEmail" style="font-size:0.88rem;font-weight:500;">Connected</span>
+              <span id="gaPropertyName" style="font-size:0.82rem;color:var(--text-muted);margin-left:8px;"></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span id="gaLastUpdated" style="font-size:0.75rem;color:var(--text-muted);"></span>
+              <button id="gaDisconnectBtn" style="font-size:0.82rem;color:var(--red);background:none;border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:6px 12px;cursor:pointer;">Disconnect</button>
+            </div>
+          </div>
+
+          <!-- Realtime section -->
+          <div class="core-section" style="margin-bottom:24px;">
+            <div class="core-section-header">
+              <h3 style="display:flex;align-items:center;gap:8px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;"></span>
+                Realtime
+              </h3>
+              <span id="gaRealtimeRefresh" style="font-size:0.75rem;color:var(--text-muted);">Auto-refreshes every 30s</span>
+            </div>
+            <div style="padding:20px;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;">
+                <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
+                  <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Active Users Now</div>
+                  <div id="gaRealtimeUsers" style="font-size:2.4rem;font-weight:700;color:var(--green);line-height:1;">0</div>
+                </div>
+                <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
+                  <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Pageviews (30 min)</div>
+                  <div id="gaRealtimePageviews" style="font-size:2.4rem;font-weight:700;line-height:1;">0</div>
+                </div>
+                <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;">
+                  <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">Events (30 min)</div>
+                  <div id="gaRealtimeEvents" style="font-size:2.4rem;font-weight:700;line-height:1;">0</div>
+                </div>
+              </div>
+
+              <!-- Realtime active pages -->
+              <h4 style="font-size:0.88rem;font-weight:600;margin-bottom:12px;color:var(--text-light);">Active Pages</h4>
+              <div id="gaRealtimePages" style="display:grid;gap:6px;margin-bottom:24px;">
+                <div style="color:var(--text-muted);font-size:0.85rem;padding:12px;">Waiting for data...</div>
+              </div>
+
+              <!-- Realtime by country -->
+              <h4 style="font-size:0.88rem;font-weight:600;margin-bottom:12px;color:var(--text-light);">Active Users by Country</h4>
+              <div id="gaRealtimeCountries" style="display:grid;gap:6px;">
+                <div style="color:var(--text-muted);font-size:0.85rem;padding:12px;">Waiting for data...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7-day overview -->
+          <div class="core-section" style="margin-bottom:24px;">
+            <div class="core-section-header">
+              <h3>Last 7 Days</h3>
+            </div>
+            <div style="padding:20px;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px;">
+                <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Users</div>
+                  <div id="ga7dUsers" style="font-size:1.5rem;font-weight:700;">--</div>
+                </div>
+                <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Sessions</div>
+                  <div id="ga7dSessions" style="font-size:1.5rem;font-weight:700;">--</div>
+                </div>
+                <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Page Views</div>
+                  <div id="ga7dPageviews" style="font-size:1.5rem;font-weight:700;">--</div>
+                </div>
+                <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Avg Session Duration</div>
+                  <div id="ga7dDuration" style="font-size:1.5rem;font-weight:700;">--</div>
+                </div>
+                <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Bounce Rate</div>
+                  <div id="ga7dBounce" style="font-size:1.5rem;font-weight:700;">--</div>
+                </div>
+              </div>
+
+              <!-- Top pages -->
+              <h4 style="font-size:0.88rem;font-weight:600;margin-bottom:12px;color:var(--text-light);">Top Pages</h4>
+              <div id="ga7dTopPages" style="display:grid;gap:6px;margin-bottom:24px;">
+                <div style="color:var(--text-muted);font-size:0.85rem;padding:12px;">Loading...</div>
+              </div>
+
+              <!-- Traffic sources -->
+              <h4 style="font-size:0.88rem;font-weight:600;margin-bottom:12px;color:var(--text-light);">Traffic Sources</h4>
+              <div id="ga7dSources" style="display:grid;gap:6px;">
+                <div style="color:var(--text-muted);font-size:0.85rem;padding:12px;">Loading...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick links -->
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;color:var(--text);text-decoration:none;font-size:0.9rem;font-weight:500;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+              Open GA4 Dashboard
+            </a>
+          </div>
+        </div>
+
+        <!-- Tracking info (always visible) -->
+        <div class="core-section" style="margin-top:24px;">
           <div class="core-section-header">
             <h3>Tracking Status</h3>
           </div>
@@ -2185,8 +2290,6 @@
                 <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Root layout injection</div>
               </div>
             </div>
-
-            <!-- Verify tag on site -->
             <button id="gaVerifyBtn" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:0.88rem;font-weight:500;cursor:pointer;transition:background 0.2s;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               Verify Tag on Site
@@ -3742,10 +3845,17 @@
       renderCalendar();
     })();
 
-    // ===== ANALYTICS - Google Analytics 4 =====
+    // ===== ANALYTICS - Google Analytics 4 (Live Data) =====
     (function() {
       const GA_ID = 'G-HP23C836XM';
       const SITE_URL = window.location.origin.replace('/dev', '').replace('/dev/', '');
+      const GA_SCOPES = 'https://www.googleapis.com/auth/analytics.readonly';
+      const GA_DATA_API = 'https://analyticsdata.googleapis.com/v1beta';
+      const GA_ADMIN_API = 'https://analyticsadmin.googleapis.com/v1beta';
+
+      let gaAccessToken = null;
+      let gaPropertyId = null; // numeric property ID
+      let realtimeInterval = null;
 
       // Pages to verify GA tag on
       const TRACKED_PAGES = [
@@ -3776,6 +3886,308 @@
         </div>
       `).join('');
 
+      // Check for saved session
+      const savedGaToken = sessionStorage.getItem('sammd_ga_token');
+      const savedGaProp = sessionStorage.getItem('sammd_ga_property');
+      if (savedGaToken && savedGaProp) {
+        gaAccessToken = savedGaToken;
+        gaPropertyId = savedGaProp;
+        onGaConnected();
+      }
+
+      // OAuth sign-in
+      document.getElementById('gaOAuthBtn').addEventListener('click', () => {
+        let clientId = localStorage.getItem('sammd_oauth_client_id') || '';
+        if (!clientId) {
+          clientId = prompt('Enter your Google OAuth 2.0 Client ID:\\n(Create at console.cloud.google.com/apis/credentials)\\n\\nFormat: xxxx.apps.googleusercontent.com');
+          if (!clientId) return;
+          localStorage.setItem('sammd_oauth_client_id', clientId);
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.onload = () => {
+          const tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: clientId,
+            scope: GA_SCOPES,
+            callback: async (response) => {
+              if (response.access_token) {
+                gaAccessToken = response.access_token;
+                sessionStorage.setItem('sammd_ga_token', gaAccessToken);
+                await discoverProperty();
+                onGaConnected();
+              }
+            }
+          });
+          tokenClient.requestAccessToken();
+        };
+        document.head.appendChild(script);
+      });
+
+      // Disconnect
+      document.getElementById('gaDisconnectBtn').addEventListener('click', () => {
+        gaAccessToken = null;
+        gaPropertyId = null;
+        sessionStorage.removeItem('sammd_ga_token');
+        sessionStorage.removeItem('sammd_ga_property');
+        if (realtimeInterval) clearInterval(realtimeInterval);
+        document.getElementById('gaSignInPanel').style.display = '';
+        document.getElementById('gaLiveDashboard').style.display = 'none';
+        showToast('Disconnected from Google Analytics.');
+      });
+
+      // Discover GA4 property by measurement ID
+      async function discoverProperty() {
+        try {
+          // List all GA4 account summaries
+          const resp = await fetch(GA_ADMIN_API + '/accountSummaries?pageSize=200', {
+            headers: { Authorization: 'Bearer ' + gaAccessToken }
+          });
+          if (!resp.ok) throw new Error('Admin API: ' + resp.status);
+          const data = await resp.json();
+          const summaries = data.accountSummaries || [];
+
+          // Search through properties for our measurement ID
+          for (const acct of summaries) {
+            for (const prop of (acct.propertySummaries || [])) {
+              // prop.property = "properties/123456"
+              const propId = prop.property.split('/')[1];
+              // Check data streams for this property
+              const streamsResp = await fetch(GA_ADMIN_API + '/' + prop.property + '/dataStreams', {
+                headers: { Authorization: 'Bearer ' + gaAccessToken }
+              });
+              if (streamsResp.ok) {
+                const streamsData = await streamsResp.json();
+                for (const stream of (streamsData.dataStreams || [])) {
+                  if (stream.webStreamData && stream.webStreamData.measurementId === GA_ID) {
+                    gaPropertyId = propId;
+                    sessionStorage.setItem('sammd_ga_property', propId);
+                    document.getElementById('gaPropertyName').textContent = prop.displayName || ('Property ' + propId);
+                    return;
+                  }
+                }
+              }
+            }
+          }
+          // Fallback: ask user
+          const manual = prompt('Could not auto-detect property. Enter your GA4 Property ID (numeric):');
+          if (manual) {
+            gaPropertyId = manual.trim();
+            sessionStorage.setItem('sammd_ga_property', gaPropertyId);
+          }
+        } catch (err) {
+          console.error('GA4 discovery error:', err);
+          const manual = prompt('Error discovering property. Enter GA4 Property ID manually (numeric):');
+          if (manual) {
+            gaPropertyId = manual.trim();
+            sessionStorage.setItem('sammd_ga_property', gaPropertyId);
+          }
+        }
+      }
+
+      async function onGaConnected() {
+        if (!gaPropertyId) return;
+        document.getElementById('gaSignInPanel').style.display = 'none';
+        document.getElementById('gaLiveDashboard').style.display = '';
+
+        // Get user email
+        try {
+          const userResp = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: { Authorization: 'Bearer ' + gaAccessToken }
+          });
+          if (userResp.ok) {
+            const user = await userResp.json();
+            document.getElementById('gaUserEmail').textContent = user.email || 'Connected';
+          }
+        } catch (e) {}
+
+        // Fetch initial data
+        fetchRealtimeData();
+        fetch7DayData();
+
+        // Auto-refresh realtime every 30 seconds
+        if (realtimeInterval) clearInterval(realtimeInterval);
+        realtimeInterval = setInterval(fetchRealtimeData, 30000);
+      }
+
+      // Helper: GA4 Data API request
+      async function gaDataRequest(endpoint, body) {
+        const url = `${GA_DATA_API}/properties/${gaPropertyId}:${endpoint}`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer ' + gaAccessToken,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+        if (!resp.ok) {
+          const err = await resp.text();
+          throw new Error(endpoint + ' failed: ' + resp.status + ' ' + err);
+        }
+        return resp.json();
+      }
+
+      // Helper: extract metric value from GA4 response row
+      function metricVal(row, idx) {
+        return parseInt(row.metricValues?.[idx]?.value || '0');
+      }
+      function dimVal(row, idx) {
+        return row.dimensionValues?.[idx]?.value || '(not set)';
+      }
+
+      // Fetch realtime data
+      async function fetchRealtimeData() {
+        if (!gaAccessToken || !gaPropertyId) return;
+        try {
+          // Active users
+          const rtUsers = await gaDataRequest('runRealtimeReport', {
+            metrics: [{ name: 'activeUsers' }]
+          });
+          const activeUsers = rtUsers.rows?.[0]?.metricValues?.[0]?.value || '0';
+          document.getElementById('gaRealtimeUsers').textContent = parseInt(activeUsers).toLocaleString();
+
+          // Pageviews + events
+          const rtEvents = await gaDataRequest('runRealtimeReport', {
+            metrics: [{ name: 'screenPageViews' }, { name: 'eventCount' }]
+          });
+          const pvs = rtEvents.rows?.[0]?.metricValues?.[0]?.value || '0';
+          const evts = rtEvents.rows?.[0]?.metricValues?.[1]?.value || '0';
+          document.getElementById('gaRealtimePageviews').textContent = parseInt(pvs).toLocaleString();
+          document.getElementById('gaRealtimeEvents').textContent = parseInt(evts).toLocaleString();
+
+          // Active pages
+          const rtPages = await gaDataRequest('runRealtimeReport', {
+            dimensions: [{ name: 'unifiedScreenName' }],
+            metrics: [{ name: 'activeUsers' }],
+            limit: 10
+          });
+          renderRealtimeTable('gaRealtimePages', rtPages, 'Page', 'Active Users');
+
+          // Active by country
+          const rtCountries = await gaDataRequest('runRealtimeReport', {
+            dimensions: [{ name: 'country' }],
+            metrics: [{ name: 'activeUsers' }],
+            limit: 10
+          });
+          renderRealtimeTable('gaRealtimeCountries', rtCountries, 'Country', 'Active Users');
+
+          document.getElementById('gaLastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+        } catch (err) {
+          console.error('Realtime fetch error:', err);
+          if (err.message.includes('401') || err.message.includes('403')) {
+            showToast('GA4 session expired. Please reconnect.');
+          }
+        }
+      }
+
+      function renderRealtimeTable(elId, data, dimLabel, metricLabel) {
+        const el = document.getElementById(elId);
+        const rows = data.rows || [];
+        if (rows.length === 0) {
+          el.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:12px;">No active data</div>';
+          return;
+        }
+        const maxVal = Math.max(...rows.map(r => parseInt(r.metricValues[0].value || '0')), 1);
+        el.innerHTML = rows.map(r => {
+          const dim = r.dimensionValues[0].value || '(not set)';
+          const val = parseInt(r.metricValues[0].value || '0');
+          const pct = (val / maxVal * 100).toFixed(1);
+          return `
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;">
+              <span style="flex:1;font-size:0.88rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${dim}</span>
+              <div style="flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
+                <div style="width:${pct}%;height:100%;background:var(--accent);border-radius:3px;transition:width 0.3s;"></div>
+              </div>
+              <span style="font-size:0.85rem;font-weight:600;min-width:36px;text-align:right;">${val.toLocaleString()}</span>
+            </div>`;
+        }).join('');
+      }
+
+      // Fetch 7-day data
+      async function fetch7DayData() {
+        if (!gaAccessToken || !gaPropertyId) return;
+        try {
+          // Overview metrics
+          const overview = await gaDataRequest('runReport', {
+            dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
+            metrics: [
+              { name: 'activeUsers' },
+              { name: 'sessions' },
+              { name: 'screenPageViews' },
+              { name: 'averageSessionDuration' },
+              { name: 'bounceRate' }
+            ]
+          });
+          if (overview.rows?.[0]) {
+            const r = overview.rows[0];
+            document.getElementById('ga7dUsers').textContent = metricVal(r, 0).toLocaleString();
+            document.getElementById('ga7dSessions').textContent = metricVal(r, 1).toLocaleString();
+            document.getElementById('ga7dPageviews').textContent = metricVal(r, 2).toLocaleString();
+            const dur = parseFloat(r.metricValues?.[3]?.value || '0');
+            const mins = Math.floor(dur / 60);
+            const secs = Math.round(dur % 60);
+            document.getElementById('ga7dDuration').textContent = mins + 'm ' + secs + 's';
+            const bounce = parseFloat(r.metricValues?.[4]?.value || '0');
+            document.getElementById('ga7dBounce').textContent = (bounce * 100).toFixed(1) + '%';
+          }
+
+          // Top pages
+          const topPages = await gaDataRequest('runReport', {
+            dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
+            dimensions: [{ name: 'pagePath' }],
+            metrics: [{ name: 'screenPageViews' }, { name: 'activeUsers' }],
+            orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+            limit: 15
+          });
+          render7dTable('ga7dTopPages', topPages, ['Page', 'Views', 'Users']);
+
+          // Traffic sources
+          const sources = await gaDataRequest('runReport', {
+            dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
+            dimensions: [{ name: 'sessionDefaultChannelGroup' }],
+            metrics: [{ name: 'sessions' }, { name: 'activeUsers' }],
+            orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+            limit: 10
+          });
+          render7dTable('ga7dSources', sources, ['Channel', 'Sessions', 'Users']);
+
+        } catch (err) {
+          console.error('7-day fetch error:', err);
+        }
+      }
+
+      function render7dTable(elId, data, headers) {
+        const el = document.getElementById(elId);
+        const rows = data.rows || [];
+        if (rows.length === 0) {
+          el.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:12px;">No data available</div>';
+          return;
+        }
+        const maxVal = Math.max(...rows.map(r => parseInt(r.metricValues[0].value || '0')), 1);
+        el.innerHTML = `
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:0;font-size:0.75rem;color:var(--text-muted);padding:8px 14px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">
+            <span>${headers[0]}</span><span style="text-align:right">${headers[1]}</span><span style="text-align:right">${headers[2]}</span>
+          </div>
+          ${rows.map(r => {
+            const dim = r.dimensionValues[0].value || '(not set)';
+            const m1 = parseInt(r.metricValues[0].value || '0');
+            const m2 = parseInt(r.metricValues[1].value || '0');
+            const pct = (m1 / maxVal * 100).toFixed(1);
+            return `
+              <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:0;align-items:center;padding:10px 14px;background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;">
+                <div style="display:flex;align-items:center;gap:8px;overflow:hidden;">
+                  <div style="width:40px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;flex-shrink:0;overflow:hidden;">
+                    <div style="width:${pct}%;height:100%;background:var(--accent);border-radius:2px;"></div>
+                  </div>
+                  <span style="font-size:0.88rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${dim}</span>
+                </div>
+                <span style="font-size:0.88rem;font-weight:600;text-align:right;">${m1.toLocaleString()}</span>
+                <span style="font-size:0.85rem;color:var(--text-light);text-align:right;">${m2.toLocaleString()}</span>
+              </div>`;
+          }).join('')}`;
+      }
+
       // Verify GA tag on site
       document.getElementById('gaVerifyBtn').addEventListener('click', async () => {
         const btn = document.getElementById('gaVerifyBtn');
@@ -3788,7 +4200,7 @@
         let failCount = 0;
 
         for (const page of TRACKED_PAGES) {
-          const statusSpan = document.querySelector(`.ga-page-status[data-path="${page.path}"]`);
+          const statusSpan = document.querySelector('.ga-page-status[data-path="' + page.path + '"]');
           if (statusSpan) statusSpan.innerHTML = '<span style="color:var(--yellow);">Checking...</span>';
 
           try {
@@ -3816,10 +4228,8 @@
           showToast('GA4 tag verified on all ' + passCount + ' pages!');
         } else if (passCount > 0) {
           statusEl.innerHTML = '<span style="color:var(--yellow);">' + passCount + '/' + TRACKED_PAGES.length + ' pages verified</span>';
-          showToast(passCount + ' of ' + TRACKED_PAGES.length + ' pages have GA4 tag.');
         } else {
           statusEl.innerHTML = '<span style="color:var(--red);">Tag not detected</span>';
-          showToast('Could not verify GA4 tag. It may need a deployment.');
         }
 
         btn.disabled = false;

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import ClientLayout from "@/components/ClientLayout";
 import "./globals.css";
+
+const GA_ID = "G-HP23C836XM";
 
 const SITE_URL = "https://samelguizaoui.vercel.app";
 
@@ -126,6 +129,13 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
+        </Script>
         <ClientLayout>{children}</ClientLayout>
         <SpeedInsights />
       </body>

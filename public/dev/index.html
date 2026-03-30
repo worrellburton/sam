@@ -2131,69 +2131,76 @@
       <!-- Analytics Page -->
       <div class="admin-page" id="page-analytics">
         <div class="page-header">
-          <h2>Performance Analytics</h2>
+          <h2>Google Analytics</h2>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,0.1);color:var(--green);padding:6px 14px;border-radius:8px;font-size:0.82rem;font-weight:500;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              GA4 Connected
+            </span>
+            <span style="color:var(--text-muted);font-size:0.82rem;">G-HP23C836XM</span>
+          </div>
         </div>
 
-        <!-- Pre-connect state -->
-        <div class="analytics-connect" id="analyticsConnect">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-          <h3>Connect Google Business Profile</h3>
-          <p>Sign in with your Google account that manages your Business Profile to view search queries, impressions, clicks, and more.</p>
-          <button class="google-signin-btn" id="googleSignInBtn">
-            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-            Sign in with Google
-          </button>
-          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:16px;margin-bottom:0;">Requires OAuth 2.0 Client ID. <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener" style="color:var(--accent);">Set up in Google Cloud Console</a></p>
+        <!-- Quick links -->
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+          <a href="https://analytics.google.com/analytics/web/#/p/G-HP23C836XM/reports/reportshub" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;color:var(--text);text-decoration:none;font-size:0.9rem;font-weight:500;transition:border-color 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Reports Dashboard
+          </a>
+          <a href="https://analytics.google.com/analytics/web/#/p/G-HP23C836XM/realtime/overview" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;color:var(--text);text-decoration:none;font-size:0.9rem;font-weight:500;transition:border-color 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Realtime
+          </a>
+          <a href="https://analytics.google.com/analytics/web/#/p/G-HP23C836XM/reports/explorer?params=_u..nav%3Dmaui&ruid=lifecycle-traffic-acquisition-v2&r=lifecycle-traffic-acquisition-v2" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;color:var(--text);text-decoration:none;font-size:0.9rem;font-weight:500;transition:border-color 0.2s;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v-2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+            Acquisition
+          </a>
         </div>
 
-        <!-- Connected state -->
-        <div class="analytics-connected" id="analyticsConnected">
-          <div class="analytics-user-bar">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <span class="user-email" id="analyticsUserEmail">Connected</span>
-            <button class="disconnect-btn" id="analyticsDisconnect">Disconnect</button>
+        <!-- GA4 Measurement Info -->
+        <div class="core-section">
+          <div class="core-section-header">
+            <h3>Tracking Status</h3>
           </div>
+          <div style="padding:20px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px;">
+              <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+                <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">Measurement ID</div>
+                <div style="font-size:1.1rem;font-weight:600;font-family:monospace;color:var(--accent);">G-HP23C836XM</div>
+              </div>
+              <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+                <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">Tracking Method</div>
+                <div style="font-size:1.1rem;font-weight:600;">Next.js Script</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">afterInteractive strategy</div>
+              </div>
+              <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+                <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">Tag Status</div>
+                <div id="gaTagStatus" style="font-size:1.1rem;font-weight:600;">
+                  <span style="color:var(--yellow);">Checking...</span>
+                </div>
+              </div>
+              <div style="background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+                <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:6px;">Coverage</div>
+                <div style="font-size:1.1rem;font-weight:600;">All Pages</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Root layout injection</div>
+              </div>
+            </div>
 
-          <div class="analytics-loc-tabs" id="analyticsLocTabs"></div>
-
-          <!-- Summary Metrics -->
-          <div class="metrics-grid" id="analyticsMetrics">
-            <div class="metric-card">
-              <div class="metric-card-label">Search Impressions</div>
-              <div class="metric-card-value" id="metricImpressions">--</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-card-label">Website Clicks</div>
-              <div class="metric-card-value" id="metricWebClicks">--</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-card-label">Direction Requests</div>
-              <div class="metric-card-value" id="metricDirections">--</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-card-label">Phone Calls</div>
-              <div class="metric-card-value" id="metricCalls">--</div>
-            </div>
+            <!-- Verify tag on site -->
+            <button id="gaVerifyBtn" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:0.88rem;font-weight:500;cursor:pointer;transition:background 0.2s;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Verify Tag on Site
+            </button>
           </div>
+        </div>
 
-          <!-- Impressions Chart -->
-          <div class="chart-section">
-            <h3>Visibility Over Time</h3>
-            <canvas class="chart-canvas" id="impressionsChart"></canvas>
+        <!-- Page-level tracking -->
+        <div class="core-section" style="margin-top:24px;">
+          <div class="core-section-header">
+            <h3>Tracked Pages</h3>
           </div>
-
-          <!-- Search Keywords -->
-          <div class="chart-section">
-            <h3>Top Search Keywords</h3>
-            <div id="keywordsContent">
-              <div class="loading"><div class="spinner"></div>Loading keywords...</div>
-            </div>
-          </div>
-
-          <!-- Engagement Breakdown -->
-          <div class="chart-section">
-            <h3>Engagement Breakdown</h3>
-            <canvas class="chart-canvas" id="engagementChart"></canvas>
+          <div style="padding:20px;">
+            <div id="gaTrackedPages" style="display:grid;gap:8px;"></div>
           </div>
         </div>
       </div>
@@ -3735,447 +3742,89 @@
       renderCalendar();
     })();
 
-    // ===== ANALYTICS - Google Business Profile Performance API =====
+    // ===== ANALYTICS - Google Analytics 4 =====
     (function() {
-      // OAuth config - user needs to create OAuth 2.0 Client ID in Google Cloud Console
-      // and set the authorized JavaScript origin to the site URL
-      const OAUTH_CLIENT_ID = localStorage.getItem('sammd_oauth_client_id') || '';
-      const GBP_SCOPES = 'https://www.googleapis.com/auth/business.manage';
-      const PERF_API = 'https://businessprofileperformance.googleapis.com/v1';
-      const ACCOUNTS_API = 'https://mybusinessaccountmanagement.googleapis.com/v1';
+      const GA_ID = 'G-HP23C836XM';
+      const SITE_URL = window.location.origin.replace('/dev', '').replace('/dev/', '');
 
-      let accessToken = null;
-      let gbpLocations = [];
-      let selectedLocation = null;
+      // Pages to verify GA tag on
+      const TRACKED_PAGES = [
+        { path: '/', label: 'Home' },
+        { path: '/about', label: 'About' },
+        { path: '/services/sports-medicine', label: 'Sports Medicine' },
+        { path: '/services/arthroscopic-surgery', label: 'Arthroscopic Surgery' },
+        { path: '/services/regenerative-medicine', label: 'Regenerative Medicine' },
+        { path: '/services/joint-preservation', label: 'Joint Preservation' },
+        { path: '/services/cartilage-repair', label: 'Cartilage Repair' },
+        { path: '/services/shoulder-knee-surgery', label: 'Shoulder & Knee' },
+        { path: '/reviews', label: 'Reviews' },
+        { path: '/faq', label: 'FAQ' },
+        { path: '/blog', label: 'Blog' },
+        { path: '/contact', label: 'Contact' },
+        { path: '/book', label: 'Book Appointment' },
+      ];
 
-      const connectEl = document.getElementById('analyticsConnect');
-      const connectedEl = document.getElementById('analyticsConnected');
-      const signInBtn = document.getElementById('googleSignInBtn');
-      const disconnectBtn = document.getElementById('analyticsDisconnect');
-      const locTabsEl = document.getElementById('analyticsLocTabs');
+      // Render tracked pages list
+      const pagesEl = document.getElementById('gaTrackedPages');
+      pagesEl.innerHTML = TRACKED_PAGES.map(p => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:0.9rem;font-weight:500;">${p.label}</span>
+            <span style="font-size:0.78rem;color:var(--text-muted);font-family:monospace;">${p.path}</span>
+          </div>
+          <span class="ga-page-status" data-path="${p.path}" style="font-size:0.78rem;color:var(--text-muted);">—</span>
+        </div>
+      `).join('');
 
-      // Check if we have a saved token
-      const savedToken = sessionStorage.getItem('sammd_gbp_token');
-      if (savedToken) {
-        accessToken = savedToken;
-        onConnected();
-      }
+      // Verify GA tag on site
+      document.getElementById('gaVerifyBtn').addEventListener('click', async () => {
+        const btn = document.getElementById('gaVerifyBtn');
+        const statusEl = document.getElementById('gaTagStatus');
+        btn.disabled = true;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Verifying...';
+        statusEl.innerHTML = '<span style="color:var(--yellow);">Checking...</span>';
 
-      signInBtn.addEventListener('click', () => {
-        // Check if OAuth Client ID is configured
-        let clientId = OAUTH_CLIENT_ID;
-        if (!clientId) {
-          clientId = prompt('Enter your Google OAuth 2.0 Client ID:\n(Create one at console.cloud.google.com/apis/credentials)\n\nFormat: xxxx.apps.googleusercontent.com');
-          if (!clientId) return;
-          localStorage.setItem('sammd_oauth_client_id', clientId);
-        }
+        let passCount = 0;
+        let failCount = 0;
 
-        // Use Google Identity Services (implicit grant)
-        const script = document.createElement('script');
-        script.src = 'https://accounts.google.com/gsi/client';
-        script.onload = () => {
-          const tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: clientId,
-            scope: GBP_SCOPES,
-            callback: (response) => {
-              if (response.access_token) {
-                accessToken = response.access_token;
-                sessionStorage.setItem('sammd_gbp_token', accessToken);
-                onConnected();
-              }
+        for (const page of TRACKED_PAGES) {
+          const statusSpan = document.querySelector(`.ga-page-status[data-path="${page.path}"]`);
+          if (statusSpan) statusSpan.innerHTML = '<span style="color:var(--yellow);">Checking...</span>';
+
+          try {
+            const url = (SITE_URL.replace(/\/+$/, '')) + page.path;
+            const resp = await fetch(url, { mode: 'cors' });
+            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+            const html = await resp.text();
+            const hasGtag = html.includes('googletagmanager.com/gtag/js?id=' + GA_ID) || html.includes("gtag('config','" + GA_ID + "')") || html.includes('gtag("config","' + GA_ID + '")');
+
+            if (hasGtag) {
+              passCount++;
+              if (statusSpan) statusSpan.innerHTML = '<span style="color:var(--green);display:inline-flex;align-items:center;gap:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Tracking</span>';
+            } else {
+              failCount++;
+              if (statusSpan) statusSpan.innerHTML = '<span style="color:var(--red);">Tag not found</span>';
             }
-          });
-          tokenClient.requestAccessToken();
-        };
-        document.head.appendChild(script);
+          } catch (err) {
+            failCount++;
+            if (statusSpan) statusSpan.innerHTML = '<span style="color:var(--text-muted);">Could not verify</span>';
+          }
+        }
+
+        if (failCount === 0) {
+          statusEl.innerHTML = '<span style="color:var(--green);">Active — All pages verified</span>';
+          showToast('GA4 tag verified on all ' + passCount + ' pages!');
+        } else if (passCount > 0) {
+          statusEl.innerHTML = '<span style="color:var(--yellow);">' + passCount + '/' + TRACKED_PAGES.length + ' pages verified</span>';
+          showToast(passCount + ' of ' + TRACKED_PAGES.length + ' pages have GA4 tag.');
+        } else {
+          statusEl.innerHTML = '<span style="color:var(--red);">Tag not detected</span>';
+          showToast('Could not verify GA4 tag. It may need a deployment.');
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Verify Tag on Site';
       });
-
-      disconnectBtn.addEventListener('click', () => {
-        accessToken = null;
-        sessionStorage.removeItem('sammd_gbp_token');
-        connectEl.style.display = '';
-        connectedEl.classList.remove('active');
-        showToast('Disconnected from Google.');
-      });
-
-      async function onConnected() {
-        connectEl.style.display = 'none';
-        connectedEl.classList.add('active');
-
-        // Get user info
-        try {
-          const userResp = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-            headers: { Authorization: 'Bearer ' + accessToken }
-          });
-          if (userResp.ok) {
-            const user = await userResp.json();
-            document.getElementById('analyticsUserEmail').textContent = user.email || 'Connected';
-          }
-        } catch (e) { /* ignore */ }
-
-        // Discover GBP locations
-        try {
-          const acctResp = await fetch(ACCOUNTS_API + '/accounts', {
-            headers: { Authorization: 'Bearer ' + accessToken }
-          });
-          if (!acctResp.ok) throw new Error('Could not fetch accounts: ' + acctResp.status);
-          const acctData = await acctResp.json();
-          const accounts = acctData.accounts || [];
-
-          gbpLocations = [];
-          for (const acct of accounts) {
-            const locResp = await fetch(ACCOUNTS_API + '/' + acct.name + '/locations', {
-              headers: { Authorization: 'Bearer ' + accessToken }
-            });
-            if (locResp.ok) {
-              const locData = await locResp.json();
-              (locData.locations || []).forEach(loc => {
-                gbpLocations.push({
-                  name: loc.name,
-                  title: loc.title || loc.name,
-                  locationId: loc.name.split('/').pop()
-                });
-              });
-            }
-          }
-
-          if (gbpLocations.length === 0) {
-            document.getElementById('analyticsMetrics').innerHTML =
-              '<div class="analytics-empty">No Business Profile locations found for this account.</div>';
-            return;
-          }
-
-          // Render location tabs
-          locTabsEl.innerHTML = gbpLocations.map((loc, i) =>
-            `<button class="analytics-loc-tab ${i === 0 ? 'active' : ''}" data-idx="${i}">${loc.title}</button>`
-          ).join('');
-
-          locTabsEl.addEventListener('click', e => {
-            const tab = e.target.closest('.analytics-loc-tab');
-            if (!tab) return;
-            locTabsEl.querySelectorAll('.analytics-loc-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            selectedLocation = gbpLocations[parseInt(tab.dataset.idx)];
-            fetchPerformanceData();
-          });
-
-          selectedLocation = gbpLocations[0];
-          fetchPerformanceData();
-
-        } catch (err) {
-          console.error('GBP discovery error:', err);
-          document.getElementById('analyticsMetrics').innerHTML =
-            `<div class="analytics-empty" style="color:var(--red)">Error: ${err.message}<br><span style="font-size:0.82rem;color:var(--text-muted)">Make sure the Business Profile APIs are enabled in Google Cloud Console.</span></div>`;
-        }
-      }
-
-      async function fetchPerformanceData() {
-        if (!selectedLocation || !accessToken) return;
-
-        const locId = selectedLocation.locationId;
-        const locPath = 'locations/' + locId;
-
-        // Date range: last 90 days
-        const end = new Date();
-        const start = new Date();
-        start.setDate(start.getDate() - 90);
-
-        const dateParams = `dailyRange.start_date.year=${start.getFullYear()}&dailyRange.start_date.month=${start.getMonth() + 1}&dailyRange.start_date.day=${start.getDate()}&dailyRange.end_date.year=${end.getFullYear()}&dailyRange.end_date.month=${end.getMonth() + 1}&dailyRange.end_date.day=${end.getDate()}`;
-
-        const metrics = [
-          'BUSINESS_IMPRESSIONS_DESKTOP_SEARCH',
-          'BUSINESS_IMPRESSIONS_MOBILE_SEARCH',
-          'BUSINESS_IMPRESSIONS_DESKTOP_MAPS',
-          'BUSINESS_IMPRESSIONS_MOBILE_MAPS',
-          'WEBSITE_CLICKS',
-          'BUSINESS_DIRECTION_REQUESTS',
-          'CALL_CLICKS',
-          'BUSINESS_BOOKINGS'
-        ];
-
-        // Fetch all metrics in a single API call using fetchMultiDailyMetricsTimeSeries
-        try {
-          const metricsParams = metrics.map(m => 'dailyMetrics=' + m).join('&');
-          const multiUrl = `${PERF_API}/${locPath}:fetchMultiDailyMetricsTimeSeries?${metricsParams}&${dateParams}`;
-          const multiResp = await fetch(multiUrl, { headers: { Authorization: 'Bearer ' + accessToken } });
-
-          let results;
-          if (multiResp.ok) {
-            const multiData = await multiResp.json();
-            results = (multiData.multiDailyMetricTimeSeries || []).map(entry => ({
-              metric: entry.dailyMetric,
-              timeSeries: entry.timeSeries
-            }));
-          } else {
-            // Fallback: fetch individually if multi endpoint fails
-            results = await Promise.all(metrics.map(async metric => {
-              const url = `${PERF_API}/${locPath}:getDailyMetricsTimeSeries?dailyMetric=${metric}&${dateParams}`;
-              const resp = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
-              if (!resp.ok) return { metric, timeSeries: null };
-              const data = await resp.json();
-              return { metric, timeSeries: data.timeSeries?.dailyMetricTimeSeries?.[0]?.timeSeries };
-            }));
-          }
-
-          // Aggregate totals
-          const totals = {};
-          const dailyData = {};
-          results.forEach(({ metric, timeSeries }) => {
-            const datedValues = timeSeries?.datedValues || [];
-            let sum = 0;
-            datedValues.forEach(v => {
-              const val = parseInt(v.value || 0);
-              sum += val;
-              const dateKey = `${v.date.year}-${String(v.date.month).padStart(2, '0')}-${String(v.date.day).padStart(2, '0')}`;
-              if (!dailyData[dateKey]) dailyData[dateKey] = {};
-              dailyData[dateKey][metric] = (dailyData[dateKey][metric] || 0) + val;
-            });
-            totals[metric] = sum;
-          });
-
-          // Total impressions = search + maps, desktop + mobile
-          const totalImpressions = (totals['BUSINESS_IMPRESSIONS_DESKTOP_SEARCH'] || 0) +
-            (totals['BUSINESS_IMPRESSIONS_MOBILE_SEARCH'] || 0) +
-            (totals['BUSINESS_IMPRESSIONS_DESKTOP_MAPS'] || 0) +
-            (totals['BUSINESS_IMPRESSIONS_MOBILE_MAPS'] || 0);
-
-          document.getElementById('metricImpressions').textContent = totalImpressions.toLocaleString();
-          document.getElementById('metricWebClicks').textContent = (totals['WEBSITE_CLICKS'] || 0).toLocaleString();
-          document.getElementById('metricDirections').textContent = (totals['BUSINESS_DIRECTION_REQUESTS'] || 0).toLocaleString();
-          document.getElementById('metricCalls').textContent = (totals['CALL_CLICKS'] || 0).toLocaleString();
-
-          // Draw impressions chart
-          drawLineChart('impressionsChart', dailyData, [
-            { keys: ['BUSINESS_IMPRESSIONS_DESKTOP_SEARCH', 'BUSINESS_IMPRESSIONS_MOBILE_SEARCH'], label: 'Search', color: '#2563eb' },
-            { keys: ['BUSINESS_IMPRESSIONS_DESKTOP_MAPS', 'BUSINESS_IMPRESSIONS_MOBILE_MAPS'], label: 'Maps', color: '#22c55e' }
-          ]);
-
-          // Draw engagement chart
-          drawBarChart('engagementChart', {
-            'Website Clicks': totals['WEBSITE_CLICKS'] || 0,
-            'Directions': totals['BUSINESS_DIRECTION_REQUESTS'] || 0,
-            'Phone Calls': totals['CALL_CLICKS'] || 0,
-            'Bookings': totals['BUSINESS_BOOKINGS'] || 0
-          });
-
-        } catch (err) {
-          console.error('Performance data error:', err);
-        }
-
-        // Fetch search keywords
-        fetchKeywords(locPath);
-      }
-
-      async function fetchKeywords(locPath) {
-        const content = document.getElementById('keywordsContent');
-        try {
-          const end = new Date();
-          const start = new Date();
-          start.setMonth(start.getMonth() - 3);
-
-          const url = `${PERF_API}/${locPath}/searchkeywords/impressions/monthly?monthlyRange.start_month.year=${start.getFullYear()}&monthlyRange.start_month.month=${start.getMonth() + 1}&monthlyRange.end_month.year=${end.getFullYear()}&monthlyRange.end_month.month=${end.getMonth() + 1}`;
-
-          const resp = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
-          if (!resp.ok) {
-            content.innerHTML = '<div class="analytics-empty">No keyword data available for this location.</div>';
-            return;
-          }
-          const data = await resp.json();
-          const keywords = data.searchKeywordsCounts || [];
-
-          if (keywords.length === 0) {
-            content.innerHTML = '<div class="analytics-empty">No search keywords meet the privacy threshold (15+ monthly searches).</div>';
-            return;
-          }
-
-          // Aggregate impressions across months
-          const kwMap = {};
-          keywords.forEach(k => {
-            const term = k.searchKeyword;
-            const impressions = (k.insightsValue?.value || 0);
-            kwMap[term] = (kwMap[term] || 0) + parseInt(impressions);
-          });
-
-          const sorted = Object.entries(kwMap).sort((a, b) => b[1] - a[1]).slice(0, 20);
-          const maxVal = sorted[0]?.[1] || 1;
-
-          content.innerHTML = `
-            <table class="keywords-table">
-              <thead><tr><th>Keyword</th><th>Impressions</th><th></th></tr></thead>
-              <tbody>
-                ${sorted.map(([kw, count]) => `
-                  <tr>
-                    <td class="keyword">${kw}</td>
-                    <td>${count.toLocaleString()}</td>
-                    <td><div class="keyword-bar"><div class="keyword-bar-fill" style="width:${(count / maxVal * 100).toFixed(1)}%"></div></div></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          `;
-        } catch (err) {
-          console.error('Keywords error:', err);
-          content.innerHTML = '<div class="analytics-empty">Could not load keyword data.</div>';
-        }
-      }
-
-      // === Simple Canvas Charts ===
-      function drawLineChart(canvasId, dailyData, series) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
-        const W = rect.width, H = rect.height;
-        const pad = { top: 20, right: 20, bottom: 30, left: 50 };
-
-        const dates = Object.keys(dailyData).sort();
-        if (dates.length === 0) {
-          ctx.fillStyle = '#64748b';
-          ctx.font = '14px Inter';
-          ctx.textAlign = 'center';
-          ctx.fillText('No data available', W / 2, H / 2);
-          return;
-        }
-
-        // Compute series values
-        const seriesData = series.map(s => {
-          return dates.map(d => {
-            return s.keys.reduce((sum, k) => sum + (dailyData[d]?.[k] || 0), 0);
-          });
-        });
-
-        const allVals = seriesData.flat();
-        const maxVal = Math.max(...allVals, 1);
-        const chartW = W - pad.left - pad.right;
-        const chartH = H - pad.top - pad.bottom;
-
-        // Grid lines
-        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i <= 4; i++) {
-          const y = pad.top + chartH - (chartH * i / 4);
-          ctx.beginPath();
-          ctx.moveTo(pad.left, y);
-          ctx.lineTo(W - pad.right, y);
-          ctx.stroke();
-          ctx.fillStyle = '#64748b';
-          ctx.font = '11px Inter';
-          ctx.textAlign = 'right';
-          ctx.fillText(Math.round(maxVal * i / 4).toLocaleString(), pad.left - 8, y + 4);
-        }
-
-        // Date labels
-        ctx.fillStyle = '#64748b';
-        ctx.font = '10px Inter';
-        ctx.textAlign = 'center';
-        const labelStep = Math.max(1, Math.floor(dates.length / 6));
-        dates.forEach((d, i) => {
-          if (i % labelStep === 0) {
-            const x = pad.left + (i / (dates.length - 1)) * chartW;
-            const parts = d.split('-');
-            ctx.fillText(parts[1] + '/' + parts[2], x, H - 8);
-          }
-        });
-
-        // Draw lines
-        seriesData.forEach((vals, si) => {
-          ctx.beginPath();
-          ctx.strokeStyle = series[si].color;
-          ctx.lineWidth = 2;
-          ctx.lineJoin = 'round';
-          vals.forEach((v, i) => {
-            const x = pad.left + (i / (dates.length - 1)) * chartW;
-            const y = pad.top + chartH - (v / maxVal) * chartH;
-            if (i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-          });
-          ctx.stroke();
-
-          // Fill area
-          ctx.globalAlpha = 0.08;
-          ctx.lineTo(pad.left + chartW, pad.top + chartH);
-          ctx.lineTo(pad.left, pad.top + chartH);
-          ctx.closePath();
-          ctx.fillStyle = series[si].color;
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        });
-
-        // Legend
-        let legendX = pad.left;
-        series.forEach(s => {
-          ctx.fillStyle = s.color;
-          ctx.fillRect(legendX, 4, 12, 4);
-          ctx.fillStyle = '#94a3b8';
-          ctx.font = '11px Inter';
-          ctx.textAlign = 'left';
-          ctx.fillText(s.label, legendX + 16, 10);
-          legendX += ctx.measureText(s.label).width + 36;
-        });
-      }
-
-      function drawBarChart(canvasId, data) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
-        const W = rect.width, H = rect.height;
-        const pad = { top: 20, right: 20, bottom: 40, left: 50 };
-
-        const labels = Object.keys(data);
-        const values = Object.values(data);
-        const maxVal = Math.max(...values, 1);
-        const chartW = W - pad.left - pad.right;
-        const chartH = H - pad.top - pad.bottom;
-        const barW = Math.min(60, chartW / labels.length * 0.6);
-        const gap = chartW / labels.length;
-        const colors = ['#2563eb', '#22c55e', '#fbbc04', '#ef4444'];
-
-        // Grid
-        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-        for (let i = 0; i <= 4; i++) {
-          const y = pad.top + chartH - (chartH * i / 4);
-          ctx.beginPath();
-          ctx.moveTo(pad.left, y);
-          ctx.lineTo(W - pad.right, y);
-          ctx.stroke();
-          ctx.fillStyle = '#64748b';
-          ctx.font = '11px Inter';
-          ctx.textAlign = 'right';
-          ctx.fillText(Math.round(maxVal * i / 4).toLocaleString(), pad.left - 8, y + 4);
-        }
-
-        // Bars
-        labels.forEach((label, i) => {
-          const x = pad.left + gap * i + gap / 2 - barW / 2;
-          const barH = (values[i] / maxVal) * chartH;
-          const y = pad.top + chartH - barH;
-
-          ctx.fillStyle = colors[i % colors.length];
-          ctx.beginPath();
-          ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
-          ctx.fill();
-
-          // Value on top
-          ctx.fillStyle = '#f1f5f9';
-          ctx.font = '12px Inter';
-          ctx.textAlign = 'center';
-          ctx.fillText(values[i].toLocaleString(), x + barW / 2, y - 6);
-
-          // Label
-          ctx.fillStyle = '#94a3b8';
-          ctx.font = '11px Inter';
-          ctx.fillText(label, pad.left + gap * i + gap / 2, H - 12);
-        });
-      }
     })();
   </script>
 </body>

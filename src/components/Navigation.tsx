@@ -235,73 +235,21 @@ export function Navigation() {
           </div>
 
           <div className="mnav-body">
-            {/* Main links page */}
-            <div className={`mnav-page mnav-page-main${mobileServicesOpen ? " mnav-page-left" : ""}`}>
-              <div className="mnav-links">
-                <Link href="/about" className="mnav-link" onClick={closeMobile}>
-                  <span>About</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
-                </Link>
+            <div className="mnav-links">
+              <Link href="/about" className="mnav-link" onClick={closeMobile}>
+                <span>About</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
 
-                <button
-                  className="mnav-link mnav-link-expand"
-                  onClick={() => setMobileServicesOpen(true)}
-                >
-                  <span>Services</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
-                </button>
-
-                <Link href="/reviews" className="mnav-link" onClick={closeMobile}>
-                  <span>Reviews</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
-                </Link>
-
-                <Link href="/faq" className="mnav-link" onClick={closeMobile}>
-                  <span>FAQ</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
-                </Link>
-
-                <Link href="/blog" className="mnav-link" onClick={closeMobile}>
-                  <span>Blog</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
-                </Link>
-
-                <Link href="/contact" className="mnav-link" onClick={closeMobile}>
-                  <span>Contact</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
-                </Link>
-              </div>
-
-              <div className="mnav-footer">
-                <Link href="/book" className="mnav-book-btn" onClick={closeMobile}>
-                  Book Appointment
-                </Link>
-                <a href="tel:+19179059370" className="mnav-phone">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                  </svg>
-                  (917) 905-9370
-                </a>
-                <div className="mnav-locations">
-                  <span>Manhattan</span>
-                  <span className="mnav-loc-dot"></span>
-                  <span>Brooklyn</span>
-                  <span className="mnav-loc-dot"></span>
-                  <span>Upper East Side</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Services sub-page (slides in from right) */}
-            <div className={`mnav-page mnav-page-services${mobileServicesOpen ? " mnav-page-active" : ""}`}>
-              <button className="mnav-back-btn" onClick={() => setMobileServicesOpen(false)}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-                <span>Back</span>
+              <button
+                className={`mnav-link mnav-link-expand${mobileServicesOpen ? " open" : ""}`}
+                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+              >
+                <span>Services</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: mobileServicesOpen ? "rotate(90deg)" : "none", transition: "transform 0.3s ease" }}><polyline points="9 6 15 12 9 18"/></svg>
               </button>
-              <h3 className="mnav-services-title">Our Services</h3>
-              <div className="mnav-services-list">
+
+              <div className={`mnav-services${mobileServicesOpen ? " open" : ""}`}>
                 {services.map((s) => (
                   <Link
                     key={s.slug}
@@ -311,9 +259,47 @@ export function Navigation() {
                   >
                     <span className="mnav-service-name">{s.label}</span>
                     <span className="mnav-service-desc">{s.desc}</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
                   </Link>
                 ))}
+              </div>
+
+              <Link href="/reviews" className="mnav-link" onClick={closeMobile}>
+                <span>Reviews</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+
+              <Link href="/faq" className="mnav-link" onClick={closeMobile}>
+                <span>FAQ</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+
+              <Link href="/blog" className="mnav-link" onClick={closeMobile}>
+                <span>Blog</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+
+              <Link href="/contact" className="mnav-link" onClick={closeMobile}>
+                <span>Contact</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 6 15 12 9 18"/></svg>
+              </Link>
+            </div>
+
+            <div className="mnav-footer">
+              <Link href="/book" className="mnav-book-btn" onClick={closeMobile}>
+                Book Appointment
+              </Link>
+              <a href="tel:+19179059370" className="mnav-phone">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                (917) 905-9370
+              </a>
+              <div className="mnav-locations">
+                <span>Manhattan</span>
+                <span className="mnav-loc-dot"></span>
+                <span>Brooklyn</span>
+                <span className="mnav-loc-dot"></span>
+                <span>Upper East Side</span>
               </div>
             </div>
           </div>

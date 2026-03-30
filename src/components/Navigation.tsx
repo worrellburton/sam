@@ -54,12 +54,22 @@ export function Navigation() {
   const closeMobile = useCallback(() => {
     setMobileOpen(false);
     setMobileServicesOpen(false);
+    document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+    document.body.style.top = "";
+    window.scrollTo(0, parseInt(document.body.dataset.scrollY || "0"));
   }, []);
 
   const openMobile = useCallback(() => {
     setMobileOpen(true);
+    document.body.dataset.scrollY = String(window.scrollY);
+    document.body.style.top = `-${window.scrollY}px`;
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
   }, []);
 
   useEffect(() => {
@@ -73,7 +83,7 @@ export function Navigation() {
 
   return (
     <nav
-      className={`nav${!isHome ? " nav-solid" : ""}${isScrolled ? " scrolled" : ""}${isHidden ? " nav-hidden" : ""}`}
+      className={`nav${!isHome ? " nav-solid" : ""}${isScrolled ? " scrolled" : ""}${isHidden && !mobileOpen ? " nav-hidden" : ""}`}
       id="nav"
     >
       <div className="container nav-container">

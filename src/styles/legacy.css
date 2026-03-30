@@ -285,6 +285,11 @@ img { max-width: 100%; display: block; }
 .nav.nav-hidden {
   transform: translateY(-100%);
 }
+@media (max-width: 768px) {
+  .nav.nav-hidden {
+    transform: none;
+  }
+}
 
 /* nav-solid: dark mode (default) — dark bg, light text */
 .nav.nav-solid {
@@ -4972,6 +4977,7 @@ img.insurance-logo:hover {
     -webkit-backdrop-filter: saturate(180%) blur(40px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   [data-theme="light"] .mobile-nav {
     background: rgba(255, 255, 255, 0.97);

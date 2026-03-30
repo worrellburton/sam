@@ -771,6 +771,13 @@ a.nav-btn-book,
 .nav-toggle.active span:nth-child(2) { opacity: 0; }
 .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
+/* Hamburger color for light theme / scrolled / solid nav */
+[data-theme="light"] .nav.nav-solid .nav-toggle span,
+[data-theme="light"] .nav.scrolled .nav-toggle span,
+.nav.scrolled .nav-toggle span { background: #1a1a2e; }
+[data-theme="dark"] .nav.nav-solid .nav-toggle span,
+[data-theme="dark"] .nav.scrolled .nav-toggle span { background: #f0f0f5; }
+
 /* ===== Reviews Page Platform Cards ===== */
 .platform-cards-grid {
   display: grid;
@@ -5001,7 +5008,7 @@ img.insurance-logo:hover {
   }
 
   /* Body */
-  .mnav-body { display: flex; flex-direction: column; flex: 1; padding: 8px 0; }
+  .mnav-body { position: relative; flex: 1; overflow: hidden; padding: 8px 0; }
   .mnav-links { display: flex; flex-direction: column; flex: 1; }
 
   /* Links */
@@ -5036,25 +5043,48 @@ img.insurance-logo:hover {
   .mobile-nav.active .mnav-links > :nth-child(8) { transition-delay: 0.24s; }
   .mobile-nav.active .mnav-links > :nth-child(9) { transition-delay: 0.27s; }
 
-  /* Services accordion */
-  .mnav-services {
-    max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
-    background: rgba(255,255,255,0.02);
+  /* Slide-in page system */
+  .mnav-page {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
   }
-  .mnav-services.open { max-height: 500px; }
-  [data-theme="light"] .mnav-services { background: rgba(0,0,0,0.02); }
+  .mnav-page-main { transform: translateX(0); }
+  .mnav-page-main.mnav-page-left { transform: translateX(-100%); }
+  .mnav-page-services { transform: translateX(100%); }
+  .mnav-page-services.mnav-page-active { transform: translateX(0); }
+
+  /* Back button on services page */
+  .mnav-back-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 18px 24px; font-size: 1rem; font-weight: 600;
+    color: var(--primary); background: none; border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer; font-family: inherit;
+  }
+  [data-theme="light"] .mnav-back-btn { border-bottom-color: rgba(0,0,0,0.06); }
+
+  /* Services page title */
+  .mnav-services-title {
+    padding: 20px 24px 8px; font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: #6b6b80;
+  }
+  [data-theme="light"] .mnav-services-title { color: #999; }
+
+  /* Services list */
+  .mnav-services-list { display: flex; flex-direction: column; }
   .mnav-service-item {
-    display: flex; flex-direction: column; padding: 14px 24px 14px 40px;
+    display: flex; align-items: center; padding: 18px 24px;
     text-decoration: none; transition: background 0.15s ease;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.04); gap: 12px;
   }
   .mnav-service-item:hover { background: rgba(99,102,241,0.08); }
-  .mnav-service-name { font-size: 1rem; font-weight: 500; color: #c4c4d4; }
-  .mnav-service-desc { font-size: 0.78rem; color: #6b6b80; margin-top: 2px; }
+  .mnav-service-name { font-size: 1.1rem; font-weight: 600; color: #e4e4ee; flex: 1; }
+  .mnav-service-desc { display: none; }
+  .mnav-service-item svg { color: rgba(255,255,255,0.2); flex-shrink: 0; }
   [data-theme="light"] .mnav-service-name { color: var(--text); }
-  [data-theme="light"] .mnav-service-desc { color: #999; }
-  [data-theme="light"] .mnav-service-item { border-bottom-color: rgba(0,0,0,0.03); }
+  [data-theme="light"] .mnav-service-item { border-bottom-color: rgba(0,0,0,0.04); }
   [data-theme="light"] .mnav-service-item:hover { background: rgba(37,99,235,0.05); }
+  [data-theme="light"] .mnav-service-item svg { color: rgba(0,0,0,0.2); }
 
   /* Footer */
   .mnav-footer {

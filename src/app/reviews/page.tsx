@@ -81,7 +81,7 @@ export default function ReviewsPage() {
           const data = await resp.json();
           return (data.reviews || []).map((r: GoogleReview) => ({ ...r, locationLabel: place.label }));
         }));
-        setReviews(results.flat());
+        setReviews(results.flat().filter((r: GoogleReview) => r.rating >= 5));
       } catch {
         // fallback
       } finally {

@@ -171,7 +171,7 @@ function useGoogleReviews() {
         setTotalCount(total);
 
         const all = results.flatMap(r => r.reviews)
-          .filter((r: GoogleReview) => r.rating >= 4)
+          .filter((r: GoogleReview) => r.rating >= 5)
           .sort((a: GoogleReview, b: GoogleReview) => new Date(b.publishTime || 0).getTime() - new Date(a.publishTime || 0).getTime());
 
         setReviews(all);

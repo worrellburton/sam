@@ -4989,7 +4989,7 @@ img.insurance-logo:hover {
   }
   [data-theme="light"] .mnav-header { border-bottom-color: rgba(0,0,0,0.06); }
   .mnav-logo {
-    font-size: 1.1rem; font-weight: 700; color: #fff; text-decoration: none;
+    display: block; font-size: 1.1rem; font-weight: 700; color: #fff; text-decoration: none;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
   }
   [data-theme="light"] .mnav-logo { color: var(--text); }
@@ -5046,7 +5046,7 @@ img.insurance-logo:hover {
 
   /* Services accordion */
   .mnav-services {
-    max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+    display: block; max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
     background: rgba(255,255,255,0.02);
   }
   .mnav-services.open { max-height: 500px; }
@@ -5057,8 +5057,8 @@ img.insurance-logo:hover {
     border-bottom: 1px solid rgba(255,255,255,0.03);
   }
   .mnav-service-item:hover { background: rgba(99,102,241,0.08); }
-  .mnav-service-name { font-size: 1rem; font-weight: 500; color: #c4c4d4; }
-  .mnav-service-desc { font-size: 0.78rem; color: #6b6b80; margin-top: 2px; }
+  .mnav-service-name { display: block; font-size: 1rem; font-weight: 500; color: #c4c4d4; }
+  .mnav-service-desc { display: block; font-size: 0.78rem; color: #6b6b80; margin-top: 2px; }
   [data-theme="light"] .mnav-service-name { color: var(--text); }
   [data-theme="light"] .mnav-service-desc { color: #999; }
   [data-theme="light"] .mnav-service-item { border-bottom-color: rgba(0,0,0,0.03); }
@@ -5091,7 +5091,7 @@ img.insurance-logo:hover {
     display: flex; align-items: center; gap: 8px;
     font-size: 0.75rem; color: #5a5a6e;
   }
-  .mnav-loc-dot { width: 3px; height: 3px; border-radius: 50%; background: #5a5a6e; }
+  .mnav-loc-dot { display: inline-block; width: 3px; height: 3px; border-radius: 50%; background: #5a5a6e; }
   [data-theme="light"] .mnav-locations { color: #999; }
   [data-theme="light"] .mnav-loc-dot { background: #bbb; }
   .pro-sports-grid { gap: 32px; }

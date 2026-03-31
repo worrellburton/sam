@@ -115,10 +115,10 @@ function FAQItem({ faq, index }: { faq: typeof faqs[0]; index: number }) {
       className={`faq-item${open ? " faq-open" : ""}`}
       style={{ animationDelay: `${index * 0.05}s` }}
     >
-      <button className="faq-summary" onClick={() => setOpen(!open)}>
-        <div className="faq-icon-wrap">{faq.icon}</div>
+      <button className="faq-summary" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <div className="faq-icon-wrap" aria-hidden="true">{faq.icon}</div>
         <h3>{faq.q}</h3>
-        <span className={`faq-toggle${open ? " faq-toggle-open" : ""}`}>
+        <span className={`faq-toggle${open ? " faq-toggle-open" : ""}`} aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </span>
       </button>

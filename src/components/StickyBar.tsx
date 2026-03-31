@@ -22,7 +22,7 @@ export function StickyBar() {
   const visible = scrollY > 300 && !nearBottom;
 
   return (
-    <div className={`sticky-bottom-bar${visible ? " visible" : ""}`}>
+    <div className={`sticky-bottom-bar${visible ? " visible" : ""}`} role="complementary" aria-label="Quick info bar">
       <div className="sticky-bar-info">
         <Link href="/reviews" className="sticky-bar-rating">
           <svg className="sticky-bar-google-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">

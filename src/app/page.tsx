@@ -337,7 +337,7 @@ export default function Home() {
                 </div>
                 <div className="highlight-card">
                   <div className="highlight-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" strokeWidth="2" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                   </div>
                   <h3>1,400+ Reviews</h3>
                   <p>4.8/5 stars across major platforms</p>
@@ -429,7 +429,7 @@ export default function Home() {
             <h2>Trusted by <span className="text-accent">{googleTotal ? `${(1469 + googleTotal).toLocaleString()}+` : '1,400+'} Patients</span></h2>
             <p className="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
           </div>
-          <div className="reviews-carousel-wrapper">
+          <div className="reviews-carousel-wrapper" aria-live="polite">
             <div className="reviews-carousel-track" style={{ transform: `translateX(-${reviewIndex * 100}%)` }}>
               {Array.from({ length: totalReviewPages }).map((_, pageIdx) => (
                 <div className="reviews-carousel-page" key={pageIdx}>
@@ -475,11 +475,11 @@ export default function Home() {
             {totalReviewPages > 1 && (
               <div className="reviews-carousel-nav">
                 <button className="reviews-nav-btn" onClick={() => setReviewIndex(prev => prev === 0 ? totalReviewPages - 1 : prev - 1)} aria-label="Previous reviews">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
                 </button>
                 <span className="reviews-nav-count">{reviewIndex + 1} / {totalReviewPages}</span>
                 <button className="reviews-nav-btn" onClick={() => setReviewIndex(prev => (prev + 1) % totalReviewPages)} aria-label="Next reviews">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 6 15 12 9 18" /></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18" /></svg>
                 </button>
               </div>
             )}

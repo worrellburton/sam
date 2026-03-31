@@ -1,7 +1,8 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { Sidebar, useDzPrefs } from "../dashboard/page";
+import { Sidebar } from "@/lib/doczoc/Sidebar";
+import { useDzPrefs } from "@/lib/doczoc/useDzPrefs";
 import { PlatformBg } from "@/components/PlatformBg";
 import { PATIENTS } from "@/data/patients";
 

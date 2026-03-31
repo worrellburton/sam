@@ -1,27 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback, createContext, useContext, lazy, Suspense } from "react";
+import { useEffect, useState, useCallback, lazy, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { StickyBar } from "@/components/StickyBar";
 import { useTheme } from "@/hooks/useTheme";
-
-interface BookingContextType {
-  openBooking: () => void;
-  closeBooking: () => void;
-  isBookingOpen: boolean;
-}
-
-export const BookingContext = createContext<BookingContextType>({
-  openBooking: () => {},
-  closeBooking: () => {},
-  isBookingOpen: false,
-});
-
-export function useBooking() {
-  return useContext(BookingContext);
-}
+import { BookingContext } from "@/lib/BookingContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [bookingOpen, setBookingOpen] = useState(false);

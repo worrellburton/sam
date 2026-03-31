@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Sidebar, useDzPrefs } from "../dashboard/page";
+import { Sidebar } from "@/lib/doczoc/Sidebar";
+import { useDzPrefs } from "@/lib/doczoc/useDzPrefs";
 import { PlatformBg } from "@/components/PlatformBg";
 import { useApiStatus, useICD10Search } from "@/hooks/useApiStatus";
 import type { ApiStatus } from "@/hooks/useApiStatus";

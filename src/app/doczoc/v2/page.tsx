@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { seoMeta } from "@/seo";
 
@@ -155,7 +156,7 @@ function DoctorCard({ doc, delay }: { doc: typeof DOCTORS[0]; delay: number }) {
     <div className="v2-doctor-card v2-msg-animate" style={{ animationDelay: `${delay}s` }}>
       <div className="v2-doc-header">
         <div className="v2-doc-avatar" style={{ background: `${color}20`, color }}>
-          {doc.image ? <img src={doc.image} alt={doc.name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} /> : initials}
+          {doc.image ? <Image src={doc.image} alt={doc.name} width={48} height={48} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} /> : initials}
         </div>
         <div className="v2-doc-info">
           <div className="v2-doc-name">{doc.name}</div>

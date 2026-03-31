@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useMemo, useCallback, useEffect, useRef, useContext } from "react";
-import { BookingContext } from "@/components/ClientLayout";
+import { BookingContext } from "@/lib/BookingContext";
 
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -266,7 +267,6 @@ function useAnimatedBackground(canvasRef: React.RefObject<HTMLCanvasElement | nu
 }
 
 // Google Places API for reviews
-const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
 const PLACE_IDS = [
   { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
   { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
@@ -291,7 +291,7 @@ function useGoogleReviews() {
     async function fetchAllReviews() {
       try {
         const results = await Promise.all(PLACE_IDS.map(async (place) => {
-          const resp = await fetch(`https://places.googleapis.com/v1/places/${place.id}?fields=${REVIEW_FIELDS}&key=${PLACES_API_KEY}`);
+          const resp = await fetch(`/api/places?placeId=${place.id}&fields=${encodeURIComponent(REVIEW_FIELDS)}`);
           if (!resp.ok) throw new Error(`API error: ${resp.status}`);
           const data = await resp.json();
           return {
@@ -659,7 +659,7 @@ export default function BookPage() {
           <div className="dz-doctor-card">
             <div className="dz-doctor-header">
               <div className="dz-avatar">
-                <img src="/sam/header.jpg" alt="Dr. Sam Elguizaoui" />
+                <Image src="/sam/header.jpg" alt="Dr. Sam Elguizaoui" width={120} height={120} />
               </div>
               <div className="dz-doctor-info">
                 <span className="dz-badge">
@@ -681,7 +681,7 @@ export default function BookPage() {
                 return photoReview ? (
                   <div className="dz-review-snippet" onClick={randomizeReview} style={{ cursor: 'pointer' }} title="Click for another review">
                     <div className="dz-snippet-author">
-                      <img src={photoReview.authorAttribution!.photoUri!} alt={photoReview.authorAttribution?.displayName || "Patient"} className="dz-snippet-avatar" />
+                      <Image src={photoReview.authorAttribution!.photoUri!} alt={photoReview.authorAttribution?.displayName || "Patient"} className="dz-snippet-avatar" width={48} height={48} unoptimized />
                     </div>
                     <p>&ldquo;{photoReview.text?.text?.slice(0, 180)}{(photoReview.text?.text?.length || 0) > 180 ? '...' : ''}&rdquo;</p>
                     <span className="dz-review-meta">{photoReview.authorAttribution?.displayName} &middot; {photoReview.relativePublishTimeDescription} &middot; {photoReview.locationLabel}</span>
@@ -780,7 +780,7 @@ export default function BookPage() {
                   <div className="dz-loc-card" key={i}>
                     <iframe
                       title={l.name}
-                      src={`https://www.google.com/maps/embed/v1/place?key=${PLACES_API_KEY}&q=${encodeURIComponent(l.address)}&zoom=13`}
+                      src={`/api/maps?type=embed&q=${encodeURIComponent(l.address)}&zoom=13`}
                       className="dz-loc-minimap"
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
@@ -1056,7 +1056,7 @@ export default function BookPage() {
                 <div className="dz-loc-circles">
                   {locations.map((l, i) => {
                     const isActive = selectedLocs.has(i);
-                    const mapSrc = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(l.address)}&zoom=14&size=200x200&scale=2&maptype=roadmap&style=feature:poi|visibility:off&markers=color:0x6366f1|${encodeURIComponent(l.address)}&key=${PLACES_API_KEY}`;
+                    const mapSrc = `/api/maps?type=static&center=${encodeURIComponent(l.address)}&zoom=14&size=200x200&scale=2&markers=${encodeURIComponent(`color:0x6366f1|${l.address}`)}`;
                     return (
                       <button
                         key={i}
@@ -1246,8 +1246,8 @@ export default function BookPage() {
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     Board Certified
                   </span>
-                  <span><img src="https://cdn.brandfetch.io/newyorkjets.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="New York Jets logo" className="sticky-team-logo" referrerPolicy="origin" /> NY Jets Team Physician</span>
-                  <span><img src="https://cdn.brandfetch.io/newyorkislanders.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="New York Islanders logo" className="sticky-team-logo" referrerPolicy="origin" /> NY Islanders Team Physician</span>
+                  <span><Image src="https://cdn.brandfetch.io/newyorkjets.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="New York Jets logo" width={32} height={32} className="sticky-team-logo" referrerPolicy="origin" /> NY Jets Team Physician</span>
+                  <span><Image src="https://cdn.brandfetch.io/newyorkislanders.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="New York Islanders logo" width={32} height={32} className="sticky-team-logo" referrerPolicy="origin" /> NY Islanders Team Physician</span>
                   <span>Lenox Hill Fellowship</span>
                   <span>Minimally Invasive Surgery</span>
                   <span>Ohio State Magna Cum Laude</span>

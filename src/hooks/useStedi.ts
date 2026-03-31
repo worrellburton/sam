@@ -1,13 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
 
-const STEDI_BASE_URL =
-  "https://healthcare.us.stedi.com/2024-04-01/change/medicalnetwork/professionalclaims/v3";
-
-function getApiKey(): string {
-  return process.env.NEXT_PUBLIC_STEDI_API_KEY || "";
-}
-
 // ── Types ───────────────────────────────────────────────────────────
 export interface StediClaimPayload {
   billing: {
@@ -325,30 +318,10 @@ export function useStediClaims() {
       setSubmitting(true);
       setLastError(null);
 
-      const apiKey = getApiKey();
-      if (!apiKey) {
-        const errorRecord: ClaimRecord = {
-          ...record,
-          status: "error",
-          response: {
-            success: false,
-            message:
-              "No Stedi API key configured. Set NEXT_PUBLIC_STEDI_API_KEY in .env",
-          },
-        };
-        setClaims((prev) =>
-          prev.map((c) => (c.id === claimId ? errorRecord : c))
-        );
-        setSubmitting(false);
-        setLastError("No API key configured");
-        return errorRecord;
-      }
-
       try {
-        const res = await fetch(`${STEDI_BASE_URL}/submission`, {
+        const res = await fetch("/api/stedi", {
           method: "POST",
           headers: {
-            Authorization: `Key ${apiKey}`,
             "Content-Type": "application/json",
             "Idempotency-Key": claimId,
           },
@@ -401,35 +374,22 @@ export function useStediClaims() {
   return { claims, submitting, lastError, submitClaim };
 }
 
-// ── Stedi health check ──────────────────────────────────────────────
+// ── Stedi health check (via server proxy) ───────────────────────────
 export async function checkStediApi(): Promise<{
   status: "connected" | "degraded" | "offline" | "no_key";
   latency?: number;
 }> {
-  const apiKey = getApiKey();
-  if (!apiKey) return { status: "no_key" };
-
   const start = performance.now();
   try {
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 8000);
-    // Use a lightweight endpoint — checking if the API responds
-    const res = await fetch(`${STEDI_BASE_URL}/submission`, {
-      method: "POST",
-      headers: {
-        Authorization: `Key ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
+    const res = await fetch("/api/stedi", {
       signal: controller.signal,
     });
     clearTimeout(tid);
-    const latency = Math.round(performance.now() - start);
-    // Even a 400 means the API is reachable
-    if (res.status < 500) {
-      return { status: latency > 3000 ? "degraded" : "connected", latency };
-    }
-    return { status: "degraded", latency };
+    const data = await res.json();
+    const latency = data.latency ?? Math.round(performance.now() - start);
+    return { status: data.status || "offline", latency };
   } catch {
     return { status: "offline" };
   }

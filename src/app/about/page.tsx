@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { Insurance } from "@/components/Insurance";
@@ -214,10 +215,7 @@ export default function AboutPage() {
         <div className="container">
           <div className="abt-split reveal">
             <div className="abt-split-img">
-              <picture>
-                <source srcSet="/header.webp" type="image/webp" />
-                <img src="/header.jpg" alt="Dr. Sam Elguizaoui performing surgery" className="abt-portrait" loading="lazy" />
-              </picture>
+              <Image src="/header.jpg" alt="Dr. Sam Elguizaoui performing surgery" className="abt-portrait" width={1200} height={669} />
             </div>
             <div className="abt-split-text">
               <p className="section-label">Clinical Philosophy</p>

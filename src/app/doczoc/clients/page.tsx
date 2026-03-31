@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useMemo } from "react";
-import { Sidebar, useDzPrefs } from "../dashboard/page";
+import { Sidebar } from "@/lib/doczoc/Sidebar";
+import { useDzPrefs } from "@/lib/doczoc/useDzPrefs";
 import { PlatformBg } from "@/components/PlatformBg";
 import { useCrosshairFocus, CrosshairToggle } from "@/hooks/useCrosshairFocus";
 

@@ -1,14 +1,6 @@
 "use client";
 import { useState, useCallback, useRef } from "react";
 
-const API_BASE = "https://api.elevenlabs.io/v1";
-const VOICE_ID = "UgBBYS2sOqTuMpoF3BR0"; // Mark - Natural Conversations
-const MODEL_ID = "eleven_multilingual_v2";
-
-function getApiKey(): string {
-  return process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY || "";
-}
-
 export interface AudioState {
   status: "idle" | "generating" | "ready" | "playing" | "paused" | "error";
   audioUrl: string | null;
@@ -40,48 +32,15 @@ export function useElevenLabs() {
       return;
     }
 
-    const apiKey = getApiKey();
-    if (!apiKey) {
-      setState({
-        status: "error",
-        audioUrl: null,
-        error: "No ElevenLabs API key configured",
-        progress: 0,
-      });
-      return;
-    }
-
     setState({ status: "generating", audioUrl: null, error: null, progress: 10 });
-
-    // Strip HTML and clean up text for speech
-    const cleanText = text
-      .replace(/<[^>]+>/g, " ")
-      .replace(/&[a-z]+;/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    // Truncate to ~5000 chars to stay within limits
-    const truncated = cleanText.length > 5000 ? cleanText.slice(0, 5000) + "..." : cleanText;
 
     try {
       setState((prev) => ({ ...prev, progress: 30 }));
 
-      const res = await fetch(`${API_BASE}/text-to-speech/${VOICE_ID}`, {
+      const res = await fetch("/api/tts", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "xi-api-key": apiKey,
-        },
-        body: JSON.stringify({
-          text: truncated,
-          model_id: MODEL_ID,
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.75,
-            style: 0.3,
-            speed: 0.95,
-          },
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
       });
 
       setState((prev) => ({ ...prev, progress: 70 }));
@@ -89,7 +48,7 @@ export function useElevenLabs() {
       if (!res.ok) {
         const errData = await res.json().catch(() => null);
         throw new Error(
-          errData?.detail?.message || errData?.message || `API error: ${res.status}`
+          errData?.error || errData?.message || `API error: ${res.status}`
         );
       }
 

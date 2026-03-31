@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { Sidebar, useDzPrefs } from "../dashboard/page";
+import { Sidebar } from "@/lib/doczoc/Sidebar";
+import { useDzPrefs } from "@/lib/doczoc/useDzPrefs";
 import { PlatformBg } from "@/components/PlatformBg";
 import { locations } from "@/data/locations";
 import { PATIENTS } from "@/data/patients";

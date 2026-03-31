@@ -2,6 +2,7 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { blogPosts, allBlogPosts, type BlogPost } from "@/data/blog";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
@@ -79,7 +80,7 @@ function BlogCard({ post, showEpisode }: { post: BlogPost; showEpisode?: boolean
     <div className={`blog-card${isComingSoon ? " coming-soon" : ""}`}>
       <Link href={isComingSoon ? "#" : `/blog/${post.slug}`} className="blog-card-link">
         <div className="blog-card-img-wrap">
-          <img className="blog-card-img" src={post.image} alt={post.imageAlt} loading="lazy" />
+          <Image className="blog-card-img" src={post.image} alt={post.imageAlt} width={800} height={400} />
           {showEpisode && post.episode && (
             <span className="blog-card-ep">EP. {post.episode}</span>
           )}

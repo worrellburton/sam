@@ -48,7 +48,6 @@ const platforms = [
   { name: "U.S. News", rating: "Top", reviews: "Doctor Rankings", url: "https://health.usnews.com/doctors" },
 ];
 
-const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
 const PLACE_IDS = [
   { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
   { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
@@ -76,7 +75,7 @@ export default function ReviewsPage() {
     async function fetchReviews() {
       try {
         const results = await Promise.all(PLACE_IDS.map(async (place) => {
-          const resp = await fetch(`https://places.googleapis.com/v1/places/${place.id}?fields=${FIELDS}&key=${PLACES_API_KEY}`);
+          const resp = await fetch(`/api/places?placeId=${place.id}&fields=${encodeURIComponent(FIELDS)}`);
           if (!resp.ok) return [];
           const data = await resp.json();
           return (data.reviews || []).map((r: GoogleReview) => ({ ...r, locationLabel: place.label }));

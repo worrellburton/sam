@@ -10,14 +10,7 @@ const BASE_URLS: Record<string, string> = {
 };
 
 const BASE_URL = BASE_URLS[ATHENA_ENV] || BASE_URLS.preview;
-const TOKEN_URL = `${BASE_URL}/oauth2/v1/token`;
 
-function getClientId(): string {
-  return process.env.NEXT_PUBLIC_ATHENA_CLIENT_ID || "";
-}
-function getClientSecret(): string {
-  return process.env.NEXT_PUBLIC_ATHENA_CLIENT_SECRET || "";
-}
 function getPracticeId(): string {
   return process.env.NEXT_PUBLIC_ATHENA_PRACTICE_ID || "";
 }
@@ -120,23 +113,11 @@ let tokenExpiry = 0;
 async function getAccessToken(): Promise<string> {
   if (cachedToken && Date.now() < tokenExpiry - 30_000) return cachedToken;
 
-  const clientId = getClientId();
-  const clientSecret = getClientSecret();
-  if (!clientId || !clientSecret) throw new Error("Athena API credentials not configured");
-
-  const basic = btoa(`${clientId}:${clientSecret}`);
-  const res = await fetch(TOKEN_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${basic}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: "grant_type=client_credentials&scope=athena/service/Athenanet.MDP.*",
-  });
+  const res = await fetch("/api/athena/token", { method: "POST" });
 
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Athena OAuth failed: ${res.status} ${text}`);
+    const data = await res.json().catch(() => ({ error: `Token request failed: ${res.status}` }));
+    throw new Error(data.error || `Athena OAuth failed: ${res.status}`);
   }
 
   const data = await res.json();
@@ -186,14 +167,14 @@ export async function checkAthenaApi(): Promise<{
   status: "connected" | "degraded" | "offline" | "no_key";
   latency?: number;
 }> {
-  if (!getClientId() || !getClientSecret()) return { status: "no_key" };
+  const practiceId = getPracticeId();
+  if (!practiceId) return { status: "no_key" };
   const start = performance.now();
   try {
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 8000);
 
     const token = await getAccessToken();
-    const practiceId = getPracticeId();
     const res = await fetch(`${BASE_URL}/v1/${practiceId}/ping`, {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       signal: controller.signal,

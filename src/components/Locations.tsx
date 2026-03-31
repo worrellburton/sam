@@ -27,7 +27,7 @@ export function Locations() {
                   style={{ border: 0, borderRadius: "12px" }}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM&q=${loc.query}&zoom=14`}
+                  src={`/api/maps?type=embed&q=${encodeURIComponent(loc.query)}&zoom=14`}
                 ></iframe>
               </div>
               <a href={loc.mapsUrl} target="_blank" rel="noopener" className="location-label">

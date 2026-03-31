@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
@@ -12,14 +13,14 @@ import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
 const tickerItems = [
   {
     icon: (
-      <img src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&h=40&w=40" alt="New York Jets" width="32" height="32" />
+      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&h=40&w=40" alt="New York Jets" width={32} height={32} />
     ),
     text: "New York Jets Team Physician",
     em: "NFL",
   },
   {
     icon: (
-      <img src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/nyi.png&h=40&w=40" alt="New York Islanders" width="32" height="32" />
+      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/nyi.png&h=40&w=40" alt="New York Islanders" width={32} height={32} />
     ),
     text: "New York Islanders Team Physician",
     em: "NHL",
@@ -132,7 +133,6 @@ const timeline = [
   { year: "2018", label: "International", title: "Joint Preservation", place: "Switzerland, Netherlands & Italy", detail: "European cartilage repair & transplant techniques" },
 ];
 
-const PLACES_API_KEY = 'AIzaSyCDYVX9sM-Tkoun755-ZLP4KpjZGufBJbM';
 const PLACE_IDS = [
   { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
   { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
@@ -157,7 +157,7 @@ function useGoogleReviews() {
     async function fetchAllReviews() {
       try {
         const results = await Promise.all(PLACE_IDS.map(async (place) => {
-          const resp = await fetch(`https://places.googleapis.com/v1/places/${place.id}?fields=${FIELDS}&key=${PLACES_API_KEY}`);
+          const resp = await fetch(`/api/places?placeId=${place.id}&fields=${encodeURIComponent(FIELDS)}`);
           if (!resp.ok) throw new Error(`API error: ${resp.status}`);
           const data = await resp.json();
           return {
@@ -257,7 +257,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
       <header className="hero" id="hero">
-        <img className="hero-bg-img loaded" src="/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" />
+        <Image className="hero-bg-img loaded" src="/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <div className="hero-text">
@@ -301,10 +301,7 @@ export default function Home() {
         <div className="container">
           <div className="about-layout">
             <div className="about-photo">
-              <picture>
-                <source srcSet="/header.webp" type="image/webp" />
-                <img src="/header.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" loading="lazy" width="1200" height="669" />
-              </picture>
+              <Image src="/header.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={1200} height={669} />
             </div>
             <div className="about-right">
               <div className="about-header">
@@ -502,7 +499,7 @@ export default function Home() {
             {recentPosts.map((post) => (
               <Link href={`/blog/${post.slug}`} className="blog-card" key={post.slug}>
                 <div style={{ position: "relative" }}>
-                  <img className="blog-card-img" src={post.image} alt={post.imageAlt} loading="lazy" />
+                  <Image className="blog-card-img" src={post.image} alt={post.imageAlt} width={800} height={400} />
                   {post.episode && (
                     <span style={{
                       position: "absolute", top: 12, left: 12,
@@ -524,7 +521,7 @@ export default function Home() {
             {comingSoonPost && (
               <div className="blog-card blog-card-coming-soon">
                 <div style={{ position: "relative" }}>
-                  <img className="blog-card-img" src={comingSoonPost.image} alt={comingSoonPost.imageAlt} loading="lazy" />
+                  <Image className="blog-card-img" src={comingSoonPost.image} alt={comingSoonPost.imageAlt} width={800} height={400} />
                   <div className="blog-card-coming-overlay">
                     <span className="blog-card-coming-badge">Coming Soon</span>
                   </div>

@@ -145,7 +145,17 @@ export default function ReviewsPage() {
                   {platformIcons[p.name]}
                 </div>
                 <div className="platform-info">
-                  <div className="platform-name">{p.name}</div>
+                  <div className="platform-name">
+                    {p.name}
+                    {p.name === "Zocdoc" && (
+                      <span className="patient-choice-inline">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none" aria-hidden="true">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                        Patient Choice
+                      </span>
+                    )}
+                  </div>
                   <div className="platform-rating">
                     <span className="platform-score">{p.rating}</span>
                     {p.rating !== "Top" && <span className="platform-stars">{starsHTML(5)}</span>}
@@ -154,16 +164,6 @@ export default function ReviewsPage() {
                 </div>
               </a>
             ))}
-          </div>
-
-          <div className="patient-choice-badge">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="#f59e0b" stroke="none" aria-hidden="true">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-            <div>
-              <strong>Patient Choice Award</strong>
-              <p>Providers with this badge are highly rated, reliable, and recommended by other patients.</p>
-            </div>
           </div>
         </div>
       </section>

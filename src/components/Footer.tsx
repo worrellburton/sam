@@ -53,7 +53,7 @@ export function Footer() {
           <div className="footer-col">
             <h4>Contact</h4>
             <a href="tel:+19179059370">+1-917-905-9370</a>
-            <Link href="/book">Book Now</Link>
+            <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Book Now</a>
             <a href="https://www.sportsorthomd.com/" target="_blank" rel="noopener">SportsOrthoMD.com</a>
           </div>
         </div>

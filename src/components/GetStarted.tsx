@@ -25,9 +25,9 @@ export function GetStarted() {
             <div className="contact-card">
               <h3>Book Online</h3>
               <p>Schedule your appointment online for instant confirmation.</p>
-              <Link href="/book" className="btn btn-primary btn-lg btn-block">
-                Book Now
-              </Link>
+              <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-zocdoc btn-lg btn-block">
+                Book on Zocdoc
+              </a>
             </div>
           </div>
         </div>

@@ -194,7 +194,7 @@ export default function AboutPage() {
             Fellowship-trained orthopedic surgeon pioneering joint preservation, biologics, and minimally invasive sports medicine in New York City.
           </p>
           <div className="abt-hero-ctas">
-            <Link href="/book" className="btn btn-primary">Book Consultation</Link>
+            <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-zocdoc">Book Consultation</a>
             <a href="#philosophy" className="btn btn-outline">Learn More</a>
           </div>
         </div>

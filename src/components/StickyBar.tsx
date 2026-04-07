@@ -69,9 +69,9 @@ export function StickyBar() {
           </div>
         </div>
       </div>
-      <Link href="/book" className="sticky-bar-btn">
+      <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="sticky-bar-btn">
         Book Now
-      </Link>
+      </a>
     </div>
   );
 }

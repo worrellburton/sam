@@ -296,7 +296,7 @@ export const conditionBlogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>You Deserve Answers — And a Plan</h3>
   <p>If you're dealing with a knee ligament injury in New York City, Dr. Elguizaoui is here to listen, evaluate, and guide you toward the best outcome. With offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -571,7 +571,7 @@ export const conditionBlogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Your Knee Deserves Expert Care</h3>
   <p>If you're dealing with knee pain, catching, or swelling, Dr. Elguizaoui can help you understand what's happening and map out a path to recovery. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -971,7 +971,7 @@ export const conditionBlogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Your Shoulder Deserves Expert Care</h3>
   <p>If you're dealing with shoulder pain, instability, or a suspected rotator cuff tear in New York City, Dr. Elguizaoui is here to help. As a fellowship-trained shoulder specialist and former team physician for the NY Jets and NY Islanders, he brings world-class expertise and genuine compassion to every patient. Offices in <a href="/services/sports-medicine">Manhattan</a>, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -1380,7 +1380,7 @@ export const conditionBlogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Elbow Pain Doesn't Have to Run Your Life</h3>
   <p>Whether you're dealing with tennis elbow, golfer's elbow, or elbow pain you can't quite explain — Dr. Elguizaoui is here to provide a clear diagnosis, a compassionate plan, and expert care. With offices in Manhattan, Brooklyn, and Scarsdale, expert elbow pain relief is close to home.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -1739,7 +1739,7 @@ export const conditionBlogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Bone Pain That Won't Quit? Let's Find Out What's Going On</h3>
   <p>If you're an athlete or active person dealing with worsening bone pain, Dr. Elguizaoui can provide a clear diagnosis and a recovery plan that gets you back to doing what you love — safely and completely. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -2083,7 +2083,7 @@ export const conditionBlogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Ready to Stop Living Around Your Pain?</h3>
   <p>Dr. Elguizaoui specializes in helping patients with chronic joint pain find real, lasting relief — whether through regenerative medicine, physical therapy, or a combined approach tailored to your life. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -2409,7 +2409,7 @@ export const conditionBlogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Joint Locking, Catching, or Clicking? Let's Figure It Out</h3>
   <p>If your joint feels like something is "stuck" or "floating around inside," Dr. Elguizaoui can evaluate you, get the right imaging, and — if needed — remove the problem arthroscopically with minimal downtime. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -2757,7 +2757,7 @@ export const conditionBlogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Swollen, Stiff Joint That Won't Settle Down?</h3>
   <p>Dr. Elguizaoui specializes in diagnosing and treating synovitis — from targeted injections to arthroscopic synovectomy. If your joint has been swollen and painful for more than a couple of weeks, let's find out why and get you feeling better. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 

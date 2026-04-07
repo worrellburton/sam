@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { locations } from "@/data/locations";
 
 export function Locations() {
@@ -9,12 +8,12 @@ export function Locations() {
           <div>
             <h2>Dr. Elguizaoui sees patients at these New York Orthopedics locations</h2>
           </div>
-          <Link href="/book" className="locations-book-btn">
+          <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="locations-book-btn">
             Book Appointment{" "}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
               <path d="M7 17L17 7M17 7H7M17 7v10" />
             </svg>
-          </Link>
+          </a>
         </div>
         <div className="locations-grid">
           {locations.map((loc) => (

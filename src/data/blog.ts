@@ -282,7 +282,7 @@ export const blogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Don't Let Pain Make Your Decisions</h3>
   <p>If any of these five signs sound familiar, you deserve a clear answer and a plan. Dr. Elguizaoui and his team are here to listen, evaluate, and guide you toward the best possible outcome — with offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -544,7 +544,7 @@ export const blogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Ready to Get Back in the Game?</h3>
   <p>Whether you've just torn your ACL or you're exploring your options, Dr. Elguizaoui and his team will guide you through every phase — from diagnosis through return to sport. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -840,7 +840,7 @@ export const blogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Curious If PRP Could Help You?</h3>
   <p>Dr. Elguizaoui will evaluate your condition and give you an honest answer about whether PRP therapy is the right fit — with no pressure and no obligation. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -1125,7 +1125,7 @@ export const blogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Need Surgery? Let's Talk About Your Options</h3>
   <p>Dr. Elguizaoui will explain exactly which approach is best for your condition, why, and what your recovery will look like — so you can make an informed decision with confidence. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 
@@ -1460,7 +1460,7 @@ export const blogPosts: BlogPost[] = [
 <div class="blog-cta">
   <h3>Don't Let Cartilage Damage Sideline You</h3>
   <p>With the right diagnosis and treatment, cartilage damage is a problem that can be solved — not just managed. Dr. Elguizaoui brings world-class cartilage repair expertise to every patient. Offices in Manhattan, Brooklyn, and Scarsdale.</p>
-  <a href="/book" class="btn btn-primary">Schedule a Consultation</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" class="btn btn-zocdoc">Schedule a Consultation</a>
   <a href="tel:2128283838" class="blog-cta-phone">or call (212) 828-3838</a>
 </div>
 

@@ -157,7 +157,7 @@ export default function ServicePage() {
             ))}
           </div>
           <div className="svc-hero-actions">
-            <Link href="/book" className="btn btn-primary">Book Consultation</Link>
+            <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-zocdoc">Book Consultation</a>
             <a href="tel:+19179059370" className="btn btn-outline">(917) 905-9370</a>
           </div>
         </div>
@@ -244,7 +244,7 @@ export default function ServicePage() {
           <h2>Ready to Get Started?</h2>
           <p>Book a consultation to discuss your condition and explore treatment options with Dr. Elguizaoui.</p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "24px", flexWrap: "wrap" }}>
-            <Link href="/book" className="btn btn-primary">Book Appointment</Link>
+            <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-zocdoc">Book Appointment</a>
             <Link href="/contact" className="btn btn-outline" style={{ borderColor: "rgba(255,255,255,0.3)", color: "#fff" }}>Contact Us</Link>
           </div>
         </div>

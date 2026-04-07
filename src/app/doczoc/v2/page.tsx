@@ -184,7 +184,7 @@ function DoctorCard({ doc, delay }: { doc: typeof DOCTORS[0]; delay: number }) {
         </div>
       </div>
       <div className="v2-doc-actions">
-        <Link href="/book" className="v2-doc-book">Book Appointment</Link>
+        <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="v2-doc-book">Book Appointment</a>
         {doc.website && <a href={doc.website} className="v2-doc-website" target="_blank" rel="noopener noreferrer">Go to Website</a>}
         <button className="v2-doc-profile">View Profile</button>
       </div>

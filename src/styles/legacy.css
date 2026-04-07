@@ -217,14 +217,14 @@ img { max-width: 100%; display: block; }
 }
 
 .btn-zocdoc {
-  background: #E8E44D;
+  background: #FFD60A;
   color: #1a1a1a;
 }
 .btn-zocdoc:hover {
-  background: #d4d044;
+  background: #F5C800;
   color: #1a1a1a;
   transform: scale(1.04);
-  box-shadow: 0 8px 24px rgba(232, 228, 77, 0.35);
+  box-shadow: 0 8px 24px rgba(255, 214, 10, 0.35);
 }
 
 .btn-outline {
@@ -475,7 +475,7 @@ a.nav-btn-book,
   align-items: center;
   justify-content: center;
   padding: 8px 20px;
-  background: #E8E44D !important;
+  background: #FFD60A !important;
   color: #1a1a1a !important;
   font-weight: 600;
   font-size: 0.85rem;
@@ -484,10 +484,10 @@ a.nav-btn-book,
   transition: all var(--transition);
 }
 .nav-btn-book:hover {
-  background: #d4d044 !important;
+  background: #F5C800 !important;
   transform: scale(1.04);
   color: #1a1a1a !important;
-  box-shadow: 0 0 24px rgba(232, 228, 77, 0.4);
+  box-shadow: 0 0 24px rgba(255, 214, 10, 0.4);
 }
 
 .nav-btn-contact {
@@ -1392,7 +1392,7 @@ a.nav-btn-book,
   align-items: center;
   height: 100%;
   padding: 0 32px;
-  background: #E8E44D;
+  background: #FFD60A;
   color: #1a1a1a !important;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
@@ -1402,7 +1402,7 @@ a.nav-btn-book,
   transition: background 0.2s;
 }
 .sticky-bar-btn:hover {
-  background: #d4d044;
+  background: #F5C800;
   color: #1a1a1a !important;
 }
 
@@ -2483,7 +2483,7 @@ a.nav-btn-book,
   align-items: center;
   gap: 10px;
   padding: 14px 28px;
-  background: #E8E44D;
+  background: #FFD60A;
   color: #1a1a1a !important;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
@@ -2492,14 +2492,14 @@ a.nav-btn-book,
   text-decoration: none;
   white-space: nowrap;
   transition: all var(--transition);
-  border: 1px solid #E8E44D;
+  border: 1px solid #FFD60A;
   flex-shrink: 0;
 }
 .locations-book-btn:hover {
-  background: #d4d044;
+  background: #F5C800;
   color: #1a1a1a !important;
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(232, 228, 77, 0.35);
+  box-shadow: 0 8px 24px rgba(255, 214, 10, 0.35);
 }
 
 .locations-grid {
@@ -5156,7 +5156,7 @@ img.insurance-logo:hover {
   .mnav-book-btn {
     display: block; width: 100%; text-align: center;
     padding: 16px; font-size: 1.05rem; font-weight: 600;
-    background: #E8E44D; color: #1a1a1a; border-radius: 14px;
+    background: #FFD60A; color: #1a1a1a; border-radius: 14px;
     text-decoration: none; transition: opacity 0.2s;
   }
   .mnav-book-btn:hover { opacity: 0.9; }

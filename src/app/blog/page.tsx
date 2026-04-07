@@ -174,7 +174,7 @@ export default function BlogPage() {
       </section>
 
       {guidePosts.length > 0 && (
-        <section className="section" style={{ paddingTop: 0 }}>
+        <section className="section" style={{ paddingTop: "20px" }}>
           <div className="container">
             <div className="blog-section-header">
               <h2>

@@ -5263,12 +5263,12 @@ img.insurance-logo:hover {
     justify-content: center;
     font-size: 1rem;
     font-weight: 700;
-    background: #f5a623;
-    color: #000 !important;
+    background: #FFD60A;
+    color: #1a1a1a !important;
   }
   .sticky-bar-btn:hover {
-    background: #e6950f;
-    color: #000 !important;
+    background: #F5C800;
+    color: #1a1a1a !important;
   }
 
   /* Fixed theme toggle on mobile */
@@ -5299,9 +5299,46 @@ img.insurance-logo:hover {
   .svc-hero-visual { height: 240px; }
   .svc-hero-content h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); }
   .svc-conditions-row { grid-template-columns: 1fr; }
-  .platform-cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .platform-cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .platform-card { padding: 16px; flex-direction: column; text-align: center; gap: 10px; }
   .credentials-timeline { padding-left: 20px; }
   .mega-menu-inner { grid-template-columns: 1fr; }
+
+  /* Blog cards mobile */
+  .blog-card-img-wrap { margin: 8px 8px 0; border-radius: 12px; }
+  .blog-card-img { height: 180px; border-radius: 12px; }
+  .blog-card-body { padding: 14px 16px 16px; }
+  .blog-card-body h3 { font-size: 0.95rem; }
+  .blog-section-header h2 { font-size: 1.4rem; }
+
+  /* About hero mobile */
+  .abt-hero { min-height: auto; padding: 100px 0 50px; }
+  .abt-hero-title { font-size: 1.6rem; }
+  .abt-hero-sub { font-size: 1rem; max-width: 100%; }
+  .abt-hero-ctas .btn { width: 100%; justify-content: center; text-align: center; }
+
+  /* Reviews hero mobile */
+  .reviews-hero { padding: 100px 0 40px; }
+  .reviews-hero h1 { font-size: 1.6rem; }
+
+  /* Buttons - better touch targets */
+  .btn { min-height: 48px; padding: 14px 24px; }
+  .btn-lg { padding: 16px 28px; }
+
+  /* Locations mobile */
+  .locations-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+  .locations-header h2 { font-size: 1.2rem; }
+  .locations-book-btn { width: 100%; justify-content: center; }
+
+  /* Contact form mobile */
+  .contact-form { gap: 14px; }
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea { font-size: 16px; min-height: 48px; }
+
+  /* Get started mobile */
+  .get-started-content { padding: 40px 20px; }
+  .get-started-content h2 { font-size: 1.3rem; }
 }
 
 @media (max-width: 480px) {
@@ -5309,7 +5346,7 @@ img.insurance-logo:hover {
   .about-photo { width: 100%; max-width: 320px; margin: 0 auto; }
   .locations-grid { grid-template-columns: 1fr; }
   .location-map { height: 200px; }
-  .container { padding: 0 14px; }
+  .container { padding: 0 16px; }
   .hero-text h1 { font-size: 1.3rem; }
   .hero-content { padding: 0 16px 90px; }
   .hero-rating-card { padding: 12px 14px; }
@@ -5323,10 +5360,14 @@ img.insurance-logo:hover {
   .contact-content { gap: 24px; }
   .footer-columns { grid-template-columns: 1fr; gap: 20px; }
   .platform-cards-grid { grid-template-columns: 1fr; }
+  .platform-card { flex-direction: row; text-align: left; }
   .about-layout { gap: 20px; }
   .credentials-timeline { padding-left: 12px; }
   .svc-hero-content { padding: 40px 16px 30px; }
   .blog-post-hero { padding: 100px 0 50px; }
+  .blog-card-body h3 { font-size: 0.9rem; }
+  .blog-card-img { height: 160px; }
+  .abt-hero-ctas { flex-direction: column; }
 }
 
 /* ===== Blog Post Page ===== */

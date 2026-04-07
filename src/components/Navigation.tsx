@@ -6,7 +6,7 @@ import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { useTheme } from "@/hooks/useTheme";
 
 const serviceIcons: Record<string, React.ReactNode> = {
-  "sports-medicine": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="14" cy="4" r="2"/><path d="M4 17l4-2 3-5 4 2 3-4"/><path d="M8 15l-2 6"/><path d="M15 10l2 6"/><path d="M11 10l-3 5"/></svg>,
+  "sports-medicine": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="16" cy="3" r="2"/><path d="M9 13l-2 8"/><path d="M17 7l-4 2-3 3 2 3"/><path d="M12 12l-4 1"/><path d="M15 17l2 5"/><path d="M12 12l3 5"/></svg>,
   "arthroscopic-surgery": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>,
   "regenerative-medicine": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>,
   "joint-preservation": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
@@ -139,11 +139,12 @@ export function Navigation() {
                   <h4 className="mega-heading">Treatments</h4>
                   <Link href="/services/sports-medicine" className="mega-link">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a3a5c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <circle cx="14" cy="4" r="2" />
-                      <path d="M4 17l4-2 3-5 4 2 3-4" />
-                      <path d="M8 15l-2 6" />
-                      <path d="M15 10l2 6" />
-                      <path d="M11 10l-3 5" />
+                      <circle cx="16" cy="3" r="2" />
+                      <path d="M9 13l-2 8" />
+                      <path d="M17 7l-4 2-3 3 2 3" />
+                      <path d="M12 12l-4 1" />
+                      <path d="M15 17l2 5" />
+                      <path d="M12 12l3 5" />
                     </svg>
                     <div>
                       <span>Sports Medicine</span>

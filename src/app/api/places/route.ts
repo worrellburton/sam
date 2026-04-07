@@ -14,15 +14,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Google Places API key not configured" }, { status: 500 });
   }
 
-  const url = `https://places.googleapis.com/v1/places/${placeId}?fields=${fields}&key=${PLACES_API_KEY}`;
+  const url = `https://places.googleapis.com/v1/places/${placeId}`;
 
   const resp = await fetch(url, {
-    headers: { "Content-Type": "application/json" },
-    next: { revalidate: 3600 }, // Cache for 1 hour
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": PLACES_API_KEY,
+      "X-Goog-FieldMask": fields,
+    },
+    next: { revalidate: 3600 },
   });
 
   if (!resp.ok) {
-    return NextResponse.json({ error: "Places API error" }, { status: resp.status });
+    const text = await resp.text();
+    console.error(`Places API error for ${placeId}: ${resp.status} ${text}`);
+    return NextResponse.json({ error: "Places API error", details: text }, { status: resp.status });
   }
 
   const data = await resp.json();

@@ -1661,7 +1661,6 @@ a.nav-btn-book,
 .abt-hero-content {
   position: relative;
   z-index: 1;
-  max-width: 720px;
 }
 .abt-hero-title {
   font-size: clamp(2rem, 5vw, 3.2rem);

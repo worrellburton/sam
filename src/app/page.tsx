@@ -257,7 +257,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
       <header className="hero" id="hero">
-        <Image className="hero-bg-img loaded" src="/images/photos/DSC02128.jpg" alt="Dr. Sameh Elguizaoui - Orthopedic Surgeon NYC" aria-hidden="true" width={1920} height={1080} priority style={{ objectPosition: "center 20%" }} />
+        <Image className="hero-bg-img loaded" src="/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <div className="hero-text">
@@ -301,7 +301,7 @@ export default function Home() {
         <div className="container">
           <div className="about-layout">
             <div className="about-photo">
-              <Image src="/images/photos/DSC02243.jpg" alt="Dr. Sam Elguizaoui in the operating room" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 15%" }} />
+              <Image src="/images/photos/DSC02128.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
             </div>
             <div className="about-right">
               <div className="about-header">
@@ -389,6 +389,9 @@ export default function Home() {
           <div className="section-header">
             <p className="section-label">Training &amp; Credentials</p>
             <h2>World-Class <span className="text-accent">Education &amp; Training</span></h2>
+          </div>
+          <div className="cred-hero-img">
+            <Image src="/images/photos/DSC02243.jpg" alt="Dr. Elguizaoui in the operating room" width={1200} height={600} style={{ objectPosition: "center 15%" }} />
           </div>
           <div className="cred-track">
             {timeline.map((item, i) => (

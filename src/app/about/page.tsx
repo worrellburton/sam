@@ -434,24 +434,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── The Physician-Athlete ──────────────────────────────── */}
-      <section className="section">
-        <div className="container">
-          <div className="abt-personal reveal">
-            <div className="abt-personal-img-wrap">
-              <Image src="/images/photos/DSC02325.jpg" alt="Dr. Elguizaoui scrubbing in for surgery" width={500} height={700} style={{ objectPosition: "center 15%" }} />
-            </div>
-            <div className="abt-personal-text">
-              <div className="abt-personal-icon">{icons.dumbbell}</div>
-              <h2>The Physician-Athlete</h2>
-              <p>
-                A family man married with four children, Dr. Elguizaoui embodies the &ldquo;physician-athlete&rdquo; archetype. His personal interests — <strong>weightlifting and biking</strong> — allow him to empathize experientially with the frustrations of his active patient base. When a patient describes the mechanical pain of a squat or the endurance limits of a cyclist, he doesn&rsquo;t merely analyze the anatomy theoretically — he understands the biomechanics firsthand.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ── Reputation ─────────────────────────────────────────── */}
       <section className="section abt-reputation-section">
         <div className="container">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -6,6 +7,9 @@ export function Footer() {
       <div className="container">
         <div className="footer-top">
           <div className="footer-brand">
+            <div className="footer-headshot">
+              <Image src="/images/photos/DSC02137.jpg" alt="Dr. Sameh Elguizaoui" width={200} height={200} style={{ objectPosition: "center 15%" }} />
+            </div>
             <p className="footer-name">Sameh Elguizaoui, M.D.</p>
             <p className="footer-tagline">Board-Certified Orthopedic Surgeon &amp; Sports Medicine Specialist</p>
             <p className="footer-affiliations">Lenox Hill Hospital &bull; Mount Sinai Hospital &bull; NYP Brooklyn Methodist</p>

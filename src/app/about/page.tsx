@@ -184,7 +184,6 @@ export default function AboutPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* ── Hero ───────────────────────────────────────────────── */}
       <section className="abt-hero">
-        <Image className="abt-hero-photo" src="/images/photos/DSC02128.jpg" alt="Dr. Elguizaoui professional portrait" width={1920} height={1080} priority style={{ objectPosition: "center 25%" }} />
         <div className="abt-hero-bg" />
         <div className="container abt-hero-content reveal">
           <p className="section-label">About Dr. Elguizaoui</p>
@@ -465,7 +464,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Affiliations ───────────────────────────────────────── */}
-      <section className="section">
+      <section className="section abt-affiliations-section">
         <div className="container">
           <div className="section-header reveal">
             <p className="section-label">Hospital Affiliations</p>

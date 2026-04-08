@@ -384,14 +384,12 @@ export default function Home() {
       </section>
 
       {/* Credentials */}
-      <section className="section credentials reveal" id="credentials">
-        <div className="container">
+      <section className="section credentials reveal cred-has-bg" id="credentials" style={{ backgroundImage: "url('/images/photos/DSC02243.jpg')" }}>
+        <div className="cred-bg-overlay" />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div className="section-header">
             <p className="section-label">Training &amp; Credentials</p>
             <h2>World-Class <span className="text-accent">Education &amp; Training</span></h2>
-          </div>
-          <div className="cred-hero-img">
-            <Image src="/images/photos/DSC02243.jpg" alt="Dr. Elguizaoui in the operating room" width={1200} height={600} style={{ objectPosition: "center 15%" }} />
           </div>
           <div className="cred-track">
             {timeline.map((item, i) => (

@@ -184,6 +184,7 @@ export default function AboutPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* ── Hero ───────────────────────────────────────────────── */}
       <section className="abt-hero">
+        <Image className="abt-hero-photo" src="/images/photos/DSC02128.jpg" alt="Dr. Elguizaoui professional portrait" width={1920} height={1080} priority style={{ objectPosition: "center 25%" }} />
         <div className="abt-hero-bg" />
         <div className="container abt-hero-content reveal">
           <p className="section-label">About Dr. Elguizaoui</p>
@@ -215,7 +216,7 @@ export default function AboutPage() {
         <div className="container">
           <div className="abt-split reveal">
             <div className="abt-split-img">
-              <Image src="/header.jpg" alt="Dr. Sam Elguizaoui performing surgery" className="abt-portrait" width={1200} height={669} />
+              <Image src="/images/photos/DSC02202.jpg" alt="Dr. Sam Elguizaoui with anatomical knee model" className="abt-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
             </div>
             <div className="abt-split-text">
               <p className="section-label">Clinical Philosophy</p>
@@ -437,8 +438,11 @@ export default function AboutPage() {
       <section className="section">
         <div className="container">
           <div className="abt-personal reveal">
-            <div className="abt-personal-icon">{icons.dumbbell}</div>
+            <div className="abt-personal-img-wrap">
+              <Image src="/images/photos/DSC02325.jpg" alt="Dr. Elguizaoui scrubbing in for surgery" width={500} height={700} style={{ objectPosition: "center 15%" }} />
+            </div>
             <div className="abt-personal-text">
+              <div className="abt-personal-icon">{icons.dumbbell}</div>
               <h2>The Physician-Athlete</h2>
               <p>
                 A family man married with four children, Dr. Elguizaoui embodies the &ldquo;physician-athlete&rdquo; archetype. His personal interests — <strong>weightlifting and biking</strong> — allow him to empathize experientially with the frustrations of his active patient base. When a patient describes the mechanical pain of a squat or the endurance limits of a cyclist, he doesn&rsquo;t merely analyze the anatomy theoretically — he understands the biomechanics firsthand.

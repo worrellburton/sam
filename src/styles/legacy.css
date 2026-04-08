@@ -1649,14 +1649,22 @@ a.nav-btn-book,
   overflow: hidden;
   padding: 120px 0 80px;
 }
+.abt-hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
 .abt-hero-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(10,10,30,0.95) 0%, rgba(20,20,50,0.85) 50%, rgba(37,99,235,0.15) 100%);
+  background: linear-gradient(135deg, rgba(10,10,30,0.85) 0%, rgba(20,20,50,0.7) 50%, rgba(37,99,235,0.15) 100%);
   z-index: 0;
 }
 [data-theme="light"] .abt-hero-bg {
-  background: linear-gradient(135deg, rgba(248,250,252,0.98) 0%, rgba(240,245,255,0.95) 50%, rgba(37,99,235,0.08) 100%);
+  background: linear-gradient(135deg, rgba(248,250,252,0.88) 0%, rgba(240,245,255,0.82) 50%, rgba(37,99,235,0.08) 100%);
 }
 .abt-hero-content {
   position: relative;
@@ -2145,11 +2153,30 @@ a.nav-btn-book,
 /* Personal */
 .abt-personal {
   display: flex;
-  gap: 24px;
+  gap: 0;
   align-items: center;
   background: var(--bg-alt);
   border: 1px solid var(--border);
   border-radius: 20px;
+  padding: 0;
+  overflow: hidden;
+}
+.abt-personal-img-wrap {
+  flex-shrink: 0;
+  width: 280px;
+  height: 320px;
+  overflow: hidden;
+}
+.abt-personal-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.abt-personal:hover .abt-personal-img-wrap img {
+  transform: scale(1.05);
+}
+.abt-personal-text {
   padding: 40px;
 }
 .abt-personal-icon {
@@ -2162,6 +2189,7 @@ a.nav-btn-book,
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-bottom: 16px;
 }
 .abt-personal-icon svg { width: 32px; height: 32px; }
 .abt-personal-text h2 {
@@ -2284,6 +2312,9 @@ a.nav-btn-book,
   .abt-tl-dot svg { width: 22px; height: 22px; }
   .abt-tl-card { padding: 18px; }
   .abt-personal { flex-direction: column; text-align: center; }
+  .abt-personal-img-wrap { width: 100%; height: 240px; }
+  .abt-personal-text { padding: 24px; }
+  .abt-personal-icon { margin: 0 auto 16px; }
 }
 @media (max-width: 480px) {
   .abt-hero { padding: 90px 0 50px; }

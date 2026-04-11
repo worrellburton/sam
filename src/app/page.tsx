@@ -358,18 +358,19 @@ export default function Home() {
             <h2>Specialized Orthopedic <span className="text-accent">Treatments</span></h2>
             <p className="section-desc">From advanced arthroscopic surgery to cutting-edge regenerative therapies, Dr. Elguizaoui offers comprehensive orthopedic care tailored to your needs and goals.</p>
           </div>
-          <div className="specialties-grid">
-            {services.map((svc) => (
+          {(() => {
+            const topRow = ["sports-medicine", "joint-preservation"];
+            const bottomRow = ["arthroscopic-surgery", "regenerative-medicine", "cartilage-repair", "shoulder-knee-surgery"];
+            const renderCard = (svc: typeof services[number]) => (
               <Link href={`/services/${svc.slug}`} className="specialty-card specialty-link" key={svc.slug}>
-                <SpecialtyCanvas slug={svc.slug} />
                 <video
                   className="specialty-video"
+                  src={`/videos/${svc.slug}.mp4`}
+                  autoPlay
                   muted
                   loop
                   playsInline
-                  preload="none"
-                  onMouseEnter={(e) => { const v = e.currentTarget; if (!v.src) v.src = `/videos/${svc.slug}.mp4`; v.play().then(() => v.classList.add("loaded")).catch(() => {}); }}
-                  onMouseLeave={(e) => { const v = e.currentTarget; v.classList.remove("loaded"); v.pause(); }}
+                  preload="metadata"
                 />
                 <div className="specialty-overlay"></div>
                 <span className="specialty-arrow-btn" aria-hidden="true">
@@ -380,8 +381,24 @@ export default function Home() {
                 </span>
                 <h3 className="specialty-title">{svc.title}</h3>
               </Link>
-            ))}
-          </div>
+            );
+            return (
+              <>
+                <div className="specialties-row specialties-row-top">
+                  {topRow.map((slug) => {
+                    const svc = services.find((s) => s.slug === slug);
+                    return svc ? renderCard(svc) : null;
+                  })}
+                </div>
+                <div className="specialties-row specialties-row-bottom">
+                  {bottomRow.map((slug) => {
+                    const svc = services.find((s) => s.slug === slug);
+                    return svc ? renderCard(svc) : null;
+                  })}
+                </div>
+              </>
+            );
+          })()}
         </div>
       </section>
 

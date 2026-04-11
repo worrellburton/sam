@@ -1556,6 +1556,32 @@ a.nav-btn-book,
   gap: 28px;
 }
 
+.specialties-row {
+  display: grid;
+  gap: 28px;
+}
+.specialties-row + .specialties-row {
+  margin-top: 28px;
+}
+.specialties-row-top {
+  grid-template-columns: 2fr 1fr;
+}
+.specialties-row-bottom {
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 900px) {
+  .specialties-row-top,
+  .specialties-row-bottom {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .specialties-row-top,
+  .specialties-row-bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
 .specialty-card {
   position: relative;
   border-radius: 20px;

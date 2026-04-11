@@ -301,7 +301,7 @@ export default function Home() {
         <div className="container">
           <div className="about-layout">
             <div className="about-photo">
-              <Image src="/images/sam/sam4.jpeg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
+              <Image src="/images/sam/sam5.jpeg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
             </div>
             <div className="about-right">
               <div className="about-header">

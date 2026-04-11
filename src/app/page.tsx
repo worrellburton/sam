@@ -359,14 +359,41 @@ export default function Home() {
             <p className="section-desc">From advanced arthroscopic surgery to cutting-edge regenerative therapies, Dr. Elguizaoui offers comprehensive orthopedic care tailored to your needs and goals.</p>
           </div>
           {(() => {
-            const row1 = ["sports-medicine", "joint-preservation"];
-            const row2 = ["arthroscopic-surgery", "regenerative-medicine", "cartilage-repair"];
-            const row3 = ["shoulder-knee-surgery"];
-            const renderCard = (svc: typeof services[number]) => (
+            type SpecialtyCard = {
+              title: string;
+              href: string;
+              video?: string;
+              image?: string;
+              description?: string;
+            };
+            const row1: SpecialtyCard[] = [
+              { title: "Sports Medicine", href: "/services/sports-medicine", video: "/videos/sports-medicine.mp4" },
+              { title: "Joint Preservation", href: "/services/joint-preservation", video: "/videos/joint-preservation.mp4" },
+            ];
+            const row2: SpecialtyCard[] = [
+              { title: "Arthroscopic Surgery", href: "/services/arthroscopic-surgery", video: "/videos/arthroscopic-surgery.mp4" },
+              { title: "Cartilage Repair", href: "/services/cartilage-repair", video: "/videos/cartilage-repair.mp4" },
+              { title: "Regenerative Medicine", href: "/services/regenerative-medicine", video: "/videos/regenerative-medicine.mp4" },
+            ];
+            const row3: SpecialtyCard[] = [
+              { title: "Shoulder & Knee Surgery", href: "/services/shoulder-knee-surgery", video: "/videos/shoulder-knee-surgery.mp4" },
+              { title: "Meet Dr. Elguizaoui", href: "/about", image: "/images/sam/sam5.jpeg" },
+              { title: "Patient Reviews", href: "/reviews", image: "/images/sam/sam6.jpeg" },
+            ];
+            const row4: SpecialtyCard[] = [
+              { title: "Read the Blog", href: "/blog", image: "/images/sam/sam7.jpeg" },
+              {
+                title: "Book a Consultation",
+                href: "/book",
+                image: "/images/sam/sam1.jpeg",
+                description: "Schedule a visit at one of Dr. Elguizaoui's NYC offices — Manhattan, Brooklyn, or Scarsdale.",
+              },
+            ];
+            const renderCard = (card: SpecialtyCard) => (
               <Link
-                href={`/services/${svc.slug}`}
+                href={card.href}
                 className="specialty-card specialty-link"
-                key={svc.slug}
+                key={card.href}
                 onMouseEnter={(e) => {
                   const v = e.currentTarget.querySelector("video");
                   if (v) v.play().catch(() => {});
@@ -379,14 +406,19 @@ export default function Home() {
                   }
                 }}
               >
-                <video
-                  className="specialty-video"
-                  src={`/videos/${svc.slug}.mp4`}
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
+                {card.video ? (
+                  <video
+                    className="specialty-video"
+                    src={card.video}
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
+                ) : card.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className="specialty-video" src={card.image} alt="" />
+                ) : null}
                 <div className="specialty-overlay"></div>
                 <span className="specialty-arrow-btn" aria-hidden="true">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -394,15 +426,15 @@ export default function Home() {
                     <polyline points="7 7 17 7 17 17" />
                   </svg>
                 </span>
-                <h3 className="specialty-title">{svc.title}</h3>
+                <div className="specialty-content">
+                  <h3 className="specialty-title">{card.title}</h3>
+                  {card.description && <p className="specialty-description">{card.description}</p>}
+                </div>
               </Link>
             );
-            const renderRow = (slugs: string[], rowClass: string) => (
+            const renderRow = (cards: SpecialtyCard[], rowClass: string) => (
               <div className={`specialties-row ${rowClass}`}>
-                {slugs.map((slug) => {
-                  const svc = services.find((s) => s.slug === slug);
-                  return svc ? renderCard(svc) : null;
-                })}
+                {cards.map((c) => renderCard(c))}
               </div>
             );
             return (
@@ -410,6 +442,7 @@ export default function Home() {
                 {renderRow(row1, "specialties-row-1")}
                 {renderRow(row2, "specialties-row-2")}
                 {renderRow(row3, "specialties-row-3")}
+                {renderRow(row4, "specialties-row-4")}
               </>
             );
           })()}

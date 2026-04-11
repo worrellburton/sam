@@ -1649,7 +1649,7 @@ section.specialties .section-header .section-desc {
 .specialty-card .specialty-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(5, 8, 15, 0.88);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 35%, rgba(0, 0, 0, 0.2) 65%, rgba(0, 0, 0, 0.15) 100%);
   transition: background 0.5s ease;
   z-index: 2;
 }
@@ -1705,7 +1705,7 @@ section.specialties .section-header .section-desc {
   transform: rotate(-45deg) scale(1.08);
 }
 .specialty-card:hover .specialty-overlay {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.05) 80%, rgba(0, 0, 0, 0) 100%);
 }
 
 /* ===== About Page Redesign ===== */

@@ -414,6 +414,10 @@ export default function Home() {
                     loop
                     playsInline
                     preload="metadata"
+                    onLoadedMetadata={(e) => {
+                      // Force first frame to render so paused cards aren't black
+                      e.currentTarget.currentTime = 0.01;
+                    }}
                   />
                 ) : card.image ? (
                   // eslint-disable-next-line @next/next/no-img-element

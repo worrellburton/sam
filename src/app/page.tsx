@@ -359,8 +359,9 @@ export default function Home() {
             <p className="section-desc">From advanced arthroscopic surgery to cutting-edge regenerative therapies, Dr. Elguizaoui offers comprehensive orthopedic care tailored to your needs and goals.</p>
           </div>
           {(() => {
-            const topRow = ["sports-medicine", "joint-preservation"];
-            const bottomRow = ["arthroscopic-surgery", "regenerative-medicine", "cartilage-repair", "shoulder-knee-surgery"];
+            const row1 = ["sports-medicine", "joint-preservation"];
+            const row2 = ["arthroscopic-surgery", "regenerative-medicine", "cartilage-repair"];
+            const row3 = ["shoulder-knee-surgery"];
             const renderCard = (svc: typeof services[number]) => (
               <Link href={`/services/${svc.slug}`} className="specialty-card specialty-link" key={svc.slug}>
                 <video
@@ -382,20 +383,19 @@ export default function Home() {
                 <h3 className="specialty-title">{svc.title}</h3>
               </Link>
             );
+            const renderRow = (slugs: string[], rowClass: string) => (
+              <div className={`specialties-row ${rowClass}`}>
+                {slugs.map((slug) => {
+                  const svc = services.find((s) => s.slug === slug);
+                  return svc ? renderCard(svc) : null;
+                })}
+              </div>
+            );
             return (
               <>
-                <div className="specialties-row specialties-row-top">
-                  {topRow.map((slug) => {
-                    const svc = services.find((s) => s.slug === slug);
-                    return svc ? renderCard(svc) : null;
-                  })}
-                </div>
-                <div className="specialties-row specialties-row-bottom">
-                  {bottomRow.map((slug) => {
-                    const svc = services.find((s) => s.slug === slug);
-                    return svc ? renderCard(svc) : null;
-                  })}
-                </div>
+                {renderRow(row1, "specialties-row-1")}
+                {renderRow(row2, "specialties-row-2")}
+                {renderRow(row3, "specialties-row-3")}
               </>
             );
           })()}

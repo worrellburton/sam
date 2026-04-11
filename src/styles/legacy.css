@@ -1550,6 +1550,25 @@ a.nav-btn-book,
 }
 
 /* ===== Specialties ===== */
+section.specialties {
+  background: #05080f;
+  padding: 160px 0;
+}
+[data-theme="light"] section.specialties {
+  background: #05080f;
+}
+section.specialties .section-header h2,
+section.specialties .section-header .section-label,
+section.specialties .section-header .section-desc {
+  color: #f0f0f5;
+}
+section.specialties .section-header .section-label {
+  color: #a1a1b5;
+}
+section.specialties .section-header .section-desc {
+  color: #c4c4d4;
+}
+
 .specialties-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1563,21 +1582,26 @@ a.nav-btn-book,
 .specialties-row + .specialties-row {
   margin-top: 28px;
 }
-.specialties-row-top {
+.specialties-row-1 {
   grid-template-columns: 2fr 1fr;
 }
-.specialties-row-bottom {
-  grid-template-columns: repeat(4, 1fr);
+.specialties-row-2 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.specialties-row-3 {
+  grid-template-columns: 1fr;
 }
 @media (max-width: 900px) {
-  .specialties-row-top,
-  .specialties-row-bottom {
+  .specialties-row-1,
+  .specialties-row-2,
+  .specialties-row-3 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (max-width: 600px) {
-  .specialties-row-top,
-  .specialties-row-bottom {
+  .specialties-row-1,
+  .specialties-row-2,
+  .specialties-row-3 {
     grid-template-columns: 1fr;
   }
 }
@@ -1588,9 +1612,19 @@ a.nav-btn-book,
   overflow: hidden;
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
   cursor: pointer;
-  aspect-ratio: 4 / 3;
+  height: 380px;
   background: #0a0f1f;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+@media (max-width: 900px) {
+  .specialty-card {
+    height: 300px;
+  }
+}
+@media (max-width: 600px) {
+  .specialty-card {
+    height: 260px;
+  }
 }
 .specialty-card .specialty-img,
 .specialty-card .specialty-canvas {
@@ -1614,7 +1648,7 @@ a.nav-btn-book,
 .specialty-card .specialty-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.35) 38%, rgba(0, 0, 0, 0.05) 70%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.65) 35%, rgba(0, 0, 0, 0.4) 65%, rgba(0, 0, 0, 0.3) 100%);
   transition: background 0.4s ease;
   z-index: 2;
 }
@@ -1663,7 +1697,7 @@ a.nav-btn-book,
   transform: rotate(-45deg) scale(1.08);
 }
 .specialty-card:hover .specialty-overlay {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0.1) 75%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0.45) 70%, rgba(0, 0, 0, 0.3) 100%);
 }
 
 /* ===== About Page Redesign ===== */

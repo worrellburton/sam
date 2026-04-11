@@ -301,7 +301,7 @@ export default function Home() {
         <div className="container">
           <div className="about-layout">
             <div className="about-photo">
-              <Image src="/images/photos/DSC02128.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
+              <Image src="/images/sam/sam4.jpeg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
             </div>
             <div className="about-right">
               <div className="about-header">
@@ -368,7 +368,7 @@ export default function Home() {
                   loop
                   playsInline
                   preload="none"
-                  onMouseEnter={(e) => { const v = e.currentTarget; v.src = "/test.mp4"; v.play().then(() => v.classList.add("loaded")).catch(() => {}); }}
+                  onMouseEnter={(e) => { const v = e.currentTarget; if (!v.src) v.src = `/videos/${svc.slug}.mp4`; v.play().then(() => v.classList.add("loaded")).catch(() => {}); }}
                   onMouseLeave={(e) => { const v = e.currentTarget; v.classList.remove("loaded"); v.pause(); }}
                 />
                 <div className="specialty-overlay"></div>
@@ -386,7 +386,7 @@ export default function Home() {
       </section>
 
       {/* Credentials */}
-      <section className="section credentials reveal cred-has-bg" id="credentials" style={{ backgroundImage: "url('/images/photos/DSC02243.jpg')" }}>
+      <section className="section credentials reveal cred-has-bg" id="credentials" style={{ backgroundImage: "url('/images/sam/sam7.jpeg')" }}>
         <div className="cred-bg-overlay" />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div className="section-header">

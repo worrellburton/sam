@@ -363,11 +363,25 @@ export default function Home() {
             const row2 = ["arthroscopic-surgery", "regenerative-medicine", "cartilage-repair"];
             const row3 = ["shoulder-knee-surgery"];
             const renderCard = (svc: typeof services[number]) => (
-              <Link href={`/services/${svc.slug}`} className="specialty-card specialty-link" key={svc.slug}>
+              <Link
+                href={`/services/${svc.slug}`}
+                className="specialty-card specialty-link"
+                key={svc.slug}
+                onMouseEnter={(e) => {
+                  const v = e.currentTarget.querySelector("video");
+                  if (v) v.play().catch(() => {});
+                }}
+                onMouseLeave={(e) => {
+                  const v = e.currentTarget.querySelector("video");
+                  if (v) {
+                    v.pause();
+                    v.currentTime = 0;
+                  }
+                }}
+              >
                 <video
                   className="specialty-video"
                   src={`/videos/${svc.slug}.mp4`}
-                  autoPlay
                   muted
                   loop
                   playsInline

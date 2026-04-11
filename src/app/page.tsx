@@ -353,7 +353,11 @@ export default function Home() {
       {/* Specialties */}
       <section className="section specialties reveal" id="specialties">
         <div className="container">
-          <div className="section-header">
+          <div className="section-header specialties-header">
+            <span className="specialties-eyebrow">
+              <span className="specialties-eyebrow-dot" aria-hidden="true"></span>
+              Board-Certified Orthopedic Excellence
+            </span>
             <p className="section-label">Areas of Expertise</p>
             <h2>Specialized Orthopedic <span className="text-accent">Treatments</span></h2>
             <p className="section-desc">From advanced arthroscopic surgery to cutting-edge regenerative therapies, Dr. Elguizaoui offers comprehensive orthopedic care tailored to your needs and goals.</p>

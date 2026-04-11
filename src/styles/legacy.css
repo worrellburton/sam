@@ -1553,20 +1553,100 @@ a.nav-btn-book,
 section.specialties {
   background: #05080f;
   padding: 160px 0;
+  position: relative;
+}
+section.specialties::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(37, 99, 235, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(245, 158, 11, 0.05), transparent 60%);
+  pointer-events: none;
+}
+section.specialties > .container {
+  position: relative;
+  z-index: 1;
 }
 [data-theme="light"] section.specialties {
   background: #05080f;
 }
-section.specialties .section-header h2,
-section.specialties .section-header .section-label,
-section.specialties .section-header .section-desc {
-  color: #f0f0f5;
+.specialties-header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 72px;
 }
-section.specialties .section-header .section-label {
+.specialties-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.28);
+  color: #93c5fd;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  backdrop-filter: blur(6px);
+}
+.specialties-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #60a5fa;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.8);
+  animation: specialty-pulse 2.4s ease-in-out infinite;
+}
+@keyframes specialty-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+.specialties-header .section-label {
   color: #a1a1b5;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
 }
-section.specialties .section-header .section-desc {
+.specialties-header h2 {
+  color: #f5f5f8;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  margin: 0 0 20px;
+}
+.specialties-header h2 .text-accent {
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.specialties-header .section-desc {
   color: #c4c4d4;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  max-width: 640px;
+  margin: 0 auto;
+}
+@media (max-width: 600px) {
+  .specialties-header {
+    margin-bottom: 48px;
+  }
+  .specialties-eyebrow {
+    font-size: 0.66rem;
+    padding: 7px 14px;
+  }
+  .specialties-header h2 {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+  .specialties-header .section-desc {
+    font-size: 0.95rem;
+  }
 }
 
 .specialties-grid {

@@ -5,6 +5,7 @@ build/
 static-backup/
 *.mp4
 !public/test.mp4
+!public/videos/*.mp4
 *.gif
 .env
 .env.local

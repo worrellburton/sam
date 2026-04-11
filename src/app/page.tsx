@@ -372,11 +372,13 @@ export default function Home() {
                   onMouseLeave={(e) => { const v = e.currentTarget; v.classList.remove("loaded"); v.pause(); }}
                 />
                 <div className="specialty-overlay"></div>
+                <span className="specialty-arrow-btn" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
+                </span>
                 <h3 className="specialty-title">{svc.title}</h3>
-                <div className="specialty-detail">
-                  <p>{svc.detail}</p>
-                  <span className="specialty-arrow">Learn more &rarr;</span>
-                </div>
               </Link>
             ))}
           </div>

@@ -1553,22 +1553,28 @@ a.nav-btn-book,
 .specialties-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 28px;
 }
 
 .specialty-card {
   position: relative;
-  border-radius: var(--radius);
+  border-radius: 20px;
   overflow: hidden;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
   cursor: pointer;
+  aspect-ratio: 4 / 3;
+  background: #0a0f1f;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 .specialty-card .specialty-img,
 .specialty-card .specialty-canvas {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 260px;
+  height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .specialty-card .specialty-video {
   position: absolute;
@@ -1586,58 +1592,56 @@ a.nav-btn-book,
 .specialty-card .specialty-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.35) 38%, rgba(0, 0, 0, 0.05) 70%, transparent 100%);
   transition: background 0.4s ease;
+  z-index: 2;
 }
 .specialty-card .specialty-title {
   position: absolute;
-  bottom: 16px;
-  left: 20px;
-  right: 20px;
+  bottom: 24px;
+  left: 28px;
+  right: 80px;
   font-family: inherit;
-  font-weight: 700;
-  font-size: 1.15rem;
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
   color: #fff;
   margin: 0;
-  transition: bottom 0.4s ease;
-  z-index: 2;
+  z-index: 3;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
-.specialty-card .specialty-detail {
+.specialty-card .specialty-arrow-btn {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 0 20px 20px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  z-index: 2;
-}
-.specialty-card .specialty-detail p {
-  font-size: 0.88rem;
-  color: rgba(255,255,255,0.9);
-  line-height: 1.6;
-  margin: 0 0 8px;
+  top: 20px;
+  right: 20px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #0a0f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  backdrop-filter: blur(4px);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Hover: darken others, reveal detail on hovered card */
-.specialties-grid:hover .specialty-card {
-  opacity: 0.45;
+.specialty-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
 }
-.specialties-grid:hover .specialty-card:hover {
-  opacity: 1;
-  transform: scale(1.02);
+.specialty-card:hover .specialty-canvas,
+.specialty-card:hover .specialty-img {
+  transform: scale(1.06);
+}
+.specialty-card:hover .specialty-arrow-btn {
+  background: #fff;
+  transform: rotate(-45deg) scale(1.08);
 }
 .specialty-card:hover .specialty-overlay {
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.2) 100%);
-}
-.specialty-card:hover .specialty-title {
-  bottom: auto;
-  top: 16px;
-}
-.specialty-card:hover .specialty-detail {
-  opacity: 1;
-  transform: translateY(0);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0.1) 75%, transparent 100%);
 }
 
 /* ===== About Page Redesign ===== */
@@ -4345,16 +4349,6 @@ a.nav-btn-book,
 .specialty-link:hover {
   color: inherit;
 }
-.specialty-arrow {
-  display: inline-block;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--accent);
-  transition: transform var(--transition);
-}
-.specialty-link:hover .specialty-arrow {
-  transform: translateX(4px);
-}
 
 /* ===== Service Pages ===== */
 .service-hero {
@@ -5537,7 +5531,8 @@ img.insurance-logo:hover {
   .move-easier-section { margin: 0 8px; padding: 48px 0; }
   .move-easier-content h2 { font-size: 1.2rem; }
   .highlight-card { padding: 18px; }
-  .specialty-card .specialty-img, .specialty-card .specialty-canvas { height: 220px; }
+  .specialty-card .specialty-title { font-size: 1.2rem; bottom: 20px; left: 22px; right: 70px; }
+  .specialty-card .specialty-arrow-btn { width: 38px; height: 38px; top: 16px; right: 16px; }
   .contact-content { gap: 24px; }
   .footer-columns { grid-template-columns: 1fr; gap: 20px; }
   .platform-cards-grid { grid-template-columns: 1fr; }

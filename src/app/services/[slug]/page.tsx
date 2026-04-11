@@ -220,6 +220,57 @@ export default function ServicePage() {
         </div>
       </section>
 
+      {slug === "regenerative-medicine" && (
+        <section className="svc-procedures">
+          <div className="container">
+            <div className="svc-section-header">
+              <p className="section-label">Treatment Options</p>
+              <h2>Stem Cell Procedures</h2>
+              <p className="svc-section-desc">Dr. Elguizaoui offers advanced stem cell treatments that use your body&rsquo;s own regenerative cells to help heal injured tissue and relieve pain &mdash; without surgery.</p>
+            </div>
+            <div className="svc-procedures-grid">
+              <div className="svc-procedure-card">
+                <div className="svc-procedure-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M12 2v6" />
+                    <path d="M12 22v-6" />
+                    <circle cx="12" cy="12" r="4" />
+                    <path d="M4.93 4.93l4.24 4.24" />
+                    <path d="M14.83 14.83l4.24 4.24" />
+                    <path d="M4.93 19.07l4.24-4.24" />
+                    <path d="M14.83 9.17l4.24-4.24" />
+                  </svg>
+                </div>
+                <h3>Bone Marrow Stem Cells</h3>
+                <p>Also known as Bone Marrow Aspirate Concentrate (BMAC), this procedure harvests stem cells from your own bone marrow &mdash; typically from the pelvis &mdash; and concentrates them for injection into damaged joints or soft tissue. These mesenchymal stem cells release growth factors and anti-inflammatory proteins that promote healing and reduce pain.</p>
+                <ul className="svc-procedure-list">
+                  <li>Treats arthritis, cartilage injuries, and tendon damage</li>
+                  <li>Minimally invasive, performed in-office</li>
+                  <li>Uses your own cells &mdash; no rejection risk</li>
+                  <li>Minimal downtime, return to daily activity quickly</li>
+                </ul>
+              </div>
+              <div className="svc-procedure-card">
+                <div className="svc-procedure-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M12 2a9 9 0 0 1 9 9c0 4-3 7-6 9-1 .67-2 1-3 1s-2-.33-3-1c-3-2-6-5-6-9a9 9 0 0 1 9-9z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+                <h3>Lipogems Procedure</h3>
+                <p>Lipogems is an FDA-cleared technology that harvests and gently processes a small sample of your own adipose (fat) tissue to deliver cushioning and support to injured areas. The fat tissue contains a rich supply of regenerative cells that help reduce inflammation and promote natural healing.</p>
+                <ul className="svc-procedure-list">
+                  <li>Excellent for osteoarthritis and tendon injuries</li>
+                  <li>Single outpatient procedure</li>
+                  <li>Uses your own adipose tissue &mdash; minimal manipulation</li>
+                  <li>Can delay or avoid the need for joint replacement</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {service.approach && (
         <section className="svc-approach">
           <div className="container">

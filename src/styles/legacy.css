@@ -1853,8 +1853,15 @@ section.specialties > .container {
   inset: 0;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 35%, rgba(0, 0, 0, 0.2) 65%, rgba(0, 0, 0, 0.15) 100%);
   opacity: 1;
-  transition: opacity 1.2s ease, background 0.5s ease;
+  transition: opacity 1.5s ease;
   z-index: 2;
+}
+.specialty-card .specialty-content {
+  transition: opacity 1.5s ease;
+}
+.specialty-card:hover .specialty-overlay,
+.specialty-card:hover .specialty-content {
+  opacity: 0;
 }
 .specialty-card .specialty-content {
   position: absolute;
@@ -1907,10 +1914,6 @@ section.specialties > .container {
   background: #fff;
   transform: rotate(-45deg) scale(1.08);
 }
-.specialty-card:hover .specialty-overlay {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.05) 80%, rgba(0, 0, 0, 0) 100%);
-}
-
 /* Book a Consultation card — ZocDoc branded, no image */
 .specialty-card.book-card {
   background: linear-gradient(135deg, #1a3a5c 0%, #0f2440 100%);

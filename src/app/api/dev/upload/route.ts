@@ -5,44 +5,71 @@ const REPO_OWNER = "worrellburton";
 const REPO_NAME = "sam";
 const BRANCH = "main";
 
-// Returns upload config (token + existing file SHA) so the client
-// can PUT directly to GitHub, bypassing Vercel's 4.5 MB body limit.
+// Proxy for uploading files to GitHub.
+// Client sends { fileName, folder, content (base64) }
+// This endpoint forwards to GitHub API, avoiding CORS issues.
 export async function POST(request: NextRequest) {
   if (!GITHUB_TOKEN) {
     return NextResponse.json(
-      { error: "GITHUB_TOKEN not configured" },
+      { error: "GITHUB_TOKEN not configured. Add it to your Vercel environment variables." },
       { status: 500 }
     );
   }
 
-  const { fileName, folder } = await request.json();
-  if (!fileName || !folder) {
-    return NextResponse.json({ error: "Missing fileName or folder" }, { status: 400 });
+  const { fileName, folder, content } = await request.json();
+  if (!fileName || !folder || !content) {
+    return NextResponse.json({ error: "Missing fileName, folder, or content" }, { status: 400 });
   }
 
   const repoPath = `public/${folder}/${fileName}`;
 
-  // Check if file already exists to get SHA for overwrites
+  // Check if file exists (get SHA for overwrites)
   let sha: string | undefined;
   try {
-    const res = await fetch(
+    const checkRes = await fetch(
       `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${repoPath}?ref=${BRANCH}`,
       { headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: "application/vnd.github.v3+json" } }
     );
-    if (res.ok) {
-      const existing = await res.json();
+    if (checkRes.ok) {
+      const existing = await checkRes.json();
       sha = existing.sha;
     }
   } catch {
     // File doesn't exist yet
   }
 
-  return NextResponse.json({
-    token: GITHUB_TOKEN,
-    owner: REPO_OWNER,
-    repo: REPO_NAME,
+  const body: Record<string, string> = {
+    message: `Upload ${fileName} via dev panel`,
+    content,
     branch: BRANCH,
-    path: repoPath,
-    sha,
+  };
+  if (sha) body.sha = sha;
+
+  const res = await fetch(
+    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${repoPath}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }
+  );
+
+  if (!res.ok) {
+    const err = await res.json();
+    return NextResponse.json(
+      { error: `GitHub API error: ${err.message || res.statusText}` },
+      { status: res.status }
+    );
+  }
+
+  const result = await res.json();
+  return NextResponse.json({
+    success: true,
+    path: `/${folder}/${fileName}`,
+    url: result.content?.html_url,
   });
 }

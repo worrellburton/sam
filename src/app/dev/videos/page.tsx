@@ -63,44 +63,16 @@ export default function DevVideosPage() {
         reader.readAsDataURL(file);
       });
 
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: 35, message: "Getting upload config..." } : u));
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 40, message: "Pushing to GitHub..." } : u));
 
-      // Step 2: Get auth config from our API
-      const configRes = await fetch("/api/dev/upload", {
+      // Step 2: Upload via server proxy (avoids CORS, handles GitHub auth)
+      const res = await fetch("/api/dev/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName: file.name, folder: "videos" }),
+        body: JSON.stringify({ fileName: file.name, folder: "videos", content: base64 }),
       });
-      const config = await configRes.json();
-      if (config.error) throw new Error(config.error);
-
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 45, message: "Pushing to GitHub..." } : u));
-
-      // Step 3: PUT directly to GitHub API
-      const body: Record<string, string> = {
-        message: `Upload ${file.name} via dev panel`,
-        content: base64,
-        branch: config.branch,
-      };
-      if (config.sha) body.sha = config.sha;
-
-      const ghRes = await fetch(
-        `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${config.token}`,
-            Accept: "application/vnd.github.v3+json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        }
-      );
-
-      if (!ghRes.ok) {
-        const err = await ghRes.json();
-        throw new Error(err.message || ghRes.statusText);
-      }
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Upload failed");
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
       fetchFiles();

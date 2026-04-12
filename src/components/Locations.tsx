@@ -24,7 +24,7 @@ export function Locations() {
                   width="100%"
                   height="100%"
                   style={{ border: 0, borderRadius: "12px" }}
-                  loading="lazy"
+                  loading="eager"
                   referrerPolicy="no-referrer-when-downgrade"
                   src={`/api/maps?type=embed&q=${encodeURIComponent(loc.query)}&zoom=14`}
                 ></iframe>

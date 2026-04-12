@@ -19,6 +19,7 @@ export default function DevImagesPage() {
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [uploads, setUploads] = useState<UploadState[]>([]);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchFiles = useCallback(async () => {
@@ -64,42 +65,15 @@ export default function DevImagesPage() {
         reader.readAsDataURL(file);
       });
 
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: 35, message: "Getting upload config..." } : u));
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 40, message: "Pushing to GitHub..." } : u));
 
-      const configRes = await fetch("/api/dev/upload", {
+      const res = await fetch("/api/dev/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName: file.name, folder }),
+        body: JSON.stringify({ fileName: file.name, folder, content: base64 }),
       });
-      const config = await configRes.json();
-      if (config.error) throw new Error(config.error);
-
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 45, message: "Pushing to GitHub..." } : u));
-
-      const body: Record<string, string> = {
-        message: `Upload ${file.name} via dev panel`,
-        content: base64,
-        branch: config.branch,
-      };
-      if (config.sha) body.sha = config.sha;
-
-      const ghRes = await fetch(
-        `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${config.token}`,
-            Accept: "application/vnd.github.v3+json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        }
-      );
-
-      if (!ghRes.ok) {
-        const err = await ghRes.json();
-        throw new Error(err.message || ghRes.statusText);
-      }
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Upload failed");
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
       fetchFiles();
@@ -147,6 +121,19 @@ export default function DevImagesPage() {
         .dev-img-card:hover .copy-btn { opacity: 1; }
         .dev-img-card .copy-btn:hover { background: rgba(99,102,241,0.5); border-color: #818cf8; }
         .dev-img-card .copy-btn.copied { background: rgba(34,197,94,0.5); border-color: #22c55e; }
+        .dev-img-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 48px; }
+        .dev-img-list-item { display: flex; align-items: center; gap: 14px; background: #111827; border: 1px solid #1e293b; border-radius: 8px; padding: 8px 14px; cursor: pointer; position: relative; transition: background 0.15s; }
+        .dev-img-list-item:hover { background: #1a2234; }
+        .dev-img-list-item img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+        .dev-img-list-item .list-name { font-size: 0.85rem; font-weight: 500; color: #e2e8f0; flex: 1; }
+        .dev-img-list-item .list-path { font-size: 0.72rem; color: #475569; flex: 2; }
+        .dev-img-list-item .copy-btn { background: rgba(0,0,0,0.5); color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+        .dev-img-list-item:hover .copy-btn { opacity: 1; }
+        .dev-img-list-item .copy-btn:hover { background: rgba(99,102,241,0.5); border-color: #818cf8; }
+        .dev-img-list-item .copy-btn.copied { background: rgba(34,197,94,0.5); border-color: #22c55e; opacity: 1; }
+        .view-toggle { display: flex; gap: 4px; background: #111827; border-radius: 8px; padding: 3px; border: 1px solid #1e293b; }
+        .view-toggle button { background: none; border: none; color: #64748b; padding: 6px 10px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; }
+        .view-toggle button.active { background: #1e293b; color: #e2e8f0; }
         .upload-progress-track { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
         .upload-progress-bar { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
         .upload-progress-bar.uploading { background: linear-gradient(90deg, #6366f1, #818cf8); }
@@ -161,9 +148,19 @@ export default function DevImagesPage() {
         }
       `}</style>
       <div className="dev-page">
-        <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>Images</h1>
-          <p style={{ fontSize: "0.88rem", color: "#64748b", margin: "4px 0 0" }}>{files.length} files in /public/images</p>
+        <div style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div>
+            <h1 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>Images</h1>
+            <p style={{ fontSize: "0.88rem", color: "#64748b", margin: "4px 0 0" }}>{files.length} files in /public/images</p>
+          </div>
+          <div className="view-toggle">
+            <button className={viewMode === "list" ? "active" : ""} onClick={() => setViewMode("list")} title="List view">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+            <button className={viewMode === "grid" ? "active" : ""} onClick={() => setViewMode("grid")} title="Grid view">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </button>
+          </div>
         </div>
 
         {/* Upload zone */}
@@ -229,25 +226,41 @@ export default function DevImagesPage() {
           </div>
         )}
 
-        {/* Image grid grouped by folder */}
+        {/* Image grid/list grouped by folder */}
         {loading ? (
           <p style={{ color: "#64748b", textAlign: "center", padding: 40 }}>Loading images...</p>
         ) : (
           Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)).map(([dir, imgs]) => (
             <div key={dir}>
               <h2 style={{ fontWeight: 600, color: "#94a3b8", marginBottom: 16, marginTop: 8, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "0.78rem" }}>{dir} <span style={{ color: "#475569", fontWeight: 400 }}>({imgs.length})</span></h2>
-              <div className="dev-img-grid">
-                {imgs.sort().map((src) => (
-                  <div key={src} className="dev-img-card" onClick={() => setLightbox(src)}>
-                    <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
-                      {copied === src ? "Copied!" : "Copy path"}
-                    </button>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={src} alt="" style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} loading="lazy" />
-                    <p style={{ padding: "8px 10px", fontSize: "0.72rem", color: "#64748b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{src.split("/").pop()}</p>
-                  </div>
-                ))}
-              </div>
+              {viewMode === "grid" ? (
+                <div className="dev-img-grid">
+                  {imgs.sort().map((src) => (
+                    <div key={src} className="dev-img-card" onClick={() => setLightbox(src)}>
+                      <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
+                        {copied === src ? "Copied!" : "Copy path"}
+                      </button>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={src} alt="" style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} loading="lazy" />
+                      <p style={{ padding: "8px 10px", fontSize: "0.72rem", color: "#64748b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{src.split("/").pop()}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="dev-img-list">
+                  {imgs.sort().map((src) => (
+                    <div key={src} className="dev-img-list-item" onClick={() => setLightbox(src)}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={src} alt="" loading="lazy" />
+                      <span className="list-name">{src.split("/").pop()}</span>
+                      <span className="list-path">{src}</span>
+                      <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
+                        {copied === src ? "Copied!" : "Copy path"}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))
         )}

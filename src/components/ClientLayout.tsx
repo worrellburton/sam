@@ -22,6 +22,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     setBookingOpen(false);
   }, []);
 
+  // Scroll to top on route change (fixes mobile back-to-top issue)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   // Intercept clicks on any link to /book
   useEffect(() => {
     function handleClick(e: MouseEvent) {

@@ -68,48 +68,73 @@ export default function DevImagesPage() {
 
   useEffect(() => { fetchFiles(); }, [fetchFiles]);
 
+  const compressImage = (file: File, maxWidth = 2400, quality = 0.82): Promise<{ base64: string; fileName: string; compressedSize: number }> => {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let w = img.width;
+        let h = img.height;
+        if (w > maxWidth) {
+          h = Math.round(h * (maxWidth / w));
+          w = maxWidth;
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) { reject(new Error("Canvas not supported")); return; }
+        ctx.drawImage(img, 0, 0, w, h);
+        const webpDataUrl = canvas.toDataURL("image/webp", quality);
+        const base64 = webpDataUrl.split(",")[1];
+        const compressedSize = Math.round(base64.length * 0.75);
+        const baseName = file.name.replace(/\.[^.]+$/, "");
+        resolve({ base64, fileName: `${baseName}.webp`, compressedSize });
+      };
+      img.onerror = () => reject(new Error("Failed to load image"));
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   const uploadFile = async (file: File) => {
-    const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+    const originalSizeMB = (file.size / 1024 / 1024).toFixed(1);
     const idx = uploads.length;
 
     setUploads(prev => [...prev, {
       fileName: file.name,
-      fileSize: `${sizeMB} MB`,
+      fileSize: `${originalSizeMB} MB`,
       phase: "uploading",
       progress: 0,
-      message: `Reading ${file.name}...`,
+      message: `Compressing ${file.name}...`,
     }]);
 
     try {
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onprogress = (e) => {
-          if (e.lengthComputable) {
-            const pct = Math.round((e.loaded / e.total) * 30);
-            setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: pct, message: `Reading ${file.name}... ${pct}%` } : u));
-          }
-        };
-        reader.onload = () => {
-          const result = reader.result as string;
-          resolve(result.split(",")[1]);
-        };
-        reader.onerror = () => reject(new Error("Failed to read file"));
-        reader.readAsDataURL(file);
-      });
+      // Compress to WebP
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: 10, message: "Compressing for web..." } : u));
+      const { base64, fileName, compressedSize } = await compressImage(file);
+      const compressedMB = (compressedSize / 1024 / 1024).toFixed(1);
+      const savings = Math.round((1 - compressedSize / file.size) * 100);
 
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 40, message: "Pushing to GitHub..." } : u));
+      setUploads(prev => prev.map((u, i) => i === idx ? {
+        ...u,
+        fileName,
+        fileSize: `${compressedMB} MB (${savings}% smaller)`,
+        progress: 35,
+        message: `Compressed: ${originalSizeMB} MB → ${compressedMB} MB`,
+      } : u));
+
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 45, message: "Pushing to GitHub..." } : u));
 
       const res = await fetch("/api/dev/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName: file.name, folder: "images", content: base64 }),
+        body: JSON.stringify({ fileName, folder: "images", content: base64 }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error || "Upload failed");
 
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${fileName} uploaded (${savings}% smaller)` } : u));
       // Add to top of list immediately
-      setFiles(prev => [{ path: `/images/${file.name}`, mtime: Date.now() }, ...prev.filter(f => f.path !== `/images/${file.name}`)]);
+      setFiles(prev => [{ path: `/images/${fileName}`, mtime: Date.now() }, ...prev.filter(f => f.path !== `/images/${fileName}`)]);
     } catch (err) {
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: `${err}` } : u));
     }

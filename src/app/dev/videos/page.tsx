@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Link from "next/link";
+import { DevSidebar } from "../DevSidebar";
 
 export default function DevVideosPage() {
   const [files, setFiles] = useState<string[]>([]);
@@ -61,10 +61,11 @@ export default function DevVideosPage() {
   }, []);
 
   return (
-    <div style={styles.page}>
+    <div style={{ display: "flex" }}>
+      <DevSidebar />
+      <div style={styles.page}>
       <div style={styles.header}>
         <div style={styles.headerLeft}>
-          <Link href="/dev/images" style={styles.navLink}>&larr; Images</Link>
           <h1 style={styles.title}>Videos</h1>
           <p style={styles.subtitle}>{files.length} files in /public/videos</p>
         </div>
@@ -125,11 +126,12 @@ export default function DevVideosPage() {
         </div>
       )}
     </div>
+    </div>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  page: { minHeight: "100vh", background: "#0a0e1a", color: "#e2e8f0", padding: "32px 40px", fontFamily: "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" },
+  page: { minHeight: "100vh", background: "#0a0e1a", color: "#e2e8f0", padding: "32px 40px", fontFamily: "-apple-system, BlinkMacSystemFont, 'Inter', sans-serif", marginLeft: 220, flex: 1 },
   header: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 },
   headerLeft: { display: "flex", flexDirection: "column", gap: 4 },
   navLink: { color: "#60a5fa", fontSize: "0.82rem", textDecoration: "none", marginBottom: 8 },

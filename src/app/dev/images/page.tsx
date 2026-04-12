@@ -3,15 +3,22 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { DevSidebar } from "../DevSidebar";
 
+interface UploadState {
+  fileName: string;
+  fileSize: string;
+  phase: "uploading" | "processing" | "done" | "error";
+  progress: number;
+  message: string;
+}
+
 export default function DevImagesPage() {
   const [files, setFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [folder, setFolder] = useState("images/sam");
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [uploads, setUploads] = useState<UploadState[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchFiles = useCallback(async () => {
@@ -28,26 +35,55 @@ export default function DevImagesPage() {
 
   useEffect(() => { fetchFiles(); }, [fetchFiles]);
 
-  const uploadFile = async (file: File) => {
-    setUploading(true);
-    setUploadStatus(`Uploading ${file.name}...`);
+  const uploadFile = (file: File) => {
+    const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+    const idx = uploads.length;
+    const initial: UploadState = {
+      fileName: file.name,
+      fileSize: `${sizeMB} MB`,
+      phase: "uploading",
+      progress: 0,
+      message: `Uploading ${file.name}...`,
+    };
+
+    setUploads(prev => [...prev, initial]);
+
+    const xhr = new XMLHttpRequest();
     const form = new FormData();
     form.append("file", file);
     form.append("folder", folder);
-    try {
-      const res = await fetch("/api/dev/files", { method: "POST", body: form });
-      const data = await res.json();
-      if (data.success) {
-        setUploadStatus(`Uploaded ${file.name}`);
-        fetchFiles();
-      } else {
-        setUploadStatus(`Error: ${data.error}`);
+
+    xhr.upload.addEventListener("progress", (e) => {
+      if (e.lengthComputable) {
+        const pct = Math.round((e.loaded / e.total) * 70);
+        setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: pct, message: `Uploading ${file.name}... ${pct}%` } : u));
       }
-    } catch (err) {
-      setUploadStatus(`Upload failed: ${err}`);
-    } finally {
-      setUploading(false);
-    }
+    });
+
+    xhr.addEventListener("load", () => {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (data.success) {
+          setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
+          fetchFiles();
+        } else {
+          setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: data.error || "Upload failed" } : u));
+        }
+      } catch {
+        setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: "Upload failed — file may be too large for server (4.5 MB limit on Vercel)" } : u));
+      }
+    });
+
+    xhr.upload.addEventListener("loadend", () => {
+      setUploads(prev => prev.map((u, i) => i === idx && u.phase === "uploading" ? { ...u, phase: "processing", progress: 80, message: "Pushing to GitHub..." } : u));
+    });
+
+    xhr.addEventListener("error", () => {
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: "Network error" } : u));
+    });
+
+    xhr.open("POST", "/api/dev/files");
+    xhr.send(form);
   };
 
   const handleFiles = (fileList: FileList) => {
@@ -89,6 +125,13 @@ export default function DevImagesPage() {
         .dev-img-card:hover .copy-btn { opacity: 1; }
         .dev-img-card .copy-btn:hover { background: rgba(99,102,241,0.5); border-color: #818cf8; }
         .dev-img-card .copy-btn.copied { background: rgba(34,197,94,0.5); border-color: #22c55e; }
+        .upload-progress-track { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
+        .upload-progress-bar { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
+        .upload-progress-bar.uploading { background: linear-gradient(90deg, #6366f1, #818cf8); }
+        .upload-progress-bar.processing { background: linear-gradient(90deg, #818cf8, #f59e0b); animation: pulse-bar 1.5s ease-in-out infinite; }
+        .upload-progress-bar.done { background: #22c55e; }
+        .upload-progress-bar.error { background: #ef4444; }
+        @keyframes pulse-bar { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
         @media (max-width: 768px) {
           .dev-page { margin-left: 0; padding: 20px 16px; padding-top: 60px; }
           .dev-img-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
@@ -103,7 +146,7 @@ export default function DevImagesPage() {
 
         {/* Upload zone */}
         <div
-          style={{ border: "2px dashed #334155", borderRadius: 16, padding: "48px 24px", textAlign: "center", cursor: "pointer", marginBottom: 48, transition: "all 0.2s ease", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, ...(dragOver ? { borderColor: "#60a5fa", background: "rgba(96,165,250,0.06)" } : {}) }}
+          style={{ border: "2px dashed #334155", borderRadius: 16, padding: "40px 24px", textAlign: "center", cursor: "pointer", marginBottom: 32, transition: "all 0.2s ease", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, ...(dragOver ? { borderColor: "#60a5fa", background: "rgba(96,165,250,0.06)" } : {}) }}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={onDrop}
@@ -126,9 +169,43 @@ export default function DevImagesPage() {
               <option value="images">images (root)</option>
             </select>
           </div>
-          {uploading && <p style={{ color: "#f59e0b", fontSize: "0.85rem", margin: 0 }}>Uploading...</p>}
-          {uploadStatus && !uploading && <p style={{ color: "#34d399", fontSize: "0.85rem", margin: 0 }}>{uploadStatus}</p>}
         </div>
+
+        {/* Upload progress cards */}
+        {uploads.length > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
+            {uploads.map((u, i) => (
+              <div key={i} style={{ background: "#111827", border: "1px solid #1e293b", borderRadius: 12, padding: "16px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: u.phase === "done" ? "rgba(34,197,94,0.15)" : u.phase === "error" ? "rgba(239,68,68,0.15)" : "rgba(99,102,241,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      {u.phase === "done" ? (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
+                      ) : u.phase === "error" ? (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+                      ) : (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                      )}
+                    </div>
+                    <div>
+                      <p style={{ margin: 0, fontSize: "0.88rem", fontWeight: 600, color: "#e2e8f0" }}>{u.fileName}</p>
+                      <p style={{ margin: 0, fontSize: "0.72rem", color: "#64748b" }}>{u.fileSize}</p>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: u.phase === "done" ? "#22c55e" : u.phase === "error" ? "#ef4444" : u.phase === "processing" ? "#f59e0b" : "#818cf8" }}>
+                    {u.phase === "done" ? "Complete" : u.phase === "error" ? "Failed" : u.phase === "processing" ? "Pushing to GitHub..." : `${u.progress}%`}
+                  </span>
+                </div>
+                <div className="upload-progress-track">
+                  <div className={`upload-progress-bar ${u.phase}`} style={{ width: `${u.progress}%` }} />
+                </div>
+                {u.phase === "error" && (
+                  <p style={{ margin: 0, fontSize: "0.75rem", color: "#f87171" }}>{u.message}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Image grid grouped by folder */}
         {loading ? (

@@ -5,6 +5,78 @@ import { useState } from "react";
 
 const links = [
   {
+    to: "/dev",
+    exact: true,
+    label: "Home",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+    ),
+  },
+  {
+    to: "/dev#dashboard",
+    label: "Dashboard",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="9" rx="1" />
+        <rect x="14" y="3" width="7" height="5" rx="1" />
+        <rect x="14" y="12" width="7" height="9" rx="1" />
+        <rect x="3" y="16" width="7" height="5" rx="1" />
+      </svg>
+    ),
+  },
+  {
+    to: "/dev#reviews",
+    label: "Reviews",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+      </svg>
+    ),
+  },
+  {
+    to: "/dev#seo",
+    label: "SEO",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <path d="M21 21l-4.35-4.35" />
+      </svg>
+    ),
+  },
+  {
+    to: "/dev#geo",
+    label: "GEO",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
+      </svg>
+    ),
+  },
+  {
+    to: "/dev#bookings",
+    label: "Bookings",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+      </svg>
+    ),
+  },
+  {
+    to: "/dev#analytics",
+    label: "Analytics",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 20V10M12 20V4M6 20v-6" />
+      </svg>
+    ),
+  },
+  {
     to: "/dev/images",
     label: "Images",
     icon: (
@@ -30,6 +102,12 @@ const links = [
 export function DevSidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const isActive = (link: typeof links[0]) => {
+    if ('exact' in link && link.exact) return pathname === "/dev";
+    if (link.to.includes("#")) return false;
+    return pathname.startsWith(link.to);
+  };
 
   return (
     <>
@@ -131,14 +209,14 @@ export function DevSidebar() {
         <div className="dev-sidebar-brand">
           <span className="dev-sidebar-brand-bold">Sam</span>
           <span className="dev-sidebar-brand-accent">MD</span>
-          <span className="dev-sidebar-brand-sub">Dev Tools</span>
+          <span className="dev-sidebar-brand-sub">Admin Portal</span>
         </div>
         <nav className="dev-sidebar-nav">
           {links.map((l) => (
             <Link
               key={l.to}
               href={l.to}
-              className={`dev-sidebar-link${pathname.startsWith(l.to) ? " active" : ""}`}
+              className={`dev-sidebar-link${isActive(l) ? " active" : ""}`}
               onClick={() => setOpen(false)}
             >
               {l.icon}

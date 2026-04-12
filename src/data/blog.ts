@@ -40,6 +40,483 @@ export function isPostReleased(post: BlogPost, now: Date = new Date()): boolean 
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "cartilage-restoration-maci-allograft",
+    title: "Cartilage Construction: How MACI and Osteochondral Allografts Save Knees Before Replacement",
+    excerpt:
+      "Two cell-grade techniques are rewriting what's possible for young athletes with cartilage damage — and pushing knee replacement back by decades.",
+    tag: "The Science",
+    date: "April 10, 2026",
+    readTime: "11 min read",
+    episode: 12,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "cartilage-repair",
+    image: "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Orthopedic surgeon studying a knee joint model with cartilage highlighted",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#why">Why Cartilage Is the Forgotten Tissue</a></li>
+    <li><a href="#maci">MACI — Growing Your Own Cartilage</a></li>
+    <li><a href="#allograft">Osteochondral Allograft — Installing a Replacement Surface</a></li>
+    <li><a href="#compare">MACI vs Allograft at a Glance</a></li>
+    <li><a href="#recovery">The 12-Month Recovery Map</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you are 28 and the MRI just said "full-thickness cartilage lesion," you are not destined for a knee replacement at 40. You are in the sweet spot for two of the most underused procedures in orthopedics.</p>
+</div>
+
+<h2 id="why">Why Cartilage Is the Forgotten Tissue</h2>
+
+<p>Articular cartilage is the glossy white surface that caps the ends of bones inside every joint. Two millimeters thick in most places. Smoother than ice on ice. It is what lets your femur glide on your tibia 8,000 times a day without a single thought.</p>
+
+<p>It has one problem: <strong>cartilage does not heal itself.</strong> Unlike skin, muscle, or bone, cartilage has no blood supply. When you tear a piece out — a bad landing, a twist on a curb, decades of compensation — the body has no delivery system to patch it. The defect sits there, edges fraying, until it spreads into early osteoarthritis.</p>
+
+<div class="blog-expert-quote">
+  <p>The single best predictor of whether a 30-year-old ends up with a knee replacement at 50 is whether someone addressed their cartilage defect when it was still the size of a dime.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon, Fellowship-Trained in Cartilage Restoration</cite>
+</div>
+
+<div class="blog-anatomy">
+  <svg width="420" height="240" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cross-section of a knee joint showing articular cartilage">
+    <defs>
+      <linearGradient id="boneGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f5f5f4"/>
+        <stop offset="100%" stop-color="#a8a29e"/>
+      </linearGradient>
+      <linearGradient id="cartGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="100%" stop-color="#818cf8"/>
+      </linearGradient>
+    </defs>
+    <path d="M80,40 Q60,80 90,130 Q100,160 130,170 L180,170 Q220,165 230,140 Q245,90 220,50 Q180,30 130,32 Q100,34 80,40 Z" fill="url(#boneGrad)" stroke="#78716c" stroke-width="1.5"/>
+    <path d="M95,128 Q120,165 180,168 Q220,162 225,140" stroke="url(#cartGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <path d="M250,90 Q260,140 285,160 L330,160 Q360,155 370,130 L370,90 Q345,75 300,78 Q265,80 250,90 Z" fill="url(#boneGrad)" stroke="#78716c" stroke-width="1.5"/>
+    <path d="M252,95 Q268,145 300,158 L335,158" stroke="url(#cartGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <g class="hotspot">
+      <circle cx="165" cy="168" r="14" fill="#ef4444" opacity="0.15"/>
+      <circle class="hotspot-pulse" cx="165" cy="168" r="7" fill="#ef4444"/>
+    </g>
+    <text x="165" y="210" text-anchor="middle" font-family="Inter, system-ui" font-size="11" fill="#94a3b8" font-weight="600">DEFECT</text>
+    <text x="60" y="140" font-family="Inter, system-ui" font-size="10" fill="#94a3b8">Femur</text>
+    <text x="345" y="175" font-family="Inter, system-ui" font-size="10" fill="#94a3b8">Tibia</text>
+    <text x="110" y="115" font-family="Inter, system-ui" font-size="10" fill="#6366f1" font-weight="600">Cartilage</text>
+  </svg>
+</div>
+
+<div class="blog-takeaway">
+  <h4>Why "watch and wait" fails cartilage</h4>
+  <ul>
+    <li>No blood supply → no natural repair signal</li>
+    <li>Defect edges shear off with every step</li>
+    <li>Exposed bone grinds on bone — this is arthritis</li>
+    <li>By the time you feel grinding, the window for biologics may be closed</li>
+  </ul>
+</div>
+
+<h2 id="maci">MACI — Growing Your Own Cartilage in a Lab</h2>
+
+<p>MACI stands for Matrix-Induced Autologous Chondrocyte Implantation. Translation: we take a few of your own cartilage cells, hand them to a lab that grows millions more on a postage-stamp-sized collagen patch, and then we fit the patch into your defect like a custom floor tile.</p>
+
+<p>It is FDA-approved. It is the only cell-based cartilage procedure that is. And it is shockingly under-offered — most patients with symptomatic knee cartilage defects never hear the word "MACI" from their surgeon.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2a10 10 0 0 0-10 10"/><circle cx="12" cy="12" r="3"/></svg>
+    </div>
+    <h4>Cell Harvest</h4>
+    <p>Arthroscopic biopsy takes a rice-grain-sized sample of your healthy cartilage from a low-load area of the knee. 20 minutes, two tiny incisions, outpatient.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-3 5v9h12v-9l-3-5V2"/><path d="M9 2h6"/></svg>
+    </div>
+    <h4>Lab Expansion</h4>
+    <p>Your chondrocytes are shipped to a Vericel lab in Cambridge, MA. Over ~4 weeks they are coaxed to multiply and then seeded onto a bioresorbable collagen scaffold.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+    </div>
+    <h4>Implantation</h4>
+    <p>A mini-open procedure trims the defect to clean edges, then cuts the membrane to match its exact shape and glues it in place with fibrin sealant. No screws, no metal.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">04</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>
+    </div>
+    <h4>Integration</h4>
+    <p>Over 12 months, those cells mature into hyaline-like cartilage that bonds with your surrounding tissue. MRI at 18 months often shows near-normal cartilage signal.</p>
+  </div>
+</div>
+
+<h3>Who MACI is built for</h3>
+<ul>
+  <li>Ages <strong>18 to 55</strong> (sometimes older with good bone health)</li>
+  <li>Symptomatic <strong>full-thickness</strong> cartilage defect in the knee</li>
+  <li>Defect size <strong>2 to 20 cm²</strong></li>
+  <li>Stable knee ligaments and reasonable alignment (or a plan to fix them)</li>
+  <li>Willing and able to commit to the 12-month rehab</li>
+</ul>
+
+<a href="/services/cartilage-repair" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>See whether MACI fits your case — <strong>Dr. Elguizaoui's Cartilage Repair service</strong>, fellowship-trained across Switzerland, the Netherlands, and Italy.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="allograft">Osteochondral Allograft — Installing a Replacement Surface</h2>
+
+<p>Sometimes the defect is too big for MACI. Or the bone underneath the cartilage is dead (osteochondritis dissecans). Or you have already tried microfracture and it failed. For these cases, the answer is often an osteochondral allograft — a donor plug of cartilage <em>with the bone still attached</em>.</p>
+
+<p>Think of it like a dental implant for your knee: a circular core of healthy cartilage and its underlying bone, harvested from a carefully matched young donor, press-fit into a precisely drilled socket in your femur.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M10 20H4v-6"/><path d="M20 4 14 10"/><path d="M4 20 10 14"/></svg>
+    </div>
+    <h4>Size & Match</h4>
+    <p>Your MRI is used to order a fresh donor condyle sized to within 1mm of your anatomy. Tissue banks typically ship within 14 to 28 days.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <h4>Core & Prep</h4>
+    <p>A cylindrical coring tool drills the damaged cartilage and a few millimeters of bone down to healthy tissue, creating a clean socket.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="m8 7 4-4 4 4"/><path d="m8 17 4 4 4-4"/></svg>
+    </div>
+    <h4>Press-Fit</h4>
+    <p>The matched donor plug is seated flush with your joint surface using gentle press-fit — no hardware required. The bone block fuses to your own over 3 to 6 months.</p>
+  </div>
+</div>
+
+<h3>Who allograft is built for</h3>
+<ul>
+  <li>Defects <strong>&gt; 2 cm²</strong> (especially above 4 cm²) where MACI may struggle</li>
+  <li>Defects that involve the <strong>subchondral bone</strong>, not just cartilage</li>
+  <li>Failed prior cartilage procedures (microfracture, OATS, even MACI)</li>
+  <li>Osteochondritis dissecans (OCD) lesions in younger active patients</li>
+  <li>Athletes who need structural support <strong>on day one</strong> of healing</li>
+</ul>
+
+<h2 id="compare">MACI vs Allograft at a Glance</h2>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Procedure A</p>
+    <h4>MACI</h4>
+    <ul>
+      <li>Your own cells (autologous)</li>
+      <li>Defect 2 to 20 cm²</li>
+      <li>Treats cartilage only</li>
+      <li>Two surgeries, 4–6 weeks apart</li>
+      <li>No donor, no matching wait</li>
+      <li>Recovery: 6–12 months</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">Procedure B</p>
+    <h4>Osteochondral Allograft</h4>
+    <ul>
+      <li>Donor cells & bone (allogeneic)</li>
+      <li>Defect &gt;2 cm², often much larger</li>
+      <li>Treats cartilage <em>and</em> bone</li>
+      <li>Single surgery</li>
+      <li>Requires donor match (14–28 days)</li>
+      <li>Recovery: 6–12 months</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="recovery">The 12-Month Recovery Map</h2>
+
+<p>Both procedures have the same non-negotiable truth: <strong>the graft has to be protected while it integrates.</strong> The timeline below is the gold standard we use in the practice — it is also why compliance with PT matters more than almost any other variable.</p>
+
+<div class="blog-timeline">
+  <p class="blog-bar-chart-title">Recovery milestones (both procedures)</p>
+  <div class="blog-timeline-track">
+    <div class="blog-timeline-progress" style="--timeline-progress: 100%;"></div>
+  </div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 0–6</div>
+      <div class="blog-timeline-label">Non-weight-bearing, passive motion, CPM machine</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 6–12</div>
+      <div class="blog-timeline-label">Progressive weight-bearing, gym bike, closed-chain strength</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 3–6</div>
+      <div class="blog-timeline-label">Running progression, agility, sport-specific drills</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 9–12</div>
+      <div class="blog-timeline-label">Return to pivoting sport, MRI check, functional testing</div>
+    </div>
+  </div>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <div class="blog-stat-number">85%+</div>
+    <div class="blog-stat-label">Good-to-excellent outcomes at 10 years (MACI)</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">79%</div>
+    <div class="blog-stat-label">Graft survival at 15 years (osteochondral allograft)</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">~10 yrs</div>
+    <div class="blog-stat-label">Average delay of knee replacement when done in time</div>
+  </div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Am I too old for cartilage restoration?</h3>
+  <p>Biological age matters more than chronological age. A fit 58-year-old with good bone density and a single contained defect can be a great candidate. A sedentary 40-year-old with diffuse arthritis may not be.</p>
+
+  <h3>Does insurance cover MACI and allografts?</h3>
+  <p>In New York, most major insurers cover both procedures when medical necessity is documented — a failed course of conservative treatment, a full-thickness defect on MRI, and a matched anatomic profile. Our team handles pre-authorization in-house.</p>
+
+  <h3>What if I also have an ACL tear or a meniscus problem?</h3>
+  <p>We fix them at the same time. Cartilage does not live in isolation — instability and meniscus deficiency accelerate cartilage failure. Expect a combined surgical plan. See also our <a href="/blog/acl-tear-warning-signs">ACL symptom guide</a> and <a href="/blog/meniscus-tear-athlete-guide">meniscus guide</a>.</p>
+
+  <h3>Can I avoid surgery entirely with PRP or stem cells?</h3>
+  <p>For very early cartilage damage, biologics can quiet symptoms. They do not rebuild a full-thickness defect. Read the full breakdown in our <a href="/blog/prp-therapy-deep-dive">PRP deep dive</a>.</p>
+
+  <h3>How do I know if I am a candidate?</h3>
+  <p>A 30-minute consultation plus a weight-bearing X-ray and a high-resolution MRI will answer it. If you are in NYC, book a visit with Dr. Elguizaoui and bring your imaging.</p>
+</div>
+`,
+  },
+  {
+    slug: "prp-therapy-deep-dive",
+    title: "PRP, Decoded: What Platelet-Rich Plasma Actually Does (and What It Doesn't)",
+    excerpt:
+      "Everyone wants PRP. Few clinics explain what's in the vial, what evidence supports it, and why the concentration matters more than the marketing.",
+    tag: "Myth Busting",
+    date: "April 4, 2026",
+    readTime: "10 min read",
+    episode: 11,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "regenerative-medicine",
+    image: "https://images.unsplash.com/photo-1579154341043-2fc4fb23f9df?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Centrifuge spinning a vial of blood to concentrate platelets for PRP therapy",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what">What Is in a PRP Injection, Actually</a></li>
+    <li><a href="#how">How the Procedure Works — Step by Step</a></li>
+    <li><a href="#vs">PRP vs Cortisone vs Hyaluronic Acid</a></li>
+    <li><a href="#works">Where the Evidence Is Strongest</a></li>
+    <li><a href="#timeline">Return-to-Activity Timeline</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>Every week a patient shows up asking for PRP because their favorite pro athlete got it. That's a fine reason to ask — but it is not a treatment plan. Here is the honest version: what PRP is, what it does well, where it disappoints, and how to tell a legitimate protocol from marketing.</p>
+</div>
+
+<h2 id="what">What Is in a PRP Injection, Actually</h2>
+
+<p>PRP stands for <strong>platelet-rich plasma</strong>. We draw your blood, spin it in a centrifuge, and concentrate the platelets 3× to 7× above baseline. Platelets are not just clotting cells — they carry growth factors (PDGF, TGF-β, VEGF, IGF-1) that orchestrate tissue repair.</p>
+
+<div class="blog-anatomy">
+  <svg width="420" height="240" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Centrifuge separating blood into plasma, platelets, and red cells">
+    <defs>
+      <linearGradient id="plasmaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fde68a"/>
+        <stop offset="100%" stop-color="#fbbf24"/>
+      </linearGradient>
+      <linearGradient id="rbcGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#dc2626"/>
+        <stop offset="100%" stop-color="#7f1d1d"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(40,40)">
+      <rect x="0" y="0" width="80" height="160" rx="6" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+      <rect x="4" y="4" width="72" height="152" rx="4" fill="url(#rbcGrad)" opacity="0.7"/>
+      <text x="40" y="185" text-anchor="middle" font-family="Inter" font-size="10" fill="#94a3b8" font-weight="600">WHOLE BLOOD</text>
+    </g>
+    <g transform="translate(170,40)">
+      <rect x="0" y="0" width="80" height="160" rx="6" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+      <rect x="4" y="4" width="72" height="40" rx="2" fill="url(#plasmaGrad)"/>
+      <rect x="4" y="44" width="72" height="18" fill="#6366f1" opacity="0.85"/>
+      <rect x="4" y="62" width="72" height="94" rx="2" fill="url(#rbcGrad)" opacity="0.7"/>
+      <text x="40" y="185" text-anchor="middle" font-family="Inter" font-size="10" fill="#94a3b8" font-weight="600">AFTER SPIN</text>
+      <g>
+        <line x1="76" y1="53" x2="110" y2="53" stroke="#6366f1" stroke-width="1.5"/>
+        <text x="113" y="50" font-family="Inter" font-size="10" fill="#6366f1" font-weight="700">BUFFY COAT</text>
+        <text x="113" y="63" font-family="Inter" font-size="9" fill="#94a3b8">Platelets + WBCs</text>
+      </g>
+    </g>
+    <g transform="translate(320,40)">
+      <rect x="0" y="0" width="60" height="160" rx="6" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+      <rect x="4" y="50" width="52" height="106" rx="2" fill="url(#plasmaGrad)"/>
+      <rect x="4" y="38" width="52" height="12" fill="#6366f1"/>
+      <text x="30" y="185" text-anchor="middle" font-family="Inter" font-size="10" fill="#6366f1" font-weight="700">PRP</text>
+      <text x="30" y="198" text-anchor="middle" font-family="Inter" font-size="9" fill="#94a3b8">5× concentrate</text>
+    </g>
+    <g class="hotspot">
+      <circle cx="206" cy="53" r="12" fill="#6366f1" opacity="0.15"/>
+      <circle class="hotspot-pulse" cx="206" cy="53" r="5" fill="#6366f1"/>
+    </g>
+  </svg>
+</div>
+
+<p>That last vial — the small volume of straw-colored fluid with a concentrated platelet layer — is what gets injected into your tendon, cartilage surface, or ligament.</p>
+
+<div class="blog-takeaway">
+  <h4>What makes a PRP preparation "good"</h4>
+  <ul>
+    <li><strong>Concentration:</strong> at least 5× baseline platelet count</li>
+    <li><strong>Leukocyte content:</strong> leukocyte-poor for intra-articular, leukocyte-rich for tendons (current best evidence)</li>
+    <li><strong>Volume:</strong> 3–6 mL delivered to the target under ultrasound guidance</li>
+    <li><strong>Activation:</strong> native calcium activation or mechanical release on injection</li>
+  </ul>
+</div>
+
+<h2 id="how">How the Procedure Works — Step by Step</h2>
+
+<div class="blog-steps">
+  <div class="blog-step"><span class="blog-step-num">1</span>
+    <div class="blog-step-icon">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v4l-4 4v8l-4-2v-6L6 8z"/></svg>
+    </div>
+    <h4>Draw</h4>
+    <p>30–60 mL of your blood is drawn into a specialized kit with anticoagulant. Takes five minutes.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">2</span>
+    <div class="blog-step-icon">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg>
+    </div>
+    <h4>Spin</h4>
+    <p>Centrifuge runs 8–15 minutes. Density gradient separates red cells, buffy coat, and plasma.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">3</span>
+    <div class="blog-step-icon">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h10M14 8l4 4-4 4"/><circle cx="20" cy="12" r="1.5" fill="currentColor"/></svg>
+    </div>
+    <h4>Extract</h4>
+    <p>The platelet-rich layer is pulled into a sterile syringe. Cell count is verified on the bench.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">4</span>
+    <div class="blog-step-icon">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M9 5l3-3 3 3M5 13l14 7-6-7 6-3L5 13z"/></svg>
+    </div>
+    <h4>Inject</h4>
+    <p>Ultrasound-guided injection into the exact target — tendon sheath, joint space, or ligament insertion.</p>
+  </div>
+</div>
+
+<div class="blog-inline-cta">
+  <a href="/services/regenerative-medicine">
+    <strong>See how we handle PRP in the clinic →</strong>
+    <span>Ultrasound-guided protocols for knee, shoulder, and tendon</span>
+  </a>
+</div>
+
+<h2 id="vs">PRP vs Cortisone vs Hyaluronic Acid</h2>
+
+<p>Patients often ask "isn't this just another shot?" They are fundamentally different tools. Here is the six-month durability picture from the best available pooled data for mild-to-moderate knee osteoarthritis:</p>
+
+<div class="blog-bar-chart">
+  <div class="blog-bar-row"><span>PRP (LP)</span><div class="blog-bar"><div class="blog-bar-fill" style="width:78%; background: linear-gradient(90deg, #6366f1, #818cf8);"></div></div><span>78%</span></div>
+  <div class="blog-bar-row"><span>Hyaluronic Acid</span><div class="blog-bar"><div class="blog-bar-fill" style="width:54%; background: linear-gradient(90deg, #0ea5e9, #38bdf8);"></div></div><span>54%</span></div>
+  <div class="blog-bar-row"><span>Cortisone</span><div class="blog-bar"><div class="blog-bar-fill" style="width:32%; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div></div><span>32%</span></div>
+  <div class="blog-bar-row"><span>Saline (placebo)</span><div class="blog-bar"><div class="blog-bar-fill" style="width:24%; background: linear-gradient(90deg, #94a3b8, #cbd5e1);"></div></div><span>24%</span></div>
+  <p class="blog-bar-caption">% patients reporting ≥50% pain reduction at 6 months — pooled RCT data, mild-moderate knee OA. Your mileage depends on disease stage, preparation, and whether the clinic uses guidance.</p>
+</div>
+
+<div class="blog-compare">
+  <div class="blog-compare-card">
+    <h4>Cortisone</h4>
+    <p class="blog-pill">Anti-inflammatory</p>
+    <ul><li>Fast relief (days)</li><li>Wears off by 6–12 weeks</li><li>Repeated use weakens cartilage and tendons</li></ul>
+  </div>
+  <div class="blog-compare-card is-accent">
+    <h4>PRP</h4>
+    <p class="blog-pill">Pro-healing signal</p>
+    <ul><li>Slower onset (4–8 weeks)</li><li>Durable to 9–12 months</li><li>Does not damage cartilage; may modestly protect it</li></ul>
+  </div>
+</div>
+
+<h2 id="works">Where the Evidence Is Strongest</h2>
+
+<div class="blog-grade-grid">
+  <div class="grade-1"><h4>Strong evidence</h4><ul><li>Lateral epicondylitis (tennis elbow)</li><li>Patellar tendinopathy</li><li>Mild-moderate knee osteoarthritis</li></ul></div>
+  <div class="grade-2"><h4>Moderate / mixed</h4><ul><li>Partial rotator cuff tears</li><li>Achilles tendinopathy</li><li>Plantar fasciitis</li></ul></div>
+  <div class="grade-3"><h4>Weak or disappointing</h4><ul><li>Full-thickness rotator cuff tears</li><li>Complete ACL tears — see <a href="/blog/acl-tear-warning-signs">ACL warning signs</a></li><li>End-stage bone-on-bone arthritis</li></ul></div>
+</div>
+
+<p>For full-thickness cartilage defects, PRP is a bridge — not a build. The actual rebuild tools are covered in our <a href="/blog/cartilage-restoration-maci-allograft">MACI and allograft breakdown</a>.</p>
+
+<h2 id="timeline">Return-to-Activity Timeline</h2>
+
+<div class="blog-timeline">
+  <div class="blog-timeline-progress"></div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker" style="left:0%"><span>Day 0</span><p>Injection. Short, sharp ache.</p></div>
+    <div class="blog-timeline-marker" style="left:22%"><span>Week 1</span><p>Relative rest. No NSAIDs — they blunt the signal.</p></div>
+    <div class="blog-timeline-marker" style="left:50%"><span>Week 4</span><p>Structured return to loading. First symptom shift.</p></div>
+    <div class="blog-timeline-marker" style="left:78%"><span>Week 8</span><p>Full training. Peak benefit measured at 3 months.</p></div>
+    <div class="blog-timeline-marker" style="left:100%"><span>Month 9</span><p>Benefit assessed. Re-dose if indicated.</p></div>
+  </div>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat"><strong>5–7×</strong><span>platelet concentration target</span></div>
+  <div class="blog-stat"><strong>~45 min</strong><span>total in-clinic visit</span></div>
+  <div class="blog-stat"><strong>0</strong><span>NSAIDs for 10 days before &amp; after</span></div>
+</div>
+
+<h2 id="faq">FAQ</h2>
+
+<div class="blog-faq">
+  <h3>Does insurance cover PRP?</h3>
+  <p>Usually not. It is classified as "investigational" by most payers despite the strong evidence for specific indications. Expect out-of-pocket; ask for the itemized cost up front.</p>
+
+  <h3>How many injections do I need?</h3>
+  <p>For knee OA, the data favors a series of 2–3 injections spaced 1–3 weeks apart. For tendinopathy, one well-placed injection is often enough.</p>
+
+  <h3>Can I combine PRP with surgery?</h3>
+  <p>Yes — PRP is sometimes layered onto meniscus repair, rotator cuff repair, or MACI to accelerate the healing window. See the <a href="/blog/meniscus-tear-athlete-guide">meniscus guide</a> for how we use it in repairs.</p>
+
+  <h3>Is "stem cell" therapy the same thing?</h3>
+  <p>No. Bone marrow aspirate concentrate (BMAC) and adipose-derived preparations are a different category with different evidence. PRP is the most studied by a wide margin.</p>
+</div>
+`,
+  },
+  {
     slug: "5-signs-orthopedic-surgeon",
     title: "The 5 Warning Signs Your Body Is Sending You",
     excerpt:

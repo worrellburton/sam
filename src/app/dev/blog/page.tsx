@@ -641,7 +641,7 @@ export default function DevBlogPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "2fr 1fr 140px 100px 80px",
+              gridTemplateColumns: "72px 2fr 1fr 140px 100px 80px",
               gap: 16,
               padding: "10px 16px",
               fontSize: "0.72rem",
@@ -651,6 +651,7 @@ export default function DevBlogPage() {
               color: "#64748b",
             }}
           >
+            <span>Thumb</span>
             <span>Title</span>
             <span>Tag / Series</span>
             <span>Date</span>
@@ -671,7 +672,7 @@ export default function DevBlogPage() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "2fr 1fr 140px 100px 80px",
+                    gridTemplateColumns: "72px 2fr 1fr 140px 100px 80px",
                     gap: 16,
                     padding: "14px 16px",
                     background: isExpanded ? "#0f172a" : "#111827",
@@ -685,6 +686,30 @@ export default function DevBlogPage() {
                   }}
                   onClick={() => setExpandedSlug(isExpanded ? null : post.slug)}
                 >
+                  <div
+                    style={{
+                      width: 72,
+                      aspectRatio: "3 / 4",
+                      borderRadius: 6,
+                      overflow: "hidden",
+                      background: "#1e293b",
+                      border: "1px solid #1e293b",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {post.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={post.image}
+                        alt=""
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      />
+                    ) : (
+                      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#475569", fontSize: "0.7rem" }}>
+                        —
+                      </div>
+                    )}
+                  </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ fontWeight: 600, color: "#f1f5f9", fontSize: "0.9rem", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {post.title}

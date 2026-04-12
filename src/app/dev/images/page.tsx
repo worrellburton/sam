@@ -35,55 +35,77 @@ export default function DevImagesPage() {
 
   useEffect(() => { fetchFiles(); }, [fetchFiles]);
 
-  const uploadFile = (file: File) => {
+  const uploadFile = async (file: File) => {
     const sizeMB = (file.size / 1024 / 1024).toFixed(1);
     const idx = uploads.length;
-    const initial: UploadState = {
+
+    setUploads(prev => [...prev, {
       fileName: file.name,
       fileSize: `${sizeMB} MB`,
       phase: "uploading",
       progress: 0,
-      message: `Uploading ${file.name}...`,
-    };
+      message: `Reading ${file.name}...`,
+    }]);
 
-    setUploads(prev => [...prev, initial]);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onprogress = (e) => {
+          if (e.lengthComputable) {
+            const pct = Math.round((e.loaded / e.total) * 30);
+            setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: pct, message: `Reading ${file.name}... ${pct}%` } : u));
+          }
+        };
+        reader.onload = () => {
+          const result = reader.result as string;
+          resolve(result.split(",")[1]);
+        };
+        reader.onerror = () => reject(new Error("Failed to read file"));
+        reader.readAsDataURL(file);
+      });
 
-    const xhr = new XMLHttpRequest();
-    const form = new FormData();
-    form.append("file", file);
-    form.append("folder", folder);
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: 35, message: "Getting upload config..." } : u));
 
-    xhr.upload.addEventListener("progress", (e) => {
-      if (e.lengthComputable) {
-        const pct = Math.round((e.loaded / e.total) * 70);
-        setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: pct, message: `Uploading ${file.name}... ${pct}%` } : u));
-      }
-    });
+      const configRes = await fetch("/api/dev/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: file.name, folder }),
+      });
+      const config = await configRes.json();
+      if (config.error) throw new Error(config.error);
 
-    xhr.addEventListener("load", () => {
-      try {
-        const data = JSON.parse(xhr.responseText);
-        if (data.success) {
-          setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
-          fetchFiles();
-        } else {
-          setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: data.error || "Upload failed" } : u));
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 45, message: "Pushing to GitHub..." } : u));
+
+      const body: Record<string, string> = {
+        message: `Upload ${file.name} via dev panel`,
+        content: base64,
+        branch: config.branch,
+      };
+      if (config.sha) body.sha = config.sha;
+
+      const ghRes = await fetch(
+        `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${config.token}`,
+            Accept: "application/vnd.github.v3+json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
         }
-      } catch {
-        setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: "Upload failed — file may be too large for server (4.5 MB limit on Vercel)" } : u));
+      );
+
+      if (!ghRes.ok) {
+        const err = await ghRes.json();
+        throw new Error(err.message || ghRes.statusText);
       }
-    });
 
-    xhr.upload.addEventListener("loadend", () => {
-      setUploads(prev => prev.map((u, i) => i === idx && u.phase === "uploading" ? { ...u, phase: "processing", progress: 80, message: "Pushing to GitHub..." } : u));
-    });
-
-    xhr.addEventListener("error", () => {
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: "Network error" } : u));
-    });
-
-    xhr.open("POST", "/api/dev/files");
-    xhr.send(form);
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
+      fetchFiles();
+    } catch (err) {
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: `${err}` } : u));
+    }
   };
 
   const handleFiles = (fileList: FileList) => {

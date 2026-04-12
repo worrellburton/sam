@@ -180,7 +180,7 @@ a:hover { color: var(--accent); }
 img { max-width: 100%; display: block; }
 
 .container {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 clamp(24px, 4vw, 64px);
 }
@@ -616,7 +616,7 @@ a.nav-btn-book,
 }
 
 .mega-menu-inner {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr 280px;
@@ -1683,7 +1683,11 @@ section.specialties > .container {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.specialty-card:hover .specialty-img,
+.specialty-card:hover .specialty-canvas {
+  transform: scale(1.06);
 }
 .specialty-card .specialty-video {
   position: absolute;
@@ -1693,10 +1697,10 @@ section.specialties > .container {
   object-fit: cover;
   opacity: 1;
   z-index: 1;
-  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 .specialty-card:hover .specialty-video {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 .specialty-card .specialty-overlay {
   position: absolute;
@@ -3076,7 +3080,7 @@ section.specialties > .container {
   position: relative;
   padding: 56px 0;
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: 1300px;
   border-radius: var(--radius);
   overflow: hidden;
   text-align: center;
@@ -11902,7 +11906,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   border-bottom: 1px solid rgba(148,163,184,0.06);
 }
 .v2-nav-inner {
-  max-width: 1200px; margin: 0 auto;
+  max-width: 1300px; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
 }
 .v2-logo {
@@ -12172,7 +12176,7 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   border-top: 1px solid rgba(148,163,184,0.06);
 }
 .v2-footer-inner {
-  max-width: 1200px; margin: 0 auto;
+  max-width: 1300px; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
 }
 .v2-footer p { color: #475569; font-size: 0.78rem; margin: 0; }

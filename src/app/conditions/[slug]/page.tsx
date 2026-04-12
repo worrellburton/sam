@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getConditionBySlug } from "@/data/conditions";
+import { conditionSlugToBlogSlug } from "@/data/condition-blogs";
+import { blogPosts } from "@/data/blog";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 
@@ -137,6 +139,8 @@ export default function ConditionPage() {
   }
 
   const faqs = conditionFaqs[slug] || [];
+  const deepDiveSlug = conditionSlugToBlogSlug[slug];
+  const deepDivePost = deepDiveSlug ? blogPosts.find((p) => p.slug === deepDiveSlug) : undefined;
   const faqJsonLd = faqs.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -179,6 +183,16 @@ export default function ConditionPage() {
             </div>
             <p>{condition.overview}</p>
           </div>
+          {deepDivePost && (
+            <Link href={`/blog/${deepDivePost.slug}`} className="cond-deep-dive reveal">
+              <div className="cond-deep-dive-meta">
+                <span className="cond-deep-dive-label">Deep Dive · {deepDivePost.readTime}</span>
+                <h3>{deepDivePost.title}</h3>
+                <p>{deepDivePost.excerpt}</p>
+              </div>
+              <svg className="cond-deep-dive-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </Link>
+          )}
         </div>
       </section>
 

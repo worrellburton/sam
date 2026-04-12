@@ -1683,13 +1683,6 @@ section.specialties > .container {
   height: 100%;
   object-fit: cover;
   display: block;
-  transform: scale(1.001);
-  will-change: transform;
-  transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
-}
-.specialty-card:hover .specialty-img,
-.specialty-card:hover .specialty-canvas {
-  transform: scale(1.05);
 }
 .specialty-card .specialty-video {
   position: absolute;
@@ -1699,12 +1692,6 @@ section.specialties > .container {
   object-fit: cover;
   opacity: 1;
   z-index: 1;
-  transform: scale(1.001);
-  will-change: transform;
-  transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
-}
-.specialty-card:hover .specialty-video {
-  transform: scale(1.05);
 }
 .specialty-card .specialty-overlay {
   position: absolute;

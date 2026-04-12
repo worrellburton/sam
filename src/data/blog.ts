@@ -517,6 +517,153 @@ export const blogPosts: BlogPost[] = [
 `,
   },
   {
+    slug: "acl-tear-warning-signs",
+    title: "The 4 Signs You Tore Your ACL — and What You Should Do in the First 48 Hours",
+    excerpt:
+      "The pop, the swelling, the wobble, the deep ache — here is how to tell a sprain from a tear, and the first two days that decide your recovery arc.",
+    tag: "The Investigation",
+    date: "March 28, 2026",
+    readTime: "9 min read",
+    episode: 10,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "sports-medicine",
+    image: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Runner holding knee after a pivot on a Brooklyn court",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#signs">The 4 Warning Signs</a></li>
+    <li><a href="#anatomy">What Actually Tears Inside the Knee</a></li>
+    <li><a href="#grades">Grade 1 vs Grade 2 vs Grade 3</a></li>
+    <li><a href="#48">The First 48 Hours — Step by Step</a></li>
+    <li><a href="#path">Surgery or Not? The Decision Tree</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you felt a pop in your knee and now it is swelling and you can barely walk — read this whole piece before you Google yourself into a panic. A torn ACL is not the end of your athletic life. It is a six-month project with a very predictable map.</p>
+</div>
+
+<h2 id="signs">The 4 Warning Signs</h2>
+
+<div class="blog-anatomy">
+  <svg width="420" height="260" viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Knee diagram highlighting ACL location and warning-sign hotspots">
+    <defs>
+      <linearGradient id="bone2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f5f5f4"/>
+        <stop offset="100%" stop-color="#a8a29e"/>
+      </linearGradient>
+    </defs>
+    <path d="M170,20 Q140,60 150,120 L150,140 Q150,150 170,150 L230,150 Q250,150 250,140 L250,120 Q260,60 230,20 Z" fill="url(#bone2)" stroke="#78716c" stroke-width="1.5"/>
+    <path d="M170,160 Q165,200 180,250 L220,250 Q235,200 230,160 Z" fill="url(#bone2)" stroke="#78716c" stroke-width="1.5"/>
+    <line x1="175" y1="150" x2="215" y2="165" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/>
+    <text x="265" y="155" font-family="Inter" font-size="11" fill="#6366f1" font-weight="700">ACL</text>
+    <line x1="255" y1="152" x2="215" y2="157" stroke="#6366f1" stroke-width="1" stroke-dasharray="2 2"/>
+    <g><circle cx="60" cy="60" r="16" fill="#ef4444" opacity="0.15"/><circle class="hotspot-pulse" cx="60" cy="60" r="7" fill="#ef4444"/><text x="85" y="55" font-family="Inter" font-size="11" fill="#94a3b8" font-weight="600">1. The Pop</text><text x="85" y="68" font-family="Inter" font-size="9" fill="#94a3b8">Audible / felt inside the joint</text></g>
+    <g><circle cx="60" cy="120" r="16" fill="#f59e0b" opacity="0.15"/><circle class="hotspot-pulse" cx="60" cy="120" r="7" fill="#f59e0b"/><text x="85" y="115" font-family="Inter" font-size="11" fill="#94a3b8" font-weight="600">2. Rapid Swelling</text><text x="85" y="128" font-family="Inter" font-size="9" fill="#94a3b8">Balloon within 1–4 hours</text></g>
+    <g><circle cx="60" cy="180" r="16" fill="#6366f1" opacity="0.15"/><circle class="hotspot-pulse" cx="60" cy="180" r="7" fill="#6366f1"/><text x="85" y="175" font-family="Inter" font-size="11" fill="#94a3b8" font-weight="600">3. Giving Way</text><text x="85" y="188" font-family="Inter" font-size="9" fill="#94a3b8">Knee collapses when pivoting</text></g>
+    <g><circle cx="60" cy="230" r="16" fill="#0ea5e9" opacity="0.15"/><circle class="hotspot-pulse" cx="60" cy="230" r="7" fill="#0ea5e9"/><text x="85" y="225" font-family="Inter" font-size="11" fill="#94a3b8" font-weight="600">4. Deep Joint Ache</text><text x="85" y="238" font-family="Inter" font-size="9" fill="#94a3b8">Not skin-deep — inside the bone</text></g>
+  </svg>
+</div>
+
+<div class="blog-takeaway">
+  <h4>How these 4 cluster</h4>
+  <ul>
+    <li><strong>Pop + rapid swelling</strong> within 4 hours ≈ 75% likelihood of ACL tear</li>
+    <li><strong>Pop + giving way when pivoting</strong> after the swelling settles ≈ classic instability pattern</li>
+    <li><strong>Deep ache without the pop</strong> is more often a meniscus or bone bruise — see our <a href="/blog/meniscus-tear-athlete-guide">meniscus guide</a></li>
+  </ul>
+</div>
+
+<h2 id="anatomy">What Actually Tears Inside the Knee</h2>
+
+<p>The ACL (anterior cruciate ligament) is a pencil-thick rope of collagen connecting your femur to your tibia. It has one job: stop your tibia from sliding forward and stop your knee from rotating out of alignment. When you plant-and-pivot and your body keeps rotating but your foot does not, the ACL takes the whole load — and snaps.</p>
+
+<div class="blog-expert-quote">
+  <p>The ACL is not a muscle. You cannot "rehab" a complete tear back together. Once the fibers are fully separated, the ligament retracts and the two ends will not find each other again without a graft.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — NYC Sports Medicine</cite>
+</div>
+
+<h2 id="grades">Grade 1 vs Grade 2 vs Grade 3</h2>
+
+<div class="blog-grade-grid">
+  <div class="grade-1"><h4>Grade 1 — Sprain</h4><ul><li>Fibers stretched, not torn</li><li>Mild swelling, no instability</li><li>3–6 weeks of structured PT</li><li>No surgery</li></ul></div>
+  <div class="grade-2"><h4>Grade 2 — Partial tear</h4><ul><li>Some fibers torn, some intact</li><li>Swelling + mild instability</li><li>Bracing + PT; surgery if unstable</li><li>Decision at week 6</li></ul></div>
+  <div class="grade-3"><h4>Grade 3 — Complete tear</h4><ul><li>Full disruption</li><li>Balloon knee + giving way</li><li>Reconstruction is standard for athletes &lt; 40</li><li>Return to sport: 9–12 months</li></ul></div>
+</div>
+
+<h2 id="48">The First 48 Hours — Step by Step</h2>
+
+<div class="blog-steps">
+  <div class="blog-step"><span class="blog-step-num">1</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l3 2"/></svg></div>
+    <h4>Hour 0–2</h4>
+    <p>Stop. Ice 20 min on, 20 off. Elevate above the heart. No weight on it.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">2</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M4.93 4.93l2.83 2.83M2 12h4M4.93 19.07l2.83-2.83M12 22v-4M19.07 19.07l-2.83-2.83M22 12h-4M19.07 4.93l-2.83 2.83"/></svg></div>
+    <h4>Hour 2–12</h4>
+    <p>Compression wrap, crutches if needed. Avoid NSAIDs for the first 24h (they blur the picture on MRI later).</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">3</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg></div>
+    <h4>Hour 12–24</h4>
+    <p>Call a sports orthopedist — not just urgent care. Early exam while the joint is still fresh is more accurate than one after a week of compensation.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">4</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/></svg></div>
+    <h4>Hour 24–48</h4>
+    <p>MRI if history and exam suggest ACL involvement. High-resolution 3T scan reads the ligament, meniscus, and cartilage in one sitting.</p>
+  </div>
+</div>
+
+<div class="blog-inline-cta">
+  <a href="/conditions/acl-tears-and-reconstruction">
+    <strong>See our full ACL reconstruction workflow →</strong>
+    <span>Graft options, timing, and what returning to sport actually looks like</span>
+  </a>
+</div>
+
+<h2 id="path">Surgery or Not? The Decision Tree</h2>
+
+<div class="blog-compare">
+  <div class="blog-compare-card">
+    <h4>Non-operative candidates</h4>
+    <ul><li>Low-demand lifestyle (non-pivoting work)</li><li>Partial tear with no instability</li><li>Older patient, low activity goals</li><li>Willing to avoid cutting sports permanently</li></ul>
+  </div>
+  <div class="blog-compare-card is-accent">
+    <h4>Reconstruction candidates</h4>
+    <ul><li>Any cutting/pivoting sport</li><li>Occupational demand (first responders, dancers, trades)</li><li>Instability during daily life</li><li>Associated meniscus tear — repair together</li></ul>
+  </div>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat"><strong>~200k</strong><span>ACL reconstructions/year in the US</span></div>
+  <div class="blog-stat"><strong>85%+</strong><span>return-to-sport rate with modern technique</span></div>
+  <div class="blog-stat"><strong>9–12 mo</strong><span>typical return-to-competition window</span></div>
+</div>
+
+<h2 id="faq">FAQ</h2>
+
+<div class="blog-faq">
+  <h3>Can a torn ACL heal on its own?</h3>
+  <p>A complete tear (Grade 3) will not reconnect. Partial tears sometimes stabilize with rehab. An MRI plus an exam under anesthesia is how we tell.</p>
+
+  <h3>Will PRP fix an ACL tear?</h3>
+  <p>Not a complete tear. For partial tears and post-op healing acceleration it has a role — see the <a href="/blog/prp-therapy-deep-dive">PRP deep dive</a>.</p>
+
+  <h3>What's the right graft — patellar tendon, hamstring, quad?</h3>
+  <p>Depends on sport, prior surgeries, and age. Cutting athletes under 25 often do best with BTB (patellar) or quad tendon. We walk through trade-offs in person.</p>
+
+  <h3>What if I also tore my meniscus?</h3>
+  <p>Very common — about half of ACL tears have a meniscus companion. Both get addressed in the same arthroscopic visit. <a href="/blog/meniscus-tear-athlete-guide">Meniscus guide here</a>.</p>
+</div>
+`,
+  },
+  {
     slug: "5-signs-orthopedic-surgeon",
     title: "The 5 Warning Signs Your Body Is Sending You",
     excerpt:

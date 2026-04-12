@@ -1,9 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { DevSidebar } from "../DevSidebar";
 import { blogPosts } from "@/data/blog";
+
+const GLOBAL_PROMPT_LS_KEY = "dev:blog:globalPrompt";
+
+const FALLBACK_GLOBAL_PROMPT = `SETTING: New York City. All images should feel unmistakably NYC — Manhattan skyline, brownstone stoops, Central Park at golden hour, Williamsburg / Brooklyn Bridge, rooftop tracks, Chelsea lofts, subway staircases. Light, architecture, and energy should read as New York.
+
+PEOPLE: Subjects are 20s–40s only. Athletic, active, contemporary New Yorkers. No elderly subjects, no clinical "old patient with cane" stock photo tropes.
+
+BRAND VISUAL STYLE: Nike x Equinox. Premium, aspirational, athletic editorial. Cinematic natural light, high contrast, crisp shadows, shallow depth of field. Muted palette with one bold accent. Wardrobe is modern athletic or quiet-luxury minimalism — never hospital gowns. Clinical moments should feel like a high-end private practice or performance lab, not a fluorescent hospital.
+
+CONSISTENCY: All 4 prompts in a set must share the same lighting palette and color DNA so they read as one campaign.`;
 
 type Style = "photorealistic" | "editorial" | "abstract";
 
@@ -51,6 +61,40 @@ export default function DevBlogPage() {
   const [search, setSearch] = useState("");
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
   const [genStates, setGenStates] = useState<Record<string, GenState>>({});
+  const [globalPrompt, setGlobalPrompt] = useState<string>(FALLBACK_GLOBAL_PROMPT);
+  const [globalPromptOpen, setGlobalPromptOpen] = useState<boolean>(false);
+  const [serverDefaultPrompt, setServerDefaultPrompt] = useState<string>(FALLBACK_GLOBAL_PROMPT);
+
+  // Load saved global prompt from localStorage on mount, and fetch the
+  // server default so "Reset to default" uses the real default from the API.
+  useEffect(() => {
+    const stored = typeof window !== "undefined" ? localStorage.getItem(GLOBAL_PROMPT_LS_KEY) : null;
+    if (stored && stored.trim()) {
+      setGlobalPrompt(stored);
+    }
+    fetch("/api/dev/generate-prompt")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.defaultGlobalPrompt) {
+          setServerDefaultPrompt(d.defaultGlobalPrompt);
+          // If the user hasn't saved a custom prompt yet, adopt the server default
+          if (!stored) setGlobalPrompt(d.defaultGlobalPrompt);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  function saveGlobalPrompt(value: string) {
+    setGlobalPrompt(value);
+    if (typeof window !== "undefined") {
+      if (value.trim()) localStorage.setItem(GLOBAL_PROMPT_LS_KEY, value);
+      else localStorage.removeItem(GLOBAL_PROMPT_LS_KEY);
+    }
+  }
+
+  function resetGlobalPrompt() {
+    saveGlobalPrompt(serverDefaultPrompt);
+  }
 
   const filtered = blogPosts.filter(
     (p) =>
@@ -94,6 +138,7 @@ export default function DevBlogPage() {
           excerpt: post.excerpt,
           content: post.contentHtml || post.content,
           style: gen.style,
+          globalPrompt,
         }),
       });
       const data = await res.json();
@@ -232,6 +277,111 @@ export default function DevBlogPage() {
               {blogPosts.filter((p) => p.comingSoon).length} coming soon
             </p>
           </div>
+        </div>
+
+        {/* Global Image Prompt — applied to every "Ask Claude" request */}
+        <div
+          style={{
+            marginBottom: 20,
+            background: globalPromptOpen ? "#0f172a" : "#111827",
+            border: "1px solid #1e293b",
+            borderRadius: 10,
+            overflow: "hidden",
+            transition: "background 0.15s",
+          }}
+        >
+          <button
+            onClick={() => setGlobalPromptOpen((o) => !o)}
+            style={{
+              width: "100%",
+              background: "transparent",
+              border: "none",
+              color: "#e2e8f0",
+              padding: "14px 18px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              cursor: "pointer",
+              textAlign: "left",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 26,
+                  height: 26,
+                  borderRadius: 6,
+                  background: "rgba(99,102,241,0.15)",
+                  color: "#818cf8",
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+              </span>
+              <div>
+                <p style={{ margin: 0, fontSize: "0.9rem", fontWeight: 600, color: "#f1f5f9" }}>Global Image Prompt</p>
+                <p style={{ margin: 0, fontSize: "0.75rem", color: "#64748b", marginTop: 2 }}>
+                  Applied to every &ldquo;Ask Claude for 4 prompts&rdquo; call. Saved to this browser.
+                </p>
+              </div>
+            </div>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#64748b"
+              strokeWidth="2.5"
+              style={{ transform: globalPromptOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          {globalPromptOpen && (
+            <div style={{ padding: "0 18px 18px" }}>
+              <textarea
+                value={globalPrompt}
+                onChange={(e) => saveGlobalPrompt(e.target.value)}
+                rows={10}
+                style={{
+                  ...input,
+                  resize: "vertical",
+                  fontFamily: "inherit",
+                  lineHeight: 1.55,
+                  fontSize: "0.82rem",
+                  background: "#0a0e1a",
+                }}
+                placeholder="Describe the setting, subjects, and brand visual style for all blog images..."
+              />
+              <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
+                <button
+                  onClick={resetGlobalPrompt}
+                  style={{
+                    padding: "6px 12px",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid #1e293b",
+                    borderRadius: 6,
+                    color: "#94a3b8",
+                    fontSize: "0.78rem",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                  }}
+                >
+                  Reset to default
+                </button>
+                <span style={{ fontSize: "0.72rem", color: "#475569" }}>
+                  Saved automatically as you type.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         <div style={{ marginBottom: 24 }}>
@@ -581,8 +731,52 @@ export default function DevBlogPage() {
                       </div>
                     )}
                     {gen.savedPath && (
-                      <div style={{ marginTop: 16, padding: "10px 14px", background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 8, color: "#4ade80", fontSize: "0.82rem" }}>
-                        Saved to <code style={{ background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 4 }}>{gen.savedPath}</code> and set as thumbnail for <code style={{ background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 4 }}>{post.slug}</code>. Redeploys on next build.
+                      <div style={{ marginTop: 16, padding: "12px 14px", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)", borderRadius: 8, color: "#4ade80", fontSize: "0.82rem", lineHeight: 1.6 }}>
+                        <p style={{ margin: 0, color: "#bbf7d0", fontWeight: 600 }}>
+                          &#10003; Image saved &amp; thumbnail updated on <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4 }}>main</code>
+                        </p>
+                        <p style={{ margin: "4px 0 8px", color: "#86efac", fontSize: "0.76rem" }}>
+                          <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4 }}>{gen.savedPath}</code>
+                          {" · "}blog.ts patched for <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4 }}>{post.slug}</code>
+                        </p>
+                        <p style={{ margin: "0 0 8px", color: "#fcd34d", fontSize: "0.76rem" }}>
+                          Vercel is redeploying — usually <strong>1–2 min</strong>. Hard-refresh the site (Cmd+Shift+R) after it finishes.
+                        </p>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <Link
+                            href={`/blog/${post.slug}?v=${Date.now()}`}
+                            target="_blank"
+                            style={{
+                              padding: "5px 10px",
+                              background: "rgba(34,197,94,0.15)",
+                              border: "1px solid rgba(34,197,94,0.3)",
+                              borderRadius: 6,
+                              color: "#4ade80",
+                              fontSize: "0.74rem",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                            }}
+                          >
+                            Open post (cache-busted) &rarr;
+                          </Link>
+                          <a
+                            href={`https://github.com/worrellburton/sam/commits/main/src/data/blog.ts`}
+                            target="_blank"
+                            rel="noopener"
+                            style={{
+                              padding: "5px 10px",
+                              background: "rgba(255,255,255,0.05)",
+                              border: "1px solid #1e293b",
+                              borderRadius: 6,
+                              color: "#94a3b8",
+                              fontSize: "0.74rem",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                            }}
+                          >
+                            Check deploy status
+                          </a>
+                        </div>
                       </div>
                     )}
                     {anyImage && gen.selectedIndex === null && allDone && (

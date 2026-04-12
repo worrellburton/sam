@@ -26,8 +26,8 @@ export function StickyBar() {
       <div className="sticky-bar-info">
         <Link href="/reviews" className="sticky-bar-rating">
           <svg className="sticky-bar-zocdoc-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="11" fill="#4DB77A" />
-            <text x="12" y="16.5" textAnchor="middle" fill="#fff" fontSize="13" fontWeight="700" fontFamily="Inter, sans-serif">Z</text>
+            <circle cx="12" cy="12" r="11" fill="#FFD60A" />
+            <text x="12" y="16.5" textAnchor="middle" fill="#1a1a1a" fontSize="13" fontWeight="700" fontFamily="Inter, sans-serif">Z</text>
           </svg>
           <span className="sticky-bar-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
           <span className="sticky-bar-rating-text">4.8</span>

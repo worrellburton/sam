@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="container">
-        <div className="footer-top">
+        <div className="footer-grid">
           <div className="footer-brand footer-brand-card">
             <div className="footer-headshot">
               <Image src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui" width={200} height={200} style={{ objectPosition: "center 20%", transform: "scale(1.4)" }} />
@@ -32,8 +32,6 @@ export function Footer() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="footer-columns">
           <div className="footer-col">
             <h4>Services</h4>
             <Link href="/services/sports-medicine">Sports Medicine</Link>

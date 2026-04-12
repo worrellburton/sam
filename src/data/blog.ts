@@ -964,8 +964,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "8 min read",
     episode: 1,
     seriesTitle: "Clinical Clarity",
-    image:
-      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/5-signs-orthopedic-surgeon.jpg?v=1776035773816",
     imageAlt: "Doctor examining a patient's knee",
     content: "",
     contentHtml: `
@@ -1248,8 +1247,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "9 min read",
     episode: 2,
     seriesTitle: "Clinical Clarity",
-    image:
-      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/acl-tear-recovery.jpg?v=1776037059504",
     imageAlt: "Athlete performing rehabilitation exercises",
     relatedService: "sports-medicine",
     content: "",
@@ -1510,8 +1508,7 @@ export const blogPosts: BlogPost[] = [
     seriesTitle: "Clinical Clarity",
     date: "January 28, 2026",
     readTime: "9 min read",
-    image:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/prp-therapy-sports-medicine.jpg?v=1776036759084",
     imageAlt: "PRP therapy injection for sports injury",
     relatedService: "sports-medicine",
     content: "",

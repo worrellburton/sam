@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/header.jpg",
+        url: "/images/header.jpg",
         width: 1200,
         height: 630,
         alt: "Dr. Sameh Elguizaoui - Orthopedic Surgeon NYC",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
     description:
       "Board-certified orthopedic surgeon specializing in sports medicine, knee & shoulder surgery, and cartilage repair in NYC.",
-    images: ["/header.jpg"],
+    images: ["/images/header.jpg"],
   },
 };
 

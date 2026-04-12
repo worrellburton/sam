@@ -257,7 +257,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
       <header className="hero" id="hero">
-        <Image className="hero-bg-img loaded" src="/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority />
+        <Image className="hero-bg-img loaded" src="/images/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <div className="hero-text">

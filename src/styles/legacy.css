@@ -998,6 +998,32 @@ a.nav-btn-book,
   margin: 0 0 32px;
 }
 
+/* Hero entrance animations */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroDividerGrow {
+  from { opacity: 0; width: 0; }
+  to   { opacity: 1; width: 48px; }
+}
+
+.hero-text .hero-label,
+.hero-text h1,
+.hero-text .hero-divider,
+.hero-text .hero-desc,
+.hero-text .btn-hero {
+  opacity: 0;
+  animation: heroFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-text .hero-label   { animation-delay: 0.15s; }
+.hero-text h1            { animation-delay: 0.35s; }
+.hero-text .hero-divider {
+  animation: heroDividerGrow 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+}
+.hero-text .hero-desc    { animation-delay: 0.7s; }
+.hero-text .btn-hero     { animation-delay: 0.9s; }
+
 .btn-hero {
   display: inline-flex;
   align-items: center;

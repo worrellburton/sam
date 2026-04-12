@@ -1630,12 +1630,12 @@ section.specialties > .container {
 .specialties-row + .specialties-row {
   margin-top: 16px;
 }
-.specialties-row-1,
-.specialties-row-4 {
+.specialties-row-1 {
   grid-template-columns: 2fr 1fr;
 }
 .specialties-row-2,
-.specialties-row-3 {
+.specialties-row-3,
+.specialties-row-4 {
   grid-template-columns: repeat(3, 1fr);
 }
 @media (max-width: 900px) {

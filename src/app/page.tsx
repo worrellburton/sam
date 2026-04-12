@@ -377,11 +377,12 @@ export default function Home() {
             ];
             const row3: SpecialtyCard[] = [
               { title: "Shoulder & Knee Surgery", href: "/services/shoulder-knee-surgery", video: "/videos/shoulder-knee-surgery.mp4" },
-              { title: "Meet Dr. Elguizaoui", href: "/about", image: "/images/sam/sam5.jpeg" },
-              { title: "Patient Reviews", href: "/reviews", image: "/images/sam/sam6.jpeg" },
+              { title: "Knee", href: "/conditions/knee-cartilage-injuries", video: "/videos/Knee Joint Model.mp4" },
+              { title: "Elbow", href: "/conditions/tennis-elbow", video: "/videos/sports-medicine.mp4" },
             ];
             const row4: SpecialtyCard[] = [
-              { title: "Read the Blog", href: "/blog", image: "/images/sam/sam7.jpeg" },
+              { title: "Hand & Wrist", href: "/services/arthroscopic-surgery", video: "/videos/arthroscopic-surgery.mp4" },
+              { title: "General Orthopedics", href: "/services/joint-preservation", video: "/videos/joint-preservation.mp4" },
               {
                 title: "Book a Consultation",
                 href: "/book",

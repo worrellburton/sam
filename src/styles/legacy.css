@@ -438,7 +438,7 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   list-style: none;
-  gap: 0;
+  gap: 6px;
   margin: 0;
   padding: 0;
 }
@@ -481,8 +481,8 @@ img { max-width: 100%; display: block; }
 .nav-buttons {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-left: 8px;
+  gap: 6px;
+  margin-left: 12px;
 }
 
 a.nav-btn-book,
@@ -1265,6 +1265,23 @@ a.nav-btn-book,
   color: #FFD60A;
   letter-spacing: -0.5px;
 }
+.rating-patient-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFD60A;
+  color: #1a1a1a;
+  padding: 5px 10px 5px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(255, 214, 10, 0.25);
+}
+.rating-patient-choice svg {
+  flex-shrink: 0;
+}
 
 /* ===== Scrolling Ticker Bar ===== */
 .ticker-bar {
@@ -1822,7 +1839,8 @@ section.specialties > .container {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 35%, rgba(0, 0, 0, 0.2) 65%, rgba(0, 0, 0, 0.15) 100%);
-  transition: background 0.5s ease;
+  opacity: 1;
+  transition: opacity 1.2s ease, background 0.5s ease;
   z-index: 2;
 }
 .specialty-card .specialty-content {
@@ -2933,6 +2951,45 @@ section.specialties > .container {
   justify-content: center;
   gap: 16px;
   margin-top: 24px;
+}
+
+/* ===== Reviews auto-scroll marquee ===== */
+.reviews-marquee {
+  position: relative;
+  overflow: hidden;
+  margin-left: calc(-1 * max(24px, (100vw - 1200px) / 2));
+  margin-right: calc(-1 * max(24px, (100vw - 1200px) / 2));
+  padding: 8px 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);
+}
+.reviews-marquee-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: reviewsMarquee 120s linear infinite;
+}
+.reviews-marquee-track:hover {
+  animation-play-state: paused;
+}
+.reviews-marquee-group {
+  display: flex;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.reviews-marquee .google-review-card {
+  width: 360px;
+  min-width: 360px;
+  height: auto;
+}
+@keyframes reviewsMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 10px)); }
+}
+@media (max-width: 768px) {
+  .reviews-marquee { margin-left: -16px; margin-right: -16px; }
+  .reviews-marquee .google-review-card { width: 280px; min-width: 280px; }
+  .reviews-marquee-track { animation-duration: 80s; }
 }
 .reviews-nav-btn {
   width: 40px;
@@ -4492,8 +4549,8 @@ section.specialties > .container {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.4fr repeat(4, 1fr);
-  gap: 40px;
+  grid-template-columns: 1.8fr repeat(4, 1fr);
+  gap: 48px;
   margin-bottom: 48px;
   align-items: start;
 }
@@ -4503,17 +4560,27 @@ section.specialties > .container {
 }
 .footer-brand-card {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  align-items: flex-start;
+  gap: 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
-  padding: 20px;
+  padding: 22px;
+}
+.footer-brand-card .footer-headshot {
+  flex-shrink: 0;
+}
+.footer-brand-card .footer-brand-info {
+  min-width: 0;
+  flex: 1;
+}
+.footer-brand-card .footer-name {
+  white-space: nowrap;
 }
 
 .footer-headshot {
-  width: 90px;
-  height: 90px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(255,255,255,0.2);
@@ -4527,22 +4594,25 @@ section.specialties > .container {
 
 .footer-name {
   font-family: 'Inter', sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #fff;
-  margin-bottom: 8px;
+  margin: 0 0 6px;
+  line-height: 1.2;
 }
 
 .footer-tagline {
-  color: rgba(255,255,255,0.5);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .footer-affiliations {
-  font-size: 0.8rem;
-  margin-top: 12px;
-  color: rgba(255,255,255,0.35);
+  font-size: 0.72rem;
+  margin: 10px 0 0;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.5;
 }
 
 .footer-columns {

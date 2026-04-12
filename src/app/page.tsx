@@ -189,24 +189,16 @@ export default function Home() {
   const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
 
   const allReviews = (() => {
-    const arr = googleReviews.length > 0 ? [...googleReviews] : patientReviews.map(r => ({ ...r, rating: 5, isLocal: true as const }));
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+    if (googleReviews.length > 0) {
+      return [...googleReviews].sort((a, b) => {
+        const ta = new Date(a.publishTime || 0).getTime();
+        const tb = new Date(b.publishTime || 0).getTime();
+        return tb - ta;
+      });
     }
-    return arr;
+    return patientReviews.map(r => ({ ...r, rating: 5, isLocal: true as const }));
   })();
   const [heroReady, setHeroReady] = useState(false);
-  const [reviewIndex, setReviewIndex] = useState(0);
-  const reviewsPerPage = 3;
-  const totalReviewPages = Math.ceil(allReviews.length / reviewsPerPage);
-  useEffect(() => {
-    if (allReviews.length <= reviewsPerPage) return;
-    const interval = setInterval(() => {
-      setReviewIndex(prev => (prev + 1) % totalReviewPages);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [allReviews.length, totalReviewPages]);
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -263,7 +255,7 @@ export default function Home() {
             <p className="hero-desc">Sports medicine and joint preservation specialist trained at Cleveland Clinic and Lenox Hill Hospital. Former team physician for the NY Jets and NY Islanders.</p>
             <a href="#about" className="btn btn-hero">Learn More</a>
           </div>
-          <div className="hero-rating-card">
+          <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="hero-rating-card" aria-label="View Dr. Elguizaoui on Zocdoc">
             <div className="rating-top">
               <div className="rating-score">4.8<span className="rating-star">&#9733;</span></div>
               <div className="rating-info">
@@ -277,9 +269,14 @@ export default function Home() {
                 <div className="avatar">M</div>
                 <div className="avatar">A</div>
               </div>
-              <span className="rating-zocdoc">Zocdoc</span>
+              <span className="rating-patient-choice" aria-label="Zocdoc Patient Choice">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M7 4V2h10v2h4v4a4 4 0 0 1-4 4h-.35A5.002 5.002 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A5.002 5.002 0 0 1 7.35 12H7a4 4 0 0 1-4-4V4h4zm0 2H5v2a2 2 0 0 0 2 2V6zm10 0v4a2 2 0 0 0 2-2V6h-2z"/>
+                </svg>
+                Patient Choice
+              </span>
             </div>
-          </div>
+          </a>
         </div>
         <div className="ticker-bar">
           <div className="ticker-track">
@@ -464,11 +461,11 @@ export default function Home() {
             <h2>Trusted by <span className="text-accent">{googleTotal ? `${(1469 + googleTotal).toLocaleString()}+` : '1,400+'} Patients</span></h2>
             <p className="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
           </div>
-          <div className="reviews-carousel-wrapper" aria-live="polite">
-            <div className="reviews-carousel-track" style={{ transform: `translateX(-${reviewIndex * 100}%)` }}>
-              {Array.from({ length: totalReviewPages }).map((_, pageIdx) => (
-                <div className="reviews-carousel-page" key={pageIdx}>
-                  {allReviews.slice(pageIdx * reviewsPerPage, (pageIdx + 1) * reviewsPerPage).map((review, i) => {
+          <div className="reviews-marquee" aria-label="Recent patient reviews">
+            <div className="reviews-marquee-track">
+              {[0, 1].map((loopIdx) => (
+                <div className="reviews-marquee-group" key={loopIdx} aria-hidden={loopIdx === 1}>
+                  {allReviews.map((review, i) => {
                     const isGoogle = 'authorAttribution' in review;
                     const r = review as GoogleReview;
                     const local = review as typeof patientReviews[0] & { rating: number };
@@ -479,7 +476,7 @@ export default function Home() {
                     const location = isGoogle ? r.locationLabel : local.location;
                     const rating = isGoogle ? r.rating : 5;
                     return (
-                      <div className="google-review-card" key={i}>
+                      <div className="google-review-card" key={`${loopIdx}-${i}`}>
                         <div className="google-review-header">
                           <img
                             className="google-review-avatar"
@@ -507,17 +504,6 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            {totalReviewPages > 1 && (
-              <div className="reviews-carousel-nav">
-                <button className="reviews-nav-btn" onClick={() => setReviewIndex(prev => prev === 0 ? totalReviewPages - 1 : prev - 1)} aria-label="Previous reviews">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
-                </button>
-                <span className="reviews-nav-count">{reviewIndex + 1} / {totalReviewPages}</span>
-                <button className="reviews-nav-btn" onClick={() => setReviewIndex(prev => (prev + 1) % totalReviewPages)} aria-label="Next reviews">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18" /></svg>
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </section>

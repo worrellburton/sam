@@ -8,7 +8,7 @@ export function Footer() {
         <div className="footer-grid">
           <div className="footer-brand footer-brand-card">
             <div className="footer-headshot">
-              <Image src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui" width={200} height={200} style={{ objectPosition: "center 20%", transform: "scale(1.4)" }} />
+              <Image src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui" width={144} height={144} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%", transform: "scale(1.4)" }} />
             </div>
             <div className="footer-brand-info">
               <p className="footer-name">Sameh Elguizaoui, M.D.</p>

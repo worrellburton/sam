@@ -799,6 +799,162 @@ export const blogPosts: BlogPost[] = [
 `,
   },
   {
+    slug: "meniscus-tear-athlete-guide",
+    title: "Meniscus Tears, Without the Mystery: Repair vs Trim vs Leave-It-Alone",
+    excerpt:
+      "The meniscus is a shock absorber with one rule — keep as much of it as possible. Here's how tear pattern, location, and age decide the plan.",
+    tag: "The Science",
+    date: "March 14, 2026",
+    readTime: "9 min read",
+    episode: 8,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "arthroscopic-surgery",
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "MRI reading of a knee meniscus tear",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#anatomy">What the Meniscus Actually Does</a></li>
+    <li><a href="#symptoms">Symptoms That Say "Meniscus"</a></li>
+    <li><a href="#types">The 4 Tear Patterns — and Why They Matter</a></li>
+    <li><a href="#options">Repair vs Trim vs Watch</a></li>
+    <li><a href="#recovery">The Recovery Map</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If your MRI report said "meniscus tear," take a breath. Roughly one in three adults walking around with zero pain have a tear on imaging. What matters is the pattern, the location, your symptoms, and your sport — not the word "tear."</p>
+</div>
+
+<h2 id="anatomy">What the Meniscus Actually Does</h2>
+
+<div class="blog-anatomy">
+  <svg width="420" height="240" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Top-down view of the two meniscus pads inside the knee">
+    <defs>
+      <radialGradient id="menGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#818cf8"/>
+        <stop offset="100%" stop-color="#4338ca"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="210" cy="120" rx="170" ry="80" fill="#f5f5f4" stroke="#a8a29e" stroke-width="1.5"/>
+    <path d="M90,120 Q90,60 155,60 Q195,60 200,100 Q180,110 150,110 Q115,110 100,145 Q90,155 90,120 Z" fill="url(#menGrad)" opacity="0.9"/>
+    <path d="M330,120 Q330,60 265,60 Q225,60 220,100 Q240,110 270,110 Q305,110 320,145 Q330,155 330,120 Z" fill="url(#menGrad)" opacity="0.9"/>
+    <text x="130" y="95" font-family="Inter" font-size="11" fill="#fff" font-weight="700">MEDIAL</text>
+    <text x="260" y="95" font-family="Inter" font-size="11" fill="#fff" font-weight="700">LATERAL</text>
+    <g><circle cx="150" cy="75" r="10" fill="#ef4444" opacity="0.15"/><circle class="hotspot-pulse" cx="150" cy="75" r="5" fill="#ef4444"/><text x="115" y="45" font-family="Inter" font-size="9" fill="#94a3b8" font-weight="600">Red zone (heals)</text></g>
+    <g><circle cx="200" cy="110" r="10" fill="#f59e0b" opacity="0.15"/><circle class="hotspot-pulse" cx="200" cy="110" r="5" fill="#f59e0b"/><text x="195" y="200" font-family="Inter" font-size="9" fill="#94a3b8" font-weight="600">White zone (won't)</text></g>
+  </svg>
+</div>
+
+<p>Each knee has two C-shaped cartilage pads — medial (inside) and lateral (outside). They turn your tibia from a flat table into a cup that cradles the femur. They distribute 50% of your body weight across the joint every step. Remove them and the cartilage underneath grinds down 6× faster.</p>
+
+<div class="blog-takeaway">
+  <h4>The single most important anatomy fact</h4>
+  <ul>
+    <li>The outer third ("red zone") has blood supply → it can heal if repaired</li>
+    <li>The inner two-thirds ("white zone") has no blood supply → it cannot</li>
+    <li>A tear's LOCATION is what decides repair vs trim — not its size</li>
+  </ul>
+</div>
+
+<h2 id="symptoms">Symptoms That Say "Meniscus"</h2>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <h4>Classic meniscus signs</h4>
+    <ul><li>Pain localized to one side of the joint line</li><li>Catching or clicking with deep squats</li><li>Swelling that comes and goes over days</li><li>Locking — knee stuck mid-range</li></ul>
+  </div>
+  <div class="blog-compare-card">
+    <h4>Probably not meniscus</h4>
+    <ul><li>Pain on the front of the kneecap (patellofemoral)</li><li>Massive pop + immediate balloon (sounds like <a href="/blog/acl-tear-warning-signs">ACL</a>)</li><li>Pain that migrates around the whole knee</li><li>Aches only after long runs (often IT band / tendon)</li></ul>
+  </div>
+</div>
+
+<h2 id="types">The 4 Tear Patterns — and Why They Matter</h2>
+
+<div class="blog-steps">
+  <div class="blog-step"><span class="blog-step-num">1</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 Q12 4 20 12 Q12 20 4 12"/></svg></div>
+    <h4>Longitudinal / bucket-handle</h4>
+    <p>Long tear parallel to the rim. Often causes locking. Best candidate for repair — high heal rate.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">2</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 L20 6"/><path d="M12 12 L16 8"/></svg></div>
+    <h4>Radial</h4>
+    <p>Perpendicular split. Interrupts the hoop — serious because it kills shock absorption. Root tears = repair.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">3</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16M4 12h16M4 16h16"/></svg></div>
+    <h4>Horizontal / flap</h4>
+    <p>Tear splits the meniscus like a pita. Usually degenerative, often in the white zone — trim selectively.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">4</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4c-4 4-4 12 0 16M12 4c4 4 4 12 0 16"/></svg></div>
+    <h4>Complex / degenerative</h4>
+    <p>Mixed pattern, fraying edges. In the 50+ knee with arthritis, often treated non-operatively first.</p>
+  </div>
+</div>
+
+<h2 id="options">Repair vs Trim vs Watch</h2>
+
+<div class="blog-grade-grid">
+  <div class="grade-1"><h4>Meniscus repair</h4><ul><li>Stitch the tear back together</li><li>Red-zone tears, bucket-handle, root tears</li><li>Younger active patients</li><li>6 weeks partial weight-bearing — long view wins</li></ul></div>
+  <div class="grade-2"><h4>Partial meniscectomy (trim)</h4><ul><li>Remove only the unstable flap</li><li>White-zone, degenerative, flap tears</li><li>Preserve every millimeter we can</li><li>Walking same day; sport at 6–8 weeks</li></ul></div>
+  <div class="grade-3"><h4>Non-operative</h4><ul><li>Stable degenerative tears without mechanical symptoms</li><li>Structured PT + activity modification</li><li>Sometimes PRP for persistent inflammation</li><li>Surgery reserved for failure at 3 months</li></ul></div>
+</div>
+
+<div class="blog-expert-quote">
+  <p>Twenty years ago we cut aggressively. Now we know: every millimeter of meniscus you keep is a year of knee replacement you push back. When in doubt, stitch it.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<div class="blog-inline-cta">
+  <a href="/conditions/meniscus-tears">
+    <strong>See our full meniscus protocol →</strong>
+    <span>Imaging, arthroscopic approach, and recovery milestones</span>
+  </a>
+</div>
+
+<h2 id="recovery">The Recovery Map</h2>
+
+<div class="blog-timeline">
+  <div class="blog-timeline-progress"></div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker" style="left:0%"><span>Day 0</span><p>Arthroscopy — 3 small incisions, 45–60 min.</p></div>
+    <div class="blog-timeline-marker" style="left:15%"><span>Week 1</span><p>Walking, home. Trim: full weight. Repair: crutches.</p></div>
+    <div class="blog-timeline-marker" style="left:40%"><span>Week 4</span><p>Trim patients back to gym. Repair patients regaining range.</p></div>
+    <div class="blog-timeline-marker" style="left:65%"><span>Week 8</span><p>Trim: return to sport. Repair: jog progression starts.</p></div>
+    <div class="blog-timeline-marker" style="left:100%"><span>Month 4–6</span><p>Repair: full return to cutting sports.</p></div>
+  </div>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat"><strong>90%+</strong><span>healing rate for red-zone repairs</span></div>
+  <div class="blog-stat"><strong>6×</strong><span>faster cartilage wear after total meniscectomy</span></div>
+  <div class="blog-stat"><strong>~45 min</strong><span>typical arthroscopic time</span></div>
+</div>
+
+<h2 id="faq">FAQ</h2>
+
+<div class="blog-faq">
+  <h3>My MRI says "tear" — do I need surgery?</h3>
+  <p>Not automatically. If you have no locking and mild symptoms, we trial structured rehab first. We only cut when the tear is what is stopping you from living.</p>
+
+  <h3>How do I know if it's meniscus or cartilage damage?</h3>
+  <p>Often both. A high-resolution MRI separates them. If the cartilage is heavily involved, see the <a href="/blog/cartilage-restoration-maci-allograft">cartilage restoration breakdown</a>.</p>
+
+  <h3>Can I run again after a repair?</h3>
+  <p>Yes — most repair patients are back to full running at 4 months and cutting sports at 5–6. The trade-off of extra time is a knee that still has its shock absorbers at 55.</p>
+
+  <h3>What if I also have a suspected ACL problem?</h3>
+  <p>About half of ACL tears have a meniscus tear alongside. We fix both in the same arthroscopic sitting. Read the <a href="/blog/acl-tear-warning-signs">ACL warning signs</a>.</p>
+</div>
+`,
+  },
+  {
     slug: "5-signs-orthopedic-surgeon",
     title: "The 5 Warning Signs Your Body Is Sending You",
     excerpt:

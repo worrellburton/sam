@@ -26,8 +26,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "8 min read",
     episode: 1,
     seriesTitle: "Clinical Clarity",
-    image:
-      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/5-signs-orthopedic-surgeon.jpg",
     imageAlt: "Doctor examining a patient's knee",
     content: "",
     contentHtml: `

@@ -215,7 +215,7 @@ export default function AboutPage() {
         <div className="container">
           <div className="abt-split reveal">
             <div className="abt-split-img">
-              <Image src="/images/sam/sam6.jpeg" alt="Dr. Sam Elguizaoui in the surgery center" className="abt-portrait" width={800} height={1200} style={{ objectPosition: "center 15%" }} />
+              <Image src="/images/sam6.jpeg" alt="Dr. Sam Elguizaoui in the surgery center" className="abt-portrait" width={800} height={1200} style={{ objectPosition: "center 15%" }} />
             </div>
             <div className="abt-split-text">
               <p className="section-label">Clinical Philosophy</p>

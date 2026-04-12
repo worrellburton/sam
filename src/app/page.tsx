@@ -301,7 +301,7 @@ export default function Home() {
         <div className="container">
           <div className="about-layout">
             <div className="about-photo">
-              <Image src="/images/sam/Character Reference Sheet.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
+              <Image src="/images/Character Reference Sheet.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
             </div>
             <div className="about-right">
               <div className="about-header">
@@ -386,7 +386,7 @@ export default function Home() {
               {
                 title: "Book a Consultation",
                 href: "/book",
-                image: "/images/sam/sam1.jpeg",
+                image: "/images/sam1.jpeg",
                 description: "Schedule a visit at one of Dr. Elguizaoui's NYC offices — Manhattan, Brooklyn, or Scarsdale.",
               },
             ];
@@ -455,7 +455,7 @@ export default function Home() {
       </section>
 
       {/* Credentials */}
-      <section className="section credentials reveal cred-has-bg" id="credentials" style={{ backgroundImage: "url('/images/sam/sam7.jpeg')" }}>
+      <section className="section credentials reveal cred-has-bg" id="credentials" style={{ backgroundImage: "url('/images/sam7.jpeg')" }}>
         <div className="cred-bg-overlay" />
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div className="section-header">

@@ -15,7 +15,6 @@ export default function DevImagesPage() {
   const [files, setFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [dragOver, setDragOver] = useState(false);
-  const [folder, setFolder] = useState("images/sam");
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [uploads, setUploads] = useState<UploadState[]>([]);
@@ -70,13 +69,14 @@ export default function DevImagesPage() {
       const res = await fetch("/api/dev/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName: file.name, folder, content: base64 }),
+        body: JSON.stringify({ fileName: file.name, folder: "images", content: base64 }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error || "Upload failed");
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
-      fetchFiles();
+      // Add to top of list immediately
+      setFiles(prev => [`/images/${file.name}`, ...prev.filter(f => f !== `/images/${file.name}`)]);
     } catch (err) {
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: `${err}` } : u));
     }
@@ -93,7 +93,7 @@ export default function DevImagesPage() {
     setDragOver(false);
     if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [folder]);
+  }, []);
 
   const copyPath = (e: React.MouseEvent, src: string) => {
     e.stopPropagation();
@@ -101,14 +101,6 @@ export default function DevImagesPage() {
     setCopied(src);
     setTimeout(() => setCopied(null), 1500);
   };
-
-  // Group files by subfolder
-  const grouped = files.reduce<Record<string, string[]>>((acc, f) => {
-    const parts = f.replace(/^\/images\//, "").split("/");
-    const dir = parts.length > 1 ? parts.slice(0, -1).join("/") : "(root)";
-    (acc[dir] ??= []).push(f);
-    return acc;
-  }, {});
 
   return (
     <div style={{ display: "flex" }}>
@@ -180,14 +172,7 @@ export default function DevImagesPage() {
           <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: 0 }}>
             {dragOver ? "Drop images here" : "Drag & drop images or click to browse"}
           </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
-            <label style={{ color: "#64748b", fontSize: "0.8rem" }}>Upload to:</label>
-            <select value={folder} onChange={(e) => setFolder(e.target.value)} onClick={(e) => e.stopPropagation()} style={{ background: "#1e293b", color: "#e2e8f0", border: "1px solid #334155", borderRadius: 6, padding: "6px 10px", fontSize: "0.82rem" }}>
-              <option value="images/sam">images/sam</option>
-              <option value="images/photos">images/photos</option>
-              <option value="images">images (root)</option>
-            </select>
-          </div>
+          <p style={{ color: "#475569", fontSize: "0.78rem", margin: 0 }}>Uploads to /public/images/</p>
         </div>
 
         {/* Upload progress cards */}
@@ -226,43 +211,36 @@ export default function DevImagesPage() {
           </div>
         )}
 
-        {/* Image grid/list grouped by folder */}
+        {/* Image list/grid — sorted by most recent */}
         {loading ? (
           <p style={{ color: "#64748b", textAlign: "center", padding: 40 }}>Loading images...</p>
+        ) : viewMode === "grid" ? (
+          <div className="dev-img-grid">
+            {files.map((src) => (
+              <div key={src} className="dev-img-card" onClick={() => setLightbox(src)}>
+                <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
+                  {copied === src ? "Copied!" : "Copy path"}
+                </button>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt="" style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} loading="lazy" />
+                <p style={{ padding: "8px 10px", fontSize: "0.72rem", color: "#64748b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{src.split("/").pop()}</p>
+              </div>
+            ))}
+          </div>
         ) : (
-          Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)).map(([dir, imgs]) => (
-            <div key={dir}>
-              <h2 style={{ fontWeight: 600, color: "#94a3b8", marginBottom: 16, marginTop: 8, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: "0.78rem" }}>{dir} <span style={{ color: "#475569", fontWeight: 400 }}>({imgs.length})</span></h2>
-              {viewMode === "grid" ? (
-                <div className="dev-img-grid">
-                  {imgs.sort().map((src) => (
-                    <div key={src} className="dev-img-card" onClick={() => setLightbox(src)}>
-                      <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
-                        {copied === src ? "Copied!" : "Copy path"}
-                      </button>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={src} alt="" style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} loading="lazy" />
-                      <p style={{ padding: "8px 10px", fontSize: "0.72rem", color: "#64748b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{src.split("/").pop()}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="dev-img-list">
-                  {imgs.sort().map((src) => (
-                    <div key={src} className="dev-img-list-item" onClick={() => setLightbox(src)}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={src} alt="" loading="lazy" />
-                      <span className="list-name">{src.split("/").pop()}</span>
-                      <span className="list-path">{src}</span>
-                      <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
-                        {copied === src ? "Copied!" : "Copy path"}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))
+          <div className="dev-img-list">
+            {files.map((src) => (
+              <div key={src} className="dev-img-list-item" onClick={() => setLightbox(src)}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt="" loading="lazy" />
+                <span className="list-name">{src.split("/").pop()}</span>
+                <span className="list-path">{src}</span>
+                <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
+                  {copied === src ? "Copied!" : "Copy path"}
+                </button>
+              </div>
+            ))}
+          </div>
         )}
 
         {/* Lightbox */}

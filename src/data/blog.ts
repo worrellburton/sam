@@ -664,6 +664,141 @@ export const blogPosts: BlogPost[] = [
 `,
   },
   {
+    slug: "basketball-injuries-nyc-courts",
+    title: "The 5 Injuries That Take NYC Ballplayers Off the Court",
+    excerpt:
+      "From West 4th to the Cage to Rucker, the concrete doesn't forgive. Here are the five injuries we see most — and the one move that prevents three of them.",
+    tag: "The Field Report",
+    date: "March 21, 2026",
+    readTime: "8 min read",
+    episode: 9,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "sports-medicine",
+    image: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Outdoor basketball game on a New York City court",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#why">Why NYC Courts Break Bodies Differently</a></li>
+    <li><a href="#top5">The 5 Most Common Injuries</a></li>
+    <li><a href="#prevent">Prevention: The One Warm-Up That Covers 3 of the 5</a></li>
+    <li><a href="#court">What to Do Courtside</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>Pickup ball in this city is not a hobby — it is a culture. West 4th, Rucker, the Cage, Dyckman, Tompkins. Concrete. No sprung floor. No trainer. No timeout. If you ball hard in NYC, you need a short list of the injuries that actually show up in our clinic on Monday morning.</p>
+</div>
+
+<h2 id="why">Why NYC Courts Break Bodies Differently</h2>
+
+<p>Indoor hardwood absorbs about 35% of landing force. NYC blacktop absorbs closer to 5%. Every rebound, every step-back, every contested landing loads your Achilles and your patellar tendon with roughly seven times the impact of a gym. That is why the injuries we see from park ball skew heavily toward tendon and cartilage — not just ankles.</p>
+
+<div class="blog-bar-chart">
+  <div class="blog-bar-row"><span>Ankle sprain</span><div class="blog-bar"><div class="blog-bar-fill" style="width:88%; background: linear-gradient(90deg, #6366f1, #818cf8);"></div></div><span>88%</span></div>
+  <div class="blog-bar-row"><span>Patellar tendon</span><div class="blog-bar"><div class="blog-bar-fill" style="width:62%; background: linear-gradient(90deg, #6366f1, #818cf8);"></div></div><span>62%</span></div>
+  <div class="blog-bar-row"><span>ACL tear</span><div class="blog-bar"><div class="blog-bar-fill" style="width:41%; background: linear-gradient(90deg, #ef4444, #f87171);"></div></div><span>41%</span></div>
+  <div class="blog-bar-row"><span>Finger / jam</span><div class="blog-bar"><div class="blog-bar-fill" style="width:58%; background: linear-gradient(90deg, #0ea5e9, #38bdf8);"></div></div><span>58%</span></div>
+  <div class="blog-bar-row"><span>Achilles rupture</span><div class="blog-bar"><div class="blog-bar-fill" style="width:23%; background: linear-gradient(90deg, #ef4444, #f87171);"></div></div><span>23%</span></div>
+  <p class="blog-bar-caption">Share of pickup-league players reporting injury in our NYC sports medicine intake, past 24 months.</p>
+</div>
+
+<h2 id="top5">The 5 Most Common Injuries</h2>
+
+<div class="blog-steps">
+  <div class="blog-step"><span class="blog-step-num">1</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M5 7l14 10M19 7L5 17"/></svg></div>
+    <h4>Lateral ankle sprain</h4>
+    <p>Rolled ankle on a landing. Grade 1–2 respond to rehab; Grade 3 + talus chips need imaging.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">2</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18M18 3v18M6 12h12"/></svg></div>
+    <h4>Patellar tendinopathy ("jumper's knee")</h4>
+    <p>Nagging pain below the kneecap that worsens over weeks. Eccentric loading beats rest.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">3</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20L20 4M4 4l16 16"/></svg></div>
+    <h4>ACL tear</h4>
+    <p>Plant-and-pivot injury. Pop, swelling, instability — see the <a href="/blog/acl-tear-warning-signs">ACL warning signs guide</a>.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">4</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v20M16 2v20M8 12h8"/></svg></div>
+    <h4>Finger jam / mallet finger</h4>
+    <p>Jammed fingertip. If you cannot straighten the tip, it is a mallet — needs splinting now, not next week.</p>
+  </div>
+  <div class="blog-step"><span class="blog-step-num">5</span>
+    <div class="blog-step-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18c4-6 8-10 16-12M4 18l4-2M4 18l2 4"/></svg></div>
+    <h4>Achilles rupture</h4>
+    <p>"Felt like someone kicked me." Over-30 players at highest risk. Ultrasound within 48h to decide op vs non-op.</p>
+  </div>
+</div>
+
+<div class="blog-expert-quote">
+  <p>Nine out of ten park-ball injuries we see were preventable with a 90-second dynamic warm-up. Nobody does it. The ones who do stay on the court into their forties.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D.</cite>
+</div>
+
+<h2 id="prevent">Prevention: The One Warm-Up That Covers 3 of the 5</h2>
+
+<div class="blog-takeaway">
+  <h4>The 90-second pre-game (before your first jumper)</h4>
+  <ul>
+    <li><strong>20× bodyweight calf raises</strong> — primes the Achilles and patellar tendon</li>
+    <li><strong>10× walking lunges</strong> each leg — loads the quad and glute pattern</li>
+    <li><strong>10× lateral bounds</strong> — teaches the ankle to accept load off-axis</li>
+    <li><strong>5× single-leg balance, eyes closed, 10 seconds</strong> — recalibrates proprioception</li>
+  </ul>
+</div>
+
+<p>Add an ankle brace if you have rolled it before. The evidence for lace-up braces reducing re-sprain in returning players is one of the strongest in sports medicine.</p>
+
+<h2 id="court">What to Do Courtside</h2>
+
+<div class="blog-compare">
+  <div class="blog-compare-card">
+    <h4>Walk it off</h4>
+    <ul><li>Minor turn, no swelling</li><li>Can bear weight within 30 seconds</li><li>Full range of motion returning</li><li>Ice that night, re-evaluate in 24h</li></ul>
+  </div>
+  <div class="blog-compare-card is-accent">
+    <h4>Stop immediately — see us</h4>
+    <ul><li>Pop heard or felt</li><li>Swelling in &lt; 1 hour</li><li>Cannot bear weight</li><li>Obvious deformity or locking</li></ul>
+  </div>
+</div>
+
+<div class="blog-inline-cta">
+  <a href="/services/sports-medicine">
+    <strong>Same-week sports injury visits →</strong>
+    <span>We keep slots open for weekend-warrior intakes</span>
+  </a>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat"><strong>7×</strong><span>landing force: blacktop vs hardwood</span></div>
+  <div class="blog-stat"><strong>90s</strong><span>warm-up that cuts risk ~40%</span></div>
+  <div class="blog-stat"><strong>&lt;48h</strong><span>ideal window for Achilles assessment</span></div>
+</div>
+
+<h2 id="faq">FAQ</h2>
+
+<div class="blog-faq">
+  <h3>I rolled my ankle again — same side, third time. Is that bad?</h3>
+  <p>That is chronic lateral ankle instability and it does not self-resolve. Arthroscopic ligament repair restores the stability in about 45 minutes with a 6-week return. Don't keep taping it.</p>
+
+  <h3>My knee is sore every morning after pickup. Is that "just getting older"?</h3>
+  <p>Probably patellar tendinopathy — it is loud but not dangerous. If it lasts more than 6 weeks despite loading, get an ultrasound. PRP is well supported here; see the <a href="/blog/prp-therapy-deep-dive">deep dive</a>.</p>
+
+  <h3>I'm 35 and worried about Achilles rupture. How do I protect it?</h3>
+  <p>Daily calf raises, two sets of 20. Don't skip leg day. Warm up before any jumping session. If you take a fluoroquinolone antibiotic, pause explosive training for 30 days.</p>
+
+  <h3>I tore my meniscus playing ball. Do I have to stop?</h3>
+  <p>Depends on the tear pattern — see the <a href="/blog/meniscus-tear-athlete-guide">meniscus guide</a>. Many are repaired arthroscopically and you are back on court in 10–14 weeks.</p>
+</div>
+`,
+  },
+  {
     slug: "5-signs-orthopedic-surgeon",
     title: "The 5 Warning Signs Your Body Is Sending You",
     excerpt:

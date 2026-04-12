@@ -5335,7 +5335,6 @@ img.insurance-logo:hover {
   }
   .mobile-nav.active { display: flex; flex-direction: column; }
 
-  .mobile-nav.active ~ .nav-toggle,
   .nav-toggle.active { opacity: 0; pointer-events: none; }
 
   /* Header */

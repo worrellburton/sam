@@ -82,6 +82,7 @@ export function Navigation() {
   }, [pathname, closeMobile]);
 
   return (
+    <>
     <nav
       role="navigation"
       aria-label="Main navigation"
@@ -238,96 +239,97 @@ export function Navigation() {
             </a>
           </li>
         </ul>
+      </div>
+    </nav>
 
-        {/* Mobile fullscreen nav — rebuilt from scratch */}
-        <div className={`mobile-nav${mobileOpen ? " active" : ""}`}>
-          <div className="mnav-header">
-            <Link href="/" className="mnav-logo" onClick={closeMobile}>
-              Sam Elguizaoui, M.D.
-            </Link>
-            <div className="mnav-header-actions">
-              <button className="mnav-close" onClick={closeMobile} aria-label="Close menu">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              </button>
-            </div>
+    {/* Mobile nav rendered outside <nav> to avoid backdrop-filter containing block */}
+    <div className={`mobile-nav${mobileOpen ? " active" : ""}`}>
+      <div className="mnav-header">
+        <Link href="/" className="mnav-logo" onClick={closeMobile}>
+          Sam Elguizaoui, M.D.
+        </Link>
+        <div className="mnav-header-actions">
+          <button className="mnav-close" onClick={closeMobile} aria-label="Close menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div className="mnav-body">
+        <div className="mnav-links">
+          <Link href="/about" className="mnav-link" onClick={closeMobile}>
+            <span>About</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+          </Link>
+
+          <button
+            className={`mnav-link mnav-link-expand${mobileServicesOpen ? " open" : ""}`}
+            onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+            aria-expanded={mobileServicesOpen}
+            aria-label="Services submenu"
+          >
+            <span>Services</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" style={{ transform: mobileServicesOpen ? "rotate(90deg)" : "none", transition: "transform 0.3s ease" }}><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
+
+          <div className={`mnav-services${mobileServicesOpen ? " open" : ""}`}>
+            {services.map((s) => (
+              <Link
+                key={s.slug}
+                href={`/services/${s.slug}`}
+                className="mnav-service-item"
+                onClick={closeMobile}
+              >
+                <span className="mnav-service-icon">{serviceIcons[s.slug]}</span>
+                <div className="mnav-service-text">
+                  <span className="mnav-service-name">{s.label}</span>
+                  <span className="mnav-service-desc">{s.desc}</span>
+                </div>
+              </Link>
+            ))}
           </div>
 
-          <div className="mnav-body">
-            <div className="mnav-links">
-              <Link href="/about" className="mnav-link" onClick={closeMobile}>
-                <span>About</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
-              </Link>
+          <Link href="/reviews" className="mnav-link" onClick={closeMobile}>
+            <span>Reviews</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+          </Link>
 
-              <button
-                className={`mnav-link mnav-link-expand${mobileServicesOpen ? " open" : ""}`}
-                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                aria-expanded={mobileServicesOpen}
-                aria-label="Services submenu"
-              >
-                <span>Services</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" style={{ transform: mobileServicesOpen ? "rotate(90deg)" : "none", transition: "transform 0.3s ease" }}><polyline points="9 6 15 12 9 18"/></svg>
-              </button>
+          <Link href="/faq" className="mnav-link" onClick={closeMobile}>
+            <span>FAQ</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+          </Link>
 
-              <div className={`mnav-services${mobileServicesOpen ? " open" : ""}`}>
-                {services.map((s) => (
-                  <Link
-                    key={s.slug}
-                    href={`/services/${s.slug}`}
-                    className="mnav-service-item"
-                    onClick={closeMobile}
-                  >
-                    <span className="mnav-service-icon">{serviceIcons[s.slug]}</span>
-                    <div className="mnav-service-text">
-                      <span className="mnav-service-name">{s.label}</span>
-                      <span className="mnav-service-desc">{s.desc}</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+          <Link href="/blog" className="mnav-link" onClick={closeMobile}>
+            <span>Blog</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+          </Link>
 
-              <Link href="/reviews" className="mnav-link" onClick={closeMobile}>
-                <span>Reviews</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
-              </Link>
+          <Link href="/contact" className="mnav-link" onClick={closeMobile}>
+            <span>Contact</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+          </Link>
+        </div>
 
-              <Link href="/faq" className="mnav-link" onClick={closeMobile}>
-                <span>FAQ</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
-              </Link>
-
-              <Link href="/blog" className="mnav-link" onClick={closeMobile}>
-                <span>Blog</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
-              </Link>
-
-              <Link href="/contact" className="mnav-link" onClick={closeMobile}>
-                <span>Contact</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
-              </Link>
-            </div>
-
-            <div className="mnav-footer">
-              <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="mnav-book-btn" onClick={closeMobile}>
-                Book Appointment
-              </a>
-              <a href="tel:+19179059370" className="mnav-phone">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-                </svg>
-                (917) 905-9370
-              </a>
-              <div className="mnav-locations">
-                <span>Manhattan</span>
-                <span className="mnav-loc-dot"></span>
-                <span>Brooklyn</span>
-                <span className="mnav-loc-dot"></span>
-                <span>Upper East Side</span>
-              </div>
-            </div>
+        <div className="mnav-footer">
+          <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="mnav-book-btn" onClick={closeMobile}>
+            Book Appointment
+          </a>
+          <a href="tel:+19179059370" className="mnav-phone">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            (917) 905-9370
+          </a>
+          <div className="mnav-locations">
+            <span>Manhattan</span>
+            <span className="mnav-loc-dot"></span>
+            <span>Brooklyn</span>
+            <span className="mnav-loc-dot"></span>
+            <span>Upper East Side</span>
           </div>
         </div>
       </div>
-    </nav>
+    </div>
+    </>
   );
 }

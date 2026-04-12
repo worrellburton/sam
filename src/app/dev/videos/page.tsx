@@ -23,7 +23,7 @@ export default function DevVideosPage() {
     try {
       const res = await fetch("/api/dev/files?type=videos");
       const data = await res.json();
-      setFiles(data.files || []);
+      setFiles((data.files || []).map((f: { path: string }) => f.path));
     } catch {
       setFiles([]);
     } finally {

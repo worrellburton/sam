@@ -3,6 +3,11 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { DevSidebar } from "../DevSidebar";
 
+interface FileEntry {
+  path: string;
+  mtime: number;
+}
+
 interface UploadState {
   fileName: string;
   fileSize: string;
@@ -11,14 +16,19 @@ interface UploadState {
   message: string;
 }
 
+type SortField = "name" | "date";
+type SortDir = "asc" | "desc";
+
 export default function DevImagesPage() {
-  const [files, setFiles] = useState<string[]>([]);
+  const [files, setFiles] = useState<FileEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [dragOver, setDragOver] = useState(false);
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [uploads, setUploads] = useState<UploadState[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [sortField, setSortField] = useState<SortField>("date");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchFiles = useCallback(async () => {
@@ -32,6 +42,29 @@ export default function DevImagesPage() {
       setLoading(false);
     }
   }, []);
+
+  const toggleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDir(field === "date" ? "desc" : "asc");
+    }
+  };
+
+  const sortedFiles = [...files].sort((a, b) => {
+    if (sortField === "date") {
+      return sortDir === "desc" ? b.mtime - a.mtime : a.mtime - b.mtime;
+    }
+    const nameA = a.path.split("/").pop()?.toLowerCase() || "";
+    const nameB = b.path.split("/").pop()?.toLowerCase() || "";
+    return sortDir === "asc" ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+  });
+
+  const formatDate = (mtime: number) => {
+    const d = new Date(mtime);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  };
 
   useEffect(() => { fetchFiles(); }, [fetchFiles]);
 
@@ -76,7 +109,7 @@ export default function DevImagesPage() {
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
       // Add to top of list immediately
-      setFiles(prev => [`/images/${file.name}`, ...prev.filter(f => f !== `/images/${file.name}`)]);
+      setFiles(prev => [{ path: `/images/${file.name}`, mtime: Date.now() }, ...prev.filter(f => f.path !== `/images/${file.name}`)]);
     } catch (err) {
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: `${err}` } : u));
     }
@@ -123,6 +156,12 @@ export default function DevImagesPage() {
         .dev-img-list-item:hover .copy-btn { opacity: 1; }
         .dev-img-list-item .copy-btn:hover { background: rgba(99,102,241,0.5); border-color: #818cf8; }
         .dev-img-list-item .copy-btn.copied { background: rgba(34,197,94,0.5); border-color: #22c55e; opacity: 1; }
+        .dev-img-list-item .list-date { font-size: 0.78rem; color: #64748b; width: 120px; flex-shrink: 0; text-align: right; }
+        .dev-list-header { display: flex; align-items: center; gap: 14px; padding: 6px 14px 6px 76px; margin-bottom: 4px; }
+        .dev-list-header button { background: none; border: none; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; }
+        .dev-list-header button:hover { color: #94a3b8; }
+        .dev-list-header button.active { color: #e2e8f0; }
+        .sort-arrow { font-size: 0.65rem; }
         .view-toggle { display: flex; gap: 4px; background: #111827; border-radius: 8px; padding: 3px; border: 1px solid #1e293b; }
         .view-toggle button { background: none; border: none; color: #64748b; padding: 6px 10px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; }
         .view-toggle button.active { background: #1e293b; color: #e2e8f0; }
@@ -216,27 +255,38 @@ export default function DevImagesPage() {
           <p style={{ color: "#64748b", textAlign: "center", padding: 40 }}>Loading images...</p>
         ) : viewMode === "grid" ? (
           <div className="dev-img-grid">
-            {files.map((src) => (
-              <div key={src} className="dev-img-card" onClick={() => setLightbox(src)}>
-                <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
-                  {copied === src ? "Copied!" : "Copy path"}
+            {sortedFiles.map((f) => (
+              <div key={f.path} className="dev-img-card" onClick={() => setLightbox(f.path)}>
+                <button className={`copy-btn${copied === f.path ? " copied" : ""}`} onClick={(e) => copyPath(e, f.path)}>
+                  {copied === f.path ? "Copied!" : "Copy path"}
                 </button>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} loading="lazy" />
-                <p style={{ padding: "8px 10px", fontSize: "0.72rem", color: "#64748b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{src.split("/").pop()}</p>
+                <img src={f.path} alt="" style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} loading="lazy" />
+                <p style={{ padding: "8px 10px", fontSize: "0.72rem", color: "#64748b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.path.split("/").pop()}</p>
               </div>
             ))}
           </div>
         ) : (
           <div className="dev-img-list">
-            {files.map((src) => (
-              <div key={src} className="dev-img-list-item" onClick={() => setLightbox(src)}>
+            <div className="dev-list-header">
+              <button className={sortField === "name" ? "active" : ""} onClick={() => toggleSort("name")} style={{ flex: 1 }}>
+                Name <span className="sort-arrow">{sortField === "name" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
+              </button>
+              <span style={{ flex: 2 }} />
+              <button className={sortField === "date" ? "active" : ""} onClick={() => toggleSort("date")} style={{ width: 120, textAlign: "right", justifyContent: "flex-end" }}>
+                Date uploaded <span className="sort-arrow">{sortField === "date" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
+              </button>
+              <span style={{ width: 72 }} />
+            </div>
+            {sortedFiles.map((f) => (
+              <div key={f.path} className="dev-img-list-item" onClick={() => setLightbox(f.path)}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" loading="lazy" />
-                <span className="list-name">{src.split("/").pop()}</span>
-                <span className="list-path">{src}</span>
-                <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
-                  {copied === src ? "Copied!" : "Copy path"}
+                <img src={f.path} alt="" loading="lazy" />
+                <span className="list-name">{f.path.split("/").pop()}</span>
+                <span className="list-path">{f.path}</span>
+                <span className="list-date">{formatDate(f.mtime)}</span>
+                <button className={`copy-btn${copied === f.path ? " copied" : ""}`} onClick={(e) => copyPath(e, f.path)}>
+                  {copied === f.path ? "Copied!" : "Copy path"}
                 </button>
               </div>
             ))}

@@ -27,5 +27,5 @@ export async function GET(request: NextRequest) {
   const files = walkDir(targetDir, publicDir);
   // Sort by most recently modified first
   files.sort((a, b) => b.mtime - a.mtime);
-  return NextResponse.json({ files: files.map(f => f.path) });
+  return NextResponse.json({ files: files.map(f => ({ path: f.path, mtime: f.mtime })) });
 }

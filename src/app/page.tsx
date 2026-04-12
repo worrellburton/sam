@@ -381,62 +381,65 @@ export default function Home() {
               { title: "Elbow", href: "/conditions/tennis-elbow", video: "/videos/sports-medicine.mp4" },
             ];
             const row4: SpecialtyCard[] = [
-              { title: "Hand & Wrist", href: "/services/arthroscopic-surgery", video: "/videos/arthroscopic-surgery.mp4" },
               { title: "General Orthopedics", href: "/services/joint-preservation", video: "/videos/joint-preservation.mp4" },
               {
                 title: "Book a Consultation",
                 href: "/book",
-                image: "/images/sam1.jpeg",
                 description: "Schedule a visit at one of Dr. Elguizaoui's NYC offices — Manhattan, Brooklyn, or Scarsdale.",
               },
             ];
-            const renderCard = (card: SpecialtyCard) => (
-              <Link
-                href={card.href}
-                className="specialty-card specialty-link"
-                key={card.href}
-                onMouseEnter={(e) => {
-                  const v = e.currentTarget.querySelector("video");
-                  if (v) v.play().catch(() => {});
-                }}
-                onMouseLeave={(e) => {
-                  const v = e.currentTarget.querySelector("video");
-                  if (v) {
-                    v.pause();
-                    v.currentTime = 0;
-                  }
-                }}
-              >
-                {card.video ? (
-                  <video
-                    className="specialty-video"
-                    src={card.video}
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    onLoadedMetadata={(e) => {
-                      // Force first frame to render so paused cards aren't black
-                      e.currentTarget.currentTime = 0.01;
-                    }}
-                  />
-                ) : card.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className="specialty-video" src={card.image} alt="" />
-                ) : null}
-                <div className="specialty-overlay"></div>
-                <span className="specialty-arrow-btn" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7" />
-                    <polyline points="7 7 17 7 17 17" />
-                  </svg>
-                </span>
-                <div className="specialty-content">
-                  <h3 className="specialty-title">{card.title}</h3>
-                  {card.description && <p className="specialty-description">{card.description}</p>}
-                </div>
-              </Link>
-            );
+            const renderCard = (card: SpecialtyCard) => {
+              const isBookCard = !card.video && !card.image;
+              return (
+                <Link
+                  href={card.href}
+                  className={`specialty-card specialty-link${isBookCard ? " book-card" : ""}`}
+                  key={card.title}
+                  onMouseEnter={(e) => {
+                    const v = e.currentTarget.querySelector("video");
+                    if (v) v.play().catch(() => {});
+                  }}
+                  onMouseLeave={(e) => {
+                    const v = e.currentTarget.querySelector("video");
+                    if (v) {
+                      v.pause();
+                      v.currentTime = 0;
+                    }
+                  }}
+                >
+                  {card.video ? (
+                    <video
+                      className="specialty-video"
+                      src={card.video}
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      onLoadedMetadata={(e) => {
+                        e.currentTarget.currentTime = 0.01;
+                      }}
+                    />
+                  ) : null}
+                  {!isBookCard && <div className="specialty-overlay"></div>}
+                  <span className="specialty-arrow-btn" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="7" y1="17" x2="17" y2="7" />
+                      <polyline points="7 7 17 7 17 17" />
+                    </svg>
+                  </span>
+                  <div className="specialty-content">
+                    {isBookCard && (
+                      <div className="book-card-badge">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <span>ZocDoc</span>
+                      </div>
+                    )}
+                    <h3 className="specialty-title">{card.title}</h3>
+                    {card.description && <p className="specialty-description">{card.description}</p>}
+                  </div>
+                </Link>
+              );
+            };
             const renderRow = (cards: SpecialtyCard[], rowClass: string) => (
               <div className={`specialties-row ${rowClass}`}>
                 {cards.map((c) => renderCard(c))}

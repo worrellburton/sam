@@ -1454,8 +1454,8 @@ a.nav-btn-book,
 /* ===== About ===== */
 .about-layout {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 60px;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 50px;
   align-items: start;
 }
 
@@ -1465,7 +1465,7 @@ a.nav-btn-book,
 }
 .about-portrait {
   width: 100%;
-  height: 540px;
+  height: 600px;
   border-radius: var(--radius);
   object-fit: cover;
   border: 3px solid var(--primary);
@@ -1634,16 +1634,20 @@ section.specialties > .container {
   grid-template-columns: 2fr 1fr;
 }
 .specialties-row-2,
-.specialties-row-3,
-.specialties-row-4 {
+.specialties-row-3 {
   grid-template-columns: repeat(3, 1fr);
+}
+.specialties-row-4 {
+  grid-template-columns: 2fr 1fr;
 }
 @media (max-width: 900px) {
   .specialties-row-1,
   .specialties-row-2,
-  .specialties-row-3,
-  .specialties-row-4 {
+  .specialties-row-3 {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .specialties-row-4 {
+    grid-template-columns: 1fr 1fr;
   }
 }
 @media (max-width: 600px) {
@@ -1753,6 +1757,53 @@ section.specialties > .container {
 }
 .specialty-card:hover .specialty-overlay {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.05) 80%, rgba(0, 0, 0, 0) 100%);
+}
+
+/* Book a Consultation card — ZocDoc branded, no image */
+.specialty-card.book-card {
+  background: linear-gradient(135deg, #1a3a5c 0%, #0f2440 100%);
+  display: flex;
+  align-items: flex-end;
+}
+.specialty-card.book-card .specialty-content {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  padding: 28px;
+  width: 100%;
+}
+.specialty-card.book-card .specialty-title {
+  font-size: 1.5rem;
+}
+.specialty-card.book-card .specialty-description {
+  color: rgba(255,255,255,0.65);
+}
+.book-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+  width: fit-content;
+}
+.specialty-card.book-card .specialty-arrow-btn {
+  background: #fff;
+  color: #1a3a5c;
+}
+.specialty-card.book-card:hover {
+  background: linear-gradient(135deg, #234b72 0%, #152f50 100%);
+}
+.specialty-card.book-card:hover .specialty-arrow-btn {
+  background: #fff;
+  transform: rotate(-45deg) scale(1.08);
 }
 
 /* ===== About Page Redesign ===== */
@@ -2465,7 +2516,7 @@ section.specialties > .container {
 /* ── Credentials Track ─────────────────────────────────────────── */
 .cred-track {
   display: flex;
-  gap: 0;
+  gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;

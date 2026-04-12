@@ -49,7 +49,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "8 min read",
     episode: 1,
     seriesTitle: "Clinical Clarity",
-    image: "/images/blog/5-signs-orthopedic-surgeon.jpg",
+    image: "/images/blog/5-signs-orthopedic-surgeon.jpg?v=1776035773816",
     imageAlt: "Doctor examining a patient's knee",
     content: "",
     contentHtml: `

@@ -1,9 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { DevSidebar } from "../DevSidebar";
 import { blogPosts } from "@/data/blog";
+
+const GLOBAL_PROMPT_LS_KEY = "dev:blog:globalPrompt";
+
+const FALLBACK_GLOBAL_PROMPT = `SETTING: New York City. All images should feel unmistakably NYC — Manhattan skyline, brownstone stoops, Central Park at golden hour, Williamsburg / Brooklyn Bridge, rooftop tracks, Chelsea lofts, subway staircases. Light, architecture, and energy should read as New York.
+
+PEOPLE: Subjects are 20s–40s only. Athletic, active, contemporary New Yorkers. No elderly subjects, no clinical "old patient with cane" stock photo tropes.
+
+BRAND VISUAL STYLE: Nike x Equinox. Premium, aspirational, athletic editorial. Cinematic natural light, high contrast, crisp shadows, shallow depth of field. Muted palette with one bold accent. Wardrobe is modern athletic or quiet-luxury minimalism — never hospital gowns. Clinical moments should feel like a high-end private practice or performance lab, not a fluorescent hospital.
+
+CONSISTENCY: All 4 prompts in a set must share the same lighting palette and color DNA so they read as one campaign.`;
 
 type Style = "photorealistic" | "editorial" | "abstract";
 
@@ -51,6 +61,138 @@ export default function DevBlogPage() {
   const [search, setSearch] = useState("");
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
   const [genStates, setGenStates] = useState<Record<string, GenState>>({});
+  const [globalPrompt, setGlobalPrompt] = useState<string>(FALLBACK_GLOBAL_PROMPT);
+  const [globalPromptOpen, setGlobalPromptOpen] = useState<boolean>(false);
+  const [serverDefaultPrompt, setServerDefaultPrompt] = useState<string>(FALLBACK_GLOBAL_PROMPT);
+
+  // Release-date state (per-post editor values + save status)
+  const [releaseDrafts, setReleaseDrafts] = useState<Record<string, string>>({});
+  const [releaseSaveStates, setReleaseSaveStates] = useState<
+    Record<string, { phase: "idle" | "saving" | "error" | "done"; error: string }>
+  >({});
+
+  // Auto-schedule panel
+  const [scheduleOpen, setScheduleOpen] = useState<boolean>(false);
+  const [scheduleStart, setScheduleStart] = useState<string>(() => {
+    const t = new Date();
+    t.setDate(t.getDate() + 1);
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+  });
+  const [scheduleInterval, setScheduleInterval] = useState<number>(7);
+  const [schedulePhase, setSchedulePhase] = useState<"idle" | "saving" | "error" | "done">("idle");
+  const [scheduleError, setScheduleError] = useState<string>("");
+  const [scheduleResult, setScheduleResult] = useState<Array<{ slug: string; releaseDate: string }> | null>(null);
+
+  // Drafts eligible for auto-schedule, ordered by episode number ascending.
+  const schedulableDrafts = useMemo(
+    () =>
+      blogPosts
+        .filter((p) => p.comingSoon)
+        .slice()
+        .sort((a, b) => (a.episode || 9999) - (b.episode || 9999)),
+    []
+  );
+
+  function addDaysISO(iso: string, days: number): string {
+    const [y, m, d] = iso.split("-").map((n) => parseInt(n, 10));
+    const dt = new Date(y, (m || 1) - 1, d || 1);
+    dt.setDate(dt.getDate() + days);
+    return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+  }
+
+  function computeSchedule(): Array<{ slug: string; releaseDate: string }> {
+    return schedulableDrafts.map((p, i) => ({
+      slug: p.slug,
+      releaseDate: addDaysISO(scheduleStart, i * Math.max(1, scheduleInterval)),
+    }));
+  }
+
+  async function applySchedule() {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(scheduleStart)) {
+      setSchedulePhase("error");
+      setScheduleError("Start date must be YYYY-MM-DD");
+      return;
+    }
+    const updates = computeSchedule();
+    if (updates.length === 0) {
+      setSchedulePhase("error");
+      setScheduleError("No drafts to schedule");
+      return;
+    }
+    setSchedulePhase("saving");
+    setScheduleError("");
+    setScheduleResult(null);
+    try {
+      const res = await fetch("/api/dev/set-release-date", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ updates }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to apply schedule");
+      setSchedulePhase("done");
+      setScheduleResult(updates);
+      // Reflect in the per-post editor inputs so the UI stays in sync
+      setReleaseDrafts((prev) => {
+        const next = { ...prev };
+        for (const u of updates) next[u.slug] = u.releaseDate;
+        return next;
+      });
+    } catch (err) {
+      setSchedulePhase("error");
+      setScheduleError(err instanceof Error ? err.message : "Failed");
+    }
+  }
+
+  async function savePostReleaseDate(slug: string, releaseDate: string | null) {
+    setReleaseSaveStates((prev) => ({ ...prev, [slug]: { phase: "saving", error: "" } }));
+    try {
+      const res = await fetch("/api/dev/set-release-date", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, releaseDate }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save release date");
+      setReleaseSaveStates((prev) => ({ ...prev, [slug]: { phase: "done", error: "" } }));
+    } catch (err) {
+      setReleaseSaveStates((prev) => ({
+        ...prev,
+        [slug]: { phase: "error", error: err instanceof Error ? err.message : "Failed" },
+      }));
+    }
+  }
+
+  // Load saved global prompt from localStorage on mount, and fetch the
+  // server default so "Reset to default" uses the real default from the API.
+  useEffect(() => {
+    const stored = typeof window !== "undefined" ? localStorage.getItem(GLOBAL_PROMPT_LS_KEY) : null;
+    if (stored && stored.trim()) {
+      setGlobalPrompt(stored);
+    }
+    fetch("/api/dev/generate-prompt")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.defaultGlobalPrompt) {
+          setServerDefaultPrompt(d.defaultGlobalPrompt);
+          // If the user hasn't saved a custom prompt yet, adopt the server default
+          if (!stored) setGlobalPrompt(d.defaultGlobalPrompt);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  function saveGlobalPrompt(value: string) {
+    setGlobalPrompt(value);
+    if (typeof window !== "undefined") {
+      if (value.trim()) localStorage.setItem(GLOBAL_PROMPT_LS_KEY, value);
+      else localStorage.removeItem(GLOBAL_PROMPT_LS_KEY);
+    }
+  }
+
+  function resetGlobalPrompt() {
+    saveGlobalPrompt(serverDefaultPrompt);
+  }
 
   const filtered = blogPosts.filter(
     (p) =>
@@ -94,6 +236,7 @@ export default function DevBlogPage() {
           excerpt: post.excerpt,
           content: post.contentHtml || post.content,
           style: gen.style,
+          globalPrompt,
         }),
       });
       const data = await res.json();
@@ -234,6 +377,261 @@ export default function DevBlogPage() {
           </div>
         </div>
 
+        {/* Global Image Prompt — applied to every "Ask Claude" request */}
+        <div
+          style={{
+            marginBottom: 20,
+            background: globalPromptOpen ? "#0f172a" : "#111827",
+            border: "1px solid #1e293b",
+            borderRadius: 10,
+            overflow: "hidden",
+            transition: "background 0.15s",
+          }}
+        >
+          <button
+            onClick={() => setGlobalPromptOpen((o) => !o)}
+            style={{
+              width: "100%",
+              background: "transparent",
+              border: "none",
+              color: "#e2e8f0",
+              padding: "14px 18px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              cursor: "pointer",
+              textAlign: "left",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 26,
+                  height: 26,
+                  borderRadius: 6,
+                  background: "rgba(99,102,241,0.15)",
+                  color: "#818cf8",
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+              </span>
+              <div>
+                <p style={{ margin: 0, fontSize: "0.9rem", fontWeight: 600, color: "#f1f5f9" }}>Global Image Prompt</p>
+                <p style={{ margin: 0, fontSize: "0.75rem", color: "#64748b", marginTop: 2 }}>
+                  Applied to every &ldquo;Ask Claude for 4 prompts&rdquo; call. Saved to this browser.
+                </p>
+              </div>
+            </div>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#64748b"
+              strokeWidth="2.5"
+              style={{ transform: globalPromptOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          {globalPromptOpen && (
+            <div style={{ padding: "0 18px 18px" }}>
+              <textarea
+                value={globalPrompt}
+                onChange={(e) => saveGlobalPrompt(e.target.value)}
+                rows={10}
+                style={{
+                  ...input,
+                  resize: "vertical",
+                  fontFamily: "inherit",
+                  lineHeight: 1.55,
+                  fontSize: "0.82rem",
+                  background: "#0a0e1a",
+                }}
+                placeholder="Describe the setting, subjects, and brand visual style for all blog images..."
+              />
+              <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
+                <button
+                  onClick={resetGlobalPrompt}
+                  style={{
+                    padding: "6px 12px",
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid #1e293b",
+                    borderRadius: 6,
+                    color: "#94a3b8",
+                    fontSize: "0.78rem",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                  }}
+                >
+                  Reset to default
+                </button>
+                <span style={{ fontSize: "0.72rem", color: "#475569" }}>
+                  Saved automatically as you type.
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Auto-schedule Releases — stack drafts and release on a cadence */}
+        <div
+          style={{
+            marginBottom: 20,
+            background: scheduleOpen ? "#0f172a" : "#111827",
+            border: "1px solid #1e293b",
+            borderRadius: 10,
+            overflow: "hidden",
+            transition: "background 0.15s",
+          }}
+        >
+          <button
+            onClick={() => setScheduleOpen((o) => !o)}
+            style={{
+              width: "100%",
+              background: "transparent",
+              border: "none",
+              color: "#e2e8f0",
+              padding: "14px 18px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              cursor: "pointer",
+              textAlign: "left",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 26,
+                  height: 26,
+                  borderRadius: 6,
+                  background: "rgba(251,191,36,0.15)",
+                  color: "#fbbf24",
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </span>
+              <div>
+                <p style={{ margin: 0, fontSize: "0.9rem", fontWeight: 600, color: "#f1f5f9" }}>Auto-schedule Releases</p>
+                <p style={{ margin: 0, fontSize: "0.75rem", color: "#64748b", marginTop: 2 }}>
+                  Stack drafts and release one every N days. {schedulableDrafts.length} draft{schedulableDrafts.length === 1 ? "" : "s"} eligible.
+                </p>
+              </div>
+            </div>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#64748b"
+              strokeWidth="2.5"
+              style={{ transform: scheduleOpen ? "rotate(180deg)" : "none", transition: "transform 0.15s" }}
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          {scheduleOpen && (
+            <div style={{ padding: "0 18px 18px" }}>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "flex-end", marginBottom: 12 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <label style={{ fontSize: "0.7rem", color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    First release
+                  </label>
+                  <input
+                    type="date"
+                    value={scheduleStart}
+                    onChange={(e) => setScheduleStart(e.target.value)}
+                    style={{ ...input, width: 170, padding: "8px 10px", fontSize: "0.82rem" }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <label style={{ fontSize: "0.7rem", color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    Release every
+                  </label>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <input
+                      type="number"
+                      min={1}
+                      max={90}
+                      value={scheduleInterval}
+                      onChange={(e) => setScheduleInterval(Math.max(1, parseInt(e.target.value || "1", 10)))}
+                      style={{ ...input, width: 70, padding: "8px 10px", fontSize: "0.82rem" }}
+                    />
+                    <span style={{ color: "#94a3b8", fontSize: "0.82rem" }}>days</span>
+                  </div>
+                </div>
+                <button
+                  onClick={applySchedule}
+                  disabled={schedulePhase === "saving" || schedulableDrafts.length === 0}
+                  style={{
+                    ...btnPrimary,
+                    background: "#f59e0b",
+                    opacity: schedulePhase === "saving" || schedulableDrafts.length === 0 ? 0.5 : 1,
+                  }}
+                >
+                  {schedulePhase === "saving" ? "Applying..." : "Apply schedule to all drafts"}
+                </button>
+              </div>
+
+              {/* Preview */}
+              {schedulableDrafts.length > 0 && (
+                <div
+                  style={{
+                    background: "#0a0e1a",
+                    border: "1px solid #1e293b",
+                    borderRadius: 8,
+                    padding: "10px 12px",
+                    maxHeight: 220,
+                    overflow: "auto",
+                  }}
+                >
+                  <p style={{ margin: "0 0 8px", fontSize: "0.72rem", color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    Preview (ordered by episode)
+                  </p>
+                  {computeSchedule().map(({ slug, releaseDate }, i) => {
+                    const post = blogPosts.find((p) => p.slug === slug);
+                    return (
+                      <div key={slug} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", fontSize: "0.8rem", color: "#cbd5e1", borderTop: i === 0 ? "none" : "1px solid #1e293b" }}>
+                        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", paddingRight: 12 }}>
+                          {post?.episode ? `Ep. ${post.episode} · ` : ""}{post?.title || slug}
+                        </span>
+                        <span style={{ color: "#fbbf24", fontVariantNumeric: "tabular-nums" }}>{releaseDate}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {schedulePhase === "error" && scheduleError && (
+                <p style={{ color: "#f87171", fontSize: "0.78rem", marginTop: 10 }}>{scheduleError}</p>
+              )}
+              {schedulePhase === "done" && scheduleResult && (
+                <p style={{ color: "#4ade80", fontSize: "0.78rem", marginTop: 10 }}>
+                  &#10003; Scheduled {scheduleResult.length} draft{scheduleResult.length === 1 ? "" : "s"}. Vercel is redeploying — drafts will auto-appear on their release dates.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
         <div style={{ marginBottom: 24 }}>
           <input type="text" placeholder="Search posts..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ ...input, maxWidth: 400 }} />
         </div>
@@ -359,6 +757,79 @@ export default function DevBlogPage() {
                       padding: "20px 24px 24px",
                     }}
                   >
+                    {/* Release date (drafts only) */}
+                    {post.comingSoon && (() => {
+                      const draft = releaseDrafts[post.slug] ?? post.releaseDate ?? "";
+                      const saveState = releaseSaveStates[post.slug];
+                      return (
+                        <div
+                          style={{
+                            marginBottom: 16,
+                            padding: "12px 14px",
+                            background: "rgba(251,191,36,0.06)",
+                            border: "1px solid rgba(251,191,36,0.2)",
+                            borderRadius: 8,
+                          }}
+                        >
+                          <label style={{ fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#fbbf24", display: "block", marginBottom: 8 }}>
+                            Release date
+                          </label>
+                          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                            <input
+                              type="date"
+                              value={draft}
+                              onChange={(e) =>
+                                setReleaseDrafts((prev) => ({ ...prev, [post.slug]: e.target.value }))
+                              }
+                              style={{ ...input, width: 180, padding: "8px 10px", fontSize: "0.82rem" }}
+                            />
+                            <button
+                              onClick={() => savePostReleaseDate(post.slug, draft || null)}
+                              disabled={saveState?.phase === "saving"}
+                              style={{
+                                ...btnPrimary,
+                                padding: "7px 14px",
+                                fontSize: "0.78rem",
+                                opacity: saveState?.phase === "saving" ? 0.5 : 1,
+                              }}
+                            >
+                              {saveState?.phase === "saving" ? "Saving..." : "Save release date"}
+                            </button>
+                            {draft && (
+                              <button
+                                onClick={() => {
+                                  setReleaseDrafts((prev) => ({ ...prev, [post.slug]: "" }));
+                                  savePostReleaseDate(post.slug, null);
+                                }}
+                                disabled={saveState?.phase === "saving"}
+                                style={{
+                                  ...btnSecondary,
+                                  padding: "7px 12px",
+                                  fontSize: "0.78rem",
+                                }}
+                              >
+                                Clear
+                              </button>
+                            )}
+                            {post.releaseDate && (
+                              <span style={{ fontSize: "0.76rem", color: "#94a3b8" }}>
+                                Currently: <code style={{ background: "rgba(255,255,255,0.06)", padding: "1px 6px", borderRadius: 4, color: "#fbbf24" }}>{post.releaseDate}</code>
+                              </span>
+                            )}
+                            {saveState?.phase === "done" && (
+                              <span style={{ fontSize: "0.76rem", color: "#4ade80" }}>&#10003; Saved</span>
+                            )}
+                            {saveState?.phase === "error" && (
+                              <span style={{ fontSize: "0.76rem", color: "#f87171" }}>{saveState.error}</span>
+                            )}
+                          </div>
+                          <p style={{ margin: "8px 0 0", fontSize: "0.72rem", color: "#64748b" }}>
+                            Draft auto-releases when today &ge; release date. Leave blank to keep hidden as &ldquo;Coming Soon.&rdquo;
+                          </p>
+                        </div>
+                      );
+                    })()}
+
                     {/* Style selector */}
                     <div style={{ marginBottom: 16 }}>
                       <label style={{ fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", display: "block", marginBottom: 8 }}>
@@ -581,8 +1052,52 @@ export default function DevBlogPage() {
                       </div>
                     )}
                     {gen.savedPath && (
-                      <div style={{ marginTop: 16, padding: "10px 14px", background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 8, color: "#4ade80", fontSize: "0.82rem" }}>
-                        Saved to <code style={{ background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 4 }}>{gen.savedPath}</code> and set as thumbnail for <code style={{ background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 4 }}>{post.slug}</code>. Redeploys on next build.
+                      <div style={{ marginTop: 16, padding: "12px 14px", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)", borderRadius: 8, color: "#4ade80", fontSize: "0.82rem", lineHeight: 1.6 }}>
+                        <p style={{ margin: 0, color: "#bbf7d0", fontWeight: 600 }}>
+                          &#10003; Image saved &amp; thumbnail updated on <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4 }}>main</code>
+                        </p>
+                        <p style={{ margin: "4px 0 8px", color: "#86efac", fontSize: "0.76rem" }}>
+                          <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4 }}>{gen.savedPath}</code>
+                          {" · "}blog.ts patched for <code style={{ background: "rgba(255,255,255,0.1)", padding: "1px 6px", borderRadius: 4 }}>{post.slug}</code>
+                        </p>
+                        <p style={{ margin: "0 0 8px", color: "#fcd34d", fontSize: "0.76rem" }}>
+                          Vercel is redeploying — usually <strong>1–2 min</strong>. Hard-refresh the site (Cmd+Shift+R) after it finishes.
+                        </p>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <Link
+                            href={`/blog/${post.slug}?v=${Date.now()}`}
+                            target="_blank"
+                            style={{
+                              padding: "5px 10px",
+                              background: "rgba(34,197,94,0.15)",
+                              border: "1px solid rgba(34,197,94,0.3)",
+                              borderRadius: 6,
+                              color: "#4ade80",
+                              fontSize: "0.74rem",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                            }}
+                          >
+                            Open post (cache-busted) &rarr;
+                          </Link>
+                          <a
+                            href={`https://github.com/worrellburton/sam/commits/main/src/data/blog.ts`}
+                            target="_blank"
+                            rel="noopener"
+                            style={{
+                              padding: "5px 10px",
+                              background: "rgba(255,255,255,0.05)",
+                              border: "1px solid #1e293b",
+                              borderRadius: 6,
+                              color: "#94a3b8",
+                              fontSize: "0.74rem",
+                              fontWeight: 600,
+                              textDecoration: "none",
+                            }}
+                          >
+                            Check deploy status
+                          </a>
+                        </div>
                       </div>
                     )}
                     {anyImage && gen.selectedIndex === null && allDone && (

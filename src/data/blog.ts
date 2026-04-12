@@ -13,6 +13,29 @@ export interface BlogPost {
   episode?: number;
   seriesTitle?: string;
   comingSoon?: boolean;
+  /**
+   * Optional ISO date (YYYY-MM-DD) at which a draft auto-releases. When
+   * `comingSoon` is true and `releaseDate` has passed (<= today), the post
+   * is treated as published on the client. Use `isPostReleased` for the check.
+   */
+  releaseDate?: string;
+}
+
+/**
+ * Returns true if the post should be visible as a published article today.
+ * A post is "released" if it isn't flagged coming-soon OR its `releaseDate`
+ * is on or before today.
+ */
+export function isPostReleased(post: BlogPost, now: Date = new Date()): boolean {
+  if (!post.comingSoon) return true;
+  if (!post.releaseDate) return false;
+  const release = new Date(post.releaseDate);
+  if (isNaN(release.getTime())) return false;
+  // Compare by calendar day (local time) so a "2026-05-01" release flips
+  // on May 1 regardless of timezone-affected hours.
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const rel = new Date(release.getFullYear(), release.getMonth(), release.getDate());
+  return rel.getTime() <= today.getTime();
 }
 
 export const blogPosts: BlogPost[] = [

@@ -7,7 +7,7 @@ import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { Insurance } from "@/components/Insurance";
 import { services } from "@/data/services";
-import { blogPosts } from "@/data/blog";
+import { blogPosts, isPostReleased } from "@/data/blog";
 import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
 import { HeroGradient } from "@/components/HeroGradient";
 
@@ -184,8 +184,19 @@ function starsHTML(rating: number) {
 }
 
 export default function Home() {
-  const recentPosts = blogPosts.slice(0, 3);
-  const comingSoonPost = blogPosts.find(p => p.comingSoon);
+  // Treat drafts whose releaseDate has passed as published
+  const releasedPosts = blogPosts.filter((p) => isPostReleased(p));
+  const recentPosts = releasedPosts.slice(0, 3);
+  // Feature the next unreleased draft (by earliest releaseDate, falling back
+  // to first coming-soon if none have dates)
+  const upcomingDrafts = blogPosts.filter((p) => p.comingSoon && !isPostReleased(p));
+  const comingSoonPost = upcomingDrafts
+    .slice()
+    .sort((a, b) => {
+      const da = a.releaseDate ? new Date(a.releaseDate).getTime() : Infinity;
+      const db = b.releaseDate ? new Date(b.releaseDate).getTime() : Infinity;
+      return da - db;
+    })[0];
   const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
 
   const allReviews = (() => {

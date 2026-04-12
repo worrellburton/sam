@@ -45,15 +45,19 @@ export async function POST(request: NextRequest) {
   const entryEnd = nextSlugIdx === -1 ? currentContent.length : nextSlugIdx;
   const entry = currentContent.slice(slugIdx, entryEnd);
 
+  // Append a cache-buster so Next.js <Image> re-optimizes after the file changes.
+  const separator = imagePath.includes("?") ? "&" : "?";
+  const bustedPath = `${imagePath}${separator}v=${Date.now()}`;
+
   // Replace either single-line `image: "..."` or multi-line `image:\n    "..."` forms
   const imageSingleLine = /image:\s*"[^"]*"/;
   const imageMultiLine = /image:\s*\n\s*"[^"]*"/;
 
   let updatedEntry: string | null = null;
   if (imageSingleLine.test(entry)) {
-    updatedEntry = entry.replace(imageSingleLine, `image: "${imagePath}"`);
+    updatedEntry = entry.replace(imageSingleLine, `image: "${bustedPath}"`);
   } else if (imageMultiLine.test(entry)) {
-    updatedEntry = entry.replace(imageMultiLine, `image: "${imagePath}"`);
+    updatedEntry = entry.replace(imageMultiLine, `image: "${bustedPath}"`);
   }
   if (!updatedEntry) {
     return NextResponse.json({ error: `Could not locate image field for "${slug}"` }, { status: 500 });

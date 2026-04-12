@@ -593,8 +593,7 @@ export const blogPosts: BlogPost[] = [
     seriesTitle: "Clinical Clarity",
     date: "January 28, 2026",
     readTime: "9 min read",
-    image:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/prp-therapy-sports-medicine.jpg?v=1776036759084",
     imageAlt: "PRP therapy injection for sports injury",
     relatedService: "sports-medicine",
     content: "",

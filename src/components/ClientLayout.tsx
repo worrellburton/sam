@@ -100,34 +100,63 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     };
   }, []);
 
-  // Auto-play specialty videos when they scroll into center of viewport
+  // Specialty video playback:
+  //  - Desktop (fine pointer): play only while the card is hovered
+  //  - Mobile / touch: play when the video is ~centered in the viewport
   useEffect(() => {
-    const videoObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target as HTMLVideoElement;
-          if (entry.isIntersecting) {
-            video.play().catch(() => {});
-          } else {
-            video.pause();
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
-    function observeVideos() {
-      document.querySelectorAll(".specialty-video").forEach((v) => {
-        videoObserver.observe(v);
+    const hoverHandlers = new WeakMap<HTMLElement, { enter: () => void; leave: () => void }>();
+    let videoObserver: IntersectionObserver | null = null;
+
+    if (isTouch) {
+      videoObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target as HTMLVideoElement;
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+    }
+
+    function attach() {
+      document.querySelectorAll<HTMLVideoElement>(".specialty-video").forEach((video) => {
+        if (isTouch) {
+          videoObserver?.observe(video);
+        } else {
+          video.pause();
+          const card = (video.closest(".specialty-card") as HTMLElement) || video;
+          const enter = () => video.play().catch(() => {});
+          const leave = () => {
+            video.pause();
+            video.currentTime = 0;
+          };
+          card.addEventListener("mouseenter", enter);
+          card.addEventListener("mouseleave", leave);
+          hoverHandlers.set(card, { enter, leave });
+        }
       });
     }
 
-    // Delay to let elements render
-    const timer = setTimeout(observeVideos, 500);
+    const timer = setTimeout(attach, 500);
 
     return () => {
       clearTimeout(timer);
-      videoObserver.disconnect();
+      videoObserver?.disconnect();
+      document.querySelectorAll<HTMLVideoElement>(".specialty-video").forEach((video) => {
+        const card = (video.closest(".specialty-card") as HTMLElement) || video;
+        const h = hoverHandlers.get(card);
+        if (h) {
+          card.removeEventListener("mouseenter", h.enter);
+          card.removeEventListener("mouseleave", h.leave);
+        }
+      });
     };
   }, [pathname]);
 

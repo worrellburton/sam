@@ -1181,6 +1181,19 @@ a.nav-btn-book,
   flex-shrink: 0;
   color: #fff;
   opacity: 0;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.5s ease;
+}
+a.hero-rating-card:hover {
+  border-color: rgba(255,214,10,0.5);
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 50px rgba(0,0,0,0.3),
+    0 0 40px rgba(255,214,10,0.35),
+    0 0 80px rgba(255,214,10,0.15),
+    inset 0 1px 0 rgba(255,214,10,0.3),
+    inset 0 -1px 0 rgba(255,255,255,0.08);
 }
 .hero-loaded .hero-rating-card {
   animation: heroFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.4s forwards;

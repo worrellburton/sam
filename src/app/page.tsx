@@ -9,6 +9,7 @@ import { Insurance } from "@/components/Insurance";
 import { services } from "@/data/services";
 import { blogPosts } from "@/data/blog";
 import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
+import { HeroGradient } from "@/components/HeroGradient";
 
 const tickerItems = [
   {
@@ -125,13 +126,6 @@ const patientReviews = [
 
 
 
-const timeline = [
-  { year: "2007", label: "Undergraduate", title: "B.S. Biology", place: "The Ohio State University", detail: "Magna cum laude, Psychology minor" },
-  { year: "2011", label: "Medical School", title: "Doctor of Medicine", place: "Ohio State College of Medicine", detail: "Graduated cum laude" },
-  { year: "2016", label: "Residency", title: "Orthopedic Surgery", place: "Cleveland Clinic Akron General", detail: "High-volume trauma in the Cleveland Clinic system" },
-  { year: "2017", label: "Fellowship", title: "Sports Medicine", place: "Lenox Hill Hospital, NYC", detail: "NY Jets & NY Islanders team physician" },
-  { year: "2018", label: "International", title: "Joint Preservation", place: "Switzerland, Netherlands & Italy", detail: "European cartilage repair & transplant techniques" },
-];
 
 const PLACE_IDS = [
   { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
@@ -259,6 +253,7 @@ export default function Home() {
       {/* Hero */}
       <header className={`hero${heroReady ? " hero-loaded" : ""}`} id="hero">
         <Image className={`hero-bg-img${heroReady ? " loaded" : ""}`} src="/images/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority onLoad={() => setHeroReady(true)} />
+        <HeroGradient />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <div className="hero-text">
@@ -458,45 +453,6 @@ export default function Home() {
               </>
             );
           })()}
-        </div>
-      </section>
-
-      {/* Credentials */}
-      <section className="section credentials reveal cred-has-bg" id="credentials" style={{ backgroundImage: "url('/images/sam7.jpeg')" }}>
-        <div className="cred-bg-overlay" />
-        <div className="container" style={{ position: "relative", zIndex: 1 }}>
-          <div className="section-header">
-            <p className="section-label">Training &amp; Credentials</p>
-            <h2>World-Class <span className="text-accent">Education &amp; Training</span></h2>
-          </div>
-          <div className="cred-track">
-            {timeline.map((item, i) => (
-              <div className="cred-step" key={i}>
-                <div className="cred-icon-wrap">
-                  <svg className="cred-icon-ring" viewBox="0 0 60 60" aria-hidden="true">
-                    <circle cx="30" cy="30" r="27" fill="none" stroke="var(--border)" strokeWidth="2" />
-                    <circle className="cred-ring-fill" cx="30" cy="30" r="27" fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="170" strokeDashoffset="170" />
-                  </svg>
-                  <span className="cred-step-num">{i + 1}</span>
-                </div>
-                {i < timeline.length - 1 && (
-                  <div className="cred-connector">
-                    <svg viewBox="0 0 80 12" preserveAspectRatio="none" className="cred-connector-svg" aria-hidden="true">
-                      <line x1="0" y1="6" x2="70" y2="6" stroke="var(--primary)" strokeWidth="2" strokeDasharray="70" strokeDashoffset="70" />
-                      <polygon points="68,2 76,6 68,10" fill="var(--primary)" opacity="0" className="cred-arrow" />
-                    </svg>
-                  </div>
-                )}
-                <div className="cred-card">
-                  <span className="cred-year">{item.year}</span>
-                  <span className="cred-label">{item.label}</span>
-                  <h3>{item.title}</h3>
-                  <p className="cred-place">{item.place}</p>
-                  {item.detail && <p className="cred-detail">{item.detail}</p>}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

@@ -119,6 +119,9 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="light" className={inter.variable}>
       <head>
+        <meta name="theme-color" content="#0a1628" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script
           type="application/ld+json"

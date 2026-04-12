@@ -1,14 +1,16 @@
 import Link from "next/link";
+import { HeroGradient } from "@/components/HeroGradient";
 
 export function GetStarted() {
   return (
-    <section className="section contact reveal" id="contact">
-      <div className="container">
+    <section className="section contact reveal" id="contact" style={{ position: "relative", overflow: "hidden" }}>
+      <HeroGradient />
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div className="contact-content">
           <div className="contact-text">
             <p className="section-label">Get Started</p>
             <h2>
-              Get Back to <span className="text-accent">What You Love</span>
+              Get Back to<br /><span className="text-accent">What You Love</span>
             </h2>
             <p>
               Take the first step toward recovery. Schedule a consultation with Dr. Elguizaoui to discuss your condition

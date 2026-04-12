@@ -100,6 +100,37 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     };
   }, []);
 
+  // Auto-play specialty videos when they scroll into center of viewport
+  useEffect(() => {
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    function observeVideos() {
+      document.querySelectorAll(".specialty-video").forEach((v) => {
+        videoObserver.observe(v);
+      });
+    }
+
+    // Delay to let elements render
+    const timer = setTimeout(observeVideos, 500);
+
+    return () => {
+      clearTimeout(timer);
+      videoObserver.disconnect();
+    };
+  }, [pathname]);
+
   const isDocZocPage = pathname.startsWith("/doczoc");
   const isDevPage = pathname.startsWith("/dev");
   const showChrome = !isDocZocPage && !isDevPage;

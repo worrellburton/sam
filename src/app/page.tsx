@@ -261,7 +261,10 @@ export default function Home() {
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <div className="hero-text">
-            <h1>NYC&rsquo;s Most Trusted Orthopedic Surgeon &mdash; Sports Medicine and Joint Preservation Expert</h1>
+            <p className="hero-label">Board-Certified Orthopedic Excellence</p>
+            <h1>Where <em>Precision</em> Meets the Human Body</h1>
+            <div className="hero-divider" />
+            <p className="hero-desc">World-class orthopedic surgeon delivering transformative results through cutting-edge technique, cinematic precision, and an unwavering commitment to restoring movement.</p>
             <a href="#about" className="btn btn-hero">Learn More</a>
           </div>
           <div className="hero-rating-card">

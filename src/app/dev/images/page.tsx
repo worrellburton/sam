@@ -6,6 +6,7 @@ import { DevSidebar } from "../DevSidebar";
 interface FileEntry {
   path: string;
   mtime: number;
+  size: number;
 }
 
 interface UploadState {
@@ -66,6 +67,12 @@ export default function DevImagesPage() {
   const formatDate = (mtime: number) => {
     const d = new Date(mtime);
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  };
+
+  const formatSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
   };
 
   useEffect(() => { fetchFiles(); }, [fetchFiles]);
@@ -136,7 +143,7 @@ export default function DevImagesPage() {
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${fileName} uploaded (${savings}% smaller)` } : u));
       // Add to top of list immediately
-      setFiles(prev => [{ path: `/images/${fileName}`, mtime: Date.now() }, ...prev.filter(f => f.path !== `/images/${fileName}`)]);
+      setFiles(prev => [{ path: `/images/${fileName}`, mtime: Date.now(), size: compressedSize }, ...prev.filter(f => f.path !== `/images/${fileName}`)]);
     } catch (err) {
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: `${err}` } : u));
     }
@@ -214,6 +221,7 @@ export default function DevImagesPage() {
         .dev-img-list-item:hover .del-btn { opacity: 1; }
         .dev-img-list-item .del-btn:hover { color: #f87171; border-color: #7f1d1d; }
         .dev-img-list-item .del-btn.confirm { opacity: 1; background: rgba(239,68,68,0.2); color: #f87171; border-color: #ef4444; }
+        .dev-img-list-item .list-size { font-size: 0.78rem; color: #64748b; width: 80px; flex-shrink: 0; text-align: right; }
         .dev-img-list-item .list-date { font-size: 0.78rem; color: #64748b; width: 120px; flex-shrink: 0; text-align: right; }
         .dev-list-header { display: flex; align-items: center; gap: 14px; padding: 6px 14px 6px 76px; margin-bottom: 4px; }
         .dev-list-header button { background: none; border: none; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; }
@@ -336,10 +344,11 @@ export default function DevImagesPage() {
                 Name <span className="sort-arrow">{sortField === "name" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
               </button>
               <span style={{ flex: 2 }} />
+              <span style={{ width: 80, textAlign: "right", color: "#64748b", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Size</span>
               <button className={sortField === "date" ? "active" : ""} onClick={() => toggleSort("date")} style={{ width: 120, textAlign: "right", justifyContent: "flex-end" }}>
                 Date uploaded <span className="sort-arrow">{sortField === "date" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
               </button>
-              <span style={{ width: 72 }} />
+              <span style={{ width: 120 }} />
             </div>
             {sortedFiles.map((f) => (
               <div key={f.path} className="dev-img-list-item" onClick={() => setLightbox(f.path)} style={deleting === f.path ? { opacity: 0.4, pointerEvents: "none" } : {}}>
@@ -347,6 +356,7 @@ export default function DevImagesPage() {
                 <img src={f.path} alt="" loading="lazy" />
                 <span className="list-name">{f.path.split("/").pop()}</span>
                 <span className="list-path">{f.path}</span>
+                <span className="list-size">{formatSize(f.size)}</span>
                 <span className="list-date">{formatDate(f.mtime)}</span>
                 <button className={`copy-btn${copied === f.path ? " copied" : ""}`} onClick={(e) => copyPath(e, f.path)}>
                   {copied === f.path ? "Copied!" : "Copy path"}

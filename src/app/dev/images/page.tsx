@@ -29,6 +29,8 @@ export default function DevImagesPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchFiles = useCallback(async () => {
@@ -160,6 +162,30 @@ export default function DevImagesPage() {
     setTimeout(() => setCopied(null), 1500);
   };
 
+  const deleteFile = async (e: React.MouseEvent, filePath: string) => {
+    e.stopPropagation();
+    if (confirmDelete !== filePath) {
+      setConfirmDelete(filePath);
+      return;
+    }
+    setDeleting(filePath);
+    setConfirmDelete(null);
+    try {
+      const res = await fetch("/api/dev/upload", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filePath }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      setFiles(prev => prev.filter(f => f.path !== filePath));
+    } catch (err) {
+      alert(`Delete failed: ${err}`);
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <DevSidebar />
@@ -167,10 +193,13 @@ export default function DevImagesPage() {
         .dev-page { min-height: 100vh; background: #0a0e1a; color: #e2e8f0; padding: 32px 40px; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; margin-left: 220px; flex: 1; }
         .dev-img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 48px; }
         .dev-img-card { background: #111827; border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.2s; border: 1px solid #1e293b; position: relative; }
-        .dev-img-card .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.75); color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; z-index: 2; backdrop-filter: blur(4px); }
-        .dev-img-card:hover .copy-btn { opacity: 1; }
+        .dev-img-card .card-actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; z-index: 2; }
+        .dev-img-card:hover .card-actions { opacity: 1; }
+        .dev-img-card .copy-btn, .dev-img-card .del-btn { background: rgba(0,0,0,0.75); color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; cursor: pointer; backdrop-filter: blur(4px); }
         .dev-img-card .copy-btn:hover { background: rgba(99,102,241,0.5); border-color: #818cf8; }
         .dev-img-card .copy-btn.copied { background: rgba(34,197,94,0.5); border-color: #22c55e; }
+        .dev-img-card .del-btn { color: #f87171; border-color: #7f1d1d; }
+        .dev-img-card .del-btn:hover, .dev-img-card .del-btn.confirm { background: rgba(239,68,68,0.4); border-color: #ef4444; color: #fecaca; }
         .dev-img-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 48px; }
         .dev-img-list-item { display: flex; align-items: center; gap: 14px; background: #111827; border: 1px solid #1e293b; border-radius: 8px; padding: 8px 14px; cursor: pointer; position: relative; transition: background 0.15s; }
         .dev-img-list-item:hover { background: #1a2234; }
@@ -181,6 +210,10 @@ export default function DevImagesPage() {
         .dev-img-list-item:hover .copy-btn { opacity: 1; }
         .dev-img-list-item .copy-btn:hover { background: rgba(99,102,241,0.5); border-color: #818cf8; }
         .dev-img-list-item .copy-btn.copied { background: rgba(34,197,94,0.5); border-color: #22c55e; opacity: 1; }
+        .dev-img-list-item .del-btn { background: none; color: #64748b; border: 1px solid transparent; border-radius: 6px; padding: 4px 8px; font-size: 0.72rem; cursor: pointer; opacity: 0; transition: opacity 0.15s, color 0.15s; }
+        .dev-img-list-item:hover .del-btn { opacity: 1; }
+        .dev-img-list-item .del-btn:hover { color: #f87171; border-color: #7f1d1d; }
+        .dev-img-list-item .del-btn.confirm { opacity: 1; background: rgba(239,68,68,0.2); color: #f87171; border-color: #ef4444; }
         .dev-img-list-item .list-date { font-size: 0.78rem; color: #64748b; width: 120px; flex-shrink: 0; text-align: right; }
         .dev-list-header { display: flex; align-items: center; gap: 14px; padding: 6px 14px 6px 76px; margin-bottom: 4px; }
         .dev-list-header button { background: none; border: none; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; }
@@ -281,10 +314,15 @@ export default function DevImagesPage() {
         ) : viewMode === "grid" ? (
           <div className="dev-img-grid">
             {sortedFiles.map((f) => (
-              <div key={f.path} className="dev-img-card" onClick={() => setLightbox(f.path)}>
-                <button className={`copy-btn${copied === f.path ? " copied" : ""}`} onClick={(e) => copyPath(e, f.path)}>
-                  {copied === f.path ? "Copied!" : "Copy path"}
-                </button>
+              <div key={f.path} className="dev-img-card" onClick={() => setLightbox(f.path)} style={deleting === f.path ? { opacity: 0.4, pointerEvents: "none" } : {}}>
+                <div className="card-actions">
+                  <button className={`copy-btn${copied === f.path ? " copied" : ""}`} onClick={(e) => copyPath(e, f.path)}>
+                    {copied === f.path ? "Copied!" : "Copy"}
+                  </button>
+                  <button className={`del-btn${confirmDelete === f.path ? " confirm" : ""}`} onClick={(e) => deleteFile(e, f.path)}>
+                    {confirmDelete === f.path ? "Confirm?" : "Delete"}
+                  </button>
+                </div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={f.path} alt="" style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} loading="lazy" />
                 <p style={{ padding: "8px 10px", fontSize: "0.72rem", color: "#64748b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.path.split("/").pop()}</p>
@@ -304,7 +342,7 @@ export default function DevImagesPage() {
               <span style={{ width: 72 }} />
             </div>
             {sortedFiles.map((f) => (
-              <div key={f.path} className="dev-img-list-item" onClick={() => setLightbox(f.path)}>
+              <div key={f.path} className="dev-img-list-item" onClick={() => setLightbox(f.path)} style={deleting === f.path ? { opacity: 0.4, pointerEvents: "none" } : {}}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={f.path} alt="" loading="lazy" />
                 <span className="list-name">{f.path.split("/").pop()}</span>
@@ -312,6 +350,9 @@ export default function DevImagesPage() {
                 <span className="list-date">{formatDate(f.mtime)}</span>
                 <button className={`copy-btn${copied === f.path ? " copied" : ""}`} onClick={(e) => copyPath(e, f.path)}>
                   {copied === f.path ? "Copied!" : "Copy path"}
+                </button>
+                <button className={`del-btn${confirmDelete === f.path ? " confirm" : ""}`} onClick={(e) => deleteFile(e, f.path)}>
+                  {deleting === f.path ? "..." : confirmDelete === f.path ? "Confirm?" : "Delete"}
                 </button>
               </div>
             ))}

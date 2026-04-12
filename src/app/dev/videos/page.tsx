@@ -17,6 +17,8 @@ export default function DevVideosPage() {
   const [dragOver, setDragOver] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [uploads, setUploads] = useState<UploadState[]>([]);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchFiles = useCallback(async () => {
@@ -101,6 +103,30 @@ export default function DevVideosPage() {
     setTimeout(() => setCopied(null), 1500);
   };
 
+  const deleteFile = async (e: React.MouseEvent, filePath: string) => {
+    e.stopPropagation();
+    if (confirmDelete !== filePath) {
+      setConfirmDelete(filePath);
+      return;
+    }
+    setDeleting(filePath);
+    setConfirmDelete(null);
+    try {
+      const res = await fetch("/api/dev/upload", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filePath }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      setFiles(prev => prev.filter(f => f !== filePath));
+    } catch (err) {
+      alert(`Delete failed: ${err}`);
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   const activeUploads = uploads.filter(u => u.phase !== "done" || Date.now() < Date.now() + 3000);
 
   return (
@@ -110,10 +136,13 @@ export default function DevVideosPage() {
         .dev-page-vid { min-height: 100vh; background: #0a0e1a; color: #e2e8f0; padding: 32px 40px; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; margin-left: 220px; flex: 1; }
         .dev-vid-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         .dev-vid-card { background: #111827; border-radius: 12px; overflow: hidden; border: 1px solid #1e293b; position: relative; }
-        .dev-vid-card .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.75); color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; z-index: 2; backdrop-filter: blur(4px); }
-        .dev-vid-card:hover .copy-btn { opacity: 1; }
+        .dev-vid-card .card-actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; z-index: 2; }
+        .dev-vid-card:hover .card-actions { opacity: 1; }
+        .dev-vid-card .copy-btn, .dev-vid-card .del-btn { background: rgba(0,0,0,0.75); color: #e2e8f0; border: 1px solid #334155; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; cursor: pointer; backdrop-filter: blur(4px); }
         .dev-vid-card .copy-btn:hover { background: rgba(99,102,241,0.5); border-color: #818cf8; }
         .dev-vid-card .copy-btn.copied { background: rgba(34,197,94,0.5); border-color: #22c55e; }
+        .dev-vid-card .del-btn { color: #f87171; border-color: #7f1d1d; }
+        .dev-vid-card .del-btn:hover, .dev-vid-card .del-btn.confirm { background: rgba(239,68,68,0.4); border-color: #ef4444; color: #fecaca; }
         .upload-progress-track { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
         .upload-progress-bar { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
         .upload-progress-bar.uploading { background: linear-gradient(90deg, #6366f1, #818cf8); }
@@ -194,10 +223,15 @@ export default function DevVideosPage() {
         ) : (
           <div className="dev-vid-grid">
             {files.sort().map((src) => (
-              <div key={src} className="dev-vid-card">
-                <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
-                  {copied === src ? "Copied!" : "Copy path"}
-                </button>
+              <div key={src} className="dev-vid-card" style={deleting === src ? { opacity: 0.4, pointerEvents: "none" } : {}}>
+                <div className="card-actions">
+                  <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
+                    {copied === src ? "Copied!" : "Copy"}
+                  </button>
+                  <button className={`del-btn${confirmDelete === src ? " confirm" : ""}`} onClick={(e) => deleteFile(e, src)}>
+                    {confirmDelete === src ? "Confirm?" : "Delete"}
+                  </button>
+                </div>
                 <video
                   src={src}
                   style={{ width: "100%", height: 220, objectFit: "cover", display: "block", cursor: "pointer", background: "#000" }}

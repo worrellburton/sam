@@ -332,8 +332,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "9 min read",
     episode: 2,
     seriesTitle: "Clinical Clarity",
-    image:
-      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/acl-tear-recovery.jpg?v=1776035858835",
     imageAlt: "Athlete performing rehabilitation exercises",
     relatedService: "sports-medicine",
     content: "",

@@ -5,16 +5,15 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="container">
-        <div className="footer-grid">
-          <div className="footer-brand footer-brand-card">
-            <div className="footer-headshot">
-              <Image src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui" width={144} height={144} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%", transform: "scale(1.4)" }} />
-            </div>
-            <div className="footer-brand-info">
-              <p className="footer-name">Sameh Elguizaoui, M.D.</p>
-              <p className="footer-tagline">Board-Certified Orthopedic Surgeon &amp; Sports Medicine Specialist</p>
-              <p className="footer-affiliations">Lenox Hill Hospital &bull; Mount Sinai Hospital &bull; NYP Brooklyn Methodist</p>
-              <div className="footer-social">
+        <div className="footer-brand footer-brand-card">
+          <div className="footer-headshot">
+            <Image src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui" width={144} height={144} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%", transform: "scale(1.4)" }} />
+          </div>
+          <div className="footer-brand-info">
+            <p className="footer-name">Sameh Elguizaoui, M.D.</p>
+            <p className="footer-tagline">Board-Certified Orthopedic Surgeon &amp; Sports Medicine Specialist</p>
+            <p className="footer-affiliations">Lenox Hill Hospital &bull; Mount Sinai Hospital &bull; NYP Brooklyn Methodist</p>
+            <div className="footer-social">
               <a href="https://www.instagram.com/sportsdocsam/" target="_blank" rel="noopener" aria-label="Instagram">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -29,9 +28,10 @@ export function Footer() {
                   <circle cx="4" cy="4" r="2" />
                 </svg>
               </a>
-              </div>
             </div>
           </div>
+        </div>
+        <div className="footer-grid">
           <div className="footer-col">
             <h4>Services</h4>
             <Link href="/services/sports-medicine">Sports Medicine</Link>

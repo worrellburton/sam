@@ -4562,7 +4562,7 @@ section.specialties > .container {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.8fr repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 48px;
   margin-bottom: 48px;
   align-items: start;
@@ -4579,6 +4579,7 @@ section.specialties > .container {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
   padding: 22px;
+  margin-bottom: 40px;
 }
 .footer-brand-card .footer-headshot {
   flex-shrink: 0;
@@ -4982,8 +4983,51 @@ section.specialties > .container {
 /* Coming Soon Banner */
 .blog-home-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* Book-card variant: portrait 3:4 thumbnail for the landing blog row */
+.blog-card-book .blog-card-img-wrap {
+  position: relative;
+  margin: 0;
+  border-radius: 0;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.blog-card-book .blog-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* Featured (coming-soon) card — brighter, taller, no faded look */
+.blog-card.blog-card-featured {
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 12px 36px rgba(245, 158, 11, 0.18),
+              0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.blog-card-feature-flag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  background: #f59e0b;
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
 }
 .blog-card-coming-soon {
   opacity: 0.85;
@@ -5565,8 +5609,7 @@ img.insurance-logo-light { display: none; }
   .blog-grid { grid-template-columns: repeat(2, 1fr); }
   .blog-home-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-columns { grid-template-columns: repeat(2, 1fr); }
-  .footer-grid { grid-template-columns: 1fr repeat(2, 1fr); }
-  .footer-grid .footer-brand { grid-column: 1 / -1; }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -5789,7 +5832,6 @@ img.insurance-logo-light { display: none; }
   .footer { min-height: auto; }
   .footer .container { padding-top: 48px; padding-bottom: 32px; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
-  .footer-grid .footer-brand { grid-column: 1 / -1; }
   .footer-columns { grid-template-columns: repeat(2, 1fr); gap: 24px; }
   .footer-bottom { flex-direction: column; text-align: center; }
 
@@ -5912,7 +5954,6 @@ img.insurance-logo-light { display: none; }
   .specialty-card .specialty-arrow-btn { width: 38px; height: 38px; top: 16px; right: 16px; }
   .contact-content { gap: 24px; }
   .footer-grid { grid-template-columns: 1fr; gap: 20px; }
-  .footer-grid .footer-brand { grid-column: 1; }
   .footer-columns { grid-template-columns: 1fr; gap: 20px; }
   .platform-cards-grid { grid-template-columns: 1fr; }
   .platform-card { flex-direction: row; text-align: left; }

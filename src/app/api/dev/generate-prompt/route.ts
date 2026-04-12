@@ -17,30 +17,30 @@ export async function POST(request: NextRequest) {
 
   const styleGuide: Record<string, string> = {
     photorealistic:
-      "Create a photorealistic, professional medical/clinical photography style image. Clean, well-lit, modern clinical or hospital setting. Focus on human emotion, expertise, and care. No text overlays.",
+      "Photorealistic, professional medical/clinical photography. Clean, well-lit, modern clinical or hospital setting. Focus on human emotion, expertise, and care. No text overlays.",
     editorial:
-      "Create a modern editorial illustration in the style of The New York Times or The Atlantic. Stylized, minimal, muted tones with one accent color. Conceptual and evocative, not literal. No text overlays.",
+      "Modern editorial illustration in the style of The New York Times or The Atlantic. Stylized, minimal, muted tones with one accent color. Conceptual and evocative, not literal. No text overlays.",
     abstract:
-      "Create an abstract, artistic medical visualization. Think microscopic biology meets modern art. Rich colors, organic shapes, scientific beauty. No text overlays.",
+      "Abstract, artistic medical visualization. Microscopic biology meets modern art. Rich colors, organic shapes, scientific beauty. No text overlays.",
   };
 
-  const systemPrompt = `You are an expert at writing image generation prompts for Nano Banana Pro 2 (Gemini 3 Pro Image). Your job is to read a medical blog article and create a vivid, detailed image prompt that would make the perfect hero image for that article.
+  const systemPrompt = `You are an expert at writing image generation prompts for Nano Banana Pro 2 (Gemini 3 Pro Image). Your job is to read a medical blog article and create FOUR distinct, vivid image prompts that together tell the story of the article.
 
 Rules:
-- Output ONLY the image prompt, nothing else
-- Keep it under 200 words
+- Output ONLY a JSON array of 4 strings — nothing else, no prose, no code fences
+- Each prompt must be under 180 words
+- The 4 prompts must explore different angles/moments of the article: e.g., (1) hero / emotional opener, (2) the clinical moment or expert at work, (3) the recovery / transformation / second chapter, (4) an abstract or conceptual closing frame
 - Be specific about composition, lighting, colors, mood
 - Never include text or words in the image
-- The image should be 16:9 landscape format
-- Make it feel premium and editorial quality
-- ${styleGuide[style] || styleGuide.photorealistic}`;
+- 16:9 landscape format
+- All 4 should feel like they belong in the same article — consistent stylistic DNA, different subject matter
+- Style direction for all 4: ${styleGuide[style] || styleGuide.photorealistic}`;
 
-  // Truncate content to avoid huge payloads — first 2000 chars is enough context
   const trimmedContent = content
     ? content.replace(/<[^>]*>/g, "").slice(0, 2000)
     : "";
 
-  const userMessage = `Write an image generation prompt for this medical blog article:
+  const userMessage = `Write FOUR image generation prompts for this medical blog article. Return ONLY a JSON array of 4 strings.
 
 Title: ${title}
 Excerpt: ${excerpt || ""}
@@ -57,7 +57,7 @@ Style: ${style}`;
     },
     body: JSON.stringify({
       model: "claude-opus-4-6",
-      max_tokens: 400,
+      max_tokens: 1600,
       system: systemPrompt,
       messages: [{ role: "user", content: userMessage }],
     }),
@@ -72,14 +72,29 @@ Style: ${style}`;
   }
 
   const data = await res.json();
-  const prompt = data.content?.[0]?.text?.trim() || "";
+  const raw: string = data.content?.[0]?.text?.trim() || "";
 
-  if (!prompt) {
+  // Parse a JSON array from Claude's response. Be lenient with code fences.
+  const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+  let prompts: string[] = [];
+  try {
+    const parsed = JSON.parse(cleaned);
+    if (Array.isArray(parsed) && parsed.every((p) => typeof p === "string")) {
+      prompts = parsed;
+    }
+  } catch {
+    // Fallback: try to pull out quoted strings
+    const matches = [...cleaned.matchAll(/"([\s\S]+?)"/g)].map((m) => m[1]);
+    if (matches.length >= 4) prompts = matches.slice(0, 4);
+  }
+
+  if (prompts.length < 4) {
     return NextResponse.json(
-      { error: "No prompt generated" },
+      { error: "Claude did not return 4 prompts", raw },
       { status: 500 }
     );
   }
 
-  return NextResponse.json({ prompt });
+  return NextResponse.json({ prompts: prompts.slice(0, 4) });
 }

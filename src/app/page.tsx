@@ -518,18 +518,11 @@ export default function Home() {
           </div>
           <div className="blog-home-grid">
             {recentPosts.map((post) => (
-              <Link href={`/blog/${post.slug}`} className="blog-card" key={post.slug}>
-                <div style={{ position: "relative" }}>
-                  <Image className="blog-card-img" src={post.image} alt={post.imageAlt} width={800} height={400} />
+              <Link href={`/blog/${post.slug}`} className="blog-card blog-card-book" key={post.slug}>
+                <div className="blog-card-img-wrap">
+                  <Image className="blog-card-img" src={post.image} alt={post.imageAlt} width={600} height={800} />
                   {post.episode && (
-                    <span style={{
-                      position: "absolute", top: 12, left: 12,
-                      background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)",
-                      color: "#fff", fontSize: "0.62rem", fontWeight: 800,
-                      padding: "3px 8px", borderRadius: 5,
-                      fontFamily: "'SF Mono', Consolas, monospace",
-                      letterSpacing: "0.05em",
-                    }}>EP. {post.episode}</span>
+                    <span className="blog-card-ep">EP. {post.episode}</span>
                   )}
                 </div>
                 <div className="blog-card-body">
@@ -540,9 +533,10 @@ export default function Home() {
               </Link>
             ))}
             {comingSoonPost && (
-              <div className="blog-card blog-card-coming-soon">
-                <div style={{ position: "relative" }}>
-                  <Image className="blog-card-img" src={comingSoonPost.image} alt={comingSoonPost.imageAlt} width={800} height={400} />
+              <div className="blog-card blog-card-book blog-card-featured">
+                <span className="blog-card-feature-flag">Next Up</span>
+                <div className="blog-card-img-wrap">
+                  <Image className="blog-card-img" src={comingSoonPost.image} alt={comingSoonPost.imageAlt} width={600} height={800} />
                   <div className="blog-card-coming-overlay">
                     <span className="blog-card-coming-badge">Coming Soon</span>
                   </div>

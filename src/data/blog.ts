@@ -291,7 +291,7 @@ export const blogPosts: BlogPost[] = [
 </p>
 
 <div class="blog-author">
-  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <img class="blog-author-img" src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui, M.D." style="object-position: center 20%;" />
   <div class="blog-author-info">
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
@@ -553,7 +553,7 @@ export const blogPosts: BlogPost[] = [
 </p>
 
 <div class="blog-author">
-  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <img class="blog-author-img" src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui, M.D." style="object-position: center 20%;" />
   <div class="blog-author-info">
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
@@ -849,7 +849,7 @@ export const blogPosts: BlogPost[] = [
 </p>
 
 <div class="blog-author">
-  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <img class="blog-author-img" src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui, M.D." style="object-position: center 20%;" />
   <div class="blog-author-info">
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
@@ -1134,7 +1134,7 @@ export const blogPosts: BlogPost[] = [
 </p>
 
 <div class="blog-author">
-  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <img class="blog-author-img" src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui, M.D." style="object-position: center 20%;" />
   <div class="blog-author-info">
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
@@ -1469,7 +1469,7 @@ export const blogPosts: BlogPost[] = [
 </p>
 
 <div class="blog-author">
-  <img class="blog-author-img" src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&q=80" alt="Dr. Sam Elguizaoui" />
+  <img class="blog-author-img" src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui, M.D." style="object-position: center 20%;" />
   <div class="blog-author-info">
     <h4>Dr. Sameh Elguizaoui, M.D.</h4>
     <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>

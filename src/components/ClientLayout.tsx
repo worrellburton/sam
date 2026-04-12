@@ -96,7 +96,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   }, []);
 
   const isDocZocPage = pathname.startsWith("/doczoc");
-  const showChrome = !isDocZocPage;
+  const isDevPage = pathname.startsWith("/dev");
+  const showChrome = !isDocZocPage && !isDevPage;
 
   return (
     <BookingContext.Provider value={{ openBooking, closeBooking, isBookingOpen: bookingOpen }}>

@@ -1625,10 +1625,10 @@ section.specialties > .container {
 
 .specialties-row {
   display: grid;
-  gap: 28px;
+  gap: 16px;
 }
 .specialties-row + .specialties-row {
-  margin-top: 28px;
+  margin-top: 16px;
 }
 .specialties-row-1,
 .specialties-row-4 {
@@ -1693,6 +1693,10 @@ section.specialties > .container {
   object-fit: cover;
   opacity: 1;
   z-index: 1;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.specialty-card:hover .specialty-video {
+  transform: scale(1.05);
 }
 .specialty-card .specialty-overlay {
   position: absolute;

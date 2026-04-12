@@ -20,6 +20,14 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "a.espncdn.com" },
       { protocol: "https", hostname: "cdn.brandfetch.io" },
     ],
+    // Allow query strings on local paths so the dev panel can cache-bust
+    // blog thumbnails by appending ?v=<timestamp> after re-uploading the
+    // same filename. Without this, Next.js 16 refuses the URL at build time.
+    localPatterns: [
+      { pathname: "/images/**", search: "" },
+      { pathname: "/images/**", search: "**" },
+      { pathname: "/**", search: "" },
+    ],
   },
   async headers() {
     return [

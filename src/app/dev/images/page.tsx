@@ -17,7 +17,7 @@ interface UploadState {
   message: string;
 }
 
-type SortField = "name" | "date";
+type SortField = "name" | "date" | "size" | "seo";
 type SortDir = "asc" | "desc";
 
 export default function DevImagesPage() {
@@ -55,9 +55,34 @@ export default function DevImagesPage() {
     }
   };
 
+  const getSeoScore = (f: FileEntry) => {
+    let score = 0;
+    const name = f.path.split("/").pop() || "";
+    const ext = name.split(".").pop()?.toLowerCase() || "";
+    // WebP format (+30)
+    if (ext === "webp") score += 30;
+    else if (ext === "avif") score += 30;
+    // Descriptive name, not just DSC/IMG numbers (+30)
+    if (!/^(DSC|IMG|image|photo|pic)\d/i.test(name) && name.replace(/\.[^.]+$/, "").length > 5) score += 30;
+    // Under 500KB (+20)
+    if (f.size < 500 * 1024) score += 20;
+    else if (f.size < 1024 * 1024) score += 10;
+    // Has hyphens/underscores (SEO-friendly naming) (+10)
+    if (/[-_]/.test(name.replace(/\.[^.]+$/, ""))) score += 10;
+    // No spaces in name (+10)
+    if (!/ /.test(name)) score += 10;
+    return Math.min(score, 100);
+  };
+
   const sortedFiles = [...files].sort((a, b) => {
     if (sortField === "date") {
       return sortDir === "desc" ? b.mtime - a.mtime : a.mtime - b.mtime;
+    }
+    if (sortField === "size") {
+      return sortDir === "desc" ? b.size - a.size : a.size - b.size;
+    }
+    if (sortField === "seo") {
+      return sortDir === "desc" ? getSeoScore(b) - getSeoScore(a) : getSeoScore(a) - getSeoScore(b);
     }
     const nameA = a.path.split("/").pop()?.toLowerCase() || "";
     const nameB = b.path.split("/").pop()?.toLowerCase() || "";
@@ -223,6 +248,10 @@ export default function DevImagesPage() {
         .dev-img-list-item .del-btn.confirm { opacity: 1; background: rgba(239,68,68,0.2); color: #f87171; border-color: #ef4444; }
         .dev-img-list-item .list-size { font-size: 0.78rem; color: #64748b; width: 80px; flex-shrink: 0; text-align: right; }
         .dev-img-list-item .list-date { font-size: 0.78rem; color: #64748b; width: 120px; flex-shrink: 0; text-align: right; }
+        .seo-pill { font-size: 0.72rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; width: 44px; text-align: center; flex-shrink: 0; }
+        .seo-good { background: rgba(34,197,94,0.15); color: #4ade80; }
+        .seo-ok { background: rgba(245,158,11,0.15); color: #fbbf24; }
+        .seo-bad { background: rgba(239,68,68,0.15); color: #f87171; }
         .dev-list-header { display: flex; align-items: center; gap: 14px; padding: 6px 14px 6px 76px; margin-bottom: 4px; }
         .dev-list-header button { background: none; border: none; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; }
         .dev-list-header button:hover { color: #94a3b8; }
@@ -344,9 +373,14 @@ export default function DevImagesPage() {
                 Name <span className="sort-arrow">{sortField === "name" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
               </button>
               <span style={{ flex: 2 }} />
-              <span style={{ width: 80, textAlign: "right", color: "#64748b", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Size</span>
-              <button className={sortField === "date" ? "active" : ""} onClick={() => toggleSort("date")} style={{ width: 120, textAlign: "right", justifyContent: "flex-end" }}>
-                Date uploaded <span className="sort-arrow">{sortField === "date" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
+              <button className={sortField === "seo" ? "active" : ""} onClick={() => toggleSort("seo")} style={{ width: 44, justifyContent: "center" }}>
+                SEO <span className="sort-arrow">{sortField === "seo" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
+              </button>
+              <button className={sortField === "size" ? "active" : ""} onClick={() => toggleSort("size")} style={{ width: 80, justifyContent: "flex-end" }}>
+                Size <span className="sort-arrow">{sortField === "size" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
+              </button>
+              <button className={sortField === "date" ? "active" : ""} onClick={() => toggleSort("date")} style={{ width: 120, justifyContent: "flex-end" }}>
+                Date <span className="sort-arrow">{sortField === "date" ? (sortDir === "asc" ? "▲" : "▼") : ""}</span>
               </button>
               <span style={{ width: 120 }} />
             </div>
@@ -356,6 +390,7 @@ export default function DevImagesPage() {
                 <img src={f.path} alt="" loading="lazy" />
                 <span className="list-name">{f.path.split("/").pop()}</span>
                 <span className="list-path">{f.path}</span>
+                {(() => { const s = getSeoScore(f); return <span className={`seo-pill ${s >= 70 ? "seo-good" : s >= 40 ? "seo-ok" : "seo-bad"}`}>{s}</span>; })()}
                 <span className="list-size">{formatSize(f.size)}</span>
                 <span className="list-date">{formatDate(f.mtime)}</span>
                 <button className={`copy-btn${copied === f.path ? " copied" : ""}`} onClick={(e) => copyPath(e, f.path)}>

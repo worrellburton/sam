@@ -13,14 +13,14 @@ import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
 const tickerItems = [
   {
     icon: (
-      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&h=40&w=40" alt="New York Jets" width={32} height={32} />
+      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&h=40&w=40" alt="New York Jets" width={32} height={32} loading="eager" />
     ),
     text: "New York Jets Team Physician",
     em: "NFL",
   },
   {
     icon: (
-      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/nyi.png&h=40&w=40" alt="New York Islanders" width={32} height={32} />
+      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/nyi.png&h=40&w=40" alt="New York Islanders" width={32} height={32} loading="eager" />
     ),
     text: "New York Islanders Team Physician",
     em: "NHL",
@@ -202,6 +202,7 @@ export default function Home() {
     }
     return arr;
   })();
+  const [heroReady, setHeroReady] = useState(false);
   const [reviewIndex, setReviewIndex] = useState(0);
   const reviewsPerPage = 3;
   const totalReviewPages = Math.ceil(allReviews.length / reviewsPerPage);
@@ -256,8 +257,8 @@ export default function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
-      <header className="hero" id="hero">
-        <Image className="hero-bg-img loaded" src="/images/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority />
+      <header className={`hero${heroReady ? " hero-loaded" : ""}`} id="hero">
+        <Image className={`hero-bg-img${heroReady ? " loaded" : ""}`} src="/images/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority onLoad={() => setHeroReady(true)} />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <div className="hero-text">
@@ -281,7 +282,7 @@ export default function Home() {
                 <div className="avatar">M</div>
                 <div className="avatar">A</div>
               </div>
-              <span className="rating-zocdoc">DocZoc</span>
+              <span className="rating-zocdoc">Zocdoc</span>
             </div>
           </div>
         </div>

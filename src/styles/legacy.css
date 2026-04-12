@@ -5108,29 +5108,37 @@ section.specialties > .container {
   justify-content: center;
   min-height: 48px;
   padding: 8px 12px;
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.insurance-logo-item:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+[data-theme="light"] .insurance-logo-item:hover {
+  background: rgba(0,0,0,0.02);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 img.insurance-logo {
   height: 32px;
   width: auto;
   max-width: 160px;
   object-fit: contain;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  opacity: 1;
+  transition: transform 0.2s ease;
+}
+.insurance-logo-item:hover img.insurance-logo {
+  transform: scale(1.05);
 }
 /* Dark mode: show dark logos (forced white), hide light logos */
 img.insurance-logo-dark { display: block; filter: brightness(0) invert(1); }
 img.insurance-logo-light { display: none; }
-img.insurance-logo:hover {
-  opacity: 1;
-}
 /* Light mode: show dark logos (natural color), hide light logos */
 [data-theme="light"] img.insurance-logo-dark { display: block; filter: none; }
 [data-theme="light"] img.insurance-logo-light { display: none; }
 [data-theme="light"] img.insurance-logo {
-  opacity: 0.55;
-}
-[data-theme="light"] img.insurance-logo:hover {
-  opacity: 0.8;
+  opacity: 1;
 }
 .insurance-more-text {
   text-align: center;

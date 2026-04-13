@@ -98,6 +98,133 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "tennis-elbow-lateral-epicondylitis",
+    title: "Tennis Elbow Without the Tennis: Why Your Outside-Elbow Pain Won't Quit and What Actually Cures It",
+    excerpt:
+      "Most tennis-elbow patients have never picked up a racquet. The pain is real, the treatments are crowded with nonsense, and one specific protocol is responsible for the majority of cures.",
+    tag: "Myth Busting",
+    date: "April 1, 2026",
+    readTime: "8 min read",
+    episode: 19,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "regenerative-medicine",
+    image: "https://images.unsplash.com/photo-1542736667-069246bdbc6d?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Person holding their elbow in pain",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#what">What Tennis Elbow Actually Is</a></li>
+    <li><a href="#protocol">The Eccentric Loading Protocol That Cures Most Cases</a></li>
+    <li><a href="#injections">Injections — Cortisone, PRP, and the Truth</a></li>
+    <li><a href="#surgery">When Surgery Is the Answer</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If your outside elbow has hurt for three months, you do not need another splint. You need a structured loading program — and probably a frank conversation about why injections have not worked.</p>
+</div>
+
+<h2 id="what">What Tennis Elbow Actually Is</h2>
+
+<p>Lateral epicondylitis is a misnomer. There is almost no inflammation. The pathology is a degenerative tendinosis of the <em>extensor carpi radialis brevis</em> (ECRB) tendon at the outside of the elbow — collagen disorganization and microtearing from chronic overload. This matters because it tells us what works (loading the tendon to remodel) and what doesn't (anti-inflammatory injections aimed at inflammation that isn't there).</p>
+
+<div class="blog-expert-quote">
+  <p>The most expensive lesson in this diagnosis is realizing that what felt like the most logical treatment — cortisone — gives short-term relief and long-term harm.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="protocol">The Eccentric Loading Protocol</h2>
+
+<p>Eccentric loading — lengthening the tendon under load — is the gold standard for tennis elbow. The Tyler Twist (using a flexible rubber bar) is one well-validated version. Done correctly, it cures roughly 70% of cases within 6–8 weeks.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="m9 6 6 6-6 6"/></svg>
+    </div>
+    <h4>Activity Modification</h4>
+    <p>Identify and unload the offending activity for 4–6 weeks — keyboard ergonomics, racquet grip size, gym pulls.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M4 12 12 6"/><path d="M4 12 12 18"/></svg>
+    </div>
+    <h4>Eccentric Loading 3×/Day</h4>
+    <p>15 reps, three times daily, with mild discomfort permitted. Progressive resistance over 6 weeks.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <h4>Counterforce Strap (Optional)</h4>
+    <p>A counterforce brace shifts load distally. Useful during reintroduction of activity, not as a stand-alone treatment.</p>
+  </div>
+</div>
+
+<h2 id="injections">Injections — Cortisone, PRP, and the Truth</h2>
+
+<div class="blog-compare">
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">Short-term win, long-term loss</p>
+    <h4>Cortisone</h4>
+    <ul>
+      <li>Quick pain relief at 6 weeks</li>
+      <li>Worse outcomes than placebo at 12 months</li>
+      <li>Repeated injections degrade tendon further</li>
+      <li>We rarely use it for this diagnosis</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Slower, biologic</p>
+    <h4>PRP</h4>
+    <ul>
+      <li>Stimulates collagen remodeling</li>
+      <li>Outperforms cortisone at 6+ months</li>
+      <li>Best paired with structured eccentric loading</li>
+      <li>Cost is real — reserve for refractory cases</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="surgery">When Surgery Is the Answer</h2>
+
+<p>Surgery is reserved for the &lt; 10% of patients with persistent symptoms beyond 6–12 months of conservative care. Modern technique is arthroscopic ECRB release with debridement of pathologic tissue. Recovery: 8–12 weeks to full grip strength.</p>
+
+<a href="/services/regenerative-medicine" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Three months of elbow pain that won&rsquo;t quit? <strong>Book a tendinopathy consultation</strong> for a structured loading plan and an honest injection conversation.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Why does it hurt so much from such a small motion?</h3>
+  <p>The ECRB attaches a forearm tendon to a tiny bony footprint. Even ordinary daily loads (lifting a coffee cup, shaking hands) put high stress per square millimeter on a degenerative footprint.</p>
+
+  <h3>What about a brace?</h3>
+  <p>Counterforce braces help while you reintroduce activity. They do not reverse the underlying tendinopathy. Wearing a brace for months without loading work is treating the wrong problem.</p>
+
+  <h3>How long does the eccentric protocol take to work?</h3>
+  <p>Most patients see meaningful relief by week 4 and substantial relief by week 8. Patience is the unsexy answer; consistency is the cure.</p>
+
+  <h3>Is golfer's elbow (medial epicondylitis) treated the same way?</h3>
+  <p>Yes — same loading principles, opposite side of the elbow. Eccentric flexor loading is the cornerstone. Beware the ulnar nerve, which lives next door.</p>
+
+  <h3>What about dry needling or shock-wave?</h3>
+  <p>Both have modest supporting evidence in refractory cases. They are reasonable second-line additions before considering PRP or surgery.</p>
+</div>
+`,
+  },
+  {
     slug: "achilles-tendon-injuries-guide",
     title: "The Pop Heard on the Court: A Clear Playbook for Achilles Tendon Ruptures and Tendinopathy",
     excerpt:

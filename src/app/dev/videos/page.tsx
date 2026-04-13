@@ -67,19 +67,79 @@ export default function DevVideosPage() {
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 40, message: "Pushing to GitHub..." } : u));
 
-      // Step 2: Upload via server proxy (avoids CORS, handles GitHub auth)
-      const res = await fetch("/api/dev/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName: file.name, folder: "videos", content: base64 }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error || "Upload failed");
+      // Base64-encoded size. Vercel caps serverless request bodies at ~4.5 MB.
+      // For anything larger we go directly to GitHub's API from the browser
+      // (GitHub Contents API accepts up to 100 MB per file).
+      const encodedBytes = base64.length * 0.75; // approximate decoded → encoded ratio
+      const DIRECT_THRESHOLD = 3.5 * 1024 * 1024; // ~3.5 MB file ≈ 4.7 MB JSON
+      const useDirect = file.size > DIRECT_THRESHOLD || encodedBytes > DIRECT_THRESHOLD;
+
+      if (useDirect) {
+        const tokenRes = await fetch("/api/dev/github-token");
+        if (!tokenRes.ok) {
+          const errText = await tokenRes.text();
+          throw new Error(`Token fetch failed: ${errText.slice(0, 200)}`);
+        }
+        const { token, owner, repo, branch } = await tokenRes.json();
+        const repoPath = `public/videos/${file.name}`;
+
+        // Look up existing sha so we can overwrite.
+        let sha: string | undefined;
+        try {
+          const chk = await fetch(
+            `https://api.github.com/repos/${owner}/${repo}/contents/${repoPath}?ref=${branch}`,
+            { headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github.v3+json" } }
+          );
+          if (chk.ok) sha = (await chk.json()).sha;
+        } catch { /* new file */ }
+
+        setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: 60, message: `Uploading ${sizeMB} MB to GitHub...` } : u));
+
+        const putRes = await fetch(
+          `https://api.github.com/repos/${owner}/${repo}/contents/${repoPath}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/vnd.github.v3+json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: `Upload ${file.name} via dev panel`,
+              content: base64,
+              branch,
+              ...(sha ? { sha } : {}),
+            }),
+          }
+        );
+        if (!putRes.ok) {
+          const errBody = await putRes.text();
+          let msg = `${putRes.status} ${putRes.statusText}`;
+          try { msg = JSON.parse(errBody).message || msg; } catch { /* plain text */ }
+          throw new Error(`GitHub error: ${msg}`);
+        }
+      } else {
+        // Small files: go through our serverless proxy.
+        const res = await fetch("/api/dev/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName: file.name, folder: "videos", content: base64 }),
+        });
+        const text = await res.text();
+        let data: { success?: boolean; error?: string };
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new Error(`Upload failed (${res.status}): ${text.slice(0, 200)}`);
+        }
+        if (!data.success) throw new Error(data.error || "Upload failed");
+      }
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
       fetchFiles();
     } catch (err) {
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: `${err}` } : u));
+      const msg = err instanceof Error ? err.message : String(err);
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: msg } : u));
     }
   };
 

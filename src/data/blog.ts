@@ -98,6 +98,133 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "hyaluronic-acid-vs-prp-knee",
+    title: "Hyaluronic Acid vs PRP for Knee Arthritis: What Actually Helps, What Just Sounds Scientific",
+    excerpt:
+      "Both are injected. Both are marketed. Only one has consistent evidence for your knee — and which one depends on the stage of your arthritis.",
+    tag: "Myth Busting",
+    date: "April 6, 2026",
+    readTime: "9 min read",
+    episode: 21,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "regenerative-medicine",
+    image: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Knee injection preparation in an orthopedic clinic",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#ha">Hyaluronic Acid — Lubrication Theory</a></li>
+    <li><a href="#prp">PRP — Growth-Factor Theory</a></li>
+    <li><a href="#evidence">What the Head-to-Head Evidence Shows</a></li>
+    <li><a href="#stage">Match the Injection to the Stage</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If a clinic is selling you an injection without first doing standing X-rays and a careful exam, they are selling — not treating. The difference between &ldquo;helped a lot&rdquo; and &ldquo;did nothing&rdquo; is usually about which injection met which knee.</p>
+</div>
+
+<h2 id="ha">Hyaluronic Acid — Lubrication Theory</h2>
+
+<p>Hyaluronic acid (HA) is a natural component of synovial fluid — the slippery liquid inside every joint. In arthritis, the native HA becomes shorter and thinner, and joint fluid loses its shock-absorbing elasticity. Injectable HA products replace or supplement that molecule with a higher-molecular-weight version, typically over a series of one to three injections.</p>
+
+<div class="blog-takeaway">
+  <h4>Where HA fits</h4>
+  <ul>
+    <li>Mild to moderate knee osteoarthritis (Kellgren-Lawrence grade 2–3)</li>
+    <li>Patients who cannot or prefer not to take NSAIDs</li>
+    <li>Bridge therapy while waiting for definitive care or lifestyle gains</li>
+    <li>Patients with clear mechanical lubrication symptoms — catching, stiffness after sitting</li>
+  </ul>
+</div>
+
+<h2 id="prp">PRP — Growth-Factor Theory</h2>
+
+<p>Platelet-rich plasma (PRP) is your own blood, centrifuged down to a high-concentration platelet layer that is re-injected into the joint. Platelets release dozens of growth factors — the idea is that these stimulate chondrocyte metabolism and quiet inflammatory cytokines.</p>
+
+<div class="blog-expert-quote">
+  <p>PRP is not a single product. The difference between a quality preparation and a budget one is an order of magnitude of platelet concentration — and that is what the research is measuring.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<p>We wrote a full deep dive on PRP earlier in this series — see the <a href="/blog/prp-therapy-deep-dive">PRP decoded article</a> for the preparation details. The short version: leukocyte-poor, double-spin PRP with &gt; 5× platelet concentration has the best evidence.</p>
+
+<h2 id="evidence">What the Head-to-Head Evidence Shows</h2>
+
+<p>Multiple randomized trials now compare HA and PRP head-to-head for knee osteoarthritis. The consistent finding: in early-to-mid-stage disease, PRP outperforms HA at 6 and 12 months for pain and function, but not by a huge margin. In advanced, bone-on-bone disease, neither performs particularly well — and surgery becomes the honest recommendation.</p>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Lubrication</p>
+    <h4>Hyaluronic Acid</h4>
+    <ul>
+      <li>Lower cost, often covered by insurance</li>
+      <li>Mild-to-moderate arthritis</li>
+      <li>Effect peaks 2–3 months, lasts 6</li>
+      <li>Very low adverse-event rate</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">Biologic</p>
+    <h4>Platelet-Rich Plasma</h4>
+    <ul>
+      <li>Higher cost, typically out-of-pocket</li>
+      <li>Best for mild-to-moderate arthritis</li>
+      <li>Effect often lasts 9–12 months</li>
+      <li>Evidence consistently favors over HA — in the right knee</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="stage">Match the Injection to the Stage</h2>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <div class="blog-stat-number">KL 1–2</div>
+    <div class="blog-stat-label">PRP is the more evidence-backed choice</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">KL 2–3</div>
+    <div class="blog-stat-label">PRP or HA can both help; patient preference and cost drive choice</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">KL 4</div>
+    <div class="blog-stat-label">Neither injection is a good investment — surgical planning is the conversation</div>
+  </div>
+</div>
+
+<a href="/services/regenerative-medicine" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Tired of injections that &ldquo;didn&rsquo;t do much&rdquo;? <strong>Book a regenerative-medicine consultation</strong> for an honest assessment of whether biologics will actually help your knee.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>What about cortisone? Where does it fit?</h3>
+  <p>Cortisone is a short-term anti-inflammatory. It works quickly but can damage cartilage with repeated injection. We use it sparingly and avoid it in early arthritis when we plan to offer biologics.</p>
+
+  <h3>Can I do both HA and PRP?</h3>
+  <p>Not simultaneously. Mixing preparations complicates the biology. We typically pick one, assess response at 3 months, and switch only if warranted.</p>
+
+  <h3>Does insurance cover PRP?</h3>
+  <p>For orthopedic use, almost never. HA is covered by most insurers for knee OA. PRP is typically out-of-pocket, which is part of why we advise it only when the evidence says it will help.</p>
+
+  <h3>Is stem cell injection better?</h3>
+  <p>The data remain mixed and the regulatory landscape is a concern. Read our <a href="/blog/stem-cell-therapy-investigation">stem cell investigation</a> before paying five figures for an unregulated injection.</p>
+
+  <h3>How often can I repeat either?</h3>
+  <p>HA can be repeated every 6 months. PRP typically holds for 9–12 months and can be repeated annually if it helped.</p>
+</div>
+`,
+  },
+  {
     slug: "distal-radius-fractures-wrist",
     title: "Broken Wrist, Open Questions: The Modern Decision Between Casting and Plating a Distal Radius Fracture",
     excerpt:

@@ -1803,8 +1803,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "9 min read",
     episode: 4,
     seriesTitle: "Clinical Clarity",
-    image:
-      "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/arthroscopic-vs-open-surgery.jpg?v=1776039732482",
     imageAlt: "Surgical procedure in operating room",
     relatedService: "shoulder-knee-surgery",
     content: "",

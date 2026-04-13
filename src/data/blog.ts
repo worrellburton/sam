@@ -98,6 +98,208 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "total-knee-replacement-2026",
+    title: "Total Knee Replacement in 2026: Robotic Guidance, Kinematic Alignment, and the End of the One-Size Knee",
+    excerpt:
+      "Modern knee replacement is three decades more precise than the surgery most patients still imagine. Here is how robotics, alignment philosophy, and implant design change outcomes.",
+    tag: "The Science",
+    date: "April 9, 2026",
+    readTime: "12 min read",
+    episode: 23,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "joint-preservation",
+    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Robotic-assisted total knee replacement in progress",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#when">When a Knee Is Actually Ready for Replacement</a></li>
+    <li><a href="#robotics">Robotic Guidance — What It Actually Does</a></li>
+    <li><a href="#alignment">Mechanical vs Kinematic Alignment</a></li>
+    <li><a href="#implants">Implant Choices in 2026</a></li>
+    <li><a href="#recovery">The 12-Week Recovery Map</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>A knee replacement in 2026 is not your parents' knee replacement. The implant your neighbor got in 2006 is still a good design — but how it is sized, rotated, aligned, and balanced has been rewritten twice over.</p>
+</div>
+
+<h2 id="when">When a Knee Is Actually Ready for Replacement</h2>
+
+<p>Replacement is not decided by an X-ray. It is decided by how your knee limits your life. Bone-on-bone imaging without nightly pain is not an indication. Nightly pain with preserved cartilage is not an indication either. Both have to line up.</p>
+
+<div class="blog-takeaway">
+  <h4>Signs we see in clinic before we say "replacement"</h4>
+  <ul>
+    <li>Activity tolerance under 30 minutes of walking</li>
+    <li>Night pain that wakes you</li>
+    <li>Stairs or curbs that you avoid</li>
+    <li>A fixed flexion contracture — can't fully straighten the knee</li>
+    <li>Failure of at least one structured non-op course (PT, weight loss, bracing, injections)</li>
+  </ul>
+</div>
+
+<div class="blog-expert-quote">
+  <p>The best knee replacement is the one that waits until your life says it is time — and the one planned with the precision your anatomy deserves.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="robotics">Robotic Guidance — What It Actually Does</h2>
+
+<p>A robotic-arm-assisted knee replacement is not a robot operating on you. It is a CT-based 3D plan of your knee loaded into a haptic guidance arm that physically prevents the surgeon from cutting outside the planned envelope. Translation: the cuts land where we planned to millimeter precision, every single time.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+    </div>
+    <h4>Pre-Op CT</h4>
+    <p>A low-dose CT of your knee and landmarks becomes a segmented 3D model. Implant size, position, and rotation are planned before we ever touch you.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M2 12h4"/><path d="M18 12h4"/></svg>
+    </div>
+    <h4>Intra-Op Tracking</h4>
+    <p>Small optical trackers pinned to the femur and tibia let the system know where your leg is in space at 0.1 mm accuracy.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l6-6 4 4 6-8"/></svg>
+    </div>
+    <h4>Gap Balancing</h4>
+    <p>Before any bone is cut, we dynamically tension the knee through its full range and watch the software quantify medial and lateral gaps in millimeters — then tweak the plan.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">04</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M6 7v14"/><path d="M18 7v14"/></svg>
+    </div>
+    <h4>Haptic Cutting</h4>
+    <p>The robotic arm holds the cutting saw inside a virtual fence. Step outside the plan and the arm stops. It is boring when it works — which is exactly what you want.</p>
+  </div>
+</div>
+
+<h2 id="alignment">Mechanical vs Kinematic Alignment</h2>
+
+<p>Every knee replacement has to decide: do we line up the implant with the mechanical axis (a straight line from hip to ankle) or with the kinematic axis (the knee's natural asymmetric flexion axis)?</p>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Tradition</p>
+    <h4>Mechanical Alignment</h4>
+    <ul>
+      <li>Neutral hip-knee-ankle axis</li>
+      <li>Decades of survivorship data</li>
+      <li>Can feel "different" from a native knee</li>
+      <li>Implant loads predictably</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">Anatomy-respecting</p>
+    <h4>Kinematic Alignment</h4>
+    <ul>
+      <li>Restores your pre-arthritic joint line</li>
+      <li>Better early ROM and patient-reported satisfaction</li>
+      <li>Requires precise tools — robotics is the natural fit</li>
+      <li>Early data on 10-year survivorship is reassuring</li>
+    </ul>
+  </div>
+</div>
+
+<p>The pragmatic answer in our practice is <em>restricted kinematic alignment</em> — a hybrid that respects your anatomy within safe limits but never lets varus or valgus push beyond evidence-backed boundaries.</p>
+
+<h2 id="implants">Implant Choices in 2026</h2>
+
+<ul>
+  <li><strong>Cruciate-retaining (CR)</strong> — keeps the PCL. More "kinematic" feel; requires a well-functioning PCL.</li>
+  <li><strong>Posterior-stabilized (PS)</strong> — sacrifices the PCL and uses a cam-post for stability. Forgiving in flexion.</li>
+  <li><strong>Medial congruent / Medial pivot</strong> — designed to mimic the knee's natural medial pivot motion. Rising in popularity.</li>
+  <li><strong>Cementless (porous-coated)</strong> — no cement; the bone grows into the implant. Well-supported in active patients under 70.</li>
+</ul>
+
+<a href="/services/joint-preservation" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Before deciding on replacement, <strong>book a joint-preservation consultation</strong> — some knees have biologic options left that add a decade before an implant is needed.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="recovery">The 12-Week Recovery Map</h2>
+
+<div class="blog-timeline">
+  <p class="blog-bar-chart-title">Total knee replacement recovery</p>
+  <div class="blog-timeline-track">
+    <div class="blog-timeline-progress" style="--timeline-progress: 100%;"></div>
+  </div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">DAY 0–7</div>
+      <div class="blog-timeline-label">Discharge day-of or day-after, walker, ice, multimodal pain control</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 2–6</div>
+      <div class="blog-timeline-label">Cane, outpatient PT, targeting 120° flexion and full extension</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 6–12</div>
+      <div class="blog-timeline-label">Return to work (desk sooner; on-feet by 12 weeks), driving by 4–6 weeks</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 3–6</div>
+      <div class="blog-timeline-label">Low-impact sport, cycling, hiking, gym — the knee keeps improving through one year</div>
+    </div>
+  </div>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <div class="blog-stat-number">95%</div>
+    <div class="blog-stat-label">Patient-reported satisfaction at 2 years with modern technique</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">~25 yrs</div>
+    <div class="blog-stat-label">Expected implant survival for contemporary designs</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">1 night</div>
+    <div class="blog-stat-label">Typical hospital stay — many go home the same day</div>
+  </div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Am I too young for a knee replacement?</h3>
+  <p>"Too young" used to mean under 60. Modern implants and alignment techniques now let active patients in their 50s — even late 40s with severe disease — have replacements that are likely to outlast them. The right answer is individualized, not age-based.</p>
+
+  <h3>Can I kneel after a knee replacement?</h3>
+  <p>Most patients can kneel comfortably by 6 months. It feels different — there is a prosthetic kneecap under the skin — but it is safe.</p>
+
+  <h3>What about partial (unicompartmental) knee replacement?</h3>
+  <p>For isolated medial or lateral compartment arthritis with intact ligaments, partial replacement is a better operation than a total — smaller incision, faster recovery, more native feel. Robotic planning has made unis more reliable.</p>
+
+  <h3>Do I need blood thinners?</h3>
+  <p>Yes — typically aspirin for 3–4 weeks in standard-risk patients. Higher-risk patients get a low-molecular-weight heparin or DOAC. Protocols are individualized.</p>
+
+  <h3>What goes wrong — and how often?</h3>
+  <p>Infection (&lt;1%), blood clot (&lt;1%), persistent stiffness requiring manipulation (2–5%), and unhappy but well-aligned knees (&lt;5%). The last is the biggest long-term concern and is exactly what modern alignment work is designed to prevent.</p>
+</div>
+`,
+  },
+  {
     slug: "rotator-cuff-repair-options",
     title: "Rotator Cuff Repair in 2026: Arthroscopic, Double-Row, Superior Capsular Reconstruction — And When Each One Wins",
     excerpt:

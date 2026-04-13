@@ -566,7 +566,7 @@ export default function DevBlogPage() {
       <style>{`@keyframes devSpin { to { transform: rotate(360deg); } }`}</style>
       <DevSidebar />
       <main style={{ flex: 1, marginLeft: 220, padding: "40px 48px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32, gap: 16 }}>
           <div>
             <h1 style={{ fontSize: "1.8rem", fontWeight: 700, color: "#f1f5f9", margin: 0 }}>Blog</h1>
             <p style={{ color: "#64748b", fontSize: "0.9rem", marginTop: 4 }}>
@@ -574,6 +574,32 @@ export default function DevBlogPage() {
               {blogPosts.filter((p) => p.comingSoon).length} coming soon
             </p>
           </div>
+          <Link
+            href="/dev/blog/batch"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "10px 16px",
+              background: "#111827",
+              border: "1px solid #334155",
+              borderRadius: 8,
+              color: "#e2e8f0",
+              fontSize: "0.85rem",
+              fontWeight: 600,
+              textDecoration: "none",
+              transition: "background 0.15s, border-color 0.15s",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            Batch Thumbs
+          </Link>
         </div>
 
         {/* Global Image Prompt — applied to every "Ask Claude" request */}

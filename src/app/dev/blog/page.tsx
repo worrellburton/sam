@@ -71,6 +71,44 @@ export default function DevBlogPage() {
     Record<string, { phase: "idle" | "saving" | "error" | "done"; error: string }>
   >({});
 
+  // Optimistic override of each post's published/draft state. Keys are slugs,
+  // values are the desired `comingSoon` flag after the user clicks the toggle.
+  // Seeded from blog.ts on first render.
+  const [statusOverrides, setStatusOverrides] = useState<Record<string, boolean>>({});
+  const [statusSaving, setStatusSaving] = useState<Record<string, boolean>>({});
+  const [statusError, setStatusError] = useState<Record<string, string>>({});
+
+  async function togglePostStatus(slug: string, current: boolean) {
+    const next = !current;
+    setStatusOverrides((prev) => ({ ...prev, [slug]: next }));
+    setStatusSaving((prev) => ({ ...prev, [slug]: true }));
+    setStatusError((prev) => {
+      const { [slug]: _, ...rest } = prev;
+      return rest;
+    });
+    try {
+      const res = await fetch("/api/dev/set-blog-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, comingSoon: next }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update status");
+    } catch (err) {
+      // Roll back optimistic state on failure.
+      setStatusOverrides((prev) => ({ ...prev, [slug]: current }));
+      setStatusError((prev) => ({
+        ...prev,
+        [slug]: err instanceof Error ? err.message : "Failed",
+      }));
+    } finally {
+      setStatusSaving((prev) => {
+        const { [slug]: _, ...rest } = prev;
+        return rest;
+      });
+    }
+  }
+
   // Auto-schedule panel
   const [scheduleOpen, setScheduleOpen] = useState<boolean>(false);
   const [scheduleStart, setScheduleStart] = useState<string>(() => {
@@ -371,6 +409,7 @@ export default function DevBlogPage() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#0a0e1a", color: "#e2e8f0" }}>
+      <style>{`@keyframes devSpin { to { transform: rotate(360deg); } }`}</style>
       <DevSidebar />
       <main style={{ flex: 1, marginLeft: 220, padding: "40px 48px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
@@ -647,7 +686,7 @@ export default function DevBlogPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "72px 2fr 1fr 140px 100px 80px",
+              gridTemplateColumns: "72px 2fr 1fr 140px 100px 110px",
               gap: 16,
               padding: "10px 16px",
               fontSize: "0.72rem",
@@ -671,6 +710,28 @@ export default function DevBlogPage() {
             const anyImage = gen.slots.some((s) => s.data);
             const allDone = gen.slots.every((s) => s.phase === "done");
             const anyGenerating = gen.slots.some((s) => s.phase === "generating");
+            const imagesDone = gen.slots.filter((s) => s.phase === "done").length;
+            const imagesErrored = gen.slots.some((s) => s.phase === "error");
+
+            // Compute a single status indicator for the row header
+            let statusChip: { label: string; color: string; bg: string; spin: boolean } | null = null;
+            if (gen.phase === "prompting") {
+              statusChip = { label: "Drafting prompts", color: "#a5b4fc", bg: "rgba(99,102,241,0.16)", spin: true };
+            } else if (anyGenerating) {
+              statusChip = { label: `Generating images ${imagesDone}/4`, color: "#a5b4fc", bg: "rgba(99,102,241,0.16)", spin: true };
+            } else if (gen.phase === "saving") {
+              statusChip = { label: "Saving thumbnail", color: "#86efac", bg: "rgba(34,197,94,0.16)", spin: true };
+            } else if (gen.phase === "error" || imagesErrored) {
+              statusChip = { label: "Error", color: "#fca5a5", bg: "rgba(239,68,68,0.16)", spin: false };
+            } else if (gen.savedPath) {
+              statusChip = { label: "Thumbnail saved", color: "#86efac", bg: "rgba(34,197,94,0.16)", spin: false };
+            } else if (allDone && anyImage) {
+              statusChip = { label: "4 images ready", color: "#c4b5fd", bg: "rgba(139,92,246,0.16)", spin: false };
+            } else if (anyImage) {
+              statusChip = { label: `${imagesDone}/4 images`, color: "#c4b5fd", bg: "rgba(139,92,246,0.12)", spin: false };
+            } else if (gen.slots.some((s) => s.prompt)) {
+              statusChip = { label: "Prompts ready", color: "#93c5fd", bg: "rgba(59,130,246,0.12)", spin: false };
+            }
 
             return (
               <div key={post.slug} style={{ marginBottom: 4 }}>
@@ -678,7 +739,7 @@ export default function DevBlogPage() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "72px 2fr 1fr 140px 100px 80px",
+                    gridTemplateColumns: "72px 2fr 1fr 140px 100px 110px",
                     gap: 16,
                     padding: "14px 16px",
                     background: isExpanded ? "#0f172a" : "#111827",
@@ -717,9 +778,54 @@ export default function DevBlogPage() {
                     )}
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <p style={{ fontWeight: 600, color: "#f1f5f9", fontSize: "0.9rem", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {post.title}
-                    </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                      <p style={{ fontWeight: 600, color: "#f1f5f9", fontSize: "0.9rem", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, flex: 1 }}>
+                        {post.title}
+                      </p>
+                      {statusChip && (
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 6,
+                            padding: "3px 8px",
+                            borderRadius: 999,
+                            fontSize: "0.7rem",
+                            fontWeight: 600,
+                            background: statusChip.bg,
+                            color: statusChip.color,
+                            border: `1px solid ${statusChip.color}30`,
+                            flexShrink: 0,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {statusChip.spin ? (
+                            <span
+                              style={{
+                                width: 10,
+                                height: 10,
+                                borderRadius: "50%",
+                                border: `1.5px solid ${statusChip.color}`,
+                                borderTopColor: "transparent",
+                                animation: "devSpin 0.8s linear infinite",
+                                display: "inline-block",
+                              }}
+                            />
+                          ) : (
+                            <span
+                              style={{
+                                width: 6,
+                                height: 6,
+                                borderRadius: "50%",
+                                background: statusChip.color,
+                                display: "inline-block",
+                              }}
+                            />
+                          )}
+                          {statusChip.label}
+                        </span>
+                      )}
+                    </div>
                     <p style={{ color: "#64748b", fontSize: "0.78rem", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       /blog/{post.slug}
                     </p>
@@ -735,45 +841,113 @@ export default function DevBlogPage() {
                     )}
                   </div>
                   <span style={{ color: "#94a3b8", fontSize: "0.82rem" }}>{post.date}</span>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      padding: "3px 8px",
-                      borderRadius: 6,
-                      fontSize: "0.72rem",
-                      fontWeight: 600,
-                      background: post.comingSoon ? "rgba(251,191,36,0.12)" : "rgba(52,211,153,0.12)",
-                      color: post.comingSoon ? "#fbbf24" : "#34d399",
-                      width: "fit-content",
-                    }}
-                  >
-                    {post.comingSoon ? "Draft" : "Published"}
-                  </span>
+                  {(() => {
+                    const effective =
+                      statusOverrides[post.slug] !== undefined
+                        ? statusOverrides[post.slug]
+                        : !!post.comingSoon;
+                    const saving = !!statusSaving[post.slug];
+                    const err = statusError[post.slug];
+                    return (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 2, width: "fit-content" }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (saving) return;
+                            togglePostStatus(post.slug, effective);
+                          }}
+                          disabled={saving}
+                          title={
+                            saving
+                              ? "Saving..."
+                              : `Click to mark as ${effective ? "Published" : "Draft"}`
+                          }
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 6,
+                            padding: "3px 8px",
+                            borderRadius: 6,
+                            fontSize: "0.72rem",
+                            fontWeight: 600,
+                            background: effective ? "rgba(251,191,36,0.12)" : "rgba(52,211,153,0.12)",
+                            color: effective ? "#fbbf24" : "#34d399",
+                            border: `1px solid ${effective ? "rgba(251,191,36,0.25)" : "rgba(52,211,153,0.25)"}`,
+                            cursor: saving ? "wait" : "pointer",
+                            opacity: saving ? 0.7 : 1,
+                            width: "fit-content",
+                          }}
+                        >
+                          {saving && (
+                            <span
+                              style={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: "50%",
+                                border: `1.5px solid ${effective ? "#fbbf24" : "#34d399"}`,
+                                borderTopColor: "transparent",
+                                animation: "devSpin 0.8s linear infinite",
+                                display: "inline-block",
+                              }}
+                            />
+                          )}
+                          {effective ? "Draft" : "Published"}
+                        </button>
+                        {err && (
+                          <span style={{ fontSize: "0.68rem", color: "#fca5a5" }} title={err}>
+                            Failed
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })()}
                   <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      target="_blank"
-                      onClick={(e) => e.stopPropagation()}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: 30,
-                        height: 30,
-                        borderRadius: 6,
-                        background: "rgba(255,255,255,0.04)",
-                        border: "1px solid #1e293b",
-                        color: "#94a3b8",
-                        textDecoration: "none",
-                      }}
-                      title="View post"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
-                        <polyline points="15 3 21 3 21 9" />
-                        <line x1="10" y1="14" x2="21" y2="3" />
-                      </svg>
-                    </Link>
+                    {(() => {
+                      const effective =
+                        statusOverrides[post.slug] !== undefined
+                          ? statusOverrides[post.slug]
+                          : !!post.comingSoon;
+                      return (
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          target="_blank"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 5,
+                            padding: "0 10px",
+                            height: 30,
+                            borderRadius: 6,
+                            background: effective
+                              ? "rgba(251,191,36,0.10)"
+                              : "rgba(255,255,255,0.04)",
+                            border: `1px solid ${effective ? "rgba(251,191,36,0.25)" : "#1e293b"}`,
+                            color: effective ? "#fbbf24" : "#94a3b8",
+                            textDecoration: "none",
+                            fontSize: "0.72rem",
+                            fontWeight: 600,
+                          }}
+                          title={effective ? "Preview draft in new tab" : "View published post"}
+                        >
+                          <svg
+                            width="13"
+                            height="13"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                            <polyline points="15 3 21 3 21 9" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                          </svg>
+                          {effective ? "Preview" : "View"}
+                        </Link>
+                      );
+                    })()}
                   </div>
                 </div>
 

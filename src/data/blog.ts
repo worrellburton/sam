@@ -6,6 +6,10 @@ export interface BlogPost {
   date: string;
   readTime: string;
   image: string;
+  /** Optional 3:4 (portrait) variant of the thumbnail. Used by mobile/sidebar placements. */
+  image3x4?: string;
+  /** Optional 1:1 (square) variant of the thumbnail. Used by the blog listing cards. */
+  image1x1?: string;
   imageAlt: string;
   content: string;
   contentHtml?: string;

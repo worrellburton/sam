@@ -502,25 +502,76 @@ export default function DevBlogPage() {
 
     updateGen(slug, { phase: "saving", error: "", savedPath: null });
 
-    const ext = selected.mime.includes("jpeg") ? "jpg" : "png";
-    const fileName = `${slug}.${ext}`;
-    const imagePath = `/images/blog/${fileName}`;
+    // Gather the latest render of every aspect ratio that matches the selected
+    // prompt (i.e. the current "series"). This lets Save & Set commit the full
+    // 16:9 / 3:4 / 1:1 set in one shot so the main site can pick the right
+    // aspect for each placement (hero, card, etc.).
+    const pickByRatio = (r: AspectRatio) => {
+      let best: GeneratedImage | undefined;
+      for (const im of gen.images) {
+        if (im.prompt !== selected.prompt) continue;
+        if (im.aspectRatio !== r) continue;
+        if (!best || im.ts > best.ts) best = im;
+      }
+      return best;
+    };
+    const primary = pickByRatio("16:9") || selected; // Landscape → `image`
+    const portrait = pickByRatio("3:4");
+    const square = pickByRatio("1:1");
+
+    const extOf = (im: GeneratedImage) => (im.mime.includes("jpeg") ? "jpg" : "png");
+
+    const primaryName = `${slug}.${extOf(primary)}`;
+    const imagePath = `/images/blog/${primaryName}`;
+    const portraitName = portrait ? `${slug}-3x4.${extOf(portrait)}` : null;
+    const squareName = square ? `${slug}-1x1.${extOf(square)}` : null;
 
     try {
-      // 1. Upload image
-      const upload = await fetch("/api/dev/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName, folder: "images/blog", content: selected.data }),
-      });
-      const uploadData = await upload.json();
-      if (!upload.ok) throw new Error(uploadData.error || "Failed to upload image");
+      // 1. Upload every aspect we have in parallel.
+      const uploads: Array<Promise<Response>> = [];
+      uploads.push(
+        fetch("/api/dev/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName: primaryName, folder: "images/blog", content: primary.data }),
+        })
+      );
+      if (portrait && portraitName) {
+        uploads.push(
+          fetch("/api/dev/upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fileName: portraitName, folder: "images/blog", content: portrait.data }),
+          })
+        );
+      }
+      if (square && squareName) {
+        uploads.push(
+          fetch("/api/dev/upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fileName: squareName, folder: "images/blog", content: square.data }),
+          })
+        );
+      }
+      const responses = await Promise.all(uploads);
+      for (const res of responses) {
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || "Failed to upload image");
+        }
+      }
 
-      // 2. Patch blog.ts to point at the new image
+      // 2. Patch blog.ts with every path we uploaded.
       const setThumb = await fetch("/api/dev/set-blog-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, imagePath }),
+        body: JSON.stringify({
+          slug,
+          imagePath,
+          imagePath3x4: portraitName ? `/images/blog/${portraitName}` : undefined,
+          imagePath1x1: squareName ? `/images/blog/${squareName}` : undefined,
+        }),
       });
       const setData = await setThumb.json();
       if (!setThumb.ok) throw new Error(setData.error || "Failed to set thumbnail");

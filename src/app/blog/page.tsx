@@ -3,7 +3,7 @@
 import { useRef, useCallback, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { blogPosts, allBlogPosts, isPostReleased, type BlogPost } from "@/data/blog";
+import { blogPosts, allBlogPosts, isPostReleased, getSeriesRotationView, type BlogPost } from "@/data/blog";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 
@@ -73,18 +73,39 @@ function CardAudioBtn({ slug }: { slug: string }) {
   );
 }
 
-function BlogCard({ post, showEpisode }: { post: BlogPost; showEpisode?: boolean }) {
-  const isComingSoon = post.comingSoon && !isPostReleased(post);
+function BlogCard({
+  post,
+  showEpisode,
+  asComingSoon,
+  comingLabel,
+}: {
+  post: BlogPost;
+  showEpisode?: boolean;
+  /** Override the card's coming-soon styling (used by the rotation teaser). */
+  asComingSoon?: boolean;
+  /** Optional custom "Coming ..." label; falls back to post.date. */
+  comingLabel?: string;
+}) {
+  const isComingSoon =
+    asComingSoon ?? Boolean(post.comingSoon && !isPostReleased(post));
+  // An authored draft is not yet published, so we shouldn't link to it. A
+  // derived teaser (asComingSoon=true on an already-released post) is a real
+  // article — keep the link live.
+  const isUnreleasedDraft = Boolean(post.comingSoon && !isPostReleased(post));
 
   return (
     <div className={`blog-card${isComingSoon ? " coming-soon" : ""}`}>
-      <Link href={isComingSoon ? "#" : `/blog/${post.slug}`} className="blog-card-link">
+      <Link href={isUnreleasedDraft ? "#" : `/blog/${post.slug}`} className="blog-card-link">
         <div className="blog-card-img-wrap">
           <Image className="blog-card-img" src={post.image} alt={post.imageAlt} width={800} height={400} />
           {showEpisode && post.episode && (
             <span className="blog-card-ep">EP. {post.episode}</span>
           )}
-          {isComingSoon && <span className="blog-card-coming">Coming {post.date}</span>}
+          {isComingSoon && (
+            <span className="blog-card-coming">
+              {comingLabel ? comingLabel : `Coming ${post.date}`}
+            </span>
+          )}
         </div>
         <div className="blog-card-body">
           <div className="blog-card-tag-row">
@@ -95,7 +116,7 @@ function BlogCard({ post, showEpisode }: { post: BlogPost; showEpisode?: boolean
           <p>{post.excerpt}</p>
           <div className="blog-card-footer">
             <span className="blog-card-meta">{post.date}</span>
-            {!isComingSoon && <CardAudioBtn slug={post.slug} />}
+            {!isUnreleasedDraft && <CardAudioBtn slug={post.slug} />}
           </div>
         </div>
       </Link>
@@ -104,9 +125,13 @@ function BlogCard({ post, showEpisode }: { post: BlogPost; showEpisode?: boolean
 }
 
 export default function BlogPage() {
-  const seriesPosts = blogPosts
-    .filter((p) => p.episode)
-    .sort((a, b) => (b.episode || 0) - (a.episode || 0));
+  // Infinite-loop rotation: when the authored coming-soon post releases (or
+  // none is flagged), the oldest released episode is re-surfaced as the
+  // teaser so the series always has a "coming next" slot.
+  const rotation = getSeriesRotationView(blogPosts);
+  const seriesPublished = [...rotation.published].sort(
+    (a, b) => (b.episode || 0) - (a.episode || 0)
+  );
 
   const guidePosts = allBlogPosts.filter((p) => !p.episode);
 
@@ -166,7 +191,20 @@ export default function BlogPage() {
           </div>
 
           <div className="blog-home-grid">
-            {seriesPosts.map((post) => (
+            {rotation.comingSoon && (
+              <BlogCard
+                key={`teaser-${rotation.comingSoon.slug}`}
+                post={rotation.comingSoon}
+                showEpisode
+                asComingSoon
+                comingLabel={
+                  rotation.derived
+                    ? "Revisiting Next"
+                    : `Coming ${rotation.comingSoon.date}`
+                }
+              />
+            )}
+            {seriesPublished.map((post) => (
               <BlogCard key={post.slug} post={post} showEpisode />
             ))}
           </div>

@@ -98,6 +98,142 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "achilles-tendon-injuries-guide",
+    title: "The Pop Heard on the Court: A Clear Playbook for Achilles Tendon Ruptures and Tendinopathy",
+    excerpt:
+      "The Achilles ruptures every weekend on basketball courts across NYC. Here is how we decide between non-operative casting and surgical repair — and why the first 48 hours matter most.",
+    tag: "The Field Report",
+    date: "April 3, 2026",
+    readTime: "10 min read",
+    episode: 20,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "sports-medicine",
+    image: "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Athlete clutching their Achilles tendon on a basketball court",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#rupture">The Weekend-Warrior Rupture</a></li>
+    <li><a href="#diagnose">Diagnosis and the Thompson Test</a></li>
+    <li><a href="#nonop">Functional Rehab vs Surgical Repair</a></li>
+    <li><a href="#tendinopathy">Chronic Achilles Tendinopathy — The Other Injury</a></li>
+    <li><a href="#recovery">Recovery by Pathway</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you heard a pop on the court and someone asked if they stepped on your heel — no one did. The Achilles just snapped. The decisions you make in the next week will shape your next year.</p>
+</div>
+
+<h2 id="rupture">The Weekend-Warrior Rupture</h2>
+
+<p>Achilles tendon ruptures are classically middle-aged, classically acute, and classically preventable. The archetype: a 38-year-old male playing pickup basketball, calf felt "tight" all week, pushes off hard on a layup, hears the pop, cannot walk. What ruptured was a tendon that had already been degenerating quietly for a decade.</p>
+
+<h2 id="diagnose">Diagnosis and the Thompson Test</h2>
+
+<p>The <strong>Thompson test</strong> is the most important bedside exam in orthopedics: with the patient prone, squeeze the calf. If the foot plantarflexes, the Achilles is intact. If it doesn't, the Achilles is torn. A negative Thompson test plus an MRI is the standard workup. Ultrasound in the clinic is an underused alternative.</p>
+
+<div class="blog-expert-quote">
+  <p>The Achilles is one of the only injuries where walking into the ER under your own power still gets you a near-complete tendon rupture. Pain is a poor guide here.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="nonop">Functional Rehab vs Surgical Repair</h2>
+
+<p>A decade ago, surgery was the default. Today, modern <em>functional rehabilitation</em> — with a hinged boot, early protected weight-bearing, and accelerated physical therapy — matches surgical re-rupture rates in most patients, without surgical risks.</p>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Non-operative</p>
+    <h4>Functional Rehab Protocol</h4>
+    <ul>
+      <li>Hinged boot in plantarflexion, progressively dorsiflexed</li>
+      <li>Weight-bearing within 2 weeks</li>
+      <li>No surgical incision, no wound risk</li>
+      <li>Best for ≤ 65, early diagnosis, tendon gap &lt; 10 mm on ultrasound</li>
+      <li>Re-rupture rate 5–7% with strict protocol adherence</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">Operative</p>
+    <h4>Percutaneous or Open Repair</h4>
+    <ul>
+      <li>Minimally invasive or open end-to-end suture technique</li>
+      <li>Faster return to peak push-off power</li>
+      <li>Best for elite athletes, delayed presentations, large tendon gaps</li>
+      <li>Re-rupture rate 2–4%</li>
+      <li>Wound and nerve complications ~5%</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="tendinopathy">Chronic Achilles Tendinopathy — The Other Injury</h2>
+
+<p>Not every bad Achilles pops. Chronic tendinopathy — painful thickening 2–6 cm above the heel — is a different problem with a different treatment plan. <em>Eccentric loading</em> (Alfredson protocol) is the cornerstone. Shock-wave therapy, PRP, and selective surgical debridement are second-line options. Cortisone is contraindicated — it doubles rupture risk.</p>
+
+<a href="/services/sports-medicine" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Acute Achilles pop this week? <strong>Book a same-week sports consultation</strong> — timing of boot and protocol start is a tendon-healing variable.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="recovery">Recovery by Pathway</h2>
+
+<div class="blog-timeline">
+  <p class="blog-bar-chart-title">Return to sport — either pathway</p>
+  <div class="blog-timeline-track">
+    <div class="blog-timeline-progress" style="--timeline-progress: 100%;"></div>
+  </div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 0–2</div>
+      <div class="blog-timeline-label">Boot in 20° plantarflexion, non-weight-bearing on crutches</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 2–8</div>
+      <div class="blog-timeline-label">Progressive weight-bearing, boot wedge reduced every 2 weeks</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 2–4</div>
+      <div class="blog-timeline-label">Out of boot, bike, pool running, heel-raise progression</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 6–9</div>
+      <div class="blog-timeline-label">Return to running, cutting sports by 9 months with strength equivalence</div>
+    </div>
+  </div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Why does this keep happening in pickup basketball?</h3>
+  <p>The tendon degenerates silently starting in the 30s. Sudden push-off loads on an already-weakened tendon are the tipping point. Cortisone for other problems in the same leg raises risk. Fluoroquinolone antibiotics also double rupture risk — ask before taking them.</p>
+
+  <h3>How do I prevent the other side from rupturing?</h3>
+  <p>Eccentric heel drops, progressive calf loading, attention to ankle mobility, and avoiding fluoroquinolones when possible. Pre-habilitation is how we protect the contralateral tendon.</p>
+
+  <h3>Will I come back to my pre-injury level?</h3>
+  <p>Most recreational athletes do. Elite athletes often return to within 90% of pre-injury push-off; the tendon is permanently slightly longer, which is the biomechanical reason the deficit exists.</p>
+
+  <h3>Is PRP injected into a rupture a thing?</h3>
+  <p>Studies do not show meaningful benefit for acute rupture healing. For chronic tendinopathy, some evidence supports it. See our <a href="/blog/prp-therapy-deep-dive">PRP deep dive</a>.</p>
+
+  <h3>When is surgery mandatory?</h3>
+  <p>Delayed presentation &gt; 3 weeks, elite athletes needing fastest return, and ruptures with a large inter-tendon gap on ultrasound. Otherwise, a well-executed non-operative protocol is a legitimate first-line choice.</p>
+</div>
+`,
+  },
+  {
     slug: "hyaluronic-acid-vs-prp-knee",
     title: "Hyaluronic Acid vs PRP for Knee Arthritis: What Actually Helps, What Just Sounds Scientific",
     excerpt:

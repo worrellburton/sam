@@ -1575,6 +1575,104 @@ export default function DevBlogPage() {
                       )}
                     </div>
 
+                    {/* Saved thumbnail — shown when no in-memory selection
+                        exists (e.g. user just opened this row in a fresh
+                        session). Pulls directly from the persisted blog.ts
+                        fields so the series is visible even before any new
+                        renders have been generated. */}
+                    {!gen.images.find((im) => im.id === gen.selectedId) && post.image && (() => {
+                      const ratios: AspectRatio[] = ["16:9", "3:4", "1:1"];
+                      const savedByRatio: Record<AspectRatio, string | undefined> = {
+                        "16:9": post.image,
+                        "3:4": post.image3x4,
+                        "1:1": post.image1x1,
+                      };
+                      const tileHeight = 360;
+                      return (
+                        <div
+                          style={{
+                            background: "linear-gradient(135deg, rgba(34,197,94,0.08), rgba(99,102,241,0.06))",
+                            border: "2px solid rgba(34,197,94,0.35)",
+                            borderRadius: 12,
+                            padding: 16,
+                            marginBottom: 20,
+                            boxShadow: "0 0 0 3px rgba(34,197,94,0.1)",
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, gap: 12, flexWrap: "wrap" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: "50%", background: "#22c55e", color: "#fff" }}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              </span>
+                              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#bbf7d0", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                                Saved thumbnail
+                              </span>
+                              <span style={{ fontSize: "0.72rem", color: "#86efac", background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)", padding: "2px 8px", borderRadius: 999, fontWeight: 600 }}>
+                                Live from blog.ts
+                              </span>
+                            </div>
+                          </div>
+
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+                            {ratios.map((r) => {
+                              const src = savedByRatio[r];
+                              return (
+                                <div
+                                  key={r}
+                                  style={{
+                                    position: "relative",
+                                    width: "100%",
+                                    height: tileHeight,
+                                    borderRadius: 10,
+                                    overflow: "hidden",
+                                    background: "#0a0e1a",
+                                    border: "1px solid #334155",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  {src ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                      src={src}
+                                      alt={`${r} saved render`}
+                                      style={{ maxWidth: "100%", maxHeight: "100%", width: "auto", height: "auto", objectFit: "contain", display: "block" }}
+                                    />
+                                  ) : (
+                                    <span style={{ fontSize: "0.72rem", color: "#64748b", padding: 10, textAlign: "center" }}>
+                                      No {r} saved yet — generate a series below to add it.
+                                    </span>
+                                  )}
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      top: 6,
+                                      left: 6,
+                                      fontSize: "0.68rem",
+                                      fontWeight: 700,
+                                      color: "#fff",
+                                      background: "rgba(0,0,0,0.6)",
+                                      padding: "2px 6px",
+                                      borderRadius: 4,
+                                      letterSpacing: "0.04em",
+                                    }}
+                                  >
+                                    {r}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <p style={{ margin: "10px 0 0", fontSize: "0.72rem", color: "#94a3b8", lineHeight: 1.5 }}>
+                            These are the aspect ratios currently live on the site for this post. Generate a new series below to replace them.
+                          </p>
+                        </div>
+                      );
+                    })()}
+
                     {/* Pinned selected thumbnail at top */}
                     {(() => {
                       const selected = gen.images.find((im) => im.id === gen.selectedId);

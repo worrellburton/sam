@@ -53,6 +53,9 @@ interface GenState {
   // setting paragraph. When false, the setting constraint is dropped so the
   // article's imagery is free to live anywhere that fits the topic.
   nyc: boolean;
+  // Surgery toggle. When true, the prompts are steered toward surgeons at work
+  // in the operating room — masked, gowned, intraoperative. Off by default.
+  surgery: boolean;
 }
 
 const emptyPromptSlot = (): PromptSlot => ({
@@ -72,6 +75,7 @@ const defaultGen: GenState = {
   error: "",
   savedPath: null,
   nyc: true,
+  surgery: false,
 };
 
 function makeImageId(): string {
@@ -344,6 +348,7 @@ export default function DevBlogPage() {
           style: gen.style,
           globalPrompt,
           nyc: gen.nyc,
+          surgery: gen.surgery,
         }),
       });
       const data = await res.json();
@@ -1401,32 +1406,60 @@ export default function DevBlogPage() {
                         <label style={{ fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", display: "block", marginBottom: 8 }}>
                           Setting
                         </label>
-                        <label
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 8,
-                            padding: "6px 12px",
-                            borderRadius: 6,
-                            border: "1px solid",
-                            borderColor: gen.nyc ? "#f59e0b" : "#1e293b",
-                            background: gen.nyc ? "rgba(245,158,11,0.12)" : "transparent",
-                            color: gen.nyc ? "#fbbf24" : "#94a3b8",
-                            fontSize: "0.78rem",
-                            fontWeight: 500,
-                            cursor: "pointer",
-                            userSelect: "none",
-                          }}
-                          title="When checked, prompts are locked to a NYC setting. Uncheck for articles where a NYC backdrop isn't necessary."
-                        >
-                          <input
-                            type="checkbox"
-                            checked={gen.nyc}
-                            onChange={(e) => updateGen(post.slug, { nyc: e.target.checked })}
-                            style={{ accentColor: "#f59e0b", cursor: "pointer" }}
-                          />
-                          NYC
-                        </label>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          <label
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 8,
+                              padding: "6px 12px",
+                              borderRadius: 6,
+                              border: "1px solid",
+                              borderColor: gen.nyc ? "#f59e0b" : "#1e293b",
+                              background: gen.nyc ? "rgba(245,158,11,0.12)" : "transparent",
+                              color: gen.nyc ? "#fbbf24" : "#94a3b8",
+                              fontSize: "0.78rem",
+                              fontWeight: 500,
+                              cursor: "pointer",
+                              userSelect: "none",
+                            }}
+                            title="When checked, prompts are locked to a NYC setting. Uncheck for articles where a NYC backdrop isn't necessary."
+                          >
+                            <input
+                              type="checkbox"
+                              checked={gen.nyc}
+                              onChange={(e) => updateGen(post.slug, { nyc: e.target.checked })}
+                              style={{ accentColor: "#f59e0b", cursor: "pointer" }}
+                            />
+                            NYC
+                          </label>
+                          <label
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 8,
+                              padding: "6px 12px",
+                              borderRadius: 6,
+                              border: "1px solid",
+                              borderColor: gen.surgery ? "#06b6d4" : "#1e293b",
+                              background: gen.surgery ? "rgba(6,182,212,0.12)" : "transparent",
+                              color: gen.surgery ? "#67e8f9" : "#94a3b8",
+                              fontSize: "0.78rem",
+                              fontWeight: 500,
+                              cursor: "pointer",
+                              userSelect: "none",
+                            }}
+                            title="When checked, prompts depict surgeons at work in the operating room — masked, gowned, intraoperative."
+                          >
+                            <input
+                              type="checkbox"
+                              checked={gen.surgery}
+                              onChange={(e) => updateGen(post.slug, { surgery: e.target.checked })}
+                              style={{ accentColor: "#06b6d4", cursor: "pointer" }}
+                            />
+                            Surgery
+                          </label>
+                        </div>
                       </div>
                     </div>
 

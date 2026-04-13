@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
     style = "photorealistic",
     globalPrompt,
     nyc = true,
+    surgery = false,
   } = await request.json();
   if (!title) {
     return NextResponse.json({ error: "Missing title" }, { status: 400 });
@@ -62,11 +63,19 @@ export async function POST(request: NextRequest) {
     ? "NYC setting, 20s–40s subjects, Nike/Equinox visual style"
     : "20s–40s subjects, Nike/Equinox visual style, setting dictated by article context";
 
+  // Surgery mode overrides the usual scene variety — all 4 prompts should be
+  // intraoperative scenes with the surgeon as the subject.
+  const surgeryDirective = surgery
+    ? `\n\n=== SURGERY OVERRIDE ===
+All 4 prompts MUST depict surgeons at work in an operating room. Think: masked, gowned, loupes, sterile field, arthroscopic tower / monitors, focused hand work, bright task light on a blue drape. Subjects are the surgeon and surgical team (20s–40s) in scrubs, caps, masks — not patients, not athletes. Each of the 4 prompts should still explore a different moment within the OR (wide establishing shot, tight hand/instrument detail, monitor/arthroscopic view over the shoulder, team choreography), but the setting, wardrobe, and action stay inside the operating room. Environment is a high-end modern OR — clean, cinematic, editorial — not a fluorescent ER. Ignore earlier instructions that would place subjects outdoors, in parks, or in athletic settings.
+=== END SURGERY OVERRIDE ===`
+    : "";
+
   const systemPrompt = `You are an expert at writing image generation prompts for Nano Banana Pro 2 (Gemini 3 Pro Image). Your job is to deeply read a medical blog article — title, series context, tag/angle, excerpt, and full body — and use EVERY bit of that information to create FOUR distinct, vivid image prompts that together tell the story of the article.
 
 === GLOBAL BRAND DIRECTION (applies to every prompt) ===
 ${globalDirection}
-=== END GLOBAL BRAND DIRECTION ===
+=== END GLOBAL BRAND DIRECTION ===${surgeryDirective}
 
 Your process before writing prompts:
 1. Identify the central argument of the article (what is it really about, beyond the title?)

@@ -16,40 +16,62 @@ BRAND VISUAL STYLE: Nike x Equinox. Premium, aspirational, athletic editorial. C
 CONSISTENCY: All 4 prompts in a set must share the same lighting palette and color DNA so they read as one campaign.`;
 
 type Style = "photorealistic" | "editorial" | "abstract";
+type AspectRatio = "16:9" | "3:4" | "1:1";
 
-interface ImageSlot {
+// A single generated image is never removed from the gallery — regenerating
+// a prompt or asking for a different aspect ratio appends a new one.
+interface GeneratedImage {
+  id: string;
   prompt: string;
-  phase: "idle" | "generating" | "done" | "error";
-  data: string | null;
+  promptIndex: number; // 0-3 origin prompt slot; -1 for "pinned reshape" renders
+  data: string;
   mime: string;
+  aspectRatio: AspectRatio;
+  ts: number;
+}
+
+// Per-prompt slot — holds the text prompt and its current generation state.
+// The actual rendered image is stored in the growing `images` gallery, not
+// here, so previous generations stay visible after a regenerate.
+interface PromptSlot {
+  prompt: string;
+  phase: "idle" | "generating" | "error";
   error: string;
 }
 
 interface GenState {
   phase: "idle" | "prompting" | "saving" | "error";
   style: Style;
-  slots: ImageSlot[]; // length 4
-  selectedIndex: number | null;
+  prompts: PromptSlot[]; // length 4
+  images: GeneratedImage[]; // grows; never cleared unless user asks for new prompts
+  selectedId: string | null;
+  reshapePhase: Record<AspectRatio, "idle" | "generating" | "error">;
+  reshapeError: string;
   error: string;
   savedPath: string | null;
 }
 
-const emptySlot = (): ImageSlot => ({
+const emptyPromptSlot = (): PromptSlot => ({
   prompt: "",
   phase: "idle",
-  data: null,
-  mime: "image/png",
   error: "",
 });
 
 const defaultGen: GenState = {
   phase: "idle",
   style: "photorealistic",
-  slots: [emptySlot(), emptySlot(), emptySlot(), emptySlot()],
-  selectedIndex: null,
+  prompts: [emptyPromptSlot(), emptyPromptSlot(), emptyPromptSlot(), emptyPromptSlot()],
+  images: [],
+  selectedId: null,
+  reshapePhase: { "16:9": "idle", "3:4": "idle", "1:1": "idle" },
+  reshapeError: "",
   error: "",
   savedPath: null,
 };
+
+function makeImageId(): string {
+  return `img_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
 
 const styleLabels: Record<Style, { label: string; color: string }> = {
   photorealistic: { label: "Photorealistic", color: "#3b82f6" },
@@ -250,11 +272,25 @@ export default function DevBlogPage() {
     }));
   }
 
-  function updateSlot(slug: string, index: number, updates: Partial<ImageSlot>) {
+  function updatePromptSlot(slug: string, index: number, updates: Partial<PromptSlot>) {
     setGenStates((prev) => {
       const cur = prev[slug] || defaultGen;
-      const slots = cur.slots.map((s, i) => (i === index ? { ...s, ...updates } : s));
-      return { ...prev, [slug]: { ...cur, slots } };
+      const prompts = cur.prompts.map((s, i) => (i === index ? { ...s, ...updates } : s));
+      return { ...prev, [slug]: { ...cur, prompts } };
+    });
+  }
+
+  function appendImage(slug: string, image: GeneratedImage, autoSelect: boolean) {
+    setGenStates((prev) => {
+      const cur = prev[slug] || defaultGen;
+      return {
+        ...prev,
+        [slug]: {
+          ...cur,
+          images: [...cur.images, image],
+          selectedId: autoSelect && !cur.selectedId ? image.id : cur.selectedId,
+        },
+      };
     });
   }
 
@@ -263,7 +299,7 @@ export default function DevBlogPage() {
     if (!post) return;
     const gen = getGen(slug);
 
-    updateGen(slug, { phase: "prompting", error: "", selectedIndex: null, savedPath: null });
+    updateGen(slug, { phase: "prompting", error: "", savedPath: null });
 
     try {
       const res = await fetch("/api/dev/generate-prompt", {
@@ -293,7 +329,8 @@ export default function DevBlogPage() {
           [slug]: {
             ...cur,
             phase: "idle",
-            slots: prompts.map((p) => ({ ...emptySlot(), prompt: p })),
+            // Preserve prior images — the user's library keeps growing.
+            prompts: prompts.map((p) => ({ ...emptyPromptSlot(), prompt: p })),
           },
         };
       });
@@ -305,22 +342,39 @@ export default function DevBlogPage() {
     }
   }
 
-  async function generateOne(slug: string, index: number) {
+  async function generateFromPrompt(
+    slug: string,
+    promptIndex: number,
+    aspectRatio: AspectRatio = "16:9"
+  ) {
     const gen = getGen(slug);
-    const slot = gen.slots[index];
+    const slot = gen.prompts[promptIndex];
     if (!slot?.prompt.trim()) return;
-    updateSlot(slug, index, { phase: "generating", error: "", data: null });
+    updatePromptSlot(slug, promptIndex, { phase: "generating", error: "" });
     try {
       const res = await fetch("/api/dev/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: slot.prompt, aspectRatio: "16:9", imageSize: "2K" }),
+        body: JSON.stringify({ prompt: slot.prompt, aspectRatio, imageSize: "2K" }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate image");
-      updateSlot(slug, index, { phase: "done", data: data.image, mime: data.mimeType || "image/png" });
+      appendImage(
+        slug,
+        {
+          id: makeImageId(),
+          prompt: slot.prompt,
+          promptIndex,
+          data: data.image,
+          mime: data.mimeType || "image/png",
+          aspectRatio,
+          ts: Date.now(),
+        },
+        /* autoSelect */ promptIndex === 0 && aspectRatio === "16:9"
+      );
+      updatePromptSlot(slug, promptIndex, { phase: "idle", error: "" });
     } catch (err) {
-      updateSlot(slug, index, {
+      updatePromptSlot(slug, promptIndex, {
         phase: "error",
         error: err instanceof Error ? err.message : "Image generation failed",
       });
@@ -331,19 +385,84 @@ export default function DevBlogPage() {
     const gen = getGen(slug);
     // Fire all 4 in parallel
     await Promise.all(
-      gen.slots.map((s, i) => (s.prompt.trim() ? generateOne(slug, i) : Promise.resolve()))
+      gen.prompts.map((s, i) =>
+        s.prompt.trim() ? generateFromPrompt(slug, i, "16:9") : Promise.resolve()
+      )
     );
+  }
+
+  // Regenerate the CURRENTLY SELECTED image's prompt at a different aspect
+  // ratio. Appends a new image to the gallery and auto-selects it.
+  async function reshapeSelected(slug: string, aspectRatio: AspectRatio) {
+    const gen = getGen(slug);
+    const selected = gen.images.find((im) => im.id === gen.selectedId);
+    if (!selected) return;
+
+    setGenStates((prev) => {
+      const cur = prev[slug] || defaultGen;
+      return {
+        ...prev,
+        [slug]: {
+          ...cur,
+          reshapePhase: { ...cur.reshapePhase, [aspectRatio]: "generating" },
+          reshapeError: "",
+        },
+      };
+    });
+
+    try {
+      const res = await fetch("/api/dev/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: selected.prompt, aspectRatio, imageSize: "2K" }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate image");
+      const newImage: GeneratedImage = {
+        id: makeImageId(),
+        prompt: selected.prompt,
+        promptIndex: selected.promptIndex,
+        data: data.image,
+        mime: data.mimeType || "image/png",
+        aspectRatio,
+        ts: Date.now(),
+      };
+      setGenStates((prev) => {
+        const cur = prev[slug] || defaultGen;
+        return {
+          ...prev,
+          [slug]: {
+            ...cur,
+            images: [...cur.images, newImage],
+            selectedId: newImage.id,
+            reshapePhase: { ...cur.reshapePhase, [aspectRatio]: "idle" },
+          },
+        };
+      });
+    } catch (err) {
+      setGenStates((prev) => {
+        const cur = prev[slug] || defaultGen;
+        return {
+          ...prev,
+          [slug]: {
+            ...cur,
+            reshapePhase: { ...cur.reshapePhase, [aspectRatio]: "error" },
+            reshapeError: err instanceof Error ? err.message : "Reshape failed",
+          },
+        };
+      });
+    }
   }
 
   async function handleSaveSelected(slug: string) {
     const gen = getGen(slug);
-    if (gen.selectedIndex === null) return;
-    const slot = gen.slots[gen.selectedIndex];
-    if (!slot?.data) return;
+    if (!gen.selectedId) return;
+    const selected = gen.images.find((im) => im.id === gen.selectedId);
+    if (!selected) return;
 
     updateGen(slug, { phase: "saving", error: "", savedPath: null });
 
-    const ext = slot.mime.includes("jpeg") ? "jpg" : "png";
+    const ext = selected.mime.includes("jpeg") ? "jpg" : "png";
     const fileName = `${slug}.${ext}`;
     const imagePath = `/images/blog/${fileName}`;
 
@@ -352,7 +471,7 @@ export default function DevBlogPage() {
       const upload = await fetch("/api/dev/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName, folder: "images/blog", content: slot.data }),
+        body: JSON.stringify({ fileName, folder: "images/blog", content: selected.data }),
       });
       const uploadData = await upload.json();
       if (!upload.ok) throw new Error(uploadData.error || "Failed to upload image");
@@ -707,29 +826,30 @@ export default function DevBlogPage() {
           {filtered.map((post) => {
             const gen = getGen(post.slug);
             const isExpanded = expandedSlug === post.slug;
-            const anyImage = gen.slots.some((s) => s.data);
-            const allDone = gen.slots.every((s) => s.phase === "done");
-            const anyGenerating = gen.slots.some((s) => s.phase === "generating");
-            const imagesDone = gen.slots.filter((s) => s.phase === "done").length;
-            const imagesErrored = gen.slots.some((s) => s.phase === "error");
+            const totalImages = gen.images.length;
+            const anyImage = totalImages > 0;
+            const promptsGenerating = gen.prompts.filter((s) => s.phase === "generating").length;
+            const anyGenerating = promptsGenerating > 0;
+            const promptsErrored = gen.prompts.some((s) => s.phase === "error");
+            const anyReshaping = Object.values(gen.reshapePhase).some((p) => p === "generating");
 
             // Compute a single status indicator for the row header
             let statusChip: { label: string; color: string; bg: string; spin: boolean } | null = null;
             if (gen.phase === "prompting") {
               statusChip = { label: "Drafting prompts", color: "#a5b4fc", bg: "rgba(99,102,241,0.16)", spin: true };
             } else if (anyGenerating) {
-              statusChip = { label: `Generating images ${imagesDone}/4`, color: "#a5b4fc", bg: "rgba(99,102,241,0.16)", spin: true };
+              statusChip = { label: `Generating ${promptsGenerating} image${promptsGenerating === 1 ? "" : "s"}`, color: "#a5b4fc", bg: "rgba(99,102,241,0.16)", spin: true };
+            } else if (anyReshaping) {
+              statusChip = { label: "Reshaping", color: "#a5b4fc", bg: "rgba(99,102,241,0.16)", spin: true };
             } else if (gen.phase === "saving") {
               statusChip = { label: "Saving thumbnail", color: "#86efac", bg: "rgba(34,197,94,0.16)", spin: true };
-            } else if (gen.phase === "error" || imagesErrored) {
+            } else if (gen.phase === "error" || promptsErrored) {
               statusChip = { label: "Error", color: "#fca5a5", bg: "rgba(239,68,68,0.16)", spin: false };
             } else if (gen.savedPath) {
               statusChip = { label: "Thumbnail saved", color: "#86efac", bg: "rgba(34,197,94,0.16)", spin: false };
-            } else if (allDone && anyImage) {
-              statusChip = { label: "4 images ready", color: "#c4b5fd", bg: "rgba(139,92,246,0.16)", spin: false };
             } else if (anyImage) {
-              statusChip = { label: `${imagesDone}/4 images`, color: "#c4b5fd", bg: "rgba(139,92,246,0.12)", spin: false };
-            } else if (gen.slots.some((s) => s.prompt)) {
+              statusChip = { label: `${totalImages} image${totalImages === 1 ? "" : "s"}`, color: "#c4b5fd", bg: "rgba(139,92,246,0.16)", spin: false };
+            } else if (gen.prompts.some((s) => s.prompt)) {
               statusChip = { label: "Prompts ready", color: "#93c5fd", bg: "rgba(59,130,246,0.12)", spin: false };
             }
 
@@ -1085,12 +1205,12 @@ export default function DevBlogPage() {
                         onClick={() => handleGenerateAllImages(post.slug)}
                         disabled={
                           anyGenerating ||
-                          !gen.slots.every((s) => s.prompt.trim())
+                          !gen.prompts.every((s) => s.prompt.trim())
                         }
                         style={{
                           ...btnPrimary,
                           opacity:
-                            anyGenerating || !gen.slots.every((s) => s.prompt.trim())
+                            anyGenerating || !gen.prompts.every((s) => s.prompt.trim())
                               ? 0.5
                               : 1,
                         }}
@@ -1101,10 +1221,10 @@ export default function DevBlogPage() {
                           <circle cx="8.5" cy="8.5" r="1.5" />
                           <polyline points="21 15 16 10 5 21" />
                         </svg>
-                        {anyGenerating ? "Generating 4 images..." : "Generate 4 Images"}
+                        {anyGenerating ? "Generating..." : "Generate 4 Images"}
                       </button>
 
-                      {anyImage && gen.selectedIndex !== null && (
+                      {gen.selectedId && (
                         <button
                           onClick={() => handleSaveSelected(post.slug)}
                           disabled={gen.phase === "saving"}
@@ -1125,130 +1245,290 @@ export default function DevBlogPage() {
                       )}
                     </div>
 
-                    {/* 2x2 grid of 4 slots */}
+                    {/* Pinned selected thumbnail at top */}
+                    {(() => {
+                      const selected = gen.images.find((im) => im.id === gen.selectedId);
+                      if (!selected) return null;
+                      const ratios: AspectRatio[] = ["16:9", "3:4", "1:1"];
+                      return (
+                        <div
+                          style={{
+                            background: "linear-gradient(135deg, rgba(34,197,94,0.08), rgba(99,102,241,0.06))",
+                            border: "2px solid rgba(34,197,94,0.35)",
+                            borderRadius: 12,
+                            padding: 16,
+                            marginBottom: 20,
+                            boxShadow: "0 0 0 3px rgba(34,197,94,0.1)",
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, gap: 12, flexWrap: "wrap" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: "50%", background: "#22c55e", color: "#fff" }}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              </span>
+                              <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#bbf7d0", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                                Selected thumbnail
+                              </span>
+                              <span style={{ fontSize: "0.72rem", color: "#86efac", background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)", padding: "2px 8px", borderRadius: 999, fontWeight: 600 }}>
+                                {selected.aspectRatio}
+                              </span>
+                            </div>
+                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                              {ratios.map((r) => {
+                                const phase = gen.reshapePhase[r];
+                                const isCurrent = selected.aspectRatio === r;
+                                return (
+                                  <button
+                                    key={r}
+                                    onClick={() => reshapeSelected(post.slug, r)}
+                                    disabled={phase === "generating" || anyReshaping}
+                                    title={`Render this prompt at ${r}`}
+                                    style={{
+                                      padding: "6px 10px",
+                                      fontSize: "0.74rem",
+                                      fontWeight: 600,
+                                      borderRadius: 6,
+                                      background: isCurrent ? "rgba(99,102,241,0.18)" : "rgba(255,255,255,0.05)",
+                                      color: isCurrent ? "#c7d2fe" : "#cbd5e1",
+                                      border: `1px solid ${isCurrent ? "rgba(99,102,241,0.35)" : "#334155"}`,
+                                      cursor: phase === "generating" ? "wait" : "pointer",
+                                      opacity: phase === "generating" || anyReshaping ? 0.6 : 1,
+                                      display: "inline-flex",
+                                      alignItems: "center",
+                                      gap: 5,
+                                    }}
+                                  >
+                                    {phase === "generating" ? (
+                                      <span
+                                        style={{
+                                          width: 9,
+                                          height: 9,
+                                          borderRadius: "50%",
+                                          border: "1.5px solid #a5b4fc",
+                                          borderTopColor: "transparent",
+                                          animation: "devSpin 0.8s linear infinite",
+                                          display: "inline-block",
+                                        }}
+                                      />
+                                    ) : null}
+                                    {r}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          <div
+                            style={{
+                              width: "100%",
+                              maxHeight: 360,
+                              borderRadius: 10,
+                              overflow: "hidden",
+                              background: "#0a0e1a",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={`data:${selected.mime};base64,${selected.data}`}
+                              alt="Selected thumbnail"
+                              style={{ maxWidth: "100%", maxHeight: 360, objectFit: "contain", display: "block" }}
+                            />
+                          </div>
+
+                          {gen.reshapeError && (
+                            <p style={{ color: "#fca5a5", fontSize: "0.74rem", margin: "10px 0 0" }}>{gen.reshapeError}</p>
+                          )}
+                          <p style={{ margin: "10px 0 0", fontSize: "0.72rem", color: "#94a3b8", lineHeight: 1.5 }}>
+                            Tip: click 16:9, 3:4, or 1:1 to render this same prompt at a different aspect so the thumbnail works on all devices. New renders appear in the gallery below.
+                          </p>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Prompt editor — 4 compact cards, one per prompt slot */}
                     <div
                       style={{
                         display: "grid",
-                        gridTemplateColumns: "repeat(2, 1fr)",
-                        gap: 16,
+                        gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+                        gap: 12,
+                        marginBottom: 20,
                       }}
                     >
-                      {gen.slots.map((slot, i) => {
-                        const isSelected = gen.selectedIndex === i;
-                        return (
-                          <div
-                            key={i}
-                            style={{
-                              background: "#111827",
-                              border: "2px solid",
-                              borderColor: isSelected ? "#22c55e" : "#1e293b",
-                              borderRadius: 10,
-                              padding: 12,
-                              boxShadow: isSelected ? "0 0 0 3px rgba(34,197,94,0.18)" : "none",
-                              transition: "border-color 0.15s, box-shadow 0.15s",
-                            }}
-                          >
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                              <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                                Image {i + 1}{i === 0 ? " · Hero candidate" : ""}
-                              </span>
-                              <button
-                                onClick={() => generateOne(post.slug, i)}
-                                disabled={!slot.prompt.trim() || slot.phase === "generating"}
-                                style={{
-                                  ...btnSecondary,
-                                  padding: "3px 8px",
-                                  fontSize: "0.68rem",
-                                  opacity: !slot.prompt.trim() || slot.phase === "generating" ? 0.5 : 1,
-                                }}
-                                title="Regenerate just this image"
-                              >
-                                {slot.phase === "generating" ? "..." : "Regenerate"}
-                              </button>
-                            </div>
-
-                            {/* Image preview */}
+                      {gen.prompts.map((slot, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            background: "#111827",
+                            border: "1px solid #1e293b",
+                            borderRadius: 10,
+                            padding: 10,
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                            <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                              Prompt {i + 1}{i === 0 ? " · Hero" : ""}
+                            </span>
                             <button
-                              onClick={() => slot.data && updateGen(post.slug, { selectedIndex: i })}
-                              disabled={!slot.data}
+                              onClick={() => generateFromPrompt(post.slug, i, "16:9")}
+                              disabled={!slot.prompt.trim() || slot.phase === "generating"}
                               style={{
-                                width: "100%",
-                                aspectRatio: "16 / 9",
-                                borderRadius: 8,
-                                overflow: "hidden",
-                                background: "#1e293b",
-                                border: "none",
-                                padding: 0,
-                                cursor: slot.data ? "pointer" : "default",
-                                display: "flex",
+                                ...btnSecondary,
+                                padding: "3px 8px",
+                                fontSize: "0.68rem",
+                                opacity: !slot.prompt.trim() || slot.phase === "generating" ? 0.5 : 1,
+                                display: "inline-flex",
                                 alignItems: "center",
-                                justifyContent: "center",
-                                position: "relative",
-                                marginBottom: 8,
+                                gap: 5,
                               }}
-                              title={slot.data ? "Click to select" : undefined}
+                              title="Generate a new image from this prompt"
                             >
-                              {slot.data ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                  src={`data:${slot.mime};base64,${slot.data}`}
-                                  alt={`Generated ${i + 1}`}
-                                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                />
-                              ) : slot.phase === "generating" ? (
-                                <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#94a3b8", fontSize: "0.78rem" }}>
-                                  <div style={{ width: 12, height: 12, borderRadius: "50%", border: "2px solid #6366f1", borderTopColor: "transparent", animation: "spin 0.8s linear infinite" }} />
-                                  Generating...
-                                </div>
-                              ) : (
-                                <div style={{ textAlign: "center", color: "#475569", padding: 16, fontSize: "0.78rem" }}>
-                                  {slot.prompt.trim() ? "Click Generate" : "No prompt yet"}
-                                </div>
-                              )}
-                              {isSelected && (
-                                <div
+                              {slot.phase === "generating" && (
+                                <span
                                   style={{
-                                    position: "absolute",
-                                    top: 8,
-                                    right: 8,
-                                    width: 26,
-                                    height: 26,
+                                    width: 9,
+                                    height: 9,
                                     borderRadius: "50%",
-                                    background: "#22c55e",
-                                    color: "#fff",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                                    border: "1.5px solid #94a3b8",
+                                    borderTopColor: "transparent",
+                                    animation: "devSpin 0.8s linear infinite",
+                                    display: "inline-block",
+                                  }}
+                                />
+                              )}
+                              {slot.phase === "generating" ? "Generating" : "Generate"}
+                            </button>
+                          </div>
+                          <textarea
+                            value={slot.prompt}
+                            onChange={(e) => updatePromptSlot(post.slug, i, { prompt: e.target.value })}
+                            placeholder="Prompt for this image..."
+                            rows={3}
+                            style={{
+                              ...input,
+                              fontSize: "0.76rem",
+                              resize: "vertical",
+                              fontFamily: "inherit",
+                              lineHeight: 1.4,
+                              padding: "8px 10px",
+                            }}
+                          />
+                          {slot.error && (
+                            <p style={{ color: "#f87171", fontSize: "0.7rem", marginTop: 4 }}>{slot.error}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Gallery — every generated image, small tiles, rows of 8 */}
+                    {gen.images.length > 0 && (
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                          <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                            Gallery &middot; {gen.images.length} image{gen.images.length === 1 ? "" : "s"}
+                          </span>
+                          <span style={{ fontSize: "0.7rem", color: "#475569" }}>
+                            Click a tile to select as thumbnail
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(8, 1fr)",
+                            gap: 8,
+                          }}
+                        >
+                          {gen.images
+                            .slice()
+                            .sort((a, b) => b.ts - a.ts)
+                            .map((img) => {
+                              const isSelected = gen.selectedId === img.id;
+                              return (
+                                <button
+                                  key={img.id}
+                                  onClick={() => updateGen(post.slug, { selectedId: img.id })}
+                                  title={`P${img.promptIndex + 1} · ${img.aspectRatio} · ${new Date(img.ts).toLocaleTimeString()}`}
+                                  style={{
+                                    aspectRatio: "1 / 1",
+                                    borderRadius: 6,
+                                    overflow: "hidden",
+                                    background: "#1e293b",
+                                    border: `2px solid ${isSelected ? "#22c55e" : "transparent"}`,
+                                    padding: 0,
+                                    cursor: "pointer",
+                                    position: "relative",
+                                    boxShadow: isSelected ? "0 0 0 2px rgba(34,197,94,0.25)" : "none",
+                                    transition: "border-color 0.1s, box-shadow 0.1s",
                                   }}
                                 >
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                    <polyline points="20 6 9 17 4 12" />
-                                  </svg>
-                                </div>
-                              )}
-                            </button>
-
-                            <textarea
-                              value={slot.prompt}
-                              onChange={(e) => updateSlot(post.slug, i, { prompt: e.target.value })}
-                              placeholder="Prompt for this image..."
-                              rows={3}
-                              style={{
-                                ...input,
-                                fontSize: "0.78rem",
-                                resize: "vertical",
-                                fontFamily: "inherit",
-                                lineHeight: 1.45,
-                              }}
-                            />
-                            {slot.error && (
-                              <p style={{ color: "#f87171", fontSize: "0.72rem", marginTop: 6 }}>{slot.error}</p>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={`data:${img.mime};base64,${img.data}`}
+                                    alt={`Generated ${img.promptIndex + 1}`}
+                                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                                  />
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      bottom: 2,
+                                      left: 2,
+                                      background: "rgba(0,0,0,0.65)",
+                                      color: "#e2e8f0",
+                                      fontSize: "0.58rem",
+                                      padding: "1px 4px",
+                                      borderRadius: 3,
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    {img.aspectRatio}
+                                  </span>
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      top: 2,
+                                      right: 2,
+                                      background: "rgba(0,0,0,0.65)",
+                                      color: "#cbd5e1",
+                                      fontSize: "0.58rem",
+                                      padding: "1px 4px",
+                                      borderRadius: 3,
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    P{img.promptIndex + 1}
+                                  </span>
+                                  {isSelected && (
+                                    <span
+                                      style={{
+                                        position: "absolute",
+                                        top: 3,
+                                        left: 3,
+                                        width: 16,
+                                        height: 16,
+                                        borderRadius: "50%",
+                                        background: "#22c55e",
+                                        color: "#fff",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        boxShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                                      }}
+                                    >
+                                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                      </svg>
+                                    </span>
+                                  )}
+                                </button>
+                              );
+                            })}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Status messages */}
                     {gen.error && (
@@ -1305,9 +1585,9 @@ export default function DevBlogPage() {
                         </div>
                       </div>
                     )}
-                    {anyImage && gen.selectedIndex === null && allDone && (
+                    {anyImage && !gen.selectedId && (
                       <div style={{ marginTop: 16, padding: "10px 14px", background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 8, color: "#a5b4fc", fontSize: "0.82rem" }}>
-                        Click an image above to select it, then Save &amp; Set as Thumbnail.
+                        Click a tile in the gallery to pin it as the selected thumbnail, then Save &amp; Set as Thumbnail.
                       </div>
                     )}
                   </div>

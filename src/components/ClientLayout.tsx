@@ -6,12 +6,17 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { StickyBar } from "@/components/StickyBar";
 import { useTheme } from "@/hooks/useTheme";
+import { useScrollPosition } from "@/hooks/useScrollPosition";
 import { BookingContext } from "@/lib/BookingContext";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [bookingOpen, setBookingOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
+  const { scrollY } = useScrollPosition();
+  // Hide the floating theme toggle while the hero is in view — the hero
+  // doesn't change with theme, so the control is meaningless there.
+  const showThemeToggle = scrollY > 100;
 
   const openBooking = useCallback(() => {
     setBookingOpen(true);
@@ -196,7 +201,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         {children}
         {showChrome && <Footer />}
         {showChrome && (
-          <button className="theme-toggle-fixed" onClick={toggleTheme} aria-label="Toggle theme">
+          <button className={`theme-toggle-fixed${showThemeToggle ? " visible" : ""}`} onClick={toggleTheme} aria-label="Toggle theme">
             <svg className="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <circle cx="12" cy="12" r="5" />
               <line x1="12" y1="1" x2="12" y2="3" />

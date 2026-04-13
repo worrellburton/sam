@@ -87,6 +87,18 @@ const links = [
     ),
   },
   {
+    to: "/dev/blog/batch",
+    label: "Batch Thumbs",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+    ),
+  },
+  {
     to: "/dev/images",
     label: "Images",
     icon: (
@@ -116,6 +128,8 @@ export function DevSidebar() {
   const isActive = (link: typeof links[0]) => {
     if ('exact' in link && link.exact) return pathname === "/dev";
     if (link.to.includes("#")) return false;
+    // /dev/blog and /dev/blog/batch are siblings — only the most specific match wins.
+    if (link.to === "/dev/blog") return pathname === "/dev/blog";
     return pathname.startsWith(link.to);
   };
 

@@ -98,6 +98,237 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "shoulder-replacement-anatomic-reverse",
+    title: "Anatomic vs Reverse Shoulder Replacement: Two Implants, Two Philosophies, One Right Choice",
+    excerpt:
+      "The shoulder has two replacement options that work in opposite directions. Picking the wrong one is a decade of stiffness. Here is how we choose — and why the rotator cuff decides.",
+    tag: "The Science",
+    date: "April 12, 2026",
+    readTime: "11 min read",
+    episode: 25,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "shoulder-knee-surgery",
+    image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Surgeon examining a shoulder joint model with implants",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#anatomy">The Shoulder Is a Soft-Tissue Joint</a></li>
+    <li><a href="#anatomic">Anatomic Total Shoulder — The Classic Replacement</a></li>
+    <li><a href="#reverse">Reverse Shoulder — The Engineering Inversion</a></li>
+    <li><a href="#decision">The Decision Tree</a></li>
+    <li><a href="#recovery">Recovery by Procedure</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you have been told you need a shoulder replacement, the next question is not <em>when</em>. It is <em>which one</em>. Two implants share the same name and almost nothing else. Picking the right one is the single biggest predictor of whether you will lift your arm overhead a year from now.</p>
+</div>
+
+<h2 id="anatomy">The Shoulder Is a Soft-Tissue Joint</h2>
+
+<p>Unlike the hip or knee, the shoulder is not stabilized by bone. The humeral head is a giant golf ball balanced on the tiny tee of the glenoid, held there almost entirely by the rotator cuff — four muscles whose tendons blend into a single envelope around the joint.</p>
+
+<p>This matters for replacement. A hip can tolerate a weak abductor and still work. A shoulder with a torn, retracted rotator cuff cannot use an anatomic replacement at all. The biology of the soft tissue dictates which implant belongs in the body.</p>
+
+<div class="blog-expert-quote">
+  <p>The question is never whether to replace the shoulder. It is whether the rotator cuff is still doing its job — because that one sentence decides which operation you get.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon, Fellowship-Trained in Shoulder Reconstruction</cite>
+</div>
+
+<h2 id="anatomic">Anatomic Total Shoulder — The Classic Replacement</h2>
+
+<p>An anatomic total shoulder arthroplasty replaces the worn surfaces without changing the mechanics. A polished metal ball goes on the humerus, a plastic cup is cemented into the glenoid. The geometry mimics the native shoulder — hence <em>anatomic</em>.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+    </div>
+    <h4>Humeral Head Resurfacing</h4>
+    <p>The arthritic humeral head is cut and replaced with a cobalt-chrome ball sized to match native anatomy within 1 mm.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M4 6h10"/><path d="M4 18h10"/></svg>
+    </div>
+    <h4>Glenoid Resurfacing</h4>
+    <p>A polyethylene component, sometimes with metal backing, is fixed into the prepared glenoid. Modern glenoids are guided by 3D CT-based planning and custom instruments.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <h4>Cuff Preservation</h4>
+    <p>The rotator cuff is protected throughout and is the engine that drives elevation after surgery. If the cuff cannot move the joint, the implant cannot move the arm.</p>
+  </div>
+</div>
+
+<h3>Who an anatomic shoulder is built for</h3>
+<ul>
+  <li>Primary <strong>glenohumeral osteoarthritis</strong> with a working rotator cuff on MRI</li>
+  <li>Post-traumatic arthritis with intact cuff</li>
+  <li>Patients whose goals include overhead reach and rotation strength</li>
+</ul>
+
+<h2 id="reverse">Reverse Shoulder — The Engineering Inversion</h2>
+
+<p>Reverse total shoulder arthroplasty flips the ball and socket. A metal ball is fixed to the glenoid; a plastic cup sits on top of the humerus. The geometry is now constrained, and the deltoid — not the rotator cuff — becomes the driver of arm elevation.</p>
+
+<p>It sounds bizarre. It works brilliantly. The French orthopedist Paul Grammont designed it in the 1980s specifically for the patient the anatomic shoulder had failed: the person with a massive irreparable rotator cuff tear and an arthritic joint.</p>
+
+<div class="blog-anatomy">
+  <svg width="420" height="220" viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schematic of anatomic vs reverse shoulder replacement">
+    <defs>
+      <linearGradient id="implantGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#cbd5e1"/>
+        <stop offset="100%" stop-color="#64748b"/>
+      </linearGradient>
+    </defs>
+    <g>
+      <text x="100" y="22" text-anchor="middle" font-family="Inter, system-ui" font-size="11" fill="#94a3b8" font-weight="700">ANATOMIC</text>
+      <rect x="60" y="80" width="10" height="90" fill="url(#implantGrad)"/>
+      <circle cx="108" cy="98" r="24" fill="url(#implantGrad)" stroke="#475569" stroke-width="1"/>
+      <path d="M132,80 Q150,100 132,122 Z" fill="#818cf8" opacity="0.8"/>
+    </g>
+    <line x1="215" y1="40" x2="215" y2="200" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4"/>
+    <g transform="translate(230,0)">
+      <text x="100" y="22" text-anchor="middle" font-family="Inter, system-ui" font-size="11" fill="#94a3b8" font-weight="700">REVERSE</text>
+      <rect x="60" y="80" width="10" height="90" fill="url(#implantGrad)"/>
+      <path d="M52,80 Q34,100 52,122 Z" fill="#cbd5e1" stroke="#475569" stroke-width="1"/>
+      <circle cx="132" cy="100" r="22" fill="#6366f1"/>
+    </g>
+    <text x="210" y="210" text-anchor="middle" font-family="Inter, system-ui" font-size="10" fill="#475569">Ball and socket positions are swapped</text>
+  </svg>
+</div>
+
+<div class="blog-takeaway">
+  <h4>Why inverting the joint works</h4>
+  <ul>
+    <li>Moves the center of rotation medially and distally</li>
+    <li>Lengthens the deltoid's lever arm by 20–40%</li>
+    <li>Converts deltoid contraction into overhead elevation — no cuff required</li>
+    <li>Constrained geometry tolerates a torn supraspinatus</li>
+  </ul>
+</div>
+
+<h3>Who a reverse shoulder is built for</h3>
+<ul>
+  <li>Rotator cuff arthropathy — arthritis driven by a torn cuff</li>
+  <li>Massive, irreparable rotator cuff tears without arthritis (in older patients)</li>
+  <li>Failed prior anatomic shoulder replacement</li>
+  <li>Complex proximal humerus fractures in elderly patients</li>
+  <li>Severe glenoid bone loss where an anatomic glenoid will not anchor</li>
+</ul>
+
+<h2 id="decision">The Decision Tree</h2>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Cuff intact</p>
+    <h4>Anatomic TSA</h4>
+    <ul>
+      <li>Best rotation strength</li>
+      <li>Most natural feel</li>
+      <li>Outcomes best in ages 60–75</li>
+      <li>Revision options available</li>
+      <li>~95% survival at 10 years</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">Cuff deficient</p>
+    <h4>Reverse TSA</h4>
+    <ul>
+      <li>Restores overhead elevation without a cuff</li>
+      <li>Limited external rotation unless latissimus transfer is added</li>
+      <li>Ideal ages 65+ or any age with cuff tear arthropathy</li>
+      <li>Primary option for fracture in elderly</li>
+      <li>~93% survival at 10 years (and improving)</li>
+    </ul>
+  </div>
+</div>
+
+<a href="/services/shoulder-knee-surgery" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Every shoulder replacement deserves a 3D CT plan before the incision — <strong>book a shoulder replacement consultation</strong> for a patient-specific surgical blueprint.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="recovery">Recovery by Procedure</h2>
+
+<div class="blog-timeline">
+  <p class="blog-bar-chart-title">Anatomic vs Reverse — typical milestones</p>
+  <div class="blog-timeline-track">
+    <div class="blog-timeline-progress" style="--timeline-progress: 100%;"></div>
+  </div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 0–4</div>
+      <div class="blog-timeline-label">Sling full-time, passive elevation only, no active lifting</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 4–8</div>
+      <div class="blog-timeline-label">Active-assisted range of motion, pendulums, table slides</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 2–4</div>
+      <div class="blog-timeline-label">Strengthening — deltoid-focused for reverse, cuff-focused for anatomic</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 6–12</div>
+      <div class="blog-timeline-label">Full return to activity — golf, tennis (anatomic), lifting, gardening</div>
+    </div>
+  </div>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <div class="blog-stat-number">95%+</div>
+    <div class="blog-stat-label">Patients rate pain relief as &ldquo;excellent&rdquo; at 2 years</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">155°</div>
+    <div class="blog-stat-label">Average overhead elevation after a well-planned reverse</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">&gt;90%</div>
+    <div class="blog-stat-label">Implant survival at 10 years for modern designs</div>
+  </div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Can I play tennis or golf after a shoulder replacement?</h3>
+  <p>After an anatomic TSA, yes — most patients return to both within 4–6 months. After a reverse, golf is common by 4 months; tennis and heavy overhead sports are generally discouraged because of implant wear at extreme elevation.</p>
+
+  <h3>How long does the implant last?</h3>
+  <p>Modern implants routinely survive 15–20 years. Younger patients (&lt; 55) with high activity demands may face a revision in their lifetime, which is planned for at the time of the index surgery.</p>
+
+  <h3>What is the biggest risk I should know about?</h3>
+  <p>Infection is low (~1%) but serious. In the reverse shoulder, scapular notching (bone erosion against the polyethylene) was the historical concern; newer implant geometries have dramatically reduced its frequency.</p>
+
+  <h3>Do I really need a CT scan if I already had an MRI?</h3>
+  <p>Yes. CT images the glenoid bone stock — the most important variable in implant choice and positioning. A 3D CT is the foundation of a patient-specific plan.</p>
+
+  <h3>What if my rotator cuff is borderline?</h3>
+  <p>Some patients fall into a gray zone. Intraoperative assessment of cuff quality can change the plan. That is why your surgeon should have both anatomic and reverse trays open in the room — and the training to use either.</p>
+</div>
+`,
+  },
+  {
     slug: "patellar-dislocation-treatment-guide",
     title: "The Kneecap That Won't Stay Put: What To Do After Your First — or Fifth — Patellar Dislocation",
     excerpt:

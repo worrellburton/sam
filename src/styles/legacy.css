@@ -3125,9 +3125,31 @@ section.specialties > .container {
   to { transform: translateX(calc(-50% - 10px)); }
 }
 @media (max-width: 768px) {
-  .reviews-marquee { margin-left: -16px; margin-right: -16px; }
-  .reviews-marquee .google-review-card { width: 280px; min-width: 280px; }
-  .reviews-marquee-track { animation-duration: 80s; }
+  /* Stack reviews vertically on mobile — no horizontal scroll / marquee */
+  .reviews-marquee {
+    margin-left: 0;
+    margin-right: 0;
+    overflow: visible;
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+  .reviews-marquee-track {
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    animation: none;
+  }
+  .reviews-marquee-group {
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+  /* Hide the duplicate group that only exists for the looping marquee */
+  .reviews-marquee-group[aria-hidden="true"] { display: none; }
+  .reviews-marquee .google-review-card {
+    width: 100%;
+    min-width: 0;
+  }
 }
 .reviews-nav-btn {
   width: 40px;

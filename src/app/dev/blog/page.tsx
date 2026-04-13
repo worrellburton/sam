@@ -324,9 +324,9 @@ export default function DevBlogPage() {
     });
   }
 
-  async function handleGeneratePrompts(slug: string) {
+  async function handleGeneratePrompts(slug: string): Promise<string[] | null> {
     const post = blogPosts.find((p) => p.slug === slug);
-    if (!post) return;
+    if (!post) return null;
     const gen = getGen(slug);
 
     updateGen(slug, { phase: "prompting", error: "", savedPath: null });
@@ -366,11 +366,13 @@ export default function DevBlogPage() {
           },
         };
       });
+      return prompts;
     } catch (err) {
       updateGen(slug, {
         phase: "error",
         error: err instanceof Error ? err.message : "Prompt generation failed",
       });
+      return null;
     }
   }
 
@@ -413,14 +415,65 @@ export default function DevBlogPage() {
     }
   }
 
-  async function handleGenerateAllImages(slug: string) {
+  async function handleGenerateAllImages(slug: string, promptsOverride?: string[]) {
     const gen = getGen(slug);
+    const sourcePrompts = promptsOverride ?? gen.prompts.map((s) => s.prompt);
     // Fire all 4 in parallel
     await Promise.all(
-      gen.prompts.map((s, i) =>
-        s.prompt.trim() ? generateFromPrompt(slug, i, "16:9") : Promise.resolve()
+      sourcePrompts.map((prompt, i) =>
+        prompt && prompt.trim()
+          ? generateFromExplicitPrompt(slug, i, prompt, "16:9")
+          : Promise.resolve()
       )
     );
+  }
+
+  // Like generateFromPrompt but the prompt text is passed in explicitly so we
+  // don't race against a pending setState from `handleGeneratePrompts`.
+  async function generateFromExplicitPrompt(
+    slug: string,
+    promptIndex: number,
+    prompt: string,
+    aspectRatio: AspectRatio = "16:9"
+  ) {
+    if (!prompt.trim()) return;
+    updatePromptSlot(slug, promptIndex, { phase: "generating", error: "" });
+    try {
+      const res = await fetch("/api/dev/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, aspectRatio, imageSize: "2K" }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate image");
+      appendImage(
+        slug,
+        {
+          id: makeImageId(),
+          prompt,
+          promptIndex,
+          data: data.image,
+          mime: data.mimeType || "image/png",
+          aspectRatio,
+          ts: Date.now(),
+        },
+        /* autoSelect */ promptIndex === 0 && aspectRatio === "16:9"
+      );
+      updatePromptSlot(slug, promptIndex, { phase: "idle", error: "" });
+    } catch (err) {
+      updatePromptSlot(slug, promptIndex, {
+        phase: "error",
+        error: err instanceof Error ? err.message : "Image generation failed",
+      });
+    }
+  }
+
+  // One-button flow: ask Claude for 4 prompts, then generate all 4 images
+  // without waiting for the user to click a second button.
+  async function handleDraftAndGenerate(slug: string) {
+    const prompts = await handleGeneratePrompts(slug);
+    if (!prompts || prompts.length === 0) return;
+    await handleGenerateAllImages(slug, prompts);
   }
 
   // Regenerate the CURRENTLY SELECTED image's prompt at a different aspect

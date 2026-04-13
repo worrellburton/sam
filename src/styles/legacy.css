@@ -497,7 +497,9 @@ a.nav-btn-book,
   align-items: center;
   justify-content: center;
   padding: 8px 20px;
-  background: #FFD60A !important;
+  /* Matches the "Orthopedic" accent in the hero h1 — warm muted gold,
+     distinct from the Zocdoc-yellow used elsewhere. */
+  background: #c9a96e !important;
   color: #1a1a1a !important;
   font-weight: 600;
   font-size: 0.85rem;
@@ -506,10 +508,10 @@ a.nav-btn-book,
   transition: all var(--transition);
 }
 .nav-btn-book:hover {
-  background: #F5C800 !important;
+  background: #d9bd84 !important;
   transform: scale(1.04);
   color: #1a1a1a !important;
-  box-shadow: 0 0 24px rgba(255, 214, 10, 0.4);
+  box-shadow: 0 0 24px rgba(201, 169, 110, 0.4);
 }
 
 .nav-btn-contact {
@@ -977,7 +979,9 @@ a.nav-btn-book,
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(10,22,40,0.92) 0%, rgba(10,22,40,0.75) 50%, rgba(10,22,40,0.6) 100%);
+  /* Lighter than before — the animated WebGL canvas also darkens
+     the image, and together they were doubling the wash. */
+  background: linear-gradient(135deg, rgba(10,22,40,0.60) 0%, rgba(10,22,40,0.42) 50%, rgba(10,22,40,0.25) 100%);
   z-index: 1;
   opacity: 0;
   transition: opacity 0.8s ease 0.3s;

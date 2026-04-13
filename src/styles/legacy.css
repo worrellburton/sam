@@ -1194,10 +1194,13 @@ a.nav-btn-book,
 a.hero-rating-card:hover {
   border-color: rgba(255,214,10,0.5);
   transform: translateY(-2px);
-  /* Keep the card visible — the hover animation replaces heroFadeUp,
-     which would otherwise revert opacity to the base `0`. */
-  opacity: 1;
-  animation: ratingGlowPulse 2.4s ease-in-out infinite;
+  /* Compose both animations instead of replacing heroFadeUp, so its
+     forwards fill (opacity: 1) is preserved during hover AND after
+     mouseleave. Replacing the animation would revoke the fill, revert
+     opacity to the base 0, and make the card vanish. */
+  animation:
+    heroFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.4s forwards,
+    ratingGlowPulse 2.4s ease-in-out infinite;
 }
 @keyframes ratingGlowPulse {
   0%, 100% {
@@ -1219,8 +1222,9 @@ a.hero-rating-card:hover {
 }
 @media (prefers-reduced-motion: reduce) {
   a.hero-rating-card:hover {
-    animation: none;
-    opacity: 1;
+    /* Keep heroFadeUp (already finished, held via forwards) so the
+       card stays visible; just skip the pulsing glow. */
+    animation: heroFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.4s forwards;
     box-shadow:
       0 12px 50px rgba(0,0,0,0.3),
       0 0 40px rgba(255,214,10,0.35),

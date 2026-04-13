@@ -98,6 +98,106 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "hockey-orthopedic-injuries",
+    title: "Ice Chips and Iron Hips: The Orthopedic Field Report on Hockey",
+    excerpt:
+      "Hockey is the only major sport where you can get hit by a human, a puck, a board, and the ice itself in the same shift. Here's what we actually see in clinic.",
+    tag: "The Field Report",
+    date: "March 18, 2026",
+    readTime: "7 min read",
+    episode: 14,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "sports-medicine",
+    image: "https://images.unsplash.com/photo-1515703407324-5f51c225da4f?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Ice hockey player at full speed on rink",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#profile">The Hockey Injury Profile</a></li>
+    <li><a href="#hips">Hip Labral Tears and FAI</a></li>
+    <li><a href="#shoulders">Shoulder: AC Joint and Labrum</a></li>
+    <li><a href="#knee">Knee: MCL and Meniscus</a></li>
+    <li><a href="#concussion">Concussion Protocol</a></li>
+    <li><a href="#prevention">Prevention Playbook</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <strong>For rec-league and youth players alike:</strong> the injuries that end careers usually don't happen in playoff moments. They happen in mid-season practice when your stride is asymmetric, you haven't foam-rolled in a month, and your hip flexors have quietly shortened. Maintenance isn't glamorous, but it's the difference between playing at 50 and not.</p>
+</div>
+
+<h2 id="profile">The Hockey Injury Profile</h2>
+<p>Hockey asks the body to do contradictory things — generate explosive power from a deeply flexed hip while absorbing body contact, all while balancing on a quarter-inch blade. That biomechanical profile yields a distinctive injury pattern: hips get pinched, shoulders get separated, knees get twisted, heads get rattled.</p>
+
+<div class="blog-stats">
+  <div class="blog-stat"><span class="blog-stat-num">38%</span><p>of elite-level hockey injuries involve the lower extremity</p></div>
+  <div class="blog-stat"><span class="blog-stat-num">~16%</span><p>are head and neck injuries</p></div>
+  <div class="blog-stat"><span class="blog-stat-num">1 in 4</span><p>male college players show hip FAI imaging findings</p></div>
+</div>
+
+<h2 id="hips">Hip Labral Tears and Femoroacetabular Impingement</h2>
+<p>The single most distinctive hockey injury is the hip labral tear driven by femoroacetabular impingement (FAI). Skating mechanics force the hip into deep flexion and internal rotation on every stride — exactly the position that pinches the femoral head-neck junction against the acetabular rim. Over years, the rim chips, the labrum tears, and the hip starts to catch or ache in the groin.</p>
+<p>Symptoms creep: a groin pull that keeps coming back, a C-sign where the player cups the side of the hip, loss of rotation, pain getting in and out of a car.</p>
+
+<h2 id="shoulders">Shoulder: AC Joint and Labrum</h2>
+<p>Board checks send players shoulder-first into the dasher. The AC joint separates — anywhere from a grade 1 sprain to a grade 3 full disruption. Most grade 1s and 2s heal with a sling and time. Grade 3 is a judgment call; grade 4–6 is surgical.</p>
+<p>Pucks to the glenohumeral joint or falls with an outstretched arm can tear the labrum. If the shoulder "dead-arms" on a slap shot or slips out of place on a check, MRI is warranted.</p>
+
+<h2 id="knee">Knee: MCL Sprains and Meniscus Tears</h2>
+<p>Hockey knees tend to fail in valgus — a leg pinned in a board battle, a skate catching in the ice. The MCL is the most common casualty. Isolated grade 1–2 MCL injuries heal in 3–6 weeks with a functional brace. Meniscus tears from pivoting on a planted skate often need arthroscopy.</p>
+
+<blockquote class="blog-expert-quote">
+  <p>"Hockey players present later than any other athletes. They'll skate on a torn labrum for two seasons before someone convinces them to get an MRI. The hip cartilage doesn't wait that long."</p>
+  <cite>— Dr. Sameh Elguizaoui</cite>
+</blockquote>
+
+<h2 id="concussion">Concussion Protocol</h2>
+<p>Return-to-play after a concussion is not "feels fine, skates fine." It's a graduated 6-step protocol: symptom-limited rest → light aerobic → sport-specific without contact → non-contact drills → full practice with contact → game. Each step is 24 hours minimum. Symptoms = back one step.</p>
+
+<h2 id="prevention">Prevention Playbook</h2>
+<div class="blog-steps">
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>
+    <div><h4>Mobility Before Strength</h4><p>Daily hip opener + thoracic rotation. Tight hips on the ice force the lumbar spine to compensate.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 20V10M18 20V4M12 20v-6"/></svg></div>
+    <div><h4>Glute Activation</h4><p>Clamshells, side-lying hip abduction, single-leg bridges. Hockey breeds glute amnesia.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <div><h4>Mouthguard + Proper Helmet Fit</h4><p>Both reduce concussion severity. Helmets expire — replace per manufacturer schedule.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+    <div><h4>Off-Season Conditioning</h4><p>Summer is for rebuilding posterior chain, lateral hip, and core endurance — not just pick-up games.</p></div>
+  </div>
+</div>
+
+<div class="blog-takeaway">
+  <h4>The Bottom Line</h4>
+  <p>Hockey rewards players who show up to maintenance on off-days. Groin that won't quit, clicking hip, shoulder that dead-arms your shot — those are the injuries that don't heal on their own. Earlier evaluation = smaller operations = longer careers.</p>
+</div>
+
+<div class="blog-inline-cta">
+  <h3>Nagging hockey injury?</h3>
+  <p>Sports-medicine evaluation with a surgeon who understands skating biomechanics.</p>
+  <a href="/book">Book a Consultation →</a>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="blog-faq">
+  <details><summary>Does a labral tear mean I need surgery?</summary><p>Not automatically. Many tears are stable enough for rehab. Symptomatic tears with mechanical catching or pain that limits skating are the ones that benefit from arthroscopic repair.</p></details>
+  <details><summary>Is an AC separation a career-ender?</summary><p>Grade 1–2s rarely. Even grade 3s usually return to full play. Grade 4+ deformity usually gets surgically reconstructed.</p></details>
+  <details><summary>How long after a concussion before return to contact?</summary><p>Minimum 6–10 days if no symptoms and all cognitive testing normalizes. In adolescents, err on the longer side.</p></details>
+  <details><summary>Should youth players get hip screening imaging?</summary><p>Not routinely. We image when there's a clinical complaint — persistent groin pain, loss of internal rotation, mechanical symptoms.</p></details>
+</div>
+`,
+  },
+  {
     slug: "patellar-quad-tendon-tears",
     title: "The Pop, the Buckle, the Drop: Decoding Patellar and Quad Tendon Tears",
     excerpt:

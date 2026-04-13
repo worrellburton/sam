@@ -98,6 +98,97 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "emerging-orthopedic-technologies",
+    title: "What's New in Orthopedics in 2026: AI Diagnostics, Bioprinted Cartilage, and the Tools That Are Actually Earning Their Place",
+    excerpt:
+      "Orthopedic technology marketing outpaces orthopedic technology evidence by years. Here is the honest 2026 status of the four innovations that are quietly changing care.",
+    tag: "The Science",
+    date: "March 26, 2026",
+    readTime: "9 min read",
+    episode: 17,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "regenerative-medicine",
+    image: "https://images.unsplash.com/photo-1581093588401-fbb62a02f120?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Surgical robot in an operating room",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#ai">AI-Augmented Imaging</a></li>
+    <li><a href="#bioprint">Bioprinted Cartilage and Bone</a></li>
+    <li><a href="#wearables">Wearables That Replace Office Visits</a></li>
+    <li><a href="#augmented">Augmented-Reality Surgery</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>Most "breakthroughs" in orthopedic marketing emails are not breakthroughs. The four below are the ones that are quietly working — and one of them is changing what we offer in clinic this year.</p>
+</div>
+
+<h2 id="ai">AI-Augmented Imaging</h2>
+
+<p>FDA-cleared AI tools now read MRIs and X-rays alongside radiologists, flagging cartilage defects, occult fractures, and rotator cuff tears with measurable improvements in sensitivity. The tools do not replace radiology — they catch what tired humans miss on the 200th study of the day.</p>
+
+<div class="blog-expert-quote">
+  <p>The first time an AI flag pointed to a 3-millimeter cartilage flake we had honestly missed in clinic, the conversation about "AI in medicine" stopped being theoretical for me.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
+</div>
+
+<h2 id="bioprint">Bioprinted Cartilage and Bone</h2>
+
+<p>Bioprinted cartilage is past proof-of-concept. Several lab groups have produced patient-specific cartilage scaffolds seeded with autologous chondrocytes that integrate in animal models. Human clinical trials are open at a handful of academic centers. The decade-out promise: a custom cartilage plug printed from your own cells that fits your defect to the millimeter.</p>
+
+<p>For the cartilage techniques that are commercially available today, see our <a href="/blog/cartilage-restoration-maci-allograft">cartilage restoration deep dive</a>.</p>
+
+<h2 id="wearables">Wearables That Replace Office Visits</h2>
+
+<p>Continuous range-of-motion sensors, smart braces, and ML-analyzed gait apps now generate the data we used to collect at 6-week PT visits. The right wearable in the right rehabilitation pathway means earlier identification of stalled recovery — and fewer in-person visits for the patient.</p>
+
+<div class="blog-takeaway">
+  <h4>What we use today</h4>
+  <ul>
+    <li>Smart knee sleeves that track range of motion in real time</li>
+    <li>Gait analysis apps that quantify limp and asymmetry</li>
+    <li>Bluetooth-enabled CPM machines for post-op cartilage and ligament cases</li>
+    <li>Patient-reported outcome platforms that flag plateaus before they entrench</li>
+  </ul>
+</div>
+
+<h2 id="augmented">Augmented-Reality Surgery</h2>
+
+<p>AR headsets now project pre-operative CT plans onto the surgical field in real time. The clearest current use case: pedicle screw placement in spine and complex pelvic fracture fixation. For shoulder and knee replacement, AR is racing robotics — both are precision tools, both are improving outcomes for the surgeons trained on them.</p>
+
+<a href="/services/regenerative-medicine" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Curious which 2026 technologies actually fit your case? <strong>Book a consultation</strong> for an honest assessment of what works — and what is still marketing.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>What about smart implants that report data after surgery?</h3>
+  <p>FDA-cleared smart knee replacements that transmit step counts, range, and step asymmetry to the surgeon now exist. Early data suggest they accelerate identification of stiffness — useful, not yet routine.</p>
+
+  <h3>Are stem cells in this list?</h3>
+  <p>No. The marketing is loud, the evidence remains thin. Read our <a href="/blog/stem-cell-therapy-investigation">stem cell investigation</a> for the unfiltered status.</p>
+
+  <h3>Will robotic surgery replace surgeons?</h3>
+  <p>No more than power tools replaced carpenters. Robotics raises the precision floor; surgeons still make every clinical decision and handle every complication.</p>
+
+  <h3>Should I hold off on surgery to wait for the &ldquo;next thing&rdquo;?</h3>
+  <p>Almost never. The cost of a year of joint damage usually outweighs the speculative benefit of a not-yet-proven technique. The right operation today wins over the wrong wait.</p>
+
+  <h3>Where do biologic 3D-printed implants fit?</h3>
+  <p>For complex segmental bone defects, 3D-printed titanium scaffolds are FDA-cleared and used today. For cartilage, fully biologic printing is still in early clinical trials.</p>
+</div>
+`,
+  },
+  {
     slug: "football-orthopedic-injuries",
     title: "Friday Night Lights, Sunday Morning Specialists: The Orthopedic Injury Map of Football",
     excerpt:

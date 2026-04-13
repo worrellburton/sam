@@ -98,6 +98,133 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "radial-head-fracture-elbow",
+    title: "The Fall That Fools You: Radial Head Fractures and Why Your Elbow Won't Straighten",
+    excerpt:
+      "You fell on an outstretched hand. The wrist feels okay. The elbow aches — but x-rays look 'fine.' If you can't fully bend or straighten it, read this before accepting that answer.",
+    tag: "The Investigation",
+    date: "March 16, 2026",
+    readTime: "7 min read",
+    episode: 13,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "arthroscopic-surgery",
+    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "X-ray of elbow joint showing radial head",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#why-missed">Why Radial Head Fractures Get Missed</a></li>
+    <li><a href="#mason">The Mason Classification</a></li>
+    <li><a href="#exam">The Exam That Catches It</a></li>
+    <li><a href="#treatment">Treatment by Type</a></li>
+    <li><a href="#stiffness">The Stiffness Trap</a></li>
+    <li><a href="#recovery">Recovery Timeline</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <strong>If this is you right now:</strong> swollen elbow after a fall, can't fully straighten it, x-ray called "normal." Ask for a repeat x-ray with an oblique view, or an MRI. A negative plain film with a positive fat-pad sign is a radial head fracture until proven otherwise.
+</div>
+
+<h2 id="why-missed">Why Radial Head Fractures Get Missed</h2>
+<p>The radial head — the top of the forearm bone where it meets the elbow — is the most commonly fractured bone of the elbow in adults. It's also one of the most commonly missed. Subtle, non-displaced fractures can hide on a standard AP/lateral x-ray. The tell is indirect: a <strong>posterior fat-pad sign</strong> on the lateral view, meaning joint fluid has pushed the normally-hidden fat pad into visibility. That finding in an adult, with the right history, is a fracture until you prove otherwise.</p>
+
+<h2 id="mason">The Mason Classification</h2>
+<p>Radial head fractures are graded by the Mason system — which largely dictates treatment:</p>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <h4>Mason I</h4>
+    <p>Non-displaced or minimally displaced (&lt;2mm). No block to motion. Sling + early motion within 5–7 days.</p>
+  </div>
+  <div class="blog-compare-card">
+    <h4>Mason II</h4>
+    <p>Displaced &gt;2mm or angulated. If a mechanical block exists, surgical fixation (ORIF with mini-screws or plate).</p>
+  </div>
+  <div class="blog-compare-card">
+    <h4>Mason III</h4>
+    <p>Comminuted (multiple fragments). Often needs ORIF or radial head replacement if reconstruction isn't feasible.</p>
+  </div>
+  <div class="blog-compare-card">
+    <h4>Mason IV</h4>
+    <p>Any of the above <em>with</em> elbow dislocation. Complex injury pattern — high risk of associated ligament injury.</p>
+  </div>
+</div>
+
+<h2 id="exam">The Exam That Catches It</h2>
+<p>After a fall on outstretched hand (FOOSH), here's what I test:</p>
+<div class="blog-steps">
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div>
+    <div><h4>Palpation of the Radial Head</h4><p>Firm tenderness over the lateral elbow joint line (3 cm distal to the lateral epicondyle) while pronating and supinating.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg></div>
+    <div><h4>Range of Motion</h4><p>Flexion, extension, pronation, supination — compared to the uninjured side. A mechanical block is a surgical finding.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M5 9l7-7 7 7"/></svg></div>
+    <div><h4>Forearm + Wrist Screen</h4><p>Distal radioulnar joint tenderness raises suspicion for an Essex-Lopresti injury — a spectrum that requires very different treatment.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <div><h4>Intra-articular Anesthetic Test</h4><p>For borderline cases, a 5 mL lidocaine injection into the joint eliminates pain. If range of motion returns fully — it's a nondisplaced fracture. If a block persists — there's a fragment.</p></div>
+  </div>
+</div>
+
+<h2 id="treatment">Treatment by Type</h2>
+
+<blockquote class="blog-expert-quote">
+  <p>"The goal isn't perfect imaging — the goal is a painless elbow that moves. Early motion, even with a fracture, saves more elbows than strict immobilization."</p>
+  <cite>— Dr. Sameh Elguizaoui</cite>
+</blockquote>
+
+<p><strong>Mason I:</strong> Sling 3–5 days for comfort, then active range of motion. Most full recoveries by 6 weeks.</p>
+<p><strong>Mason II without block:</strong> Often manageable non-operatively with early motion. Displaced but not blocking? Many surgeons will observe and operate only if symptoms persist.</p>
+<p><strong>Mason II with block / Mason III:</strong> ORIF with small-fragment screws or a small plate. When fragments are too small or numerous to reconstruct, a modern radial head replacement (metallic prosthesis) preserves elbow kinematics better than excision.</p>
+<p><strong>Mason IV:</strong> Fix or replace the radial head <em>and</em> address associated injuries — LUCL repair, coronoid fixation.</p>
+
+<h2 id="stiffness">The Stiffness Trap</h2>
+<p>The elbow is the <em>least forgiving</em> joint in the body when it comes to immobilization. Three weeks in a cast can leave a permanent 30° extension deficit. The orthopedic dogma on radial head fractures has swung in favor of early motion for this reason — even a surgically fixed elbow starts gentle ROM within the first week.</p>
+
+<div class="blog-stats">
+  <div class="blog-stat"><span class="blog-stat-num">~20%</span><p>of adult elbow fractures are radial head</p></div>
+  <div class="blog-stat"><span class="blog-stat-num">85–95%</span><p>excellent outcomes for Mason I with early motion</p></div>
+  <div class="blog-stat"><span class="blog-stat-num">5–7 days</span><p>target for initiating ROM, even post-op</p></div>
+</div>
+
+<h2 id="recovery">Recovery Timeline</h2>
+<div class="blog-timeline">
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Week 0–1</span><p>Sling for comfort. Begin gentle active flexion/extension and pronation/supination.</p></div>
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Week 2–4</span><p>Progressive range of motion. Aim for 30–130° by end of week 4.</p></div>
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Week 4–8</span><p>Light strengthening. Full motion expected. Heavy lifting restricted.</p></div>
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Month 3</span><p>Return to most activities. Contact sports may require longer for displaced fractures.</p></div>
+</div>
+
+<div class="blog-takeaway">
+  <h4>The Bottom Line</h4>
+  <p>A radial head fracture is often a "simple" injury that ends in a stiff elbow because patients and providers default to immobilization. Get the right imaging, get the right grade, and get moving early. The elbow rewards motion and punishes rest.</p>
+</div>
+
+<div class="blog-inline-cta">
+  <h3>Elbow not straightening after a fall?</h3>
+  <p>Expert elbow evaluation — x-ray, ultrasound, and MRI as needed — across our NYC offices.</p>
+  <a href="/book">Book a Consultation →</a>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="blog-faq">
+  <details><summary>Can I still work out with a Mason I fracture?</summary><p>Avoid loaded elbow flexion and any pushing or pulling for 3–4 weeks. Lower body and core work is fine. Stationary cycling (straight arms) is fine.</p></details>
+  <details><summary>Will I lose permanent range of motion?</summary><p>Not if treated correctly. Small permanent end-range deficits (5–10°) happen occasionally but rarely impact function. Large deficits usually trace to prolonged immobilization.</p></details>
+  <details><summary>What's a radial head replacement made of?</summary><p>Modern implants are titanium or cobalt-chrome with a polished articular surface. They're designed for the small load the radial head actually carries.</p></details>
+  <details><summary>How is Essex-Lopresti different?</summary><p>It's a radial head fracture with disruption of the interosseous membrane and distal radioulnar joint — basically the forearm longitudinally destabilizes. Missing it leads to chronic wrist pain. Wrist exam matters.</p></details>
+</div>
+`,
+  },
+  {
     slug: "hockey-orthopedic-injuries",
     title: "Ice Chips and Iron Hips: The Orthopedic Field Report on Hockey",
     excerpt:

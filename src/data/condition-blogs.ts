@@ -39,6 +39,20 @@ export const conditionToBlogSlug: Record<string, string> = {
   "Ankle sprains and instability": "basketball-injuries-nyc-courts",
   "Stress fractures": "basketball-injuries-nyc-courts",
   "Muscle strains and tendon injuries": "basketball-injuries-nyc-courts",
+
+  // Rotator cuff → Rotator cuff repair deep dive
+  "Rotator cuff tears": "rotator-cuff-repair-options",
+  "Rotator cuff repair": "rotator-cuff-repair-options",
+  "Rotator cuff tears and shoulder instability": "rotator-cuff-repair-options",
+
+  // Shoulder arthritis → Shoulder replacement deep dive
+  "Shoulder instability and dislocations": "shoulder-replacement-anatomic-reverse",
+
+  // Patellar instability → Patellar dislocation deep dive
+  "Patellar instability": "patellar-dislocation-treatment-guide",
+
+  // Elbow tendinopathy → Tennis elbow deep dive
+  "Tennis and golfer's elbow": "tennis-elbow-lateral-epicondylitis",
 };
 
 // Maps a condition page slug (from conditions.ts → slug) to a deep-dive blog post.
@@ -47,6 +61,9 @@ export const conditionSlugToBlogSlug: Record<string, string> = {
   "acl-tears-and-reconstruction": "acl-tear-warning-signs",
   "meniscus-tears": "meniscus-tear-athlete-guide",
   "knee-cartilage-injuries": "cartilage-restoration-maci-allograft",
+  "rotator-cuff-tears": "rotator-cuff-repair-options",
+  "patellar-instability": "patellar-dislocation-treatment-guide",
+  "shoulder-instability-and-dislocations": "shoulder-replacement-anatomic-reverse",
 };
 
 export const conditionBlogPosts: BlogPost[] = [];

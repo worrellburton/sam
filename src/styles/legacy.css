@@ -5122,12 +5122,12 @@ section.specialties > .container {
   align-items: stretch;
 }
 
-/* Book-card variant: portrait 3:4 thumbnail for the landing blog row */
+/* Book-card variant: square thumbnail for the landing blog row */
 .blog-card-book .blog-card-img-wrap {
   position: relative;
   margin: 0;
   border-radius: 0;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;

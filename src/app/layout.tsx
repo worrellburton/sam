@@ -119,10 +119,14 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="light" className={inter.variable}>
       <head>
+        {/* Navy theme-color in every color-scheme so iOS Safari tints
+            the URL/status bar navy regardless of the user's system theme. */}
         <meta name="theme-color" content="#0a1628" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#0a1628" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a1628" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         {/* `black-translucent` lets the navy nav bleed under the iOS
-            status bar so the two read as one continuous surface. */}
+            status bar in standalone PWA mode. */}
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script

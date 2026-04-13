@@ -375,10 +375,10 @@ img { max-width: 100%; display: block; }
 .nav.scrolled {
   position: fixed;
   /* Navy bg with white text regardless of theme — fades in via the
-     0.35s `.nav` transition when the scrolled class is toggled. */
-  background: rgba(10, 22, 40, 0.92);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+     0.35s `.nav` transition when the scrolled class is toggled.
+     Fully opaque so iOS Safari's status bar tints to a clean navy
+     instead of getting a washed-out blend with the white page below. */
+  background: #0a1628;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .nav.scrolled .logo-name { color: #f0f0f5; }
@@ -391,9 +391,7 @@ img { max-width: 100%; display: block; }
 .nav.scrolled .theme-toggle:hover { background: rgba(255,255,255,0.14); border-color: var(--primary); color: #fff; }
 
 [data-theme="dark"] .nav.scrolled {
-  background: rgba(10,10,20,0.95);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  background: #0a1628;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 [data-theme="dark"] .nav.scrolled .logo-name { color: #f0f0f5; }
@@ -411,10 +409,9 @@ img { max-width: 100%; display: block; }
 }
 [data-theme="light"] .nav.scrolled {
   /* Intentionally the same navy bg as dark theme — user-requested
-     navy + white look for the scrolled nav in both themes. */
-  background: rgba(10, 22, 40, 0.92);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+     navy + white look for the scrolled nav in both themes. Fully
+     opaque so iOS Safari status bar tints clean navy. */
+  background: #0a1628;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 [data-theme="light"] .nav.scrolled .logo-name { color: #f0f0f5; }
@@ -5819,15 +5816,24 @@ img.insurance-logo-light { display: none; }
   /* Header */
   .mnav-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: calc(16px + env(safe-area-inset-top)) 24px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
     flex-shrink: 0;
+    /* Navy in both themes so the iOS status bar tints navy whether the
+       site is in light or dark mode. */
+    background: #0a1628;
+    color: #fff;
   }
-  [data-theme="light"] .mnav-header { border-bottom-color: rgba(0,0,0,0.06); }
+  [data-theme="light"] .mnav-header {
+    background: #0a1628;
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
   .mnav-logo {
     display: block; font-size: 1.1rem; font-weight: 700; color: #fff; text-decoration: none;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
   }
-  [data-theme="light"] .mnav-logo { color: var(--text); }
+  /* Logo stays white in both themes — header is navy in both. */
+  [data-theme="light"] .mnav-logo { color: #fff; }
   .mnav-header-actions { display: flex; align-items: center; gap: 8px; }
   .mnav-theme-btn, .mnav-close {
     display: flex; align-items: center; justify-content: center;
@@ -5837,10 +5843,11 @@ img.insurance-logo-light { display: none; }
   }
   .mnav-theme-btn:hover, .mnav-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
   [data-theme="light"] .mnav-theme-btn, [data-theme="light"] .mnav-close {
-    background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); color: #666;
+    /* Header is navy in both themes — keep the close button white-on-navy. */
+    background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); color: #ccc;
   }
   [data-theme="light"] .mnav-theme-btn:hover, [data-theme="light"] .mnav-close:hover {
-    background: rgba(0,0,0,0.08); color: var(--text);
+    background: rgba(255,255,255,0.12); color: #fff;
   }
 
   /* Body */

@@ -98,6 +98,157 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meniscus-transplant-procedures",
+    title: "When the Meniscus Is Gone: The Quiet Power of Meniscal Allograft Transplantation",
+    excerpt:
+      "If a previous surgery removed your meniscus and the knee never felt right, you have one of the most underused operations in modern knee surgery available to you.",
+    tag: "The Science",
+    date: "March 24, 2026",
+    readTime: "9 min read",
+    episode: 16,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "joint-preservation",
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Knee anatomy model with meniscus highlighted",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#why">Why Losing a Meniscus Costs You a Decade of Knee</a></li>
+    <li><a href="#mat">Meniscal Allograft Transplantation, Step by Step</a></li>
+    <li><a href="#candidate">Who Is a Candidate</a></li>
+    <li><a href="#recovery">Recovery Map</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If you had a meniscectomy in your 20s and your knee has steadily worsened in your 30s, you are not "just getting older." You are seeing the predictable arc of a missing shock absorber. There is a procedure designed for exactly this.</p>
+</div>
+
+<h2 id="why">Why Losing a Meniscus Costs You a Decade of Knee</h2>
+
+<p>The meniscus is the C-shaped fibrocartilage that distributes load between the femur and tibia. Take 50% of it out and you double the contact pressure on the cartilage underneath. The bone-on-bone arthritis we see in 40-somethings with prior partial meniscectomies is not bad luck — it is biomechanics.</p>
+
+<div class="blog-expert-quote">
+  <p>The meniscus we removed in 2005 to "fix" your knee was almost certainly fixable in 2026. The damage downstream is the cost of an era when meniscal preservation was not the standard.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon, Cartilage Restoration Specialist</cite>
+</div>
+
+<h2 id="mat">Meniscal Allograft Transplantation, Step by Step</h2>
+
+<p>Meniscal Allograft Transplantation (MAT) replaces the missing meniscus with a size-matched donor meniscus, fixed with bone plugs and sutures. It restores load distribution and protects the cartilage that remains.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <h4>Sizing & Match</h4>
+    <p>An MRI-based measurement orders a fresh-frozen donor meniscus matched to within 5% of your tibial plateau dimensions.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="m12 3 9 9-9 9"/></svg>
+    </div>
+    <h4>Bone Plug Fixation</h4>
+    <p>The donor meniscus arrives with two small bone plugs at the anterior and posterior horns. These are seated in tunnels drilled in the tibia, locking the geometry of the load-bearing horns.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <h4>Peripheral Sutures</h4>
+    <p>The meniscal rim is sutured to the capsule with inside-out or all-inside techniques, recreating a watertight, weight-bearing structure.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">04</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M2 12h4"/><path d="M18 12h4"/></svg>
+    </div>
+    <h4>Concomitant Work</h4>
+    <p>Cartilage defect, ligament instability, malalignment — all addressed in the same setting. Otherwise the new meniscus inherits the same forces that destroyed the old one.</p>
+  </div>
+</div>
+
+<h2 id="candidate">Who Is a Candidate</h2>
+
+<div class="blog-takeaway">
+  <h4>The classic profile</h4>
+  <ul>
+    <li>Prior subtotal or total meniscectomy</li>
+    <li>Activity-related compartment pain over the missing meniscus</li>
+    <li>Cartilage in the same compartment is preserved (Outerbridge ≤ 2)</li>
+    <li>Knee is stable (or instability fixed concurrently)</li>
+    <li>Mechanical alignment within a few degrees of neutral</li>
+    <li>Age &lt; 50 in most cases</li>
+  </ul>
+</div>
+
+<a href="/services/joint-preservation" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Had a meniscectomy and the knee still hurts? <strong>Book a meniscal-transplant evaluation</strong> — imaging plus alignment work-up tells us if MAT is the right move.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="recovery">Recovery Map</h2>
+
+<div class="blog-timeline">
+  <p class="blog-bar-chart-title">MAT recovery milestones</p>
+  <div class="blog-timeline-track">
+    <div class="blog-timeline-progress" style="--timeline-progress: 100%;"></div>
+  </div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 0–6</div>
+      <div class="blog-timeline-label">Toe-touch weight-bearing, brace, passive motion</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 6–12</div>
+      <div class="blog-timeline-label">Progressive weight-bearing, bike, closed-chain strength</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 4–6</div>
+      <div class="blog-timeline-label">Jogging progression, agility</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 9–12</div>
+      <div class="blog-timeline-label">Return to pivoting sport (selectively); avoid impact in long-term</div>
+    </div>
+  </div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>How long does a transplanted meniscus last?</h3>
+  <p>Average graft survival approaches 75% at 10 years for well-selected patients. The earlier in the post-meniscectomy arc you intervene, the better.</p>
+
+  <h3>Will I be able to run again?</h3>
+  <p>Yes — most patients return to recreational running and low-impact sport. Heavy pivoting and contact sports are typically discouraged long-term.</p>
+
+  <h3>Is this an option if I already have arthritis?</h3>
+  <p>For mild arthritis (Outerbridge 1–2), often yes. For severe (3–4) cartilage loss, MAT alone fails. We pair it with cartilage restoration if appropriate — see <a href="/blog/cartilage-restoration-maci-allograft">cartilage restoration deep dive</a>.</p>
+
+  <h3>Does insurance cover MAT?</h3>
+  <p>Most major insurers do when medical necessity is documented (prior meniscectomy, persistent symptoms, intact cartilage on MRI). We handle pre-authorization in-house.</p>
+
+  <h3>What if my knee is not aligned correctly?</h3>
+  <p>A high tibial osteotomy is added in the same surgery to unload the new meniscus. Putting a new meniscus into a malaligned knee is a recipe for premature failure.</p>
+</div>
+`,
+  },
+  {
     slug: "emerging-orthopedic-technologies",
     title: "What's New in Orthopedics in 2026: AI Diagnostics, Bioprinted Cartilage, and the Tools That Are Actually Earning Their Place",
     excerpt:

@@ -2422,8 +2422,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 min read",
     episode: 6,
     seriesTitle: "Clinical Clarity",
-    image:
-      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop",
+    image: "/images/blog/protecting-joints-active-adults.jpg?v=1776039735876",
     imageAlt: "Active adult stretching before exercise",
     content: `
 ## Keeping Your Joints Healthy

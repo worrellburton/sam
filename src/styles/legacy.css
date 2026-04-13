@@ -365,19 +365,21 @@ img { max-width: 100%; display: block; }
 
 .nav.scrolled {
   position: fixed;
-  background: rgba(255,255,255,0.95);
+  /* Navy bg with white text regardless of theme — fades in via the
+     0.35s `.nav` transition when the scrolled class is toggled. */
+  background: rgba(10, 22, 40, 0.92);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-.nav.scrolled .logo-name { color: #1a1a2e; }
-.nav.scrolled .nav-links > li > a { color: rgba(0,0,0,0.75); }
-.nav.scrolled .nav-links > li > a:hover { color: #000; }
-.nav.scrolled .nav-mega-toggle { color: rgba(0,0,0,0.75); }
-.nav.scrolled .nav-mega-toggle:hover { color: #000; }
-.nav.scrolled .nav-btn-contact { color: #1a1a2e !important; }
-.nav.scrolled .theme-toggle { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.12); color: #555; }
-.nav.scrolled .theme-toggle:hover { background: rgba(0,0,0,0.1); border-color: var(--primary); color: var(--primary); }
+.nav.scrolled .logo-name { color: #f0f0f5; }
+.nav.scrolled .nav-links > li > a { color: rgba(255, 255, 255, 0.85); }
+.nav.scrolled .nav-links > li > a:hover { color: #fff; }
+.nav.scrolled .nav-mega-toggle { color: rgba(255, 255, 255, 0.85); }
+.nav.scrolled .nav-mega-toggle:hover { color: #fff; }
+.nav.scrolled .nav-btn-contact { color: #f0f0f5 !important; }
+.nav.scrolled .theme-toggle { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: #e8e8f0; }
+.nav.scrolled .theme-toggle:hover { background: rgba(255,255,255,0.14); border-color: var(--primary); color: #fff; }
 
 [data-theme="dark"] .nav.scrolled {
   background: rgba(10,10,20,0.95);
@@ -399,15 +401,17 @@ img { max-width: 100%; display: block; }
   border-bottom: none;
 }
 [data-theme="light"] .nav.scrolled {
-  background: rgba(255,255,255,0.92);
+  /* Intentionally the same navy bg as dark theme — user-requested
+     navy + white look for the scrolled nav in both themes. */
+  background: rgba(10, 22, 40, 0.92);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-[data-theme="light"] .nav.scrolled .logo-name { color: var(--text); }
-[data-theme="light"] .nav.scrolled .nav-links > li > a { color: rgba(0,0,0,0.8); }
-[data-theme="light"] .nav.scrolled .nav-links > li > a:hover { color: var(--primary); }
-[data-theme="light"] .nav.scrolled .nav-btn-contact { color: var(--text) !important; }
+[data-theme="light"] .nav.scrolled .logo-name { color: #f0f0f5; }
+[data-theme="light"] .nav.scrolled .nav-links > li > a { color: rgba(255, 255, 255, 0.85); }
+[data-theme="light"] .nav.scrolled .nav-links > li > a:hover { color: #fff; }
+[data-theme="light"] .nav.scrolled .nav-btn-contact { color: #f0f0f5 !important; }
 
 .nav-container {
   display: flex;
@@ -474,8 +478,8 @@ img { max-width: 100%; display: block; }
 }
 [data-theme="light"] .nav:not(.scrolled):not(.nav-solid) .nav-links > li > a { color: rgba(255,255,255,0.85); }
 [data-theme="light"] .nav:not(.scrolled):not(.nav-solid) .nav-links > li > a:hover { color: #fff; text-shadow: 0 0 12px rgba(255,255,255,0.6), 0 0 30px rgba(79,107,255,0.3); }
-[data-theme="light"] .nav.scrolled .nav-links > li > a { color: rgba(0,0,0,0.8); }
-[data-theme="light"] .nav.scrolled .nav-links > li > a:hover { color: var(--primary); text-shadow: 0 0 12px rgba(79,107,255,0.25); }
+[data-theme="light"] .nav.scrolled .nav-links > li > a { color: rgba(255, 255, 255, 0.85); }
+[data-theme="light"] .nav.scrolled .nav-links > li > a:hover { color: #fff; text-shadow: 0 0 12px rgba(255,255,255,0.5); }
 
 /* Nav CTA Buttons */
 .nav-buttons {
@@ -573,8 +577,8 @@ a.nav-btn-book,
 }
 [data-theme="light"] .nav:not(.scrolled):not(.nav-solid) .nav-mega-toggle { color: rgba(255,255,255,0.85); }
 [data-theme="light"] .nav:not(.scrolled):not(.nav-solid) .nav-mega-toggle:hover { color: #fff; }
-[data-theme="light"] .nav.scrolled .nav-mega-toggle { color: rgba(0,0,0,0.8); }
-[data-theme="light"] .nav.scrolled .nav-mega-toggle:hover { color: var(--primary); text-shadow: none; }
+[data-theme="light"] .nav.scrolled .nav-mega-toggle { color: rgba(255, 255, 255, 0.85); }
+[data-theme="light"] .nav.scrolled .nav-mega-toggle:hover { color: #fff; text-shadow: none; }
 [data-theme="light"] .nav:has(.nav-mega-wrap:hover) .nav-mega-toggle { color: rgba(0,0,0,0.8); text-shadow: none; }
 
 .dropdown-chevron {
@@ -829,7 +833,7 @@ a.nav-btn-book,
 /* Hamburger color for light theme / scrolled / solid nav */
 [data-theme="light"] .nav.nav-solid .nav-toggle span,
 [data-theme="light"] .nav.scrolled .nav-toggle span,
-.nav.scrolled .nav-toggle span { background: #1a1a2e; }
+.nav.scrolled .nav-toggle span { background: #f0f0f5; }
 [data-theme="dark"] .nav.nav-solid .nav-toggle span,
 [data-theme="dark"] .nav.scrolled .nav-toggle span { background: #f0f0f5; }
 
@@ -975,6 +979,13 @@ a.nav-btn-book,
   z-index: 1;
   opacity: 0;
   transition: opacity 0.8s ease 0.3s;
+}
+/* Mobile — hero text sits over the image with less margin, so we
+   push the overlay a bit darker to keep headline contrast high. */
+@media (max-width: 768px) {
+  .hero-overlay {
+    background: linear-gradient(135deg, rgba(10,22,40,0.82) 0%, rgba(10,22,40,0.68) 50%, rgba(10,22,40,0.50) 100%);
+  }
 }
 .hero-loaded .hero-overlay {
   opacity: 1;
@@ -1666,10 +1677,15 @@ a.hero-rating-card:hover {
   background: rgba(255,255,255,0.04);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 24px;
+  padding: 20px 22px;
   border-radius: var(--radius);
   border: 1px solid rgba(255,255,255,0.06);
   transition: all var(--transition);
+  /* Icon sits to the left, title + copy stack on the right. */
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 16px;
 }
 .highlight-card:hover {
   background: rgba(255,255,255,0.08);
@@ -1677,12 +1693,60 @@ a.hero-rating-card:hover {
   border-color: rgba(255,255,255,0.12);
   box-shadow: var(--shadow-md);
 }
+.highlight-card > h3,
+.highlight-card > p { grid-column: 2; }
+.highlight-card > h3 { margin-top: 0; }
 
 .highlight-icon {
-  margin-bottom: 12px;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  margin-bottom: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(79, 107, 255, 0.10);
+  flex-shrink: 0;
+  /* Subtle float — picks up speed once the card reveals into view. */
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s ease;
+}
+.highlight-card:hover .highlight-icon {
+  transform: translateY(-2px) rotate(-4deg) scale(1.06);
+  background: rgba(79, 107, 255, 0.18);
 }
 .highlight-icon svg {
   stroke: var(--primary);
+  width: 24px;
+  height: 24px;
+}
+
+/* Scroll-reveal: each card slides in from the left with a stagger.
+   `.reveal-left` gets picked up by ClientLayout's IntersectionObserver,
+   which adds `.visible` when it enters the viewport. */
+.highlight-card.reveal-left {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.highlight-card.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+/* Stagger the icon's entrance so it pops just after the card lands. */
+.highlight-card.reveal-left .highlight-icon {
+  opacity: 0;
+  transform: translateX(-12px) scale(0.8);
+  transition: opacity 0.6s ease 0.15s,
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+              background 0.3s ease;
+}
+.highlight-card.reveal-left.visible .highlight-icon {
+  opacity: 1;
+  transform: translateX(0) scale(1);
 }
 
 .highlight-card h3 {
@@ -5908,9 +5972,18 @@ img.insurance-logo-light { display: none; }
   .credentials-timeline { padding-left: 20px; }
   .mega-menu-inner { grid-template-columns: 1fr; }
 
-  /* Blog cards mobile */
-  .blog-card-img-wrap { margin: 8px 8px 0; border-radius: 12px; }
-  .blog-card-img { height: 180px; border-radius: 12px; }
+  /* Blog cards mobile — thumbnails render 1:1 so image1x1 reads cleanly */
+  .blog-card-img-wrap {
+    margin: 8px 8px 0;
+    border-radius: 12px;
+    aspect-ratio: 1 / 1;
+  }
+  .blog-card-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+  }
   .blog-card-body { padding: 14px 16px 16px; }
   .blog-card-body h3 { font-size: 0.95rem; }
   .blog-section-header h2 { font-size: 1.4rem; }
@@ -5974,7 +6047,7 @@ img.insurance-logo-light { display: none; }
   .svc-hero-content { padding: 40px 16px 30px; }
   .blog-post-hero { padding: 100px 0 50px; }
   .blog-card-body h3 { font-size: 0.9rem; }
-  .blog-card-img { height: 160px; }
+  .blog-card-img { height: 100%; }
   .abt-hero-ctas { flex-direction: column; }
 }
 
@@ -12088,8 +12161,9 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   .blog-card-body h3 {
     font-size: 1.05rem;
   }
+  .blog-card-img-wrap { aspect-ratio: 1 / 1; }
   .blog-card-img {
-    height: 180px;
+    height: 100%;
   }
 
   /* Footer columns mobile */
@@ -12416,8 +12490,9 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
   .blog-card-body h3 {
     font-size: 0.95rem;
   }
+  .blog-card-img-wrap { aspect-ratio: 1 / 1; }
   .blog-card-img {
-    height: 160px;
+    height: 100%;
   }
 
   /* Contact info items — tighter */

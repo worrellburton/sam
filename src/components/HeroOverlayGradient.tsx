@@ -7,6 +7,12 @@ import { useEffect, useRef } from "react";
  * linear gradients in the site's navy + muted-gold palette, layered on
  * top of the static `.hero-overlay` (which acts as a no-WebGL fallback).
  *
+ * Also renders a soft warm radial highlight that tracks the user's mouse
+ * while it's over the hero — the overlay gets slightly lighter and warmer
+ * under the cursor, like a gentle spotlight. The glow eases in on enter
+ * and fades out on leave; intensity is driven by a JS-side 0..1 value
+ * (u_mouseInfluence) so the transition is smooth across frames.
+ *
  * The alpha ramps along the 135deg diagonal (darker top-left, lighter
  * bottom-right) so nav + headline contrast is preserved while the
  * right-side image breathes through. Movement is intentionally very
@@ -19,6 +25,12 @@ void main() { gl_Position = vec4(a_position, 0.0, 1.0); }`;
 const FRAG = `precision highp float;
 uniform float u_time;
 uniform vec2 u_resolution;
+// Mouse position in uv space (0..1). Aspect-corrected in JS so
+// circles stay circular.
+uniform vec2 u_mouse;
+// 0..1 eased intensity — 1 when the cursor is over the hero and has
+// had time to ramp in, 0 when the cursor has left and faded out.
+uniform float u_mouseInfluence;
 
 void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution;
@@ -46,6 +58,7 @@ void main() {
   vec3 navy     = vec3(0.060, 0.120, 0.215);
   vec3 steel    = vec3(0.090, 0.175, 0.290);
   vec3 gold     = vec3(0.240, 0.190, 0.090);
+  vec3 warmGold = vec3(0.95, 0.80, 0.45); // the mouse highlight tint
 
   vec3 col = mix(deepNavy, navy, band1);
   col = mix(col, steel, band2 * 0.55);
@@ -59,10 +72,26 @@ void main() {
   float vig = 1.0 - smoothstep(0.3, 0.95, length(uv - vec2(0.5, 0.55)));
   col *= 0.88 + vig * 0.12;
 
+  // --- Mouse radial glow ----------------------------------------------
+  // Aspect-corrected distance so the glow is a real circle, not an oval.
+  vec2 mp = uv - u_mouse;
+  mp.x *= u_resolution.x / max(u_resolution.y, 1.0);
+  float mDist = length(mp);
+  // Soft falloff: bright at the cursor (~0.0), gone by ~0.45 uv units
+  float mFall = 1.0 - smoothstep(0.0, 0.45, mDist);
+  float mouseGlow = mFall * mFall * u_mouseInfluence;
+  // Warm the color toward gold and lift it slightly under the cursor
+  col = mix(col, warmGold, mouseGlow * 0.28);
+  col += warmGold * mouseGlow * 0.05;
+
   // Alpha ramp along 135deg — dark at top-left for nav legibility,
   // light at bottom-right so the image shows through cleanly.
   float diag = (uv.x + (1.0 - uv.y)) * 0.5;
   float alpha = mix(0.62, 0.22, diag);
+  // Under the cursor, thin the overlay out a touch so the image
+  // glows through more clearly.
+  alpha -= mouseGlow * 0.22;
+  alpha = clamp(alpha, 0.0, 1.0);
 
   gl_FragColor = vec4(col, alpha);
 }`;
@@ -131,6 +160,8 @@ export function HeroOverlayGradient() {
 
     const uTime = gl.getUniformLocation(prog, "u_time");
     const uRes = gl.getUniformLocation(prog, "u_resolution");
+    const uMouse = gl.getUniformLocation(prog, "u_mouse");
+    const uMouseInfluence = gl.getUniformLocation(prog, "u_mouseInfluence");
 
     // Premultiply the shader's alpha ourselves via blend func so the
     // canvas composites cleanly over the hero image + static overlay.
@@ -138,9 +169,6 @@ export function HeroOverlayGradient() {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     function sizeToParent() {
-      // Fallback to offsetWidth if clientWidth is 0 on first frame,
-      // and to a minimum 1x1 so drawArrays never silently draws into
-      // a zero-sized framebuffer.
       const dpr = Math.min(window.devicePixelRatio || 1, 1);
       const parent = canvas!.parentElement;
       const w =
@@ -166,22 +194,60 @@ export function HeroOverlayGradient() {
 
     sizeToParent();
 
-    // Keep the canvas in sync with layout — the hero image loads async,
-    // and viewport resizes change the aspect-corrected UVs.
     const ro = new ResizeObserver(sizeToParent);
     if (canvas.parentElement) ro.observe(canvas.parentElement);
     ro.observe(canvas);
     window.addEventListener("resize", sizeToParent);
+
+    // --- Mouse tracking -----------------------------------------------
+    // Track mouse in uv space (0..1), starting off-screen so the first
+    // frame before any movement has no spurious glow.
+    const mouse = { x: -1, y: -1 };
+    // Eased intensity (0..1). Ramps toward target each frame for a
+    // buttery fade rather than a snap.
+    let influence = 0;
+    let influenceTarget = 0;
+
+    const hero = canvas.parentElement;
+    const moveListener = (e: MouseEvent) => {
+      const rect = (hero || canvas!).getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      // uv space with y flipped so (0,0) = bottom-left matches gl_FragCoord
+      mouse.x = (e.clientX - rect.left) / rect.width;
+      mouse.y = 1 - (e.clientY - rect.top) / rect.height;
+      influenceTarget = 1;
+    };
+    const enterListener = () => {
+      influenceTarget = 1;
+    };
+    const leaveListener = () => {
+      influenceTarget = 0;
+    };
+
+    const attachEl: HTMLElement = hero ?? canvas;
+    attachEl.addEventListener("mousemove", moveListener);
+    attachEl.addEventListener("mouseenter", enterListener);
+    attachEl.addEventListener("mouseleave", leaveListener);
 
     const start = performance.now();
 
     function render() {
       sizeToParent();
       const t = reduced ? 0 : (performance.now() - start) / 1000;
+
+      // Ease influence toward target. ~0.5s ramp-in, ~0.9s ramp-out.
+      const rate = influenceTarget > influence ? 0.06 : 0.035;
+      influence += (influenceTarget - influence) * rate;
+
       gl!.uniform1f(uTime, t);
       gl!.uniform2f(uRes, canvas!.width, canvas!.height);
+      gl!.uniform2f(uMouse, mouse.x, mouse.y);
+      gl!.uniform1f(uMouseInfluence, influence);
       gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
-      if (!reduced) rafRef.current = requestAnimationFrame(render);
+      // Always request next frame — the mouse can move at any time,
+      // and the ease needs per-frame updates to look smooth. Reduced
+      // motion is honored by freezing t, not by stopping the loop.
+      rafRef.current = requestAnimationFrame(render);
     }
 
     render();
@@ -190,6 +256,9 @@ export function HeroOverlayGradient() {
       cancelAnimationFrame(rafRef.current);
       ro.disconnect();
       window.removeEventListener("resize", sizeToParent);
+      attachEl.removeEventListener("mousemove", moveListener);
+      attachEl.removeEventListener("mouseenter", enterListener);
+      attachEl.removeEventListener("mouseleave", leaveListener);
     };
   }, []);
 

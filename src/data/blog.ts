@@ -50,7 +50,7 @@ export const blogPosts: BlogPost[] = [
     episode: 12,
     seriesTitle: "Clinical Clarity",
     relatedService: "cartilage-repair",
-    image: "https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/cartilage-restoration-maci-allograft.jpg?v=1776038984672",
     imageAlt: "Orthopedic surgeon studying a knee joint model with cartilage highlighted",
     content: "",
     contentHtml: `

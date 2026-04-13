@@ -5825,7 +5825,7 @@ img.insurance-logo-light { display: none; }
   /* Links */
   .mnav-link, .mnav-link-expand {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 24px; font-size: 1.25rem; font-weight: 600; color: #e4e4ee;
+    padding: 16px 24px; font-size: 0.95rem; font-weight: 600; color: #e4e4ee;
     text-decoration: none; border: none; background: none; width: 100%;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     cursor: pointer; transition: background 0.15s ease, color 0.15s ease;

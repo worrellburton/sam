@@ -119,9 +119,11 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="light" className={inter.variable}>
       <head>
-        <meta name="theme-color" content="#0a1628" />
+        <meta name="theme-color" content="#FFD60A" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        {/* `default` (not black-translucent) so iOS uses dark status-bar
+            glyphs that remain legible against the yellow theme color. */}
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script
           type="application/ld+json"

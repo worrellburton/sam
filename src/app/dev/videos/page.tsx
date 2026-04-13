@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { DevSidebar } from "../DevSidebar";
 
 interface UploadState {
+  id: string;
   fileName: string;
   fileSize: string;
-  phase: "uploading" | "processing" | "done" | "error";
+  phase: "queued" | "uploading" | "processing" | "done" | "error";
   progress: number; // 0-100
   message: string;
 }
@@ -20,6 +21,10 @@ export default function DevVideosPage() {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Serialize uploads. Running several 8 MB base64 encodes + GitHub commits
+  // in parallel trips over the browser's concurrent connection cap and
+  // GitHub's write rate limiting; one at a time is both faster and cleaner.
+  const queueRef = useRef<Promise<void>>(Promise.resolve());
 
   const fetchFiles = useCallback(async () => {
     try {
@@ -35,18 +40,13 @@ export default function DevVideosPage() {
 
   useEffect(() => { fetchFiles(); }, [fetchFiles]);
 
-  const uploadFile = async (file: File) => {
+  const patchUpload = (id: string, updates: Partial<UploadState>) => {
+    setUploads(prev => prev.map(u => u.id === id ? { ...u, ...updates } : u));
+  };
+
+  const uploadFile = async (file: File, id: string) => {
     const sizeMB = (file.size / 1024 / 1024).toFixed(1);
-    const idx = uploads.length;
-
-    setUploads(prev => [...prev, {
-      fileName: file.name,
-      fileSize: `${sizeMB} MB`,
-      phase: "uploading",
-      progress: 0,
-      message: `Reading ${file.name}...`,
-    }]);
-
+    patchUpload(id, { phase: "uploading", progress: 0, message: `Reading ${file.name}...` });
     try {
       // Step 1: Read file as base64 on client
       const base64 = await new Promise<string>((resolve, reject) => {
@@ -54,7 +54,7 @@ export default function DevVideosPage() {
         reader.onprogress = (e) => {
           if (e.lengthComputable) {
             const pct = Math.round((e.loaded / e.total) * 30);
-            setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: pct, message: `Reading ${file.name}... ${pct}%` } : u));
+            patchUpload(id, { progress: pct, message: `Reading ${file.name}... ${pct}%` });
           }
         };
         reader.onload = () => {
@@ -65,7 +65,7 @@ export default function DevVideosPage() {
         reader.readAsDataURL(file);
       });
 
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 40, message: "Pushing to GitHub..." } : u));
+      patchUpload(id, { phase: "processing", progress: 40, message: "Pushing to GitHub..." });
 
       // Base64-encoded size. Vercel caps serverless request bodies at ~4.5 MB.
       // For anything larger we go directly to GitHub's API from the browser
@@ -93,7 +93,7 @@ export default function DevVideosPage() {
           if (chk.ok) sha = (await chk.json()).sha;
         } catch { /* new file */ }
 
-        setUploads(prev => prev.map((u, i) => i === idx ? { ...u, progress: 60, message: `Uploading ${sizeMB} MB to GitHub...` } : u));
+        patchUpload(id, { progress: 60, message: `Uploading ${sizeMB} MB to GitHub...` });
 
         const putRes = await fetch(
           `https://api.github.com/repos/${owner}/${repo}/contents/${repoPath}`,
@@ -135,18 +135,41 @@ export default function DevVideosPage() {
         if (!data.success) throw new Error(data.error || "Upload failed");
       }
 
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${file.name} uploaded` } : u));
+      patchUpload(id, { phase: "done", progress: 100, message: `${file.name} uploaded` });
       fetchFiles();
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: msg } : u));
+      patchUpload(id, { phase: "error", progress: 100, message: msg });
     }
   };
 
   const handleFiles = (fileList: FileList) => {
-    Array.from(fileList).forEach((f) => {
-      if (f.type.startsWith("video/")) uploadFile(f);
+    const videos = Array.from(fileList).filter((f) => f.type.startsWith("video/"));
+    if (videos.length === 0) return;
+
+    // Register every file up-front so the queue is visible immediately,
+    // then process them serially via queueRef to avoid trampling on each
+    // other's network / memory budget.
+    const entries = videos.map((file) => {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name}`;
+      return { file, id };
     });
+    const sizeMB = (n: number) => (n / 1024 / 1024).toFixed(1);
+    setUploads(prev => [
+      ...prev,
+      ...entries.map(({ file, id }) => ({
+        id,
+        fileName: file.name,
+        fileSize: `${sizeMB(file.size)} MB`,
+        phase: "queued" as const,
+        progress: 0,
+        message: "Queued…",
+      })),
+    ]);
+
+    for (const { file, id } of entries) {
+      queueRef.current = queueRef.current.then(() => uploadFile(file, id));
+    }
   };
 
   const onDrop = useCallback((e: React.DragEvent) => {
@@ -244,15 +267,17 @@ export default function DevVideosPage() {
         {/* Upload progress cards */}
         {activeUploads.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
-            {uploads.map((u, i) => (
-              <div key={i} style={{ background: "#111827", border: "1px solid #1e293b", borderRadius: 12, padding: "16px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+            {uploads.map((u) => (
+              <div key={u.id} style={{ background: "#111827", border: "1px solid #1e293b", borderRadius: 12, padding: "16px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 8, background: u.phase === "done" ? "rgba(34,197,94,0.15)" : u.phase === "error" ? "rgba(239,68,68,0.15)" : "rgba(99,102,241,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: u.phase === "done" ? "rgba(34,197,94,0.15)" : u.phase === "error" ? "rgba(239,68,68,0.15)" : u.phase === "queued" ? "rgba(148,163,184,0.12)" : "rgba(99,102,241,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       {u.phase === "done" ? (
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
                       ) : u.phase === "error" ? (
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+                      ) : u.phase === "queued" ? (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
                       ) : (
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
                       )}
@@ -262,8 +287,8 @@ export default function DevVideosPage() {
                       <p style={{ margin: 0, fontSize: "0.72rem", color: "#64748b" }}>{u.fileSize}</p>
                     </div>
                   </div>
-                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: u.phase === "done" ? "#22c55e" : u.phase === "error" ? "#ef4444" : u.phase === "processing" ? "#f59e0b" : "#818cf8" }}>
-                    {u.phase === "done" ? "Complete" : u.phase === "error" ? "Failed" : u.phase === "processing" ? "Pushing to GitHub..." : `${u.progress}%`}
+                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: u.phase === "done" ? "#22c55e" : u.phase === "error" ? "#ef4444" : u.phase === "processing" ? "#f59e0b" : u.phase === "queued" ? "#94a3b8" : "#818cf8" }}>
+                    {u.phase === "done" ? "Complete" : u.phase === "error" ? "Failed" : u.phase === "processing" ? "Pushing to GitHub..." : u.phase === "queued" ? "Queued" : `${u.progress}%`}
                   </span>
                 </div>
                 <div className="upload-progress-track">

@@ -5368,7 +5368,22 @@ img.insurance-logo-light { display: none; }
   color: var(--text-muted);
   font-size: 0.88rem;
   font-weight: 500;
-  margin-top: 28px;
+  margin-top: 32px;
+  margin-bottom: 8px;
+}
+/* Give the insurance section extra breathing room before the
+   next dark section so the "...and 200+" line doesn't run up
+   against the section boundary on mobile. */
+.insurance {
+  padding-bottom: 112px;
+}
+@media (max-width: 768px) {
+  .insurance { padding-bottom: 72px; }
+  .insurance-more-text { margin-top: 24px; }
+}
+@media (max-width: 480px) {
+  .insurance { padding-bottom: 60px; }
+  .insurance-more-text { margin-top: 20px; font-size: 0.82rem; }
 }
 .insurance-fallback {
   font-weight: 600;

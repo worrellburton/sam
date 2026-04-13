@@ -98,6 +98,136 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "patellar-quad-tendon-tears",
+    title: "The Pop, the Buckle, the Drop: Decoding Patellar and Quad Tendon Tears",
+    excerpt:
+      "A single misstep off a curb can rupture the tendon that holds your kneecap to the rest of your leg. The window to fix it cleanly is measured in weeks, not months.",
+    tag: "The Investigation",
+    date: "March 22, 2026",
+    readTime: "8 min read",
+    episode: 15,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "arthroscopic-surgery",
+    image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Runner holding knee after tendon injury",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#anatomy">The Extensor Mechanism</a></li>
+    <li><a href="#patellar">Patellar Tendon Ruptures</a></li>
+    <li><a href="#quad">Quadriceps Tendon Ruptures</a></li>
+    <li><a href="#diagnosis">How It Gets Diagnosed</a></li>
+    <li><a href="#repair">Surgical Repair</a></li>
+    <li><a href="#recovery">Recovery Timeline</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <strong>If you're reading this in the ER waiting room:</strong> a suspected tendon rupture is urgent but not an emergency. Keep the leg straight, do not bear weight, and ask for an orthopedic consult within 7–10 days. Repairs done inside that window behave very differently from repairs done at 6 weeks.
+</div>
+
+<h2 id="anatomy">The Extensor Mechanism</h2>
+<p>Every time you stand up, climb a stair, or decelerate from a jog, four quadriceps muscles pull on a rope of tissue that travels over your kneecap and attaches to the shin. That rope has two segments — the <strong>quadriceps tendon</strong> (above the patella) and the <strong>patellar tendon</strong> (below it). Either one can snap.</p>
+<p>When one snaps, the kneecap loses its anchor. You cannot straighten the knee against gravity. Most patients describe the same sensation: a loud pop, a feeling that something "gave," and then the leg simply refuses to extend.</p>
+
+<h2 id="patellar">Patellar Tendon Ruptures</h2>
+<p>Patellar tendon ruptures happen most often in active people in their 30s and 40s — basketball players landing awkwardly, weekend warriors coming down from a jump. The tendon most commonly fails at its attachment to the inferior pole of the patella.</p>
+<p>On exam, the kneecap sits higher than it should (patella alta). There is a palpable gap below the kneecap. The patient cannot perform a straight-leg raise.</p>
+
+<h2 id="quad">Quadriceps Tendon Ruptures</h2>
+<p>Quad tendon ruptures skew older — typically patients over 40, often with a history of chronic tendinopathy, fluoroquinolone antibiotic use, corticosteroid injections, or systemic illness like diabetes or renal disease. The tendon fails just above the patella.</p>
+<p>The gap sits above the kneecap instead of below it. The patella may ride lower than normal (patella baja).</p>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <h4>Patellar Tendon</h4>
+    <ul>
+      <li>Younger, athletic patients</li>
+      <li>High-energy jumping/landing</li>
+      <li>Gap <em>below</em> the kneecap</li>
+      <li>Kneecap rides high</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <h4>Quadriceps Tendon</h4>
+    <ul>
+      <li>Older, often systemic risk factors</li>
+      <li>Simple misstep, loaded knee</li>
+      <li>Gap <em>above</em> the kneecap</li>
+      <li>Kneecap rides low</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="diagnosis">How It Gets Diagnosed</h2>
+<p>Physical exam catches most of these injuries. The inability to do a straight-leg raise with a palpable defect is nearly pathognomonic. X-rays confirm the patella's position. An MRI is ordered when the exam is equivocal or when you need to assess tear completeness and retraction before surgical planning.</p>
+
+<blockquote class="blog-expert-quote">
+  <p>"The single biggest determinant of outcome is time from injury to repair. Under 2 weeks, the tendon ends still know where they came from. After 6 weeks, the muscle has retracted, scarred, and lost elasticity — now you're reconstructing rather than repairing."</p>
+  <cite>— Dr. Sameh Elguizaoui, Sports Medicine</cite>
+</blockquote>
+
+<h2 id="repair">Surgical Repair</h2>
+<p>A complete rupture is a surgical injury. Non-operative management leaves you unable to reliably extend the knee, which ends athletic careers and makes simple tasks (stairs, getting up from a chair) a chronic struggle.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div><h4>Exposure</h4><p>A midline incision exposes the kneecap and the tear. Hematoma is debrided; tendon ends are identified and refreshed.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v12"/></svg></div>
+    <div><h4>Suture Placement</h4><p>Heavy non-absorbable suture is woven through the tendon in a Krackow or whip-stitch pattern to grip tissue without cutting through it.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+    <div><h4>Bone Tunnels or Anchors</h4><p>Sutures are passed through drill holes in the patella (or secured with suture anchors) and tied over a bone bridge to re-establish the tendon's footprint.</p></div>
+  </div>
+  <div class="blog-step">
+    <div class="blog-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <div><h4>Tension Check</h4><p>The repair is tested through a range of motion to confirm the kneecap sits at the correct height and the repair holds at 90° of flexion.</p></div>
+  </div>
+</div>
+
+<h2 id="recovery">Recovery Timeline</h2>
+<div class="blog-timeline">
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Week 0–2</span><p>Brace locked in extension. Weight-bearing as tolerated with crutches. Quad sets and ankle pumps begin day 1.</p></div>
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Week 2–6</span><p>Brace unlocks 0–30°, progressing 30° every 2 weeks. Scar mobilization. Patellar mobilization.</p></div>
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Week 6–12</span><p>Full ROM, brace discontinued, closed-chain strengthening, stationary cycling.</p></div>
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Month 3–6</span><p>Running progression, plyometrics, sport-specific drills.</p></div>
+  <div class="blog-timeline-item"><span class="blog-timeline-week">Month 6–9</span><p>Return-to-sport testing. Full clearance for cutting/pivoting sports typically 6–9 months.</p></div>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat"><span class="blog-stat-num">90%+</span><p>return to recreational activity after acute repair</p></div>
+  <div class="blog-stat"><span class="blog-stat-num">2 weeks</span><p>ideal surgical window from injury</p></div>
+  <div class="blog-stat"><span class="blog-stat-num">6–9 mo</span><p>to full return to cutting sports</p></div>
+</div>
+
+<div class="blog-takeaway">
+  <h4>The Bottom Line</h4>
+  <p>If your knee pops, buckles, and you cannot lift the leg straight — get to an orthopedic surgeon within 10 days. Acute tendon repair is one of the highest-yield operations we do. Delayed repair is a different, harder operation with a longer, less predictable recovery.</p>
+</div>
+
+<div class="blog-inline-cta">
+  <h3>Suspected Tendon Rupture?</h3>
+  <p>Same-week evaluation for acute knee injuries across our Manhattan, Brooklyn, and Scarsdale offices.</p>
+  <a href="/book">Book an Urgent Consult →</a>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="blog-faq">
+  <details><summary>Can a partial tear be treated without surgery?</summary><p>Partial tears with intact extensor function (able to straight-leg raise) can be braced in extension for 6 weeks with a high rate of healing. Complete tears require repair.</p></details>
+  <details><summary>Will I need a tendon graft?</summary><p>Only if repair is delayed beyond roughly 6 weeks and the tendon has retracted significantly. Acute repairs almost never need augmentation.</p></details>
+  <details><summary>Can I drive after surgery?</summary><p>Right leg: typically 6–8 weeks once off narcotics and out of the brace. Left leg with automatic transmission: 1–2 weeks.</p></details>
+  <details><summary>Do these tears happen again?</summary><p>Re-rupture is uncommon (under 2%) if the repair is done acutely and rehab is followed. The biggest risk factor is returning to cutting sports before month 6.</p></details>
+</div>
+`,
+  },
+  {
     slug: "meniscus-transplant-procedures",
     title: "When the Meniscus Is Gone: The Quiet Power of Meniscal Allograft Transplantation",
     excerpt:

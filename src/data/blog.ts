@@ -98,6 +98,206 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "rotator-cuff-repair-options",
+    title: "Rotator Cuff Repair in 2026: Arthroscopic, Double-Row, Superior Capsular Reconstruction — And When Each One Wins",
+    excerpt:
+      "Not every torn rotator cuff needs the same operation. Here is how the tear pattern, tendon quality, and your shoulder's age dictate the right technique.",
+    tag: "The Science",
+    date: "April 11, 2026",
+    readTime: "10 min read",
+    episode: 24,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "shoulder-knee-surgery",
+    image: "https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Arthroscopic view of a rotator cuff repair",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#anatomy">Your Rotator Cuff Is Four Tendons — Not One</a></li>
+    <li><a href="#classify">Classifying the Tear</a></li>
+    <li><a href="#repair">Double-Row Arthroscopic Repair</a></li>
+    <li><a href="#scr">Superior Capsular Reconstruction</a></li>
+    <li><a href="#irreparable">Irreparable Tears — The Reverse Shoulder Option</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If your MRI said "rotator cuff tear," your surgeon's plan should depend on the exact tendon involved, its retraction, the muscle quality, your age, and your sport. Not on a default technique.</p>
+</div>
+
+<h2 id="anatomy">Your Rotator Cuff Is Four Tendons — Not One</h2>
+
+<p>The rotator cuff is a group of four muscles — supraspinatus, infraspinatus, teres minor, subscapularis — whose tendons fuse into a single cuff that wraps the humeral head. Each tendon has a job: elevation, external rotation, internal rotation. When a tear starts, it is almost always in the supraspinatus, then propagates posteriorly or anteriorly.</p>
+
+<div class="blog-expert-quote">
+  <p>The decision is not "repair or not." It is "repair now, repair plus augment, or replace the strategy altogether." All three are right — for different tears.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon, Fellowship-Trained in Shoulder Arthroscopy</cite>
+</div>
+
+<h2 id="classify">Classifying the Tear</h2>
+
+<div class="blog-takeaway">
+  <h4>Four variables that drive the plan</h4>
+  <ul>
+    <li><strong>Size</strong> — partial, small, medium, large, massive (&gt;5 cm retracted)</li>
+    <li><strong>Tendon retraction</strong> — how far the tendon has pulled away from its footprint</li>
+    <li><strong>Muscle quality</strong> — fatty infiltration on MRI (Goutallier grade) predicts healing</li>
+    <li><strong>Timing</strong> — acute (&lt; 3 months) heals far better than chronic</li>
+  </ul>
+</div>
+
+<p>A partial, non-retracted supraspinatus in a 45-year-old is a different animal than a retracted, fatty-degenerated massive tear in a 72-year-old. Both are "rotator cuff tears." Only one gets a straightforward repair.</p>
+
+<h2 id="repair">Double-Row Arthroscopic Repair</h2>
+
+<p>For most repairable tears, double-row arthroscopic repair is the gold standard. It uses two rows of bone anchors to press the tendon flat against a wide footprint on the humerus — a construct that restores the native tendon-to-bone compression and heals more reliably than a single row.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+    </div>
+    <h4>Diagnostic Arthroscopy</h4>
+    <p>Three small portals, a camera, and a full look at the joint. Labrum and biceps are evaluated; hidden tears are mapped.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h10"/></svg>
+    </div>
+    <h4>Footprint Preparation</h4>
+    <p>The bone is gently abraded to bleeding cancellous surface — marrow elements seed the repair with growth factors.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><path d="M8 12h8"/></svg>
+    </div>
+    <h4>Medial + Lateral Anchors</h4>
+    <p>Two medial anchors secure the tendon at its articular edge. Sutures are passed through the tendon and tied down laterally onto a second row of anchors — the transosseous-equivalent construct.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">04</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </div>
+    <h4>Biologic Augmentation</h4>
+    <p>For high-risk tears we add a dermal allograft patch over the top to shield the repair and add scaffolding. In our hands, this cuts re-tear rates for large tears meaningfully.</p>
+  </div>
+</div>
+
+<h2 id="scr">Superior Capsular Reconstruction (SCR)</h2>
+
+<p>Some tears cannot be pulled back to the bone. The tendon has retracted too far, the muscle has atrophied, and forcing a repair will simply fail — often within six months. For these tears in patients too young for a reverse shoulder replacement, SCR is the elegant alternative.</p>
+
+<p>The technique uses a thick dermal allograft to reconstruct the superior capsule. It does not replace the torn tendon — it restores the ceiling of the joint, preventing the humeral head from riding up into the acromion. Pain goes down, strength improves, and the arthritis trajectory slows.</p>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Repairable</p>
+    <h4>Double-Row Repair</h4>
+    <ul>
+      <li>Supraspinatus + infraspinatus can reach footprint</li>
+      <li>Goutallier ≤ 2 (muscle not badly fatty)</li>
+      <li>Age typically &lt; 70</li>
+      <li>Return to full activity at 6 months</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">Irreparable but Young</p>
+    <h4>Superior Capsular Reconstruction</h4>
+    <ul>
+      <li>Massive, retracted supraspinatus tear</li>
+      <li>Preserved deltoid and intact subscapularis</li>
+      <li>Age 50–70 who want to avoid reverse replacement</li>
+      <li>Return to function at 6–9 months</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="irreparable">Irreparable Tears in Older Patients</h2>
+
+<p>If you are over 65, have a massive tear with fatty muscle, and have already developed cuff-tear arthropathy, the best answer is almost always a <a href="/blog/shoulder-replacement-anatomic-reverse">reverse total shoulder arthroplasty</a>. The deltoid takes over what the cuff can no longer do. Outcomes in the right patient are excellent.</p>
+
+<a href="/services/shoulder-knee-surgery" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>An MRI is only half the story — <strong>book a cuff-tear consultation</strong> to map tear size, retraction, and muscle quality into a repair plan you can actually recover from.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="recovery">The 6-Month Recovery Arc</h2>
+
+<div class="blog-timeline">
+  <p class="blog-bar-chart-title">Arthroscopic rotator cuff repair</p>
+  <div class="blog-timeline-track">
+    <div class="blog-timeline-progress" style="--timeline-progress: 100%;"></div>
+  </div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 0–6</div>
+      <div class="blog-timeline-label">Sling full-time, passive-only range of motion, no active lifting</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 6–12</div>
+      <div class="blog-timeline-label">Active-assisted ROM, gentle strength, sling weaned</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 3–5</div>
+      <div class="blog-timeline-label">Progressive resistance, scapular stabilization</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 5–6</div>
+      <div class="blog-timeline-label">Sport- and work-specific loading; return to overhead activity</div>
+    </div>
+  </div>
+</div>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <div class="blog-stat-number">&gt;90%</div>
+    <div class="blog-stat-label">Satisfaction rate after well-indicated arthroscopic repair</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">15–25%</div>
+    <div class="blog-stat-label">Re-tear rate in large tears without augmentation</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">&lt; 1%</div>
+    <div class="blog-stat-label">Deep infection rate for arthroscopic cuff repair</div>
+  </div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Do I have to repair a rotator cuff tear at all?</h3>
+  <p>Small, non-retracted, asymptomatic tears in sedentary patients can be observed with PT. Symptomatic tears progress — and tears that progress become harder to repair. Early treatment protects the window.</p>
+
+  <h3>Why does the sling feel excessive?</h3>
+  <p>The tendon is reattached to the bone with sutures and anchors — but biology does the actual healing over 12 weeks. Protecting the repair in a sling is the single biggest driver of whether it holds.</p>
+
+  <h3>What about PRP and stem cells?</h3>
+  <p>Biologic augmentation is being studied; small effects have been shown in specific patterns. It is not a replacement for surgery when there is a full-thickness retracted tear. Read our <a href="/blog/prp-therapy-deep-dive">PRP deep dive</a> for the evidence landscape.</p>
+
+  <h3>How long is the surgery?</h3>
+  <p>For most arthroscopic repairs, 90–120 minutes. Outpatient, same-day discharge, usually under a regional block so opioid use is minimal.</p>
+
+  <h3>Will I know if it has re-torn?</h3>
+  <p>New onset of weakness, loss of motion, or night pain between weeks 6 and 16 are the red flags. An MRI and a clinical exam answer it.</p>
+</div>
+`,
+  },
+  {
     slug: "shoulder-replacement-anatomic-reverse",
     title: "Anatomic vs Reverse Shoulder Replacement: Two Implants, Two Philosophies, One Right Choice",
     excerpt:

@@ -10,6 +10,12 @@ export interface BlogPost {
   image3x4?: string;
   /** Optional 1:1 (square) variant of the thumbnail. Used by the blog listing cards. */
   image1x1?: string;
+  /**
+   * The 4 image-generation prompts most recently saved for this post's
+   * thumbnail series (from /dev/blog). Persisted so reopening the row shows
+   * the prompts that produced the live thumbnails — no regeneration needed.
+   */
+  imagePrompts?: string[];
   imageAlt: string;
   content: string;
   contentHtml?: string;

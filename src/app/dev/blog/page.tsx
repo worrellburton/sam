@@ -562,7 +562,9 @@ export default function DevBlogPage() {
         }
       }
 
-      // 2. Patch blog.ts with every path we uploaded.
+      // 2. Patch blog.ts with every path we uploaded, plus the 4 prompts
+      // that produced the current series so reopening the row shows them.
+      const promptTexts = gen.prompts.map((s) => s.prompt).filter((p) => p.trim().length > 0);
       const setThumb = await fetch("/api/dev/set-blog-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -571,6 +573,7 @@ export default function DevBlogPage() {
           imagePath,
           imagePath3x4: portraitName ? `/images/blog/${portraitName}` : undefined,
           imagePath1x1: squareName ? `/images/blog/${squareName}` : undefined,
+          imagePrompts: promptTexts.length > 0 ? promptTexts : undefined,
         }),
       });
       const setData = await setThumb.json();
@@ -1140,7 +1143,25 @@ export default function DevBlogPage() {
                     transition: "border-color 0.15s",
                     cursor: "pointer",
                   }}
-                  onClick={() => setExpandedSlug(isExpanded ? null : post.slug)}
+                  onClick={() => {
+                    const willOpen = !isExpanded;
+                    setExpandedSlug(willOpen ? post.slug : null);
+                    // On first open of a row, seed the prompt slots from the
+                    // post's persisted imagePrompts (if any) so the user can
+                    // tweak / regenerate without a fresh Claude draft.
+                    if (willOpen && post.imagePrompts && post.imagePrompts.length > 0) {
+                      setGenStates((prev) => {
+                        const cur = prev[post.slug] || defaultGen;
+                        const alreadySeeded = cur.prompts.some((s) => s.prompt.trim().length > 0);
+                        if (alreadySeeded) return prev;
+                        const seeded = [0, 1, 2, 3].map((i) => ({
+                          ...emptyPromptSlot(),
+                          prompt: post.imagePrompts?.[i] || "",
+                        }));
+                        return { ...prev, [post.slug]: { ...cur, prompts: seeded } };
+                      });
+                    }
+                  }}
                 >
                   <div
                     style={{

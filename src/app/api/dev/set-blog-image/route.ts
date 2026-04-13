@@ -8,9 +8,9 @@ const FILE_PATH = "src/data/blog.ts";
 
 // Updates the image fields of a blog post in src/data/blog.ts via the GitHub
 // Contents API.
-// Body: { slug, imagePath?, imagePath3x4?, imagePath1x1? }
-// Any field provided is written; the 1:1 and 3:4 variants are inserted after
-// the `image:` line if they don't already exist.
+// Body: { slug, imagePath?, imagePath3x4?, imagePath1x1?, imagePrompts? }
+// Any field provided is written; the 1:1 / 3:4 variants and the imagePrompts
+// array are inserted after the `image:` line if they don't already exist.
 export async function POST(request: NextRequest) {
   if (!GITHUB_TOKEN) {
     return NextResponse.json(
@@ -19,9 +19,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { slug, imagePath, imagePath3x4, imagePath1x1 } = await request.json();
-  if (!slug || (!imagePath && !imagePath3x4 && !imagePath1x1)) {
-    return NextResponse.json({ error: "Missing slug or at least one imagePath" }, { status: 400 });
+  const { slug, imagePath, imagePath3x4, imagePath1x1, imagePrompts } = await request.json();
+  const hasPrompts = Array.isArray(imagePrompts) && imagePrompts.length > 0;
+  if (!slug || (!imagePath && !imagePath3x4 && !imagePath1x1 && !hasPrompts)) {
+    return NextResponse.json({ error: "Missing slug or at least one field to update" }, { status: 400 });
   }
 
   // 1. Fetch current blog.ts
@@ -87,6 +88,36 @@ export async function POST(request: NextRequest) {
   if (imagePath3x4) upsertVariant("image3x4", imagePath3x4);
   if (imagePath1x1) upsertVariant("image1x1", imagePath1x1);
 
+  // Upsert imagePrompts as a multi-line array. Same strategy as upsertVariant
+  // but the value is a `[...]` expression instead of a single quoted string.
+  if (hasPrompts) {
+    // Escape each prompt for inclusion inside a double-quoted TypeScript string.
+    const escape = (s: string) =>
+      s
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')
+        .replace(/\r?\n/g, "\\n");
+    const serialized = `[\n${imagePrompts
+      .map((p: string) => `      "${escape(String(p))}"`)
+      .join(",\n")}\n    ]`;
+
+    // Match `imagePrompts: [ ... ]` across multiple lines and rewrite it.
+    const existingRe = /imagePrompts:\s*\[[\s\S]*?\]/;
+    if (existingRe.test(entry)) {
+      entry = entry.replace(existingRe, `imagePrompts: ${serialized}`);
+    } else {
+      const imageLine = entry.match(/(^|\n)(\s*)image:\s*"[^"]*",?/);
+      if (imageLine) {
+        const indent = imageLine[2] || "    ";
+        const insertAfter = imageLine.index! + imageLine[0].length;
+        entry =
+          entry.slice(0, insertAfter) +
+          `\n${indent}imagePrompts: ${serialized.replace(/\n      /g, `\n${indent}  `).replace(/\n    \]/g, `\n${indent}]`)},` +
+          entry.slice(insertAfter);
+      }
+    }
+  }
+
   const updatedContent =
     currentContent.slice(0, slugIdx) + entry + currentContent.slice(entryEnd);
 
@@ -126,5 +157,6 @@ export async function POST(request: NextRequest) {
     imagePath: imagePath || null,
     imagePath3x4: imagePath3x4 || null,
     imagePath1x1: imagePath1x1 || null,
+    imagePrompts: hasPrompts ? imagePrompts : null,
   });
 }

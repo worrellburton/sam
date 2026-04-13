@@ -326,7 +326,7 @@ export const blogPosts: BlogPost[] = [
     episode: 11,
     seriesTitle: "Clinical Clarity",
     relatedService: "regenerative-medicine",
-    image: "/images/blog/prp-therapy-deep-dive.jpg?v=1776039728566",
+    image: "/images/blog/prp-therapy-deep-dive.jpg?v=1776040793469",
     imageAlt: "Centrifuge spinning a vial of blood to concentrate platelets for PRP therapy",
     content: "",
     contentHtml: `

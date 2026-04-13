@@ -1504,11 +1504,11 @@ export default function DevBlogPage() {
                         const cur = seriesByRatio[im.aspectRatio];
                         if (!cur || im.ts > cur.ts) seriesByRatio[im.aspectRatio] = im;
                       }
-                      const aspectBoxRatio: Record<AspectRatio, string> = {
-                        "16:9": "16 / 9",
-                        "3:4": "3 / 4",
-                        "1:1": "1 / 1",
-                      };
+                      // Tiles share a common box height so the three sit
+                      // evenly in a row. The actual image is letterboxed
+                      // inside with object-fit: contain so each aspect still
+                      // reads as itself.
+                      const tileHeight = 360;
                       return (
                         <div
                           style={{
@@ -1643,7 +1643,7 @@ export default function DevBlogPage() {
                                   style={{
                                     position: "relative",
                                     width: "100%",
-                                    aspectRatio: aspectBoxRatio[r],
+                                    height: tileHeight,
                                     borderRadius: 10,
                                     overflow: "hidden",
                                     background: "#0a0e1a",
@@ -1662,7 +1662,7 @@ export default function DevBlogPage() {
                                     <img
                                       src={`data:${im.mime};base64,${im.data}`}
                                       alt={`${r} render`}
-                                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                                      style={{ maxWidth: "100%", maxHeight: "100%", width: "auto", height: "auto", objectFit: "contain", display: "block" }}
                                     />
                                   ) : phase === "generating" ? (
                                     <span

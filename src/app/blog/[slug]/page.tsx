@@ -265,6 +265,28 @@ export default function BlogPostPage() {
             className={post.contentHtml ? "blog-article" : "blog-post-content"}
             dangerouslySetInnerHTML={{ __html: post.contentHtml || markdownToHtml(post.content) }}
           />
+          <div className="blog-author">
+            <img
+              className="blog-author-img"
+              src="/images/sam6.jpeg"
+              alt="Dr. Sameh (Sam) Elguizaoui, M.D."
+            />
+            <div className="blog-author-info">
+              <h4>Written by Dr. Sameh &ldquo;Sam&rdquo; Elguizaoui, M.D.</h4>
+              <div className="author-title">Board-Certified Orthopedic Surgeon &bull; Sports Medicine Specialist</div>
+              <p>
+                Dr. Elguizaoui is a fellowship-trained orthopedic surgeon practicing in Manhattan,
+                Brooklyn, and Scarsdale. He specializes in minimally invasive arthroscopic
+                surgery, cartilage restoration, and joint preservation — treating New Yorkers
+                who refuse to slow down. Every article in Clinical Clarity is written and
+                reviewed by Dr. Sam himself, grounded in the operating room and the evidence,
+                not marketing fluff.{" "}
+                <Link href="/about" style={{ color: "var(--primary)", fontWeight: 600 }}>
+                  Learn more about Dr. Sam &rarr;
+                </Link>
+              </p>
+            </div>
+          </div>
           <div style={{ marginTop: "60px", paddingTop: "30px", borderTop: "1px solid var(--border)" }}>
             <Link href="/blog" className="btn btn-outline">&larr; Back to All Articles</Link>
           </div>

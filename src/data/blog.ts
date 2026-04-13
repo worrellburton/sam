@@ -98,6 +98,242 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "patellar-dislocation-treatment-guide",
+    title: "The Kneecap That Won't Stay Put: What To Do After Your First — or Fifth — Patellar Dislocation",
+    excerpt:
+      "A single kneecap dislocation is unlucky. A second is a diagnosis. Here is the modern playbook for stabilizing the patella before it damages cartilage for life.",
+    tag: "The Investigation",
+    date: "April 13, 2026",
+    readTime: "10 min read",
+    episode: 26,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "sports-medicine",
+    image: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Athlete clutching their knee after a patellar dislocation",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#why">Why the Kneecap Pops Out in the First Place</a></li>
+    <li><a href="#first">First Dislocation — The 6-Week Window</a></li>
+    <li><a href="#recurrent">Recurrent Dislocations — Why Surgery Becomes The Answer</a></li>
+    <li><a href="#mpfl">MPFL Reconstruction, Explained</a></li>
+    <li><a href="#recovery">The 6-Month Recovery Map</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>If your kneecap has shifted, slipped, or fully popped out — even once — you are not "just flexible." You have an anatomy problem that rarely fixes itself, and the longer you wait, the more cartilage it costs you.</p>
+</div>
+
+<h2 id="why">Why the Kneecap Pops Out in the First Place</h2>
+
+<p>The patella is a floating bone. It rides in a shallow groove on the front of the femur called the <strong>trochlear groove</strong>, held in place by a tiny ligament on the inside of the knee — the <em>medial patellofemoral ligament</em>, or MPFL. When the knee bends and straightens, the kneecap slides up and down that groove like a train on a track.</p>
+
+<p>Dislocation happens when the patella jumps the track. Almost always it shifts laterally (toward the outside of the knee). In the process, it tears the MPFL and often shears a piece of cartilage off the back of the kneecap or the edge of the femur. That cartilage piece — called an <em>osteochondral fragment</em> — is often the real long-term problem.</p>
+
+<div class="blog-expert-quote">
+  <p>Most patients remember the pop. Few realize that a single dislocation can leave a dime-sized divot of cartilage floating in the joint. That is the injury that ages a knee by twenty years.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon, Sports Medicine Specialist</cite>
+</div>
+
+<div class="blog-takeaway">
+  <h4>The four anatomic risk factors</h4>
+  <ul>
+    <li><strong>Trochlear dysplasia</strong> — a shallow groove that fails to contain the kneecap</li>
+    <li><strong>Patella alta</strong> — a high-riding kneecap that sits above the groove in early flexion</li>
+    <li><strong>Increased TT-TG distance</strong> — the tibial tubercle sits too far lateral, pulling the patella outward</li>
+    <li><strong>Ligamentous laxity</strong> — genetically loose connective tissue (common in teen athletes)</li>
+  </ul>
+</div>
+
+<h2 id="first">First Dislocation — The 6-Week Window</h2>
+
+<p>A first-time dislocation is not automatically a surgical problem. The priority in the first six weeks is precise: <strong>rule out loose cartilage, protect the torn MPFL, and rebuild quad strength before the kneecap gets lazy.</strong></p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <h4>MRI — Not Just an X-Ray</h4>
+    <p>X-rays miss most cartilage fragments. A high-quality MRI is mandatory after a first dislocation to find loose pieces and grade the MPFL tear.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+    </div>
+    <h4>Brace + Controlled Motion</h4>
+    <p>A patellar-stabilizing brace during ambulation for 4 weeks. Full passive range of motion early — frozen knees do not do well.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V10"/><path d="M12 20V4"/><path d="M18 20v-6"/></svg>
+    </div>
+    <h4>Quad-Biased Rehab</h4>
+    <p>The vastus medialis (the teardrop on the inside of the quad) is the patella's strongest dynamic stabilizer. Specific PT targets VMO recovery first.</p>
+  </div>
+</div>
+
+<h3>When surgery is required after a first dislocation</h3>
+<ul>
+  <li>A loose <strong>osteochondral fragment</strong> on MRI — these need to be reattached or removed, not rehabbed</li>
+  <li>A <strong>displaced bone bruise pattern</strong> that suggests the joint is still unstable</li>
+  <li>An elite or collegiate athlete with <strong>high anatomic risk</strong> (scroll up — trochlear dysplasia, patella alta, etc.)</li>
+</ul>
+
+<h2 id="recurrent">Recurrent Dislocations — Why Surgery Becomes The Answer</h2>
+
+<p>Recurrence is not bad luck. The anatomy that let the kneecap dislocate the first time is still there. The MPFL has healed loose, the groove is still shallow, the quad is still weaker than it was before the injury. Each subsequent dislocation is easier to produce, and each one chips off more cartilage.</p>
+
+<div class="blog-stats">
+  <div class="blog-stat">
+    <div class="blog-stat-number">~33%</div>
+    <div class="blog-stat-label">First-timers who will re-dislocate without intervention</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">&gt;70%</div>
+    <div class="blog-stat-label">Second-time dislocators who will have a third</div>
+  </div>
+  <div class="blog-stat">
+    <div class="blog-stat-number">0</div>
+    <div class="blog-stat-label">Number of cartilage divots that heal on their own</div>
+  </div>
+</div>
+
+<p>By the second dislocation, the math changes. The question is no longer <em>can we rehab this</em> — it is <em>which reconstruction stops the cycle</em>.</p>
+
+<h2 id="mpfl">MPFL Reconstruction, Explained</h2>
+
+<p>Medial patellofemoral ligament reconstruction is the workhorse procedure for recurrent patellar instability. It is an outpatient arthroscopic-assisted surgery that rebuilds the checkrein that keeps the kneecap from sliding laterally.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h12"/></svg>
+    </div>
+    <h4>Graft Harvest</h4>
+    <p>A strip of the gracilis tendon (a low-demand hamstring) is harvested through a half-inch incision, or a donor allograft is used.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/></svg>
+    </div>
+    <h4>Anatomic Tunnels</h4>
+    <p>Using fluoroscopic landmarks, a small tunnel is drilled at the native MPFL footprint on the femur. Two small sockets go into the medial edge of the patella.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="m15 6 6 6-6 6"/></svg>
+    </div>
+    <h4>Tensioning</h4>
+    <p>The graft is passed and tensioned with the knee at 30° flexion — the position the native MPFL is tightest. Tension is a matter of millimeters; this is where surgeon experience shows.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">04</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <h4>Concomitant Work</h4>
+    <p>If TT-TG distance is &gt; 20 mm, we add a <em>tibial tubercle osteotomy</em> in the same sitting. If there is a cartilage divot, we fix it now — not later.</p>
+  </div>
+</div>
+
+<a href="/services/sports-medicine" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Had two or more dislocations? <strong>Book a patellar instability workup</strong> — imaging plus a TT-TG measurement decides which reconstruction you actually need.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="compare">MPFL Reconstruction vs Tubercle Osteotomy</h2>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Soft tissue</p>
+    <h4>MPFL Reconstruction</h4>
+    <ul>
+      <li>Rebuilds the ligament that tore</li>
+      <li>Outpatient, no bone cut</li>
+      <li>Best for normal bony anatomy</li>
+      <li>Return to sport: 5–6 months</li>
+      <li>Re-dislocation rate &lt; 5%</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">Bone realignment</p>
+    <h4>Tibial Tubercle Osteotomy</h4>
+    <ul>
+      <li>Moves the patellar tendon's pull medial (and often distal)</li>
+      <li>Required when TT-TG &gt; 20 mm or patella alta</li>
+      <li>Bone fixed with two screws, heals in ~10 weeks</li>
+      <li>Almost always done <em>with</em> MPFL reconstruction</li>
+      <li>Return to sport: 6–9 months</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="recovery">The 6-Month Recovery Map</h2>
+
+<div class="blog-timeline">
+  <p class="blog-bar-chart-title">MPFL reconstruction recovery milestones</p>
+  <div class="blog-timeline-track">
+    <div class="blog-timeline-progress" style="--timeline-progress: 100%;"></div>
+  </div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 0–2</div>
+      <div class="blog-timeline-label">Brace locked in extension, weight-bear as tolerated, quad sets</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 2–6</div>
+      <div class="blog-timeline-label">Brace unlocked 0–90°, stationary bike, VMO activation</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 2–4</div>
+      <div class="blog-timeline-label">Closed-chain strength, jogging, lateral training progression</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 5–6</div>
+      <div class="blog-timeline-label">Sport-specific drills, cutting, return to competition</div>
+    </div>
+  </div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Can I just wear a brace forever and avoid surgery?</h3>
+  <p>A brace prevents <em>some</em> dislocations. It does not rebuild a torn ligament, it does not protect the cartilage you lose with each new event, and it does not let you return to cutting sports with confidence. For recurrent dislocators, bracing is a bridge — not a destination.</p>
+
+  <h3>Will I dislocate the other knee too?</h3>
+  <p>Patellar instability is often bilateral in its anatomy even when only one side has dislocated. If you have high-risk features on MRI, preventive PT on the asymptomatic side is worth the effort.</p>
+
+  <h3>What about kids and teens?</h3>
+  <p>MPFL reconstruction can be performed with <em>physeal-sparing</em> techniques in adolescents with open growth plates. The anatomy of the pediatric knee changes the graft path but not the principle. Timing is individualized to skeletal maturity.</p>
+
+  <h3>How soon can I drive?</h3>
+  <p>Left knee: typically within a week once you are off opioids. Right knee: 4–6 weeks, when you have the quad strength to slam a brake pedal without hesitation.</p>
+
+  <h3>What if I also have a cartilage injury?</h3>
+  <p>We address both at the same surgery. Cartilage that is ignored at the index procedure is the single biggest predictor of a bad long-term outcome. See our <a href="/blog/cartilage-restoration-maci-allograft">cartilage restoration deep dive</a> for the biologics options.</p>
+</div>
+`,
+  },
+  {
     slug: "cartilage-restoration-maci-allograft",
     title: "Cartilage Construction: How MACI and Osteochondral Allografts Save Knees Before Replacement",
     excerpt:

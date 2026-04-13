@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
     relatedService,
     style = "photorealistic",
     globalPrompt,
+    nyc = true,
   } = await request.json();
   if (!title) {
     return NextResponse.json({ error: "Missing title" }, { status: 400 });
@@ -45,9 +46,21 @@ export async function POST(request: NextRequest) {
       "Abstract, artistic medical visualization. Microscopic biology meets modern art. Rich colors, organic shapes, scientific beauty. No text overlays.",
   };
 
-  const globalDirection = (typeof globalPrompt === "string" && globalPrompt.trim().length > 0)
+  const rawGlobal = (typeof globalPrompt === "string" && globalPrompt.trim().length > 0)
     ? globalPrompt.trim()
     : DEFAULT_GLOBAL_PROMPT;
+
+  // When `nyc` is false, strip the NYC setting paragraph out of the global
+  // direction and replace it with a setting-neutral brief. The first paragraph
+  // of the global prompt is always the SETTING block — swap it rather than
+  // delete it so Claude still has a setting directive.
+  const NON_NYC_SETTING = `SETTING: No fixed location. Choose settings that fit the article's subject matter naturally — clinical or training environments, outdoor scenes, or context-appropriate backdrops. Do not force NYC-specific landmarks or signals when they don't serve the article.`;
+  const globalDirection = nyc
+    ? rawGlobal
+    : rawGlobal.replace(/^SETTING:[\s\S]*?(?=\n\n[A-Z]+:|$)/, NON_NYC_SETTING);
+  const brandSummary = nyc
+    ? "NYC setting, 20s–40s subjects, Nike/Equinox visual style"
+    : "20s–40s subjects, Nike/Equinox visual style, setting dictated by article context";
 
   const systemPrompt = `You are an expert at writing image generation prompts for Nano Banana Pro 2 (Gemini 3 Pro Image). Your job is to deeply read a medical blog article — title, series context, tag/angle, excerpt, and full body — and use EVERY bit of that information to create FOUR distinct, vivid image prompts that together tell the story of the article.
 
@@ -63,7 +76,7 @@ Your process before writing prompts:
 
 Rules:
 - Output ONLY a JSON array of 4 strings — nothing else, no prose, no code fences
-- Each prompt must be under 200 words and must bake in the global brand direction above (NYC setting, 20s–40s subjects, Nike/Equinox visual style)
+- Each prompt must be under 200 words and must bake in the global brand direction above (${brandSummary})
 - The 4 prompts must explore DIFFERENT angles/moments drawn directly from the article's content:
   (1) Hero / emotional opener that captures the article's central tension
   (2) The specific clinical moment, procedure, or expert-at-work scene described in the piece

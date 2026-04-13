@@ -49,6 +49,10 @@ interface GenState {
   reshapeError: string;
   error: string;
   savedPath: string | null;
+  // NYC-setting toggle. When true (default), prompts are generated with the NYC
+  // setting paragraph. When false, the setting constraint is dropped so the
+  // article's imagery is free to live anywhere that fits the topic.
+  nyc: boolean;
 }
 
 const emptyPromptSlot = (): PromptSlot => ({
@@ -67,6 +71,7 @@ const defaultGen: GenState = {
   reshapeError: "",
   error: "",
   savedPath: null,
+  nyc: true,
 };
 
 function makeImageId(): string {
@@ -338,6 +343,7 @@ export default function DevBlogPage() {
           relatedService: post.relatedService,
           style: gen.style,
           globalPrompt,
+          nyc: gen.nyc,
         }),
       });
       const data = await res.json();
@@ -473,6 +479,14 @@ export default function DevBlogPage() {
         };
       });
     }
+  }
+
+  // Fire reshapeSelected for all three aspect ratios in parallel. Used by the
+  // "Generate Series" button — one click produces 16:9, 3:4, and 1:1 renders
+  // of the currently selected prompt so the thumbnail set is complete.
+  async function generateSeries(slug: string) {
+    const ratios: AspectRatio[] = ["16:9", "3:4", "1:1"];
+    await Promise.all(ratios.map((r) => reshapeSelected(slug, r)));
   }
 
   async function handleSaveSelected(slug: string) {
@@ -1016,6 +1030,16 @@ export default function DevBlogPage() {
               statusChip = { label: "Prompts ready", color: "#93c5fd", bg: "rgba(59,130,246,0.12)", spin: false };
             }
 
+            // Prefer the in-memory selected image so the row thumbnail updates
+            // in real time after "Save & Set as Thumbnail" — the saved path on
+            // disk (/images/blog/<slug>.png) may not exist yet in this dev
+            // server's local FS (it was committed to GitHub), so using the
+            // base64 render keeps the preview live.
+            const liveImage = gen.images.find((im) => im.id === gen.selectedId);
+            const rowThumbSrc = liveImage
+              ? `data:${liveImage.mime};base64,${liveImage.data}`
+              : post.image;
+
             return (
               <div key={post.slug} style={{ marginBottom: 4 }}>
                 {/* Row */}
@@ -1047,10 +1071,10 @@ export default function DevBlogPage() {
                       flexShrink: 0,
                     }}
                   >
-                    {post.image ? (
+                    {rowThumbSrc ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={post.image}
+                        src={rowThumbSrc}
                         alt=""
                         style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                       />
@@ -1318,32 +1342,65 @@ export default function DevBlogPage() {
                       );
                     })()}
 
-                    {/* Style selector */}
-                    <div style={{ marginBottom: 16 }}>
-                      <label style={{ fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", display: "block", marginBottom: 8 }}>
-                        Style
-                      </label>
-                      <div style={{ display: "flex", gap: 8 }}>
-                        {(Object.keys(styleLabels) as Style[]).map((s) => (
-                          <button
-                            key={s}
-                            onClick={() => updateGen(post.slug, { style: s })}
-                            style={{
-                              padding: "6px 14px",
-                              borderRadius: 6,
-                              border: "1px solid",
-                              borderColor: gen.style === s ? styleLabels[s].color : "#1e293b",
-                              background: gen.style === s ? `${styleLabels[s].color}18` : "transparent",
-                              color: gen.style === s ? styleLabels[s].color : "#94a3b8",
-                              fontSize: "0.78rem",
-                              fontWeight: 500,
-                              cursor: "pointer",
-                              transition: "all 0.15s",
-                            }}
-                          >
-                            {styleLabels[s].label}
-                          </button>
-                        ))}
+                    {/* Style selector + NYC setting toggle */}
+                    <div style={{ marginBottom: 16, display: "flex", gap: 24, flexWrap: "wrap", alignItems: "flex-start" }}>
+                      <div>
+                        <label style={{ fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", display: "block", marginBottom: 8 }}>
+                          Style
+                        </label>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          {(Object.keys(styleLabels) as Style[]).map((s) => (
+                            <button
+                              key={s}
+                              onClick={() => updateGen(post.slug, { style: s })}
+                              style={{
+                                padding: "6px 14px",
+                                borderRadius: 6,
+                                border: "1px solid",
+                                borderColor: gen.style === s ? styleLabels[s].color : "#1e293b",
+                                background: gen.style === s ? `${styleLabels[s].color}18` : "transparent",
+                                color: gen.style === s ? styleLabels[s].color : "#94a3b8",
+                                fontSize: "0.78rem",
+                                fontWeight: 500,
+                                cursor: "pointer",
+                                transition: "all 0.15s",
+                              }}
+                            >
+                              {styleLabels[s].label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <label style={{ fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", display: "block", marginBottom: 8 }}>
+                          Setting
+                        </label>
+                        <label
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 8,
+                            padding: "6px 12px",
+                            borderRadius: 6,
+                            border: "1px solid",
+                            borderColor: gen.nyc ? "#f59e0b" : "#1e293b",
+                            background: gen.nyc ? "rgba(245,158,11,0.12)" : "transparent",
+                            color: gen.nyc ? "#fbbf24" : "#94a3b8",
+                            fontSize: "0.78rem",
+                            fontWeight: 500,
+                            cursor: "pointer",
+                            userSelect: "none",
+                          }}
+                          title="When checked, prompts are locked to a NYC setting. Uncheck for articles where a NYC backdrop isn't necessary."
+                        >
+                          <input
+                            type="checkbox"
+                            checked={gen.nyc}
+                            onChange={(e) => updateGen(post.slug, { nyc: e.target.checked })}
+                            style={{ accentColor: "#f59e0b", cursor: "pointer" }}
+                          />
+                          NYC
+                        </label>
                       </div>
                     </div>
 
@@ -1413,6 +1470,19 @@ export default function DevBlogPage() {
                       const selected = gen.images.find((im) => im.id === gen.selectedId);
                       if (!selected) return null;
                       const ratios: AspectRatio[] = ["16:9", "3:4", "1:1"];
+                      // Most-recent render per aspect ratio that matches the
+                      // selected image's prompt — this is the visual "series."
+                      const seriesByRatio: Partial<Record<AspectRatio, GeneratedImage>> = {};
+                      for (const im of gen.images) {
+                        if (im.prompt !== selected.prompt) continue;
+                        const cur = seriesByRatio[im.aspectRatio];
+                        if (!cur || im.ts > cur.ts) seriesByRatio[im.aspectRatio] = im;
+                      }
+                      const aspectBoxRatio: Record<AspectRatio, string> = {
+                        "16:9": "16 / 9",
+                        "3:4": "3 / 4",
+                        "1:1": "1 / 1",
+                      };
                       return (
                         <div
                           style={{
@@ -1438,7 +1508,7 @@ export default function DevBlogPage() {
                                 {selected.aspectRatio}
                               </span>
                             </div>
-                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
                               {ratios.map((r) => {
                                 const phase = gen.reshapePhase[r];
                                 const isCurrent = selected.aspectRatio === r;
@@ -1480,34 +1550,137 @@ export default function DevBlogPage() {
                                   </button>
                                 );
                               })}
+                              <button
+                                onClick={() => generateSeries(post.slug)}
+                                disabled={anyReshaping}
+                                title="Render this prompt at all 3 aspect ratios"
+                                style={{
+                                  padding: "6px 12px",
+                                  fontSize: "0.74rem",
+                                  fontWeight: 700,
+                                  borderRadius: 6,
+                                  background: "linear-gradient(135deg, #22c55e, #16a34a)",
+                                  color: "#fff",
+                                  border: "1px solid rgba(34,197,94,0.5)",
+                                  cursor: anyReshaping ? "wait" : "pointer",
+                                  opacity: anyReshaping ? 0.6 : 1,
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  marginLeft: 4,
+                                }}
+                              >
+                                {anyReshaping ? (
+                                  <span
+                                    style={{
+                                      width: 10,
+                                      height: 10,
+                                      borderRadius: "50%",
+                                      border: "1.5px solid #fff",
+                                      borderTopColor: "transparent",
+                                      animation: "devSpin 0.8s linear infinite",
+                                      display: "inline-block",
+                                    }}
+                                  />
+                                ) : (
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <path d="M4 4h6v6H4z" />
+                                    <path d="M14 4h6v6h-6z" />
+                                    <path d="M4 14h16v6H4z" />
+                                  </svg>
+                                )}
+                                {anyReshaping ? "Generating series..." : "Generate Series"}
+                              </button>
                             </div>
                           </div>
 
                           <div
                             style={{
-                              width: "100%",
-                              maxHeight: 360,
-                              borderRadius: 10,
-                              overflow: "hidden",
-                              background: "#0a0e1a",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
+                              display: "grid",
+                              gridTemplateColumns: "repeat(3, 1fr)",
+                              gap: 10,
                             }}
                           >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={`data:${selected.mime};base64,${selected.data}`}
-                              alt="Selected thumbnail"
-                              style={{ maxWidth: "100%", maxHeight: 360, objectFit: "contain", display: "block" }}
-                            />
+                            {ratios.map((r) => {
+                              const im = seriesByRatio[r];
+                              const phase = gen.reshapePhase[r];
+                              const isSelected = im && im.id === gen.selectedId;
+                              return (
+                                <button
+                                  key={r}
+                                  type="button"
+                                  onClick={() => {
+                                    if (im) updateGen(post.slug, { selectedId: im.id });
+                                    else reshapeSelected(post.slug, r);
+                                  }}
+                                  disabled={!im && phase === "generating"}
+                                  style={{
+                                    position: "relative",
+                                    width: "100%",
+                                    aspectRatio: aspectBoxRatio[r],
+                                    borderRadius: 10,
+                                    overflow: "hidden",
+                                    background: "#0a0e1a",
+                                    padding: 0,
+                                    border: isSelected
+                                      ? "2px solid #22c55e"
+                                      : "1px solid #334155",
+                                    cursor: phase === "generating" ? "wait" : "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  {im ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                      src={`data:${im.mime};base64,${im.data}`}
+                                      alt={`${r} render`}
+                                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                                    />
+                                  ) : phase === "generating" ? (
+                                    <span
+                                      style={{
+                                        width: 22,
+                                        height: 22,
+                                        borderRadius: "50%",
+                                        border: "2px solid #a5b4fc",
+                                        borderTopColor: "transparent",
+                                        animation: "devSpin 0.8s linear infinite",
+                                        display: "inline-block",
+                                      }}
+                                    />
+                                  ) : (
+                                    <span style={{ fontSize: "0.72rem", color: "#64748b", padding: 10, textAlign: "center" }}>
+                                      Not rendered yet — click to generate {r}
+                                    </span>
+                                  )}
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      top: 6,
+                                      left: 6,
+                                      fontSize: "0.68rem",
+                                      fontWeight: 700,
+                                      color: "#fff",
+                                      background: "rgba(0,0,0,0.6)",
+                                      padding: "2px 6px",
+                                      borderRadius: 4,
+                                      letterSpacing: "0.04em",
+                                    }}
+                                  >
+                                    {r}
+                                  </span>
+                                </button>
+                              );
+                            })}
                           </div>
 
                           {gen.reshapeError && (
                             <p style={{ color: "#fca5a5", fontSize: "0.74rem", margin: "10px 0 0" }}>{gen.reshapeError}</p>
                           )}
                           <p style={{ margin: "10px 0 0", fontSize: "0.72rem", color: "#94a3b8", lineHeight: 1.5 }}>
-                            Tip: click 16:9, 3:4, or 1:1 to render this same prompt at a different aspect so the thumbnail works on all devices. New renders appear in the gallery below.
+                            Tip: click &ldquo;Generate Series&rdquo; to render all 3 aspect ratios at once, or click an empty tile to render just that ratio. Click any tile to make it the selected thumbnail.
                           </p>
                         </div>
                       );

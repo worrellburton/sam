@@ -1631,12 +1631,13 @@ a.hero-rating-card:hover {
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  gap: 12px;
   height: 100%;
-  padding: 0 32px;
+  padding: 0 24px;
   background: #FFD60A;
   color: #1a1a1a !important;
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
   text-decoration: none;
   letter-spacing: 0.3px;
@@ -1645,6 +1646,30 @@ a.hero-rating-card:hover {
 .sticky-bar-btn:hover {
   background: #F5C800;
   color: #1a1a1a !important;
+}
+.sticky-bar-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.sticky-bar-btn-label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+}
+.sticky-bar-btn-sub {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(26,26,26,0.65);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sticky-bar-btn-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Mobile fixed theme toggle - hidden on desktop */
@@ -6138,23 +6163,85 @@ img.insurance-logo-light { display: none; }
     pointer-events: none;
   }
   .sticky-bar-info { display: none; }
+
+  /* Floating Book Now pill — refined with icon, label stack, arrow,
+     gradient + dual-layer shadow + subtle inner highlight. */
   .sticky-bar-btn {
     flex: 0 1 auto;
     width: auto;
     margin: 0 auto;
-    padding: 14px 36px;
-    justify-content: center;
-    font-size: 1rem;
-    font-weight: 700;
-    background: #FFD60A;
+    height: auto;
+    padding: 12px 18px 12px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(180deg, #FFE45C 0%, #FFD60A 55%, #F2C500 100%) !important;
     color: #1a1a1a !important;
     border-radius: 999px;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.32), 0 2px 6px rgba(0,0,0,0.2);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.7) inset,
+      0 -1px 0 rgba(0,0,0,0.08) inset,
+      0 12px 28px rgba(20,12,0,0.38),
+      0 4px 10px rgba(20,12,0,0.22);
     pointer-events: auto;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .sticky-bar-btn:active {
+    transform: translateY(1px) scale(0.985);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.7) inset,
+      0 -1px 0 rgba(0,0,0,0.08) inset,
+      0 6px 14px rgba(20,12,0,0.32),
+      0 2px 6px rgba(20,12,0,0.18);
   }
   .sticky-bar-btn:hover {
-    background: #F5C800;
+    background: linear-gradient(180deg, #FFE45C 0%, #FFD60A 55%, #F2C500 100%) !important;
     color: #1a1a1a !important;
+  }
+  .sticky-bar-btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(26,26,26,0.10);
+    color: #1a1a1a;
+    flex-shrink: 0;
+  }
+  .sticky-bar-btn-label {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.1;
+    text-align: left;
+  }
+  .sticky-bar-btn-title {
+    font-size: 1.02rem;
+    font-weight: 800;
+  }
+  .sticky-bar-btn-sub {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(26,26,26,0.65);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .sticky-bar-btn-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    color: #FFD60A;
+    flex-shrink: 0;
+    margin-left: 4px;
   }
 
   /* Fixed theme toggle on mobile */

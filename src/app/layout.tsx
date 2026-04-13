@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -14,6 +14,15 @@ const inter = localFont({
 const GA_ID = "G-HP23C836XM";
 
 const SITE_URL = "https://samelguizaoui.vercel.app";
+
+// `viewport-fit=cover` so env(safe-area-inset-*) values are populated
+// on notched iOS devices — required for the StickyBar to clear Safari's
+// bottom URL toolbar correctly.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Sameh Elguizaoui, M.D. | Orthopedic Surgeon & Sports Medicine | NYC",

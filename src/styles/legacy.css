@@ -102,10 +102,12 @@
 [data-theme="light"] .theme-toggle .icon-sun { display: none; }
 [data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
-/* Fixed theme toggle — bottom right */
+/* Fixed theme toggle — bottom right.
+   Same lvh/dvh trick as the StickyBar to clear Safari's URL bar. */
 .theme-toggle-fixed {
   position: fixed;
   bottom: 24px;
+  bottom: calc(24px + (100lvh - 100dvh) + env(safe-area-inset-bottom, 0px));
   right: 24px;
   z-index: 9999;
   background: rgba(255,255,255,0.1);
@@ -138,6 +140,7 @@
 /* Push up when sticky bar is visible */
 .sticky-bottom-bar.visible ~ .theme-toggle-fixed {
   bottom: 80px;
+  bottom: calc(80px + (100lvh - 100dvh) + env(safe-area-inset-bottom, 0px));
 }
 .theme-toggle-fixed:hover {
   background: rgba(255,255,255,0.2);
@@ -1478,7 +1481,12 @@ a.hero-rating-card:hover {
 /* Sticky Bottom Bar */
 .sticky-bottom-bar {
   position: fixed;
+  /* Lift above iOS Safari's collapsing bottom URL bar.
+     `100lvh - 100dvh` is the toolbar's current height (0 when hidden,
+     positive when expanded). Plus the home-indicator safe-area inset.
+     Falls back to plain `bottom: 0` on browsers without dvh/lvh. */
   bottom: 0;
+  bottom: calc(100lvh - 100dvh + env(safe-area-inset-bottom, 0px));
   left: 0;
   right: 0;
   z-index: 999;
@@ -12713,9 +12721,8 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 
 /* ── Safe Area Insets for Notched Phones ────────────────────────── */
 @supports (padding: env(safe-area-inset-bottom)) {
-  .sticky-bottom-bar {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+  /* StickyBar handles its own bottom inset via the `bottom:` calc above
+     (lifts past Safari's URL bar + home indicator) — no padding needed. */
   .mobile-nav {
     padding-bottom: env(safe-area-inset-bottom);
   }

@@ -38,6 +38,64 @@ export function isPostReleased(post: BlogPost, now: Date = new Date()): boolean 
   return rel.getTime() <= today.getTime();
 }
 
+/**
+ * Infinite-loop rotation view for the Clinical Clarity series.
+ *
+ * Rules:
+ *   1. If a post is explicitly `comingSoon: true` and has NOT yet released, it
+ *      is the "coming next" teaser (authored draft).
+ *   2. Otherwise, when the stored coming-soon post has released (or none is
+ *      flagged), the oldest released episode is re-surfaced as a derived
+ *      "coming soon" teaser — giving the series a perpetual "what's next"
+ *      slot without any authoring action.
+ *
+ * This makes the series self-rotating: as each draft releases, the oldest
+ * back-catalog episode rotates into the teaser slot automatically.
+ */
+export interface SeriesRotationView {
+  published: BlogPost[];      // all posts that are visible as articles today
+  comingSoon: BlogPost | null; // the single active teaser
+  /** true when the teaser is the oldest released post re-surfaced, not a true draft. */
+  derived: boolean;
+}
+
+export function getSeriesRotationView(
+  posts: BlogPost[] = blogPosts,
+  now: Date = new Date()
+): SeriesRotationView {
+  const series = posts.filter((p) => p.episode !== undefined);
+
+  // A real (authored) coming-soon draft that has not yet released.
+  const authoredDraft = series.find(
+    (p) => p.comingSoon && !isPostReleased(p, now)
+  );
+
+  // Everything else that is currently visible as an article.
+  const released = series
+    .filter((p) => (!authoredDraft || p.slug !== authoredDraft.slug))
+    .filter((p) => isPostReleased(p, now));
+
+  if (authoredDraft) {
+    return { published: released, comingSoon: authoredDraft, derived: false };
+  }
+
+  if (released.length === 0) {
+    return { published: [], comingSoon: null, derived: false };
+  }
+
+  // Pick the oldest released episode (lowest episode number) as the derived
+  // teaser. Ties break by earliest date.
+  const sortedByAge = [...released].sort((a, b) => {
+    const ea = a.episode ?? Number.POSITIVE_INFINITY;
+    const eb = b.episode ?? Number.POSITIVE_INFINITY;
+    if (ea !== eb) return ea - eb;
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
+  const oldest = sortedByAge[0];
+  const published = released.filter((p) => p.slug !== oldest.slug);
+  return { published, comingSoon: oldest, derived: true };
+}
+
 export const blogPosts: BlogPost[] = [
   {
     slug: "cartilage-restoration-maci-allograft",

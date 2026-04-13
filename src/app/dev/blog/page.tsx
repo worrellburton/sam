@@ -131,6 +131,27 @@ export default function DevBlogPage() {
     }
   }
 
+  // Infinite-loop rotation (dev-triggered materialization)
+  const [rotatePhase, setRotatePhase] = useState<"idle" | "rotating" | "error" | "done">("idle");
+  const [rotateError, setRotateError] = useState<string>("");
+  const [rotateResult, setRotateResult] = useState<{ promoted?: string[]; newTeaser?: string | null; noop?: boolean } | null>(null);
+
+  async function rotateBlog() {
+    setRotatePhase("rotating");
+    setRotateError("");
+    setRotateResult(null);
+    try {
+      const res = await fetch("/api/dev/rotate-blog", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to rotate");
+      setRotatePhase("done");
+      setRotateResult(data);
+    } catch (err) {
+      setRotatePhase("error");
+      setRotateError(err instanceof Error ? err.message : "Failed");
+    }
+  }
+
   // Auto-schedule panel
   const [scheduleOpen, setScheduleOpen] = useState<boolean>(false);
   const [scheduleStart, setScheduleStart] = useState<string>(() => {
@@ -795,6 +816,148 @@ export default function DevBlogPage() {
             </div>
           )}
         </div>
+
+        {/* Infinite-loop rotation panel */}
+        {(() => {
+          // Compute a preview that mirrors the server-side rotation logic so
+          // the user can see the outcome before clicking.
+          const withOverrides = blogPosts.map((p) => {
+            const ov = statusOverrides[p.slug];
+            const release = releaseDrafts[p.slug] ?? p.releaseDate ?? undefined;
+            return {
+              ...p,
+              comingSoon: ov !== undefined ? ov : !!p.comingSoon,
+              releaseDate: release || undefined,
+            };
+          });
+          const now = new Date();
+          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const released = (p: typeof withOverrides[number]) => {
+            if (!p.comingSoon) return true;
+            if (!p.releaseDate) return false;
+            const r = new Date(p.releaseDate);
+            if (isNaN(r.getTime())) return false;
+            const rel = new Date(r.getFullYear(), r.getMonth(), r.getDate());
+            return rel.getTime() <= today.getTime();
+          };
+          const dueToPromote = withOverrides.filter(
+            (p) => p.comingSoon && p.releaseDate && released(p)
+          );
+          const activeDraft = withOverrides.find(
+            (p) => p.comingSoon && !released(p)
+          );
+          const needsTeaser = !activeDraft;
+          const oldestReleased = needsTeaser
+            ? [...withOverrides]
+                .filter((p) => p.episode !== undefined)
+                .filter((p) => released(p))
+                .filter((p) => !dueToPromote.some((d) => d.slug === p.slug))
+                .sort((a, b) => (a.episode || 9999) - (b.episode || 9999))[0]
+            : undefined;
+          const isNoop = dueToPromote.length === 0 && !oldestReleased;
+          return (
+            <div
+              style={{
+                border: "1px solid #1e293b",
+                borderRadius: 10,
+                padding: 18,
+                marginBottom: 24,
+                background: "#0c1021",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 26,
+                    height: 26,
+                    borderRadius: 6,
+                    background: "rgba(139,92,246,0.15)",
+                    color: "#a78bfa",
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 2v6h-6" />
+                    <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                    <path d="M3 22v-6h6" />
+                    <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+                  </svg>
+                </span>
+                <div style={{ flex: 1 }}>
+                  <p style={{ margin: 0, fontSize: "0.9rem", fontWeight: 600, color: "#f1f5f9" }}>
+                    Infinite-Loop Rotation
+                  </p>
+                  <p style={{ margin: 0, fontSize: "0.75rem", color: "#64748b", marginTop: 2 }}>
+                    When a draft releases, the oldest published episode rotates into the &ldquo;Coming Soon&rdquo; slot.
+                  </p>
+                </div>
+                <button
+                  onClick={rotateBlog}
+                  disabled={rotatePhase === "rotating" || isNoop}
+                  style={{
+                    ...btnPrimary,
+                    background: "#8b5cf6",
+                    opacity: rotatePhase === "rotating" || isNoop ? 0.5 : 1,
+                    cursor: rotatePhase === "rotating" || isNoop ? "not-allowed" : "pointer",
+                  }}
+                  title={isNoop ? "Nothing to rotate right now" : "Advance the rotation one step"}
+                >
+                  {rotatePhase === "rotating" ? "Rotating..." : "Advance rotation"}
+                </button>
+              </div>
+              <div
+                style={{
+                  background: "#0a0e1a",
+                  border: "1px solid #1e293b",
+                  borderRadius: 8,
+                  padding: "10px 12px",
+                  fontSize: "0.8rem",
+                  color: "#cbd5e1",
+                }}
+              >
+                {isNoop ? (
+                  <span style={{ color: "#64748b" }}>
+                    Nothing pending — a draft with a past release date is required before a new teaser can be promoted.
+                  </span>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    {dueToPromote.length > 0 && (
+                      <div>
+                        <span style={{ color: "#34d399", fontWeight: 600 }}>Promote: </span>
+                        {dueToPromote.map((p) => p.slug).join(", ")}
+                      </div>
+                    )}
+                    {oldestReleased && (
+                      <div>
+                        <span style={{ color: "#a78bfa", fontWeight: 600 }}>New teaser: </span>
+                        Ep. {oldestReleased.episode} &middot; {oldestReleased.slug}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              {rotatePhase === "error" && (
+                <p style={{ color: "#fca5a5", fontSize: "0.78rem", marginTop: 10 }}>{rotateError}</p>
+              )}
+              {rotatePhase === "done" && rotateResult && !rotateResult.noop && (
+                <p style={{ color: "#4ade80", fontSize: "0.78rem", marginTop: 10 }}>
+                  &#10003; Rotated.{" "}
+                  {rotateResult.promoted && rotateResult.promoted.length > 0
+                    ? `Promoted ${rotateResult.promoted.join(", ")}. `
+                    : ""}
+                  {rotateResult.newTeaser ? `New teaser: ${rotateResult.newTeaser}.` : ""}
+                </p>
+              )}
+              {rotatePhase === "done" && rotateResult?.noop && (
+                <p style={{ color: "#64748b", fontSize: "0.78rem", marginTop: 10 }}>
+                  No changes needed.
+                </p>
+              )}
+            </div>
+          );
+        })()}
 
         <div style={{ marginBottom: 24 }}>
           <input type="text" placeholder="Search posts..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ ...input, maxWidth: 400 }} />

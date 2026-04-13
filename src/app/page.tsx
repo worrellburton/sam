@@ -445,6 +445,29 @@ export default function Home() {
                     )}
                     <h3 className="specialty-title">{card.title}</h3>
                     {card.description && <p className="specialty-description">{card.description}</p>}
+                    {isBookCard && (
+                      <div className="book-card-rating">
+                        <div className="book-card-rating-top">
+                          <span className="book-card-score">4.8<span className="book-card-star">&#9733;</span></span>
+                          <span className="book-card-rating-meta">
+                            <strong>{googleTotal ? `${(1466 + googleTotal).toLocaleString()}` : '1,466'}</strong> Patient Reviews
+                          </span>
+                        </div>
+                        <span className="book-card-patient-choice">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M7 4V2h10v2h4v4a4 4 0 0 1-4 4h-.35A5.002 5.002 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A5.002 5.002 0 0 1 7.35 12H7a4 4 0 0 1-4-4V4h4zm0 2H5v2a2 2 0 0 0 2 2V6zm10 0v4a2 2 0 0 0 2-2V6h-2z" />
+                          </svg>
+                          Patient Choice
+                        </span>
+                        <span className="book-card-cta">
+                          Book on ZocDoc
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                          </svg>
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </Link>
               );

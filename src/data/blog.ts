@@ -98,6 +98,165 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "distal-radius-fractures-wrist",
+    title: "Broken Wrist, Open Questions: The Modern Decision Between Casting and Plating a Distal Radius Fracture",
+    excerpt:
+      "The most common fracture in adults is also the most over- and under-treated. Here is how we decide between a cast, a pin, and a plate — and why one wrong call costs range of motion for life.",
+    tag: "The Investigation",
+    date: "April 8, 2026",
+    readTime: "9 min read",
+    episode: 22,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "sports-medicine",
+    image: "https://images.unsplash.com/photo-1551601651-bc60f254d532?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Wrist X-ray showing a distal radius fracture",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#why">Why Wrists Break the Way They Do</a></li>
+    <li><a href="#imaging">Imaging Is a Three-Dimensional Story</a></li>
+    <li><a href="#nonop">When Casting Works — and When It Fails</a></li>
+    <li><a href="#surgery">Volar Plating: The Modern Workhorse</a></li>
+    <li><a href="#recovery">Recovery and Return to Function</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>A distal radius fracture is not always a "just cast it" injury. Getting the first ten days right — the imaging, the reduction, the surgical decision — is what separates a wrist that works from a wrist that lingers.</p>
+</div>
+
+<h2 id="why">Why Wrists Break the Way They Do</h2>
+
+<p>The distal radius is the end of the forearm bone that forms most of the wrist joint. Fall on an outstretched hand — a FOOSH injury — and the impact drives the wrist into extension, fracturing the radius 2–4 cm above the joint. Ice, pavement, skiing, stairs, bikes. It happens to the young on skis and the elderly on floors.</p>
+
+<div class="blog-expert-quote">
+  <p>The wrist is a precision joint. A millimeter of residual deformity at the joint surface is the difference between full motion in five years and a patient who can no longer screw the lid off a jar.</p>
+  <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon, Sports Medicine Specialist</cite>
+</div>
+
+<h2 id="imaging">Imaging Is a Three-Dimensional Story</h2>
+
+<p>Two X-ray views are not enough. A true evaluation of a distal radius fracture involves measured parameters that predict outcome — and a CT when the joint surface is involved.</p>
+
+<div class="blog-takeaway">
+  <h4>Numbers that drive treatment</h4>
+  <ul>
+    <li><strong>Radial inclination</strong> — should be ≥ 15°</li>
+    <li><strong>Radial height</strong> — should be ≥ 11 mm</li>
+    <li><strong>Volar tilt</strong> — should be 0–20°</li>
+    <li><strong>Intra-articular step-off</strong> — must be &lt; 2 mm</li>
+    <li><strong>Associated ulnar styloid or DRUJ injury</strong> — changes the plan</li>
+  </ul>
+</div>
+
+<h2 id="nonop">When Casting Works — and When It Fails</h2>
+
+<p>A minimally displaced, stable, extra-articular fracture in a patient with modest demand usually heals beautifully in a short-arm cast for six weeks. The question is whether your fracture stays reduced.</p>
+
+<p>Up to 30–40% of closed reductions re-displace in the first two weeks under the cast. That is why every non-op wrist gets imaged at 1 and 2 weeks. If it has slipped, surgery is still on the table — and timing matters.</p>
+
+<h3>When casting is the right call</h3>
+<ul>
+  <li>Minimally displaced fractures meeting all alignment criteria</li>
+  <li>Low-demand patients with a stable reduction</li>
+  <li>Fractures outside the joint surface</li>
+  <li>Young children (very different healing biology)</li>
+</ul>
+
+<h2 id="surgery">Volar Plating: The Modern Workhorse</h2>
+
+<p>Open reduction and internal fixation with a <em>volar locking plate</em> has replaced pins and external fixators as the default operation for displaced distal radius fractures. The plate sits on the palm side of the wrist, deep to the tendons, and uses locking screws that grip the thin subchondral bone like a fixed-angle device.</p>
+
+<div class="blog-steps">
+  <div class="blog-step">
+    <span class="blog-step-num">01</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m19 9-7 7-7-7"/></svg>
+    </div>
+    <h4>Reduction</h4>
+    <p>Under fluoroscopy, length, tilt, and inclination are restored. Joint surface is reassembled to within 1 mm.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">02</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="4" rx="1"/><circle cx="7" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="17" cy="12" r="1"/></svg>
+    </div>
+    <h4>Plate Placement</h4>
+    <p>A low-profile titanium plate is set on the volar cortex. Locking screws into the subchondral bone create a buttress for the reconstructed joint surface.</p>
+  </div>
+  <div class="blog-step">
+    <span class="blog-step-num">03</span>
+    <div class="blog-step-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <h4>Early Motion</h4>
+    <p>The plate is stable enough to permit wrist motion within a week. This is the biggest advantage over casting — the tissues stay supple.</p>
+  </div>
+</div>
+
+<a href="/services/sports-medicine" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Broken wrist this week? <strong>Book a same-week fracture consultation</strong> — we make sure the reduction is right before a cast sets it wrong.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="recovery">Recovery and Return to Function</h2>
+
+<div class="blog-timeline">
+  <p class="blog-bar-chart-title">Volar plate recovery</p>
+  <div class="blog-timeline-track">
+    <div class="blog-timeline-progress" style="--timeline-progress: 100%;"></div>
+  </div>
+  <div class="blog-timeline-markers">
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEK 1</div>
+      <div class="blog-timeline-label">Soft splint, begin finger ROM immediately, shower at 3 days</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 2–6</div>
+      <div class="blog-timeline-label">Occupational therapy, active wrist motion, no lifting &gt; 1 lb</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">WEEKS 6–12</div>
+      <div class="blog-timeline-label">Strengthening, return to keyboard and light activity</div>
+    </div>
+    <div class="blog-timeline-marker">
+      <div class="blog-timeline-dot"></div>
+      <div class="blog-timeline-week">MONTHS 3–6</div>
+      <div class="blog-timeline-label">Full strength, return to lifting, impact sport, racquet sports</div>
+    </div>
+  </div>
+</div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Do I need the plate taken out later?</h3>
+  <p>No. Volar plates are designed to stay in. Removal is only considered if there is hardware irritation years later, which is uncommon.</p>
+
+  <h3>How much range of motion will I lose?</h3>
+  <p>With a well-reduced fracture and early motion, most patients regain 90–95% of their pre-injury range. Chronic stiffness usually follows a fracture that was under-reduced or over-casted.</p>
+
+  <h3>What about a dorsal approach or a pin-only fixation?</h3>
+  <p>Rarely used today. Volar plating is more rigid, allows earlier motion, and has lower tendon complication rates than dorsal plating or K-wires.</p>
+
+  <h3>What about osteoporotic fractures?</h3>
+  <p>Fixed-angle locking plates grip osteoporotic bone better than compression screws. For elderly patients, we also start bone-health treatment at the fracture visit — the wrist fracture is often the first warning of a future hip fracture.</p>
+
+  <h3>When is CT imaging required?</h3>
+  <p>When fragments extend into the joint surface, when comminution is severe, or when a step-off on X-ray is ambiguous. CT is not routine — but when we need it, we need it.</p>
+</div>
+`,
+  },
+  {
     slug: "total-knee-replacement-2026",
     title: "Total Knee Replacement in 2026: Robotic Guidance, Kinematic Alignment, and the End of the One-Size Knee",
     excerpt:

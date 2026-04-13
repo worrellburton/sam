@@ -98,6 +98,120 @@ export function getSeriesRotationView(
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "football-orthopedic-injuries",
+    title: "Friday Night Lights, Sunday Morning Specialists: The Orthopedic Injury Map of Football",
+    excerpt:
+      "From Pop Warner to the Jets, football injuries follow predictable anatomic patterns. As a former NY Jets team physician, here is the field-side playbook.",
+    tag: "The Field Report",
+    date: "March 30, 2026",
+    readTime: "10 min read",
+    episode: 18,
+    seriesTitle: "Clinical Clarity",
+    relatedService: "sports-medicine",
+    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&h=600&fit=crop&q=80",
+    imageAlt: "Football player on the sideline being examined by a physician",
+    content: "",
+    contentHtml: `
+<div class="blog-toc">
+  <h4>In This Article</h4>
+  <ol>
+    <li><a href="#patterns">Football's Five Predictable Injury Patterns</a></li>
+    <li><a href="#knee">The Knee — ACL, MCL, and the Combined Tear</a></li>
+    <li><a href="#shoulder">The Shoulder — Stingers, Dislocations, AC Separations</a></li>
+    <li><a href="#return">The Return-To-Play Decision</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<div class="blog-kindness">
+  <p>Football is a contact sport with predictable physics. The good news: most football injuries are not career-ending — but every one of them is mismanaged often enough to ruin a season that didn't have to be ruined.</p>
+</div>
+
+<h2 id="patterns">Football's Five Predictable Injury Patterns</h2>
+
+<div class="blog-takeaway">
+  <h4>What we see week after week</h4>
+  <ul>
+    <li><strong>ACL tear</strong> — non-contact pivoting, or contact valgus blow</li>
+    <li><strong>MCL sprain</strong> — direct lateral blow to the planted knee</li>
+    <li><strong>Anterior shoulder dislocation</strong> — tackler's arm in 90° abduction, hit from behind</li>
+    <li><strong>AC joint separation</strong> — direct fall on the point of the shoulder</li>
+    <li><strong>Burner / stinger</strong> — neck and brachial-plexus traction during a tackle</li>
+  </ul>
+</div>
+
+<h2 id="knee">The Knee — ACL, MCL, and the Combined Tear</h2>
+
+<p>The most consequential football injury is the ACL. Quarterbacks and skill positions tear ACLs non-contact on a plant-and-cut. Linemen tear them on combined contact-valgus blows that take out MCL and meniscus at the same time — the "unhappy triad."</p>
+
+<p>For ACL details, see our <a href="/blog/acl-tear-warning-signs">ACL warning signs deep dive</a> and <a href="/blog/acl-tear-recovery">ACL recovery roadmap</a>. For football specifically, two things matter: get an MRI before the swelling resolves the diagnostic clarity, and make the surgical timing decision based on knee motion (not the calendar).</p>
+
+<h3>MCL sprains</h3>
+<ul>
+  <li>Grade 1 (mild) — back to play in 1–2 weeks with a brace</li>
+  <li>Grade 2 (moderate) — 4–6 weeks, hinged brace, progressive loading</li>
+  <li>Grade 3 (complete) — 6–10 weeks; usually heals without surgery if isolated</li>
+</ul>
+
+<h2 id="shoulder">The Shoulder — Stingers, Dislocations, AC Separations</h2>
+
+<p>The football shoulder is built to absorb collisions, but it has well-known failure modes:</p>
+
+<div class="blog-compare">
+  <div class="blog-compare-card is-accent">
+    <p class="blog-compare-sub">Anterior dislocation</p>
+    <h4>Glenohumeral instability</h4>
+    <ul>
+      <li>Reduce on the field if trained, otherwise transport</li>
+      <li>MRI looks for Bankart lesion, Hill-Sachs defect</li>
+      <li>First-time in young contact athletes → surgical stabilization is increasingly the default</li>
+      <li>Re-dislocation in unrepaired teens approaches 80%</li>
+    </ul>
+  </div>
+  <div class="blog-compare-card">
+    <p class="blog-compare-sub">AC separation</p>
+    <h4>Acromioclavicular injury</h4>
+    <ul>
+      <li>Grade I–II: sling, return in 2–4 weeks</li>
+      <li>Grade III: shared decision; many heal non-op</li>
+      <li>Grade IV–VI: surgical reconstruction</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="return">The Return-To-Play Decision</h2>
+
+<p>Return to contact requires three boxes checked: <strong>full painless range of motion, strength within 10% of the contralateral side, and sport-specific functional testing.</strong> A handshake and a "feels good" is not return-to-play. Reinjury during the in-season is almost always a return-to-play criteria failure.</p>
+
+<a href="/services/sports-medicine" class="blog-inline-cta">
+  <span class="blog-inline-cta-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+  </span>
+  <span>Football injury this season? <strong>Book a same-week sports consultation</strong> — the right MRI and exam in the first week sets up the right return-to-play timeline.</span>
+  <svg class="blog-inline-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+</a>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="blog-faq">
+  <h3>Should youth players play through "small" injuries?</h3>
+  <p>No. Youth growth plates are vulnerable to apophyseal injuries (Osgood-Schlatter, Sever's, Little League shoulder) that progress with continued play. A two-week pause is almost always cheaper than a season-long disability.</p>
+
+  <h3>How dangerous are stingers really?</h3>
+  <p>One stinger that resolves in minutes is benign. Repeated stingers, bilateral symptoms, or persistent weakness require imaging — they can flag underlying cervical stenosis that contraindicates contact sport.</p>
+
+  <h3>What about turf toe?</h3>
+  <p>Hyperextension of the great toe at the MTP joint. Looks minor, can be season-ending. Grade III tears with plantar plate disruption may need surgical repair in skill-position players.</p>
+
+  <h3>Helmet contact rules — do they actually reduce injury?</h3>
+  <p>Targeting and crown-of-helmet bans have measurably reduced cervical-spine catastrophic injury. Concussion rates remain a separate, evolving conversation.</p>
+
+  <h3>Is preseason ACL prevention a real thing?</h3>
+  <p>Yes — neuromuscular training programs (FIFA 11+, PEP, Sportsmetrics) have published reductions of 50–70% in ACL injury rates in pivoting sports. Football programs that adopt them see fewer non-contact ACLs.</p>
+</div>
+`,
+  },
+  {
     slug: "tennis-elbow-lateral-epicondylitis",
     title: "Tennis Elbow Without the Tennis: Why Your Outside-Elbow Pain Won't Quit and What Actually Cures It",
     excerpt:

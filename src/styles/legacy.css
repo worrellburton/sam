@@ -986,6 +986,24 @@ a.nav-btn-book,
   opacity: 1;
 }
 
+/* Animated dark overlay — slow-moving linear gradients in navy + gold.
+   Sits on top of the static .hero-overlay (which acts as a no-WebGL
+   fallback). Same z-index as the overlay; later in DOM order so it
+   paints on top when WebGL is available. */
+.hero-overlay-webgl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease 0.4s;
+}
+.hero-loaded .hero-overlay-webgl {
+  opacity: 1;
+}
+
 .hero-content {
   position: relative;
   z-index: 2;

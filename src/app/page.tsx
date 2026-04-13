@@ -10,6 +10,7 @@ import { services } from "@/data/services";
 import { blogPosts, isPostReleased } from "@/data/blog";
 import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
 import { HeroGradient } from "@/components/HeroGradient";
+import { HeroOverlayGradient } from "@/components/HeroOverlayGradient";
 
 const tickerItems = [
   {
@@ -258,6 +259,7 @@ export default function Home() {
         <Image className={`hero-bg-img${heroReady ? " loaded" : ""}`} src="/images/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority onLoad={() => setHeroReady(true)} />
         <HeroGradient />
         <div className="hero-overlay"></div>
+        <HeroOverlayGradient />
         <div className="container hero-content">
           <div className="hero-text">
             <p className="hero-label">Board-Certified Orthopedic Excellence</p>

@@ -109,19 +109,37 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     const hoverHandlers = new WeakMap<HTMLElement, { enter: () => void; leave: () => void }>();
     let videoObserver: IntersectionObserver | null = null;
 
+    // On touch devices, track which video is most-visible and play only
+    // that one — avoids multiple autoplaying videos thrashing bandwidth
+    // and stacking audio (even if muted, decoders are finite).
+    const videoVisibility = new Map<HTMLVideoElement, number>();
+
     if (isTouch) {
       videoObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            const video = entry.target as HTMLVideoElement;
-            if (entry.isIntersecting) {
-              video.play().catch(() => {});
-            } else {
-              video.pause();
+            videoVisibility.set(
+              entry.target as HTMLVideoElement,
+              entry.intersectionRatio
+            );
+          });
+          let best: HTMLVideoElement | null = null;
+          let bestRatio = 0.35;
+          for (const [v, ratio] of videoVisibility) {
+            if (ratio > bestRatio) {
+              best = v;
+              bestRatio = ratio;
+            }
+          }
+          videoVisibility.forEach((_, v) => {
+            if (v === best) {
+              v.play().catch(() => {});
+            } else if (!v.paused) {
+              v.pause();
             }
           });
         },
-        { threshold: 0.5 }
+        { threshold: [0, 0.15, 0.3, 0.5, 0.7, 0.85, 1] }
       );
     }
 

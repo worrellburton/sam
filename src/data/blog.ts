@@ -235,7 +235,7 @@ export const blogPosts: BlogPost[] = [
     episode: 14,
     seriesTitle: "Clinical Clarity",
     relatedService: "sports-medicine",
-    image: "https://images.unsplash.com/photo-1515703407324-5f51c225da4f?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/hockey-orthopedic-injuries.jpg?v=1776085548061",
     imageAlt: "Ice hockey player at full speed on rink",
     content: "",
     contentHtml: `

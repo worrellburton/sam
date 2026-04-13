@@ -6162,23 +6162,24 @@ img.insurance-logo-light { display: none; }
   }
   .sticky-bar-info { display: none; }
 
-  /* Full-row Book Now button — flush left/right, polished yellow with
-     stacked label + icon + arrow chip. */
+  /* Full-row Book Now button — flush left/right, polished yellow,
+     single centered "Book Now" label. Extra bottom padding keeps the
+     text clear of Safari's URL toolbar when it's visible. */
   .sticky-bar-btn {
     flex: 1;
     width: 100%;
     margin: 0;
     border-radius: 0;
-    height: 64px;
-    padding: 0 20px;
+    min-height: 72px;
+    padding: 18px 20px calc(18px + env(safe-area-inset-bottom, 0px));
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
     background: linear-gradient(180deg, #FFE45C 0%, #FFD60A 55%, #F2C500 100%) !important;
     color: #1a1a1a !important;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-    font-weight: 700;
+    font-size: 1.1rem;
+    font-weight: 800;
     letter-spacing: -0.005em;
     box-shadow: 0 -8px 24px rgba(20,12,0,0.18);
     pointer-events: auto;
@@ -6188,48 +6189,6 @@ img.insurance-logo-light { display: none; }
   .sticky-bar-btn:hover {
     background: linear-gradient(180deg, #FFE45C 0%, #FFD60A 55%, #F2C500 100%) !important;
     color: #1a1a1a !important;
-  }
-  .sticky-bar-btn-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: rgba(26,26,26,0.10);
-    color: #1a1a1a;
-    flex-shrink: 0;
-  }
-  .sticky-bar-btn-label {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 1.1;
-    text-align: left;
-  }
-  .sticky-bar-btn-title {
-    font-size: 1.05rem;
-    font-weight: 800;
-  }
-  .sticky-bar-btn-sub {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: rgba(26,26,26,0.65);
-    margin-top: 2px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .sticky-bar-btn-arrow {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: #1a1a1a;
-    color: #FFD60A;
-    flex-shrink: 0;
-    margin-left: 4px;
   }
 
   /* Fixed theme toggle on mobile */

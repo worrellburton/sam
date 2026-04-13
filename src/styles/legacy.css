@@ -151,11 +151,14 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  overflow-x: hidden;
+  /* `clip` (not `hidden`) so the root doesn't become a scroll container —
+     iOS Safari only auto-hides its bottom toolbar when the document body
+     itself is the scroller. `overflow-x: hidden` here would break that. */
+  overflow-x: clip;
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', sans-serif;
   color: var(--text);
   background: var(--bg);

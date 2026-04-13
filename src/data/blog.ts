@@ -707,7 +707,7 @@ export const blogPosts: BlogPost[] = [
     episode: 18,
     seriesTitle: "Clinical Clarity",
     relatedService: "sports-medicine",
-    image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&h=600&fit=crop&q=80",
+    image: "/images/blog/football-orthopedic-injuries.jpg?v=1776084859377",
     imageAlt: "Football player on the sideline being examined by a physician",
     content: "",
     contentHtml: `

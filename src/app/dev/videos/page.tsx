@@ -2,18 +2,34 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { DevSidebar } from "../DevSidebar";
+import { supabase } from "@/lib/supabase";
+
+interface VideoFile {
+  name: string;
+  url: string;
+  size: number;
+  updatedAt?: string;
+}
 
 interface UploadState {
   id: string;
   fileName: string;
   fileSize: string;
-  phase: "queued" | "uploading" | "processing" | "done" | "error";
+  phase: "queued" | "uploading" | "done" | "error";
   progress: number; // 0-100
   message: string;
+  url?: string;
 }
 
+const BUCKET = "blog-videos";
+
+// Source of truth for Supabase Storage URLs in the browser. We use the anon
+// key directly so uploads stream straight to the bucket without squeezing
+// through Vercel's ~4.5 MB serverless body limit.
+const sanitize = (name: string) => name.replace(/\s+/g, "_");
+
 export default function DevVideosPage() {
-  const [files, setFiles] = useState<string[]>([]);
+  const [files, setFiles] = useState<VideoFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [dragOver, setDragOver] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
@@ -21,16 +37,15 @@ export default function DevVideosPage() {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // Serialize uploads. Running several 8 MB base64 encodes + GitHub commits
-  // in parallel trips over the browser's concurrent connection cap and
-  // GitHub's write rate limiting; one at a time is both faster and cleaner.
+  // Serialize uploads — each file streams ~5 MB, running in parallel trips
+  // over the browser's concurrent-connection cap for one origin.
   const queueRef = useRef<Promise<void>>(Promise.resolve());
 
   const fetchFiles = useCallback(async () => {
     try {
-      const res = await fetch("/api/dev/files?type=videos");
+      const res = await fetch("/api/dev/storage-videos", { cache: "no-store" });
       const data = await res.json();
-      setFiles((data.files || []).map((f: { path: string }) => f.path));
+      setFiles(data.files || []);
     } catch {
       setFiles([]);
     } finally {
@@ -38,108 +53,52 @@ export default function DevVideosPage() {
     }
   }, []);
 
-  useEffect(() => { fetchFiles(); }, [fetchFiles]);
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
 
   const patchUpload = (id: string, updates: Partial<UploadState>) => {
-    setUploads(prev => prev.map(u => u.id === id ? { ...u, ...updates } : u));
+    setUploads((prev) => prev.map((u) => (u.id === id ? { ...u, ...updates } : u)));
   };
 
   const uploadFile = async (file: File, id: string) => {
     const sizeMB = (file.size / 1024 / 1024).toFixed(1);
-    patchUpload(id, { phase: "uploading", progress: 0, message: `Reading ${file.name}...` });
+    const objectName = sanitize(file.name);
+    patchUpload(id, {
+      phase: "uploading",
+      progress: 20,
+      message: `Uploading ${sizeMB} MB to Supabase…`,
+    });
+
     try {
-      // Step 1: Read file as base64 on client
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onprogress = (e) => {
-          if (e.lengthComputable) {
-            const pct = Math.round((e.loaded / e.total) * 30);
-            patchUpload(id, { progress: pct, message: `Reading ${file.name}... ${pct}%` });
-          }
-        };
-        reader.onload = () => {
-          const result = reader.result as string;
-          resolve(result.split(",")[1]); // strip data:...;base64,
-        };
-        reader.onerror = () => reject(new Error("Failed to read file"));
-        reader.readAsDataURL(file);
+      // Stream straight to Supabase Storage from the browser. The anon key
+      // is scoped to the blog-videos bucket via RLS so the worst a compromised
+      // key can do is upload into this specific bucket.
+      const { error } = await supabase.storage.from(BUCKET).upload(objectName, file, {
+        contentType: file.type || "video/mp4",
+        upsert: true,
+        cacheControl: "31536000",
+      });
+      if (error) throw new Error(error.message);
+
+      const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(objectName);
+
+      patchUpload(id, {
+        phase: "done",
+        progress: 100,
+        message: `${file.name} uploaded`,
+        url: pub.publicUrl,
       });
 
-      patchUpload(id, { phase: "processing", progress: 40, message: "Pushing to GitHub..." });
-
-      // Base64-encoded size. Vercel caps serverless request bodies at ~4.5 MB.
-      // For anything larger we go directly to GitHub's API from the browser
-      // (GitHub Contents API accepts up to 100 MB per file).
-      const encodedBytes = base64.length * 0.75; // approximate decoded → encoded ratio
-      const DIRECT_THRESHOLD = 3.5 * 1024 * 1024; // ~3.5 MB file ≈ 4.7 MB JSON
-      const useDirect = file.size > DIRECT_THRESHOLD || encodedBytes > DIRECT_THRESHOLD;
-
-      if (useDirect) {
-        const tokenRes = await fetch("/api/dev/github-token");
-        if (!tokenRes.ok) {
-          const errText = await tokenRes.text();
-          throw new Error(`Token fetch failed: ${errText.slice(0, 200)}`);
-        }
-        const { token, owner, repo, branch } = await tokenRes.json();
-        const repoPath = `public/videos/${file.name}`;
-
-        // Look up existing sha so we can overwrite.
-        let sha: string | undefined;
-        try {
-          const chk = await fetch(
-            `https://api.github.com/repos/${owner}/${repo}/contents/${repoPath}?ref=${branch}`,
-            { headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github.v3+json" } }
-          );
-          if (chk.ok) sha = (await chk.json()).sha;
-        } catch { /* new file */ }
-
-        patchUpload(id, { progress: 60, message: `Uploading ${sizeMB} MB to GitHub...` });
-
-        const putRes = await fetch(
-          `https://api.github.com/repos/${owner}/${repo}/contents/${repoPath}`,
-          {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/vnd.github.v3+json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              message: `Upload ${file.name} via dev panel`,
-              content: base64,
-              branch,
-              ...(sha ? { sha } : {}),
-            }),
-          }
-        );
-        if (!putRes.ok) {
-          const errBody = await putRes.text();
-          let msg = `${putRes.status} ${putRes.statusText}`;
-          try { msg = JSON.parse(errBody).message || msg; } catch { /* plain text */ }
-          throw new Error(`GitHub error: ${msg}`);
-        }
-      } else {
-        // Small files: go through our serverless proxy.
-        const res = await fetch("/api/dev/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fileName: file.name, folder: "videos", content: base64 }),
-        });
-        const text = await res.text();
-        let data: { success?: boolean; error?: string };
-        try {
-          data = JSON.parse(text);
-        } catch {
-          throw new Error(`Upload failed (${res.status}): ${text.slice(0, 200)}`);
-        }
-        if (!data.success) throw new Error(data.error || "Upload failed");
-      }
-
-      patchUpload(id, { phase: "done", progress: 100, message: `${file.name} uploaded` });
+      // As soon as any upload lands, refresh the grid so the tile appears
+      // below automatically — no manual reload.
       fetchFiles();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      patchUpload(id, { phase: "error", progress: 100, message: msg });
+      patchUpload(id, {
+        phase: "error",
+        progress: 100,
+        message: err instanceof Error ? err.message : String(err),
+      });
     }
   };
 
@@ -147,15 +106,12 @@ export default function DevVideosPage() {
     const videos = Array.from(fileList).filter((f) => f.type.startsWith("video/"));
     if (videos.length === 0) return;
 
-    // Register every file up-front so the queue is visible immediately,
-    // then process them serially via queueRef to avoid trampling on each
-    // other's network / memory budget.
-    const entries = videos.map((file) => {
-      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name}`;
-      return { file, id };
-    });
+    const entries = videos.map((file) => ({
+      file,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name}`,
+    }));
     const sizeMB = (n: number) => (n / 1024 / 1024).toFixed(1);
-    setUploads(prev => [
+    setUploads((prev) => [
       ...prev,
       ...entries.map(({ file, id }) => ({
         id,
@@ -176,41 +132,39 @@ export default function DevVideosPage() {
     e.preventDefault();
     setDragOver(false);
     if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const copyPath = (e: React.MouseEvent, src: string) => {
+  const copyPath = (e: React.MouseEvent, url: string) => {
     e.stopPropagation();
-    navigator.clipboard.writeText(src);
-    setCopied(src);
+    navigator.clipboard.writeText(url);
+    setCopied(url);
     setTimeout(() => setCopied(null), 1500);
   };
 
-  const deleteFile = async (e: React.MouseEvent, filePath: string) => {
+  const deleteFile = async (e: React.MouseEvent, file: VideoFile) => {
     e.stopPropagation();
-    if (confirmDelete !== filePath) {
-      setConfirmDelete(filePath);
+    if (confirmDelete !== file.name) {
+      setConfirmDelete(file.name);
       return;
     }
-    setDeleting(filePath);
+    setDeleting(file.name);
     setConfirmDelete(null);
     try {
-      const res = await fetch("/api/dev/upload", {
+      const res = await fetch("/api/dev/storage-videos", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filePath }),
+        body: JSON.stringify({ name: file.name }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
-      setFiles(prev => prev.filter(f => f !== filePath));
+      setFiles((prev) => prev.filter((f) => f.name !== file.name));
     } catch (err) {
       alert(`Delete failed: ${err}`);
     } finally {
       setDeleting(null);
     }
   };
-
-  const activeUploads = uploads.filter(u => u.phase !== "done" || Date.now() < Date.now() + 3000);
 
   return (
     <div style={{ display: "flex" }}>
@@ -229,10 +183,8 @@ export default function DevVideosPage() {
         .upload-progress-track { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
         .upload-progress-bar { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
         .upload-progress-bar.uploading { background: linear-gradient(90deg, #6366f1, #818cf8); }
-        .upload-progress-bar.processing { background: linear-gradient(90deg, #818cf8, #f59e0b); animation: pulse-bar 1.5s ease-in-out infinite; }
         .upload-progress-bar.done { background: #22c55e; }
         .upload-progress-bar.error { background: #ef4444; }
-        @keyframes pulse-bar { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
         @media (max-width: 768px) {
           .dev-page-vid { margin-left: 0; padding: 20px 16px; padding-top: 60px; }
           .dev-vid-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -242,7 +194,9 @@ export default function DevVideosPage() {
       <div className="dev-page-vid">
         <div style={{ marginBottom: 32 }}>
           <h1 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>Videos</h1>
-          <p style={{ fontSize: "0.88rem", color: "#64748b", margin: "4px 0 0" }}>{files.length} files in /public/videos</p>
+          <p style={{ fontSize: "0.88rem", color: "#64748b", margin: "4px 0 0" }}>
+            {files.length} files in Supabase Storage · <code style={{ fontSize: "0.78rem" }}>{BUCKET}</code>
+          </p>
         </div>
 
         {/* Upload zone */}
@@ -261,11 +215,11 @@ export default function DevVideosPage() {
           <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: 0 }}>
             {dragOver ? "Drop videos here" : "Drag & drop .mp4 files or click to browse"}
           </p>
-          <p style={{ color: "#475569", fontSize: "0.78rem", margin: 0 }}>Uploads to /public/videos/ &middot; GitHub max 100 MB per file</p>
+          <p style={{ color: "#475569", fontSize: "0.78rem", margin: 0 }}>Uploads directly to Supabase Storage · 100 MB per file</p>
         </div>
 
         {/* Upload progress cards */}
-        {activeUploads.length > 0 && (
+        {uploads.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
             {uploads.map((u) => (
               <div key={u.id} style={{ background: "#111827", border: "1px solid #1e293b", borderRadius: 12, padding: "16px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
@@ -287,8 +241,8 @@ export default function DevVideosPage() {
                       <p style={{ margin: 0, fontSize: "0.72rem", color: "#64748b" }}>{u.fileSize}</p>
                     </div>
                   </div>
-                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: u.phase === "done" ? "#22c55e" : u.phase === "error" ? "#ef4444" : u.phase === "processing" ? "#f59e0b" : u.phase === "queued" ? "#94a3b8" : "#818cf8" }}>
-                    {u.phase === "done" ? "Complete" : u.phase === "error" ? "Failed" : u.phase === "processing" ? "Pushing to GitHub..." : u.phase === "queued" ? "Queued" : `${u.progress}%`}
+                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: u.phase === "done" ? "#22c55e" : u.phase === "error" ? "#ef4444" : u.phase === "queued" ? "#94a3b8" : "#818cf8" }}>
+                    {u.phase === "done" ? "Complete" : u.phase === "error" ? "Failed" : u.phase === "queued" ? "Queued" : "Uploading…"}
                   </span>
                 </div>
                 <div className="upload-progress-track">
@@ -307,18 +261,18 @@ export default function DevVideosPage() {
           <p style={{ color: "#64748b", textAlign: "center", padding: 40 }}>Loading videos...</p>
         ) : (
           <div className="dev-vid-grid">
-            {files.sort().map((src) => (
-              <div key={src} className="dev-vid-card" style={deleting === src ? { opacity: 0.4, pointerEvents: "none" } : {}}>
+            {files.map((file) => (
+              <div key={file.name} className="dev-vid-card" style={deleting === file.name ? { opacity: 0.4, pointerEvents: "none" } : {}}>
                 <div className="card-actions">
-                  <button className={`copy-btn${copied === src ? " copied" : ""}`} onClick={(e) => copyPath(e, src)}>
-                    {copied === src ? "Copied!" : "Copy"}
+                  <button className={`copy-btn${copied === file.url ? " copied" : ""}`} onClick={(e) => copyPath(e, file.url)}>
+                    {copied === file.url ? "Copied!" : "Copy"}
                   </button>
-                  <button className={`del-btn${confirmDelete === src ? " confirm" : ""}`} onClick={(e) => deleteFile(e, src)}>
-                    {confirmDelete === src ? "Confirm?" : "Delete"}
+                  <button className={`del-btn${confirmDelete === file.name ? " confirm" : ""}`} onClick={(e) => deleteFile(e, file)}>
+                    {confirmDelete === file.name ? "Confirm?" : "Delete"}
                   </button>
                 </div>
                 <video
-                  src={src}
+                  src={file.url}
                   style={{ width: "100%", height: 220, objectFit: "cover", display: "block", cursor: "pointer", background: "#000" }}
                   muted
                   loop
@@ -329,8 +283,8 @@ export default function DevVideosPage() {
                   onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0.01; }}
                 />
                 <div style={{ padding: "10px 14px" }}>
-                  <p style={{ fontSize: "0.85rem", fontWeight: 600, margin: 0, color: "#e2e8f0" }}>{src.split("/").pop()}</p>
-                  <p style={{ fontSize: "0.72rem", color: "#475569", margin: "4px 0 0" }}>{src}</p>
+                  <p style={{ fontSize: "0.85rem", fontWeight: 600, margin: 0, color: "#e2e8f0" }}>{file.name}</p>
+                  <p style={{ fontSize: "0.72rem", color: "#475569", margin: "4px 0 0", wordBreak: "break-all" }}>{file.url}</p>
                 </div>
               </div>
             ))}

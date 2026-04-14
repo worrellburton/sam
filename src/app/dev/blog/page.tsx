@@ -82,6 +82,83 @@ function makeImageId(): string {
   return `img_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
+// Max long-edge (in CSS px * 2 for retina) for each aspect ratio. The raw
+// Gemini output is ~2048px which is overkill for a blog thumbnail — the widest
+// card on the live site renders at ~600px, so 1600px long-edge gives us crisp
+// 2.5x retina without paying the bandwidth cost of the 2K original.
+const MAX_LONG_EDGE: Record<AspectRatio, number> = {
+  "16:9": 1600,
+  "3:4": 1200,
+  "1:1": 1200,
+};
+
+// Convert a base64-encoded raw image (PNG/JPEG from Gemini) into an optimized,
+// resized WebP. Returns base64 of the WebP bytes (no `data:` prefix) plus the
+// final dimensions. Runs entirely in the browser via <canvas>, so no server-
+// side image library is required. Falls back to returning the input untouched
+// if the canvas conversion path isn't available (e.g. SSR) — shouldn't happen
+// in practice since this is only called from the dev panel which is client-only.
+async function encodeToWebp(
+  rawBase64: string,
+  mime: string,
+  aspectRatio: AspectRatio,
+  quality = 0.85
+): Promise<{ base64: string; width: number; height: number; mime: string }> {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return { base64: rawBase64, width: 0, height: 0, mime };
+  }
+
+  const dataUrl = `data:${mime};base64,${rawBase64}`;
+
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const el = new Image();
+    el.onload = () => resolve(el);
+    el.onerror = () => reject(new Error("Failed to decode generated image"));
+    el.src = dataUrl;
+  });
+
+  const maxEdge = MAX_LONG_EDGE[aspectRatio];
+  const longEdge = Math.max(img.naturalWidth, img.naturalHeight);
+  const scale = longEdge > maxEdge ? maxEdge / longEdge : 1;
+  const targetW = Math.max(1, Math.round(img.naturalWidth * scale));
+  const targetH = Math.max(1, Math.round(img.naturalHeight * scale));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = targetW;
+  canvas.height = targetH;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    return { base64: rawBase64, width: img.naturalWidth, height: img.naturalHeight, mime };
+  }
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, 0, 0, targetW, targetH);
+
+  const blob: Blob = await new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (b) => (b ? resolve(b) : reject(new Error("Canvas toBlob returned null"))),
+      "image/webp",
+      quality
+    );
+  });
+
+  // WebP not supported → toBlob falls back to PNG. Detect and keep the PNG,
+  // the upload pipeline already handles both extensions downstream.
+  const outMime = blob.type || "image/webp";
+
+  const buf = await blob.arrayBuffer();
+  // Base64-encode the ArrayBuffer without blowing the stack for ~500KB files.
+  let binary = "";
+  const bytes = new Uint8Array(buf);
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  const base64 = btoa(binary);
+
+  return { base64, width: targetW, height: targetH, mime: outMime };
+}
+
 const styleLabels: Record<Style, { label: string; color: string }> = {
   photorealistic: { label: "Photorealistic", color: "#3b82f6" },
   editorial: { label: "Editorial", color: "#a855f7" },
@@ -572,38 +649,55 @@ export default function DevBlogPage() {
     const portrait = pickByRatio("3:4");
     const square = pickByRatio("1:1");
 
-    const extOf = (im: GeneratedImage) => (im.mime.includes("jpeg") ? "jpg" : "png");
-
-    const primaryName = `${slug}.${extOf(primary)}`;
-    const imagePath = `/images/blog/${primaryName}`;
-    const portraitName = portrait ? `${slug}-3x4.${extOf(portrait)}` : null;
-    const squareName = square ? `${slug}-1x1.${extOf(square)}` : null;
-
     try {
-      // 1. Upload every aspect we have in parallel.
+      // 1. Optimize every variant to WebP (resized to a sane long-edge for the
+      // thumbnail). This runs fully client-side so the payload we send to
+      // GitHub is already the production-ready asset — no server-side image
+      // library needed. Typical raw 2K Gemini PNG (~2-3 MB) → 100-300 KB WebP.
+      const extFromMime = (m: string) =>
+        m.includes("webp") ? "webp" : m.includes("jpeg") ? "jpg" : "png";
+
+      const optimizedPrimary = await encodeToWebp(primary.data, primary.mime, "16:9");
+      const optimizedPortrait = portrait
+        ? await encodeToWebp(portrait.data, portrait.mime, "3:4")
+        : null;
+      const optimizedSquare = square
+        ? await encodeToWebp(square.data, square.mime, "1:1")
+        : null;
+
+      const primaryName = `${slug}.${extFromMime(optimizedPrimary.mime)}`;
+      const imagePath = `/images/blog/${primaryName}`;
+      const portraitName = optimizedPortrait
+        ? `${slug}-3x4.${extFromMime(optimizedPortrait.mime)}`
+        : null;
+      const squareName = optimizedSquare
+        ? `${slug}-1x1.${extFromMime(optimizedSquare.mime)}`
+        : null;
+
+      // 2. Upload every aspect we have in parallel.
       const uploads: Array<Promise<Response>> = [];
       uploads.push(
         fetch("/api/dev/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fileName: primaryName, folder: "images/blog", content: primary.data }),
+          body: JSON.stringify({ fileName: primaryName, folder: "images/blog", content: optimizedPrimary.base64 }),
         })
       );
-      if (portrait && portraitName) {
+      if (optimizedPortrait && portraitName) {
         uploads.push(
           fetch("/api/dev/upload", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fileName: portraitName, folder: "images/blog", content: portrait.data }),
+            body: JSON.stringify({ fileName: portraitName, folder: "images/blog", content: optimizedPortrait.base64 }),
           })
         );
       }
-      if (square && squareName) {
+      if (optimizedSquare && squareName) {
         uploads.push(
           fetch("/api/dev/upload", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fileName: squareName, folder: "images/blog", content: square.data }),
+            body: JSON.stringify({ fileName: squareName, folder: "images/blog", content: optimizedSquare.base64 }),
           })
         );
       }
@@ -615,8 +709,41 @@ export default function DevBlogPage() {
         }
       }
 
-      // 2. Patch blog.ts with every path we uploaded, plus the 4 prompts
-      // that produced the current series so reopening the row shows them.
+      // 3. Auto-generate SEO + GEO-optimized alt text from the article meta and
+      // the exact prompt that produced the selected image. Best-effort — if
+      // the alt generator fails we still patch the paths; the dev panel can
+      // re-run manually later.
+      const post = blogPosts.find((p) => p.slug === slug);
+      let imageAlt: string | undefined;
+      if (post) {
+        try {
+          const altRes = await fetch("/api/dev/generate-alt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: post.title,
+              excerpt: post.excerpt,
+              tag: post.tag,
+              relatedService: post.relatedService,
+              seriesTitle: post.seriesTitle,
+              episode: post.episode,
+              prompt: selected.prompt,
+              aspectRatio: "16:9",
+            }),
+          });
+          if (altRes.ok) {
+            const altData = await altRes.json();
+            if (typeof altData.alt === "string" && altData.alt.trim().length > 0) {
+              imageAlt = altData.alt.trim();
+            }
+          }
+        } catch {
+          /* non-fatal — leave imageAlt undefined so set-blog-image skips it */
+        }
+      }
+
+      // 4. Patch blog.ts (and Supabase when configured) with every path we
+      // uploaded, plus the 4 prompts and the new alt text.
       const promptTexts = gen.prompts.map((s) => s.prompt).filter((p) => p.trim().length > 0);
       const setThumb = await fetch("/api/dev/set-blog-image", {
         method: "POST",
@@ -627,6 +754,7 @@ export default function DevBlogPage() {
           imagePath3x4: portraitName ? `/images/blog/${portraitName}` : undefined,
           imagePath1x1: squareName ? `/images/blog/${squareName}` : undefined,
           imagePrompts: promptTexts.length > 0 ? promptTexts : undefined,
+          imageAlt,
         }),
       });
       const setData = await setThumb.json();

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
 const REPO_OWNER = "worrellburton";
@@ -8,9 +9,11 @@ const FILE_PATH = "src/data/blog.ts";
 
 // Updates the image fields of a blog post in src/data/blog.ts via the GitHub
 // Contents API.
-// Body: { slug, imagePath?, imagePath3x4?, imagePath1x1?, imagePrompts? }
-// Any field provided is written; the 1:1 / 3:4 variants and the imagePrompts
-// array are inserted after the `image:` line if they don't already exist.
+// Body: { slug, imagePath?, imagePath3x4?, imagePath1x1?, imagePrompts?, imageAlt? }
+// Any field provided is written; the 1:1 / 3:4 variants, the imagePrompts
+// array, and imageAlt are inserted after the `image:` line if they don't
+// already exist. If Supabase credentials are present, the matching
+// blog_posts row is also patched (so DB-backed posts get the new thumbs + alt).
 export async function POST(request: NextRequest) {
   if (!GITHUB_TOKEN) {
     return NextResponse.json(
@@ -19,9 +22,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { slug, imagePath, imagePath3x4, imagePath1x1, imagePrompts } = await request.json();
+  const { slug, imagePath, imagePath3x4, imagePath1x1, imagePrompts, imageAlt } = await request.json();
   const hasPrompts = Array.isArray(imagePrompts) && imagePrompts.length > 0;
-  if (!slug || (!imagePath && !imagePath3x4 && !imagePath1x1 && !hasPrompts)) {
+  const hasAlt = typeof imageAlt === "string" && imageAlt.trim().length > 0;
+  if (!slug || (!imagePath && !imagePath3x4 && !imagePath1x1 && !hasPrompts && !hasAlt)) {
     return NextResponse.json({ error: "Missing slug or at least one field to update" }, { status: 400 });
   }
 
@@ -88,6 +92,29 @@ export async function POST(request: NextRequest) {
   if (imagePath3x4) upsertVariant("image3x4", imagePath3x4);
   if (imagePath1x1) upsertVariant("image1x1", imagePath1x1);
 
+  // Upsert imageAlt. Like the variant paths, replace in place when present,
+  // otherwise insert after the `image:` line with the matching indent.
+  if (hasAlt) {
+    const escaped = imageAlt
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"')
+      .replace(/\r?\n/g, " ");
+    const altRe = /imageAlt:\s*"[^"]*"/;
+    if (altRe.test(entry)) {
+      entry = entry.replace(altRe, `imageAlt: "${escaped}"`);
+    } else {
+      const imageLine = entry.match(/(^|\n)(\s*)image:\s*"[^"]*",?/);
+      if (imageLine) {
+        const indent = imageLine[2] || "    ";
+        const insertAfter = imageLine.index! + imageLine[0].length;
+        entry =
+          entry.slice(0, insertAfter) +
+          `\n${indent}imageAlt: "${escaped}",` +
+          entry.slice(insertAfter);
+      }
+    }
+  }
+
   // Upsert imagePrompts as a multi-line array. Same strategy as upsertVariant
   // but the value is a `[...]` expression instead of a single quoted string.
   if (hasPrompts) {
@@ -152,11 +179,41 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // 4. Mirror the update into Supabase so DB-backed posts pick up the new
+  // thumbs + SEO/GEO alt text without waiting on the TS file deploy. Fails
+  // soft — a Supabase error is logged but doesn't block the GitHub commit
+  // the dev UI was primarily asking for.
+  let dbPatched = false;
+  let dbError: string | null = null;
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    const patch: Record<string, unknown> = {};
+    if (imagePath) patch.image = imagePath;
+    if (imagePath3x4) patch.image_3x4 = imagePath3x4;
+    if (imagePath1x1) patch.image_1x1 = imagePath1x1;
+    if (hasPrompts) patch.image_prompts = imagePrompts;
+    if (hasAlt) patch.image_alt = imageAlt;
+    if (Object.keys(patch).length > 0) {
+      const { error: pErr } = await supabase
+        .from("blog_posts")
+        .update(patch)
+        .eq("slug", slug);
+      if (pErr) {
+        dbError = pErr.message;
+        console.error("[set-blog-image] supabase update failed", pErr);
+      } else {
+        dbPatched = true;
+      }
+    }
+  }
+
   return NextResponse.json({
     success: true,
     imagePath: imagePath || null,
     imagePath3x4: imagePath3x4 || null,
     imagePath1x1: imagePath1x1 || null,
     imagePrompts: hasPrompts ? imagePrompts : null,
+    imageAlt: hasAlt ? imageAlt : null,
+    dbPatched,
+    dbError,
   });
 }

@@ -98,7 +98,14 @@ function BlogCard({
     <div className={`blog-card${isComingSoon ? " coming-soon" : ""}`}>
       <Link href={isUnreleasedDraft ? "#" : `/blog/${post.slug}`} className="blog-card-link">
         <div className="blog-card-img-wrap">
-          <Image className="blog-card-img" src={post.image1x1 || post.image} alt={post.imageAlt} width={600} height={600} />
+          <Image
+            className="blog-card-img"
+            src={post.image1x1 || post.image}
+            alt={post.imageAlt}
+            width={600}
+            height={600}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
           {showEpisode && post.episode && (
             <span className="blog-card-ep">EP. {post.episode}</span>
           )}

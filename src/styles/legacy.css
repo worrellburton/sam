@@ -858,6 +858,98 @@ a.nav-btn-book,
 [data-theme="dark"] .nav.nav-solid .nav-toggle span,
 [data-theme="dark"] .nav.scrolled .nav-toggle span { background: #f0f0f5; }
 
+/* ============================================================
+   Desktop-only override: force the top nav to the light
+   (white-bg / dark-text) styling at ALL times — regardless of
+   theme toggle or scroll position. Mobile still follows the
+   theme + scroll state normally. Requested: "keep the light nav
+   on desktop version." Placed last so it wins over every earlier
+   .nav / .nav-solid / .nav.scrolled / [data-theme=...] rule.
+   ============================================================ */
+@media (min-width: 769px) {
+  .nav,
+  .nav.nav-solid,
+  .nav.scrolled,
+  [data-theme="dark"] .nav,
+  [data-theme="dark"] .nav.nav-solid,
+  [data-theme="dark"] .nav.scrolled,
+  [data-theme="light"] .nav,
+  [data-theme="light"] .nav.nav-solid,
+  [data-theme="light"] .nav.scrolled {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .nav .logo-name,
+  .nav.nav-solid .logo-name,
+  .nav.scrolled .logo-name,
+  [data-theme="dark"] .nav .logo-name,
+  [data-theme="dark"] .nav.nav-solid .logo-name,
+  [data-theme="dark"] .nav.scrolled .logo-name,
+  [data-theme="light"] .nav.scrolled .logo-name { color: var(--text) !important; }
+
+  .nav .nav-links > li > a,
+  .nav .nav-mega-toggle,
+  .nav.nav-solid .nav-links > li > a,
+  .nav.nav-solid .nav-mega-toggle,
+  .nav.scrolled .nav-links > li > a,
+  .nav.scrolled .nav-mega-toggle,
+  [data-theme="dark"] .nav .nav-links > li > a,
+  [data-theme="dark"] .nav .nav-mega-toggle,
+  [data-theme="dark"] .nav.nav-solid .nav-links > li > a,
+  [data-theme="dark"] .nav.nav-solid .nav-mega-toggle,
+  [data-theme="dark"] .nav.scrolled .nav-links > li > a,
+  [data-theme="dark"] .nav.scrolled .nav-mega-toggle,
+  [data-theme="light"] .nav.scrolled .nav-links > li > a,
+  [data-theme="light"] .nav.scrolled .nav-mega-toggle,
+  [data-theme="light"] .nav:not(.scrolled):not(.nav-solid) .nav-links > li > a,
+  [data-theme="light"] .nav:not(.scrolled):not(.nav-solid) .nav-mega-toggle {
+    color: rgba(0, 0, 0, 0.8) !important;
+    text-shadow: none !important;
+  }
+
+  .nav .nav-links > li > a:hover,
+  .nav .nav-mega-toggle:hover,
+  .nav.nav-solid .nav-links > li > a:hover,
+  .nav.nav-solid .nav-mega-toggle:hover,
+  .nav.scrolled .nav-links > li > a:hover,
+  .nav.scrolled .nav-mega-toggle:hover,
+  [data-theme="dark"] .nav .nav-links > li > a:hover,
+  [data-theme="dark"] .nav.nav-solid .nav-links > li > a:hover,
+  [data-theme="dark"] .nav.scrolled .nav-links > li > a:hover,
+  [data-theme="light"] .nav.scrolled .nav-links > li > a:hover,
+  [data-theme="light"] .nav:not(.scrolled):not(.nav-solid) .nav-links > li > a:hover {
+    color: var(--primary) !important;
+    text-shadow: none !important;
+  }
+
+  .nav .nav-btn-contact,
+  .nav.nav-solid .nav-btn-contact,
+  .nav.scrolled .nav-btn-contact,
+  [data-theme="dark"] .nav .nav-btn-contact,
+  [data-theme="dark"] .nav.nav-solid .nav-btn-contact,
+  [data-theme="dark"] .nav.scrolled .nav-btn-contact,
+  [data-theme="light"] .nav.scrolled .nav-btn-contact { color: var(--text) !important; }
+
+  /* Theme toggle chip in the nav also needs to read on a light bg */
+  .nav.scrolled .theme-toggle,
+  [data-theme="dark"] .nav.scrolled .theme-toggle,
+  [data-theme="light"] .nav.scrolled .theme-toggle {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: rgba(0, 0, 0, 0.75) !important;
+  }
+  .nav.scrolled .theme-toggle:hover,
+  [data-theme="dark"] .nav.scrolled .theme-toggle:hover,
+  [data-theme="light"] .nav.scrolled .theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+  }
+}
+
 /* ===== Reviews Page Platform Cards ===== */
 .platform-cards-grid {
   display: grid;

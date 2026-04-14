@@ -6148,7 +6148,7 @@ img.insurance-logo-light { display: none; }
 
   /* Sticky bottom bar mobile — fully transparent wrapper. Button is a
      compact centered rounded pill floating above the URL toolbar, with
-     no yellow bleed past it. */
+     the theme toggle sitting on the same row to the right. */
   .sticky-bottom-bar {
     height: auto;
     background: transparent !important;
@@ -6161,20 +6161,23 @@ img.insurance-logo-light { display: none; }
     pointer-events: none;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
   .sticky-bar-info { display: none; }
 
-  /* Compact rounded Book Now pill — centered, breathing room around it. */
+  /* Compact rounded Book Now pill — centered text via line-height: 1 and
+     symmetric padding so the label sits true-center vertically. */
   .sticky-bar-btn {
     flex: 0 0 auto;
     width: auto;
     margin: 0;
     border-radius: 999px;
     min-height: 52px;
-    padding: 14px 40px;
+    padding: 16px 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
     background: linear-gradient(180deg, #FFE45C 0%, #FFD60A 55%, #F2C500 100%) !important;
     color: #1a1a1a !important;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
@@ -6205,6 +6208,15 @@ img.insurance-logo-light { display: none; }
   .mobile-theme-toggle.visible {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  /* Theme toggle sits on the same row as the Book Now pill when the
+     sticky bar is visible — right-aligned, matching vertical center. */
+  .sticky-bottom-bar.visible ~ .theme-toggle-fixed {
+    bottom: calc(12px + (100lvh - 100dvh) + env(safe-area-inset-bottom, 0px));
+    right: 20px;
+    width: 44px;
+    height: 44px;
   }
 
   /* Mobile 768px — layout fixes */

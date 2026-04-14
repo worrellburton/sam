@@ -1,11 +1,12 @@
 "use client";
-import { useMemo, useState, useRef, useCallback } from "react";
+import { useMemo, useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Sidebar } from "@/lib/doczoc/Sidebar";
 import { useDzPrefs } from "@/lib/doczoc/useDzPrefs";
 import { PlatformBg } from "@/components/PlatformBg";
 import { getPatientBySlug, type Patient } from "@/data/patients";
+import { getPatientAsStatic } from "@/lib/db/patients";
 
 type TimelineEvent = {
   date: string;
@@ -115,7 +116,25 @@ export default function PatientDetailPage() {
   const { bgId } = useDzPrefs();
   const params = useParams();
   const id = params.slug as string;
-  const patient = id ? getPatientBySlug(id) : undefined;
+  const staticPatient = id ? getPatientBySlug(id) : undefined;
+  const [patient, setPatient] = useState<Patient | undefined>(staticPatient);
+
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+    // Only try the DB when the slug looks like a UUID (not the legacy numeric id).
+    if (!/^[0-9a-f]{8}-/i.test(id)) return;
+    getPatientAsStatic(id)
+      .then((p) => {
+        if (!cancelled && p) setPatient(p);
+      })
+      .catch(() => {
+        /* keep static fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
 
   if (!patient) {
     return (

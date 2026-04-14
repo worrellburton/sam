@@ -1,5 +1,6 @@
 export interface Patient {
-  id: number;
+  /** Either the legacy static numeric id or a UUID string from Supabase. */
+  id: number | string;
   name: string;
   age: number;
   dob: string;
@@ -537,12 +538,13 @@ export const PATIENTS: Patient[] = [
   })(),
 ];
 
-export function getPatientById(id: number): Patient | undefined {
-  return PATIENTS.find((p) => p.id === id);
+export function getPatientById(id: number | string): Patient | undefined {
+  return PATIENTS.find((p) => p.id === id || String(p.id) === String(id));
 }
 
 export function getPatientBySlug(slug: string): Patient | undefined {
-  const id = parseInt(slug, 10);
-  if (isNaN(id)) return undefined;
-  return getPatientById(id);
+  // Accept either a numeric id (legacy static data) or a UUID (Supabase).
+  const n = parseInt(slug, 10);
+  if (!isNaN(n) && String(n) === slug) return getPatientById(n);
+  return getPatientById(slug);
 }

@@ -3,7 +3,8 @@
 import { useRef, useCallback, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { blogPosts, allBlogPosts, isPostReleased, getSeriesRotationView, type BlogPost } from "@/data/blog";
+import { blogPosts as staticBlogPosts, allBlogPosts as staticAllBlogPosts, isPostReleased, getSeriesRotationView, type BlogPost } from "@/data/blog";
+import { listAllAsBlogPosts } from "@/lib/db/blog";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 
@@ -125,15 +126,48 @@ function BlogCard({
 }
 
 export default function BlogPage() {
+  // Prefer DB-backed posts; fall back to the bundled static list if the
+  // query fails or returns nothing (e.g. local dev without env vars).
+  const [posts, setPosts] = useState<BlogPost[]>(staticAllBlogPosts);
+
+  useEffect(() => {
+    let cancelled = false;
+    listAllAsBlogPosts()
+      .then((rows) => {
+        if (!cancelled && rows.length > 0) {
+          // Preserve static content bodies when DB rows lack them — DB
+          // currently stores metadata only for most posts.
+          const byStaticSlug = new Map(staticAllBlogPosts.map((p) => [p.slug, p]));
+          const merged = rows.map((r) => {
+            const s = byStaticSlug.get(r.slug);
+            if (!s) return r;
+            return {
+              ...r,
+              content: r.content || s.content,
+              contentHtml: r.contentHtml || s.contentHtml,
+            };
+          });
+          setPosts(merged);
+        }
+      })
+      .catch(() => {
+        /* fallback already in state */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // Infinite-loop rotation: when the authored coming-soon post releases (or
   // none is flagged), the oldest released episode is re-surfaced as the
   // teaser so the series always has a "coming next" slot.
-  const rotation = getSeriesRotationView(blogPosts);
+  const series = posts.filter((p) => p.episode !== undefined);
+  const rotation = getSeriesRotationView(series.length > 0 ? series : staticBlogPosts);
   const seriesPublished = [...rotation.published].sort(
     (a, b) => (b.episode || 0) - (a.episode || 0)
   );
 
-  const guidePosts = allBlogPosts.filter((p) => !p.episode);
+  const guidePosts = posts.filter((p) => !p.episode);
 
   const faqSchema = {
     "@context": "https://schema.org",

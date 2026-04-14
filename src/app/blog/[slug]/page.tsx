@@ -3,7 +3,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { getBlogPostBySlug } from "@/data/blog";
+import { getBlogPostBySlug as getStaticPostBySlug, type BlogPost } from "@/data/blog";
+import { getBlogPostBySlug as getDbPostBySlug } from "@/lib/db/blog";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 
@@ -194,7 +195,30 @@ function markdownToHtml(md: string): string {
 export default function BlogPostPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const post = getBlogPostBySlug(slug || "");
+  const staticPost = getStaticPostBySlug(slug || "");
+  const [post, setPost] = useState<BlogPost | undefined>(staticPost);
+
+  useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+    getDbPostBySlug(slug)
+      .then((dbPost) => {
+        if (cancelled || !dbPost) return;
+        // DB stores metadata for most posts; fall back to static content/HTML
+        // if the DB row hasn't been synced with the full body yet.
+        setPost({
+          ...dbPost,
+          content: dbPost.content || staticPost?.content || "",
+          contentHtml: dbPost.contentHtml || staticPost?.contentHtml,
+        });
+      })
+      .catch(() => {
+        /* keep static fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, staticPost]);
 
   useEffect(() => {
     if (!post?.contentHtml) return;

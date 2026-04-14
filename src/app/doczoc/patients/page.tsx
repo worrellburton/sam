@@ -1,11 +1,12 @@
 "use client";
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "@/lib/doczoc/Sidebar";
 import { useDzPrefs } from "@/lib/doczoc/useDzPrefs";
 import { PlatformBg } from "@/components/PlatformBg";
-import { PATIENTS, type Patient } from "@/data/patients";
+import { PATIENTS as STATIC_PATIENTS, type Patient } from "@/data/patients";
+import { listPatientsAsStatic } from "@/lib/db/patients";
 import { useCrosshairFocusByKey, CrosshairToggle } from "@/hooks/useCrosshairFocus";
 
 const PAYER_BRANDS: Record<string, { color: string; initial: string; bg: string }> = {
@@ -92,9 +93,26 @@ export default function PatientsPage() {
   const { bgId } = useDzPrefs();
   const router = useRouter();
 
-  const newCount = PATIENTS.filter(p => p.status.toLowerCase() === "new").length;
+  // Prefer Supabase-backed patients; fall back to the bundled static list
+  // when the table is empty or the query fails.
+  const [patients, setPatients] = useState<Patient[]>(STATIC_PATIENTS);
+  useEffect(() => {
+    let cancelled = false;
+    listPatientsAsStatic()
+      .then((rows) => {
+        if (!cancelled && rows.length > 0) setPatients(rows);
+      })
+      .catch(() => {
+        /* keep static fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  const filtered = PATIENTS.filter((p) => {
+  const newCount = patients.filter(p => p.status.toLowerCase() === "new").length;
+
+  const filtered = patients.filter((p) => {
     const q = search.toLowerCase();
     const matchesSearch = !q || p.name.toLowerCase().includes(q) ||
       p.condition.toLowerCase().includes(q) ||
@@ -117,14 +135,14 @@ export default function PatientsPage() {
         <header className="dz-platform-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
           <div>
             <h1>Patients</h1>
-            <p>{PATIENTS.length} total patients</p>
+            <p>{patients.length} total patients</p>
           </div>
         </header>
 
         {/* Tab Navigation */}
         <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 20, borderBottom: "1px solid rgba(148,163,184,0.08)", paddingBottom: 0 }}>
           {([
-            { key: "all" as const, label: "All", count: PATIENTS.length, color: "#6366f1", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
+            { key: "all" as const, label: "All", count: patients.length, color: "#6366f1", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
             { key: "new" as const, label: "New", count: newCount, color: "#22c55e", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg> },
           ]).map(tab => (
             <button key={tab.key} onClick={() => setSubPage(tab.key)} style={{
@@ -228,7 +246,7 @@ const COL_HEADERS: Record<ColKey, { label: string; className?: string; style?: R
 const DEFAULT_COLS: ColKey[] = ["patient", "visits", "nextAppt", "condition", "age", "phone", "email", "insurance"];
 const PATIENT_DATA_KEYS = new Set<ColKey>(["age", "visits"]);
 
-function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { patients: Patient[]; onRowClick: (id: number) => void; externalFocusMode?: boolean }) {
+function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { patients: Patient[]; onRowClick: (id: number | string) => void; externalFocusMode?: boolean }) {
   const [columns, setColumns] = useState<ColKey[]>(DEFAULT_COLS);
   const dragCol = useRef<number | null>(null);
   const dragOverCol = useRef<number | null>(null);

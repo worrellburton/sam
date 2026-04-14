@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Sidebar } from "@/lib/doczoc/Sidebar";
 import { useDzPrefs } from "@/lib/doczoc/useDzPrefs";
 import { PlatformBg } from "@/components/PlatformBg";
-import { GOOGLE_REVIEWS, GOOGLE_RATING, GOOGLE_REVIEW_COUNT, type GoogleReview } from "@/data/google-reviews";
+import { GOOGLE_REVIEWS as STATIC_GOOGLE_REVIEWS, GOOGLE_RATING, GOOGLE_REVIEW_COUNT, type GoogleReview } from "@/data/google-reviews";
+import { listReviewsAsStatic } from "@/lib/db/reviews";
 
 
 function StarRating({ rating, size = 12 }: { rating: number; size?: number }) {
@@ -48,10 +49,25 @@ export default function GoogleReviewsPage() {
   const [collapsed, setCollapsed] = useState(false);
   const { bgId } = useDzPrefs();
   const [filterRating, setFilterRating] = useState<number | null>(null);
+  const [allReviews, setAllReviews] = useState<GoogleReview[]>(STATIC_GOOGLE_REVIEWS);
+
+  useEffect(() => {
+    let cancelled = false;
+    listReviewsAsStatic(200)
+      .then((rows) => {
+        if (!cancelled && rows.length > 0) setAllReviews(rows);
+      })
+      .catch(() => {
+        /* keep static fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const reviews = filterRating
-    ? GOOGLE_REVIEWS.filter(r => r.rating === filterRating)
-    : GOOGLE_REVIEWS;
+    ? allReviews.filter(r => r.rating === filterRating)
+    : allReviews;
 
   // Already sorted most recent first in data file
 

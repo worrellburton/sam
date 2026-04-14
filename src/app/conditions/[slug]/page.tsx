@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { getConditionBySlug } from "@/data/conditions";
+import { getConditionBySlug as getStaticConditionBySlug, type Condition } from "@/data/conditions";
+import { getConditionBySlug as getDbConditionBySlug } from "@/lib/db/conditions";
 import { conditionSlugToBlogSlug } from "@/data/condition-blogs";
 import { blogPosts } from "@/data/blog";
 import { GetStarted } from "@/components/GetStarted";
@@ -126,7 +128,23 @@ const conditionFaqs: Record<string, { question: string; answer: string }[]> = {
 export default function ConditionPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const condition = getConditionBySlug(slug || "");
+  const staticCondition = getStaticConditionBySlug(slug || "");
+  const [condition, setCondition] = useState<Condition | undefined>(staticCondition);
+
+  useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+    getDbConditionBySlug(slug)
+      .then((row) => {
+        if (!cancelled && row) setCondition(row);
+      })
+      .catch(() => {
+        /* keep static fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
 
   if (!condition) {
     return (

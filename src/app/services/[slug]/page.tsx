@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { getServiceBySlug } from "@/data/services";
+import { getServiceBySlug as getStaticServiceBySlug, type Service } from "@/data/services";
+import { getServiceBySlug as getDbServiceBySlug } from "@/lib/db/services";
 import { conditionToBlogSlug } from "@/data/condition-blogs";
 import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
 import { GetStarted } from "@/components/GetStarted";
@@ -82,7 +84,23 @@ const serviceStats: Record<string, { stat: string; label: string }[]> = {
 export default function ServicePage() {
   const params = useParams();
   const slug = params.slug as string;
-  const service = getServiceBySlug(slug || "");
+  const staticService = getStaticServiceBySlug(slug || "");
+  const [service, setService] = useState<Service | undefined>(staticService);
+
+  useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+    getDbServiceBySlug(slug)
+      .then((row) => {
+        if (!cancelled && row) setService(row);
+      })
+      .catch(() => {
+        /* keep static fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
 
   if (!service) {
     return (

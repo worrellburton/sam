@@ -12,3 +12,5 @@ export * as booking from "./booking";
 export * as providers from "./providers";
 export * as locations from "./locations";
 export * as reviews from "./reviews";
+export * as services from "./services";
+export * as conditions from "./conditions";

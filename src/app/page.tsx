@@ -390,11 +390,11 @@ export default function Home() {
             ];
             const row3: SpecialtyCard[] = [
               { title: "Shoulder & Knee Surgery", href: "/services/shoulder-knee-surgery", video: `${V}/shoulder-knee-surgery.mp4` },
-              { title: "Knee", href: "/conditions/knee-cartilage-injuries", video: `${V}/sports-medicine.mp4` },
-              { title: "Elbow", href: "/conditions/tennis-elbow", video: `${V}/sports-medicine.mp4` },
+              { title: "Knee", href: "/services/sports-medicine", video: `${V}/sports-medicine.mp4` },
+              { title: "Elbow", href: "/services/sports-medicine", video: `${V}/sports-medicine.mp4` },
             ];
             const row4: SpecialtyCard[] = [
-              { title: "General Orthopedics", href: "/services/joint-preservation", video: `${V}/joint-preservation.mp4` },
+              { title: "General Orthopedics", href: "/services/sports-medicine", video: `${V}/joint-preservation.mp4` },
               {
                 title: "Book a Consultation",
                 href: "/book",

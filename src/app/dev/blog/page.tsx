@@ -82,14 +82,14 @@ function makeImageId(): string {
   return `img_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
-// Max long-edge (in CSS px * 2 for retina) for each aspect ratio. The raw
-// Gemini output is ~2048px which is overkill for a blog thumbnail — the widest
-// card on the live site renders at ~600px, so 1600px long-edge gives us crisp
-// 2.5x retina without paying the bandwidth cost of the 2K original.
+// Max long-edge (in CSS px * 2 for retina) for each aspect ratio. The widest
+// card on the live site renders at ~600px, so ~1200px long-edge gives us crisp
+// 2x retina without paying the bandwidth cost of a larger original. We also
+// ask Gemini for 1K (not 2K) to keep generation fast and keep raw bytes small.
 const MAX_LONG_EDGE: Record<AspectRatio, number> = {
-  "16:9": 1600,
-  "3:4": 1200,
-  "1:1": 1200,
+  "16:9": 1200,
+  "3:4": 960,
+  "1:1": 960,
 };
 
 // Convert a base64-encoded raw image (PNG/JPEG from Gemini) into an optimized,
@@ -102,7 +102,7 @@ async function encodeToWebp(
   rawBase64: string,
   mime: string,
   aspectRatio: AspectRatio,
-  quality = 0.85
+  quality = 0.78
 ): Promise<{ base64: string; width: number; height: number; mime: string }> {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return { base64: rawBase64, width: 0, height: 0, mime };
@@ -466,7 +466,7 @@ export default function DevBlogPage() {
       const res = await fetch("/api/dev/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: slot.prompt, aspectRatio, imageSize: "2K" }),
+        body: JSON.stringify({ prompt: slot.prompt, aspectRatio, imageSize: "1K" }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate image");
@@ -519,7 +519,7 @@ export default function DevBlogPage() {
       const res = await fetch("/api/dev/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, aspectRatio, imageSize: "2K" }),
+        body: JSON.stringify({ prompt, aspectRatio, imageSize: "1K" }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate image");
@@ -576,7 +576,7 @@ export default function DevBlogPage() {
       const res = await fetch("/api/dev/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: selected.prompt, aspectRatio, imageSize: "2K" }),
+        body: JSON.stringify({ prompt: selected.prompt, aspectRatio, imageSize: "1K" }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate image");

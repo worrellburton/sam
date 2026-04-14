@@ -43,6 +43,49 @@ interface RowState {
 
 const defaultRow: RowState = { phase: "idle", error: "" };
 
+// Re-encode the raw Gemini output (PNG) as a resized WebP so we ship smaller
+// files to Supabase Storage. Keeps file sizes ~10x smaller than raw 1K PNGs.
+async function encodeHeroToWebp(
+  rawBase64: string,
+  mime: string,
+  maxLongEdge = 1200,
+  quality = 0.78
+): Promise<{ base64: string; mime: string }> {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return { base64: rawBase64, mime };
+  }
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const el = new Image();
+    el.onload = () => resolve(el);
+    el.onerror = () => reject(new Error("Decode failed"));
+    el.src = `data:${mime};base64,${rawBase64}`;
+  });
+  const longEdge = Math.max(img.naturalWidth, img.naturalHeight);
+  const scale = longEdge > maxLongEdge ? maxLongEdge / longEdge : 1;
+  const w = Math.max(1, Math.round(img.naturalWidth * scale));
+  const h = Math.max(1, Math.round(img.naturalHeight * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return { base64: rawBase64, mime };
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, 0, 0, w, h);
+  const blob: Blob = await new Promise((resolve, reject) => {
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob null"))), "image/webp", quality);
+  });
+  const outMime = blob.type || "image/webp";
+  const buf = await blob.arrayBuffer();
+  const bytes = new Uint8Array(buf);
+  let binary = "";
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+  }
+  return { base64: btoa(binary), mime: outMime };
+}
+
 const phaseMeta: Record<
   RowPhase,
   { label: string; color: string; bg: string; spin: boolean }
@@ -163,7 +206,7 @@ export default function BatchThumbnailPage() {
       const res = await fetch("/api/dev/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, aspectRatio: "16:9", imageSize: "2K" }),
+        body: JSON.stringify({ prompt, aspectRatio: "16:9", imageSize: "1K" }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Image gen failed");
@@ -180,6 +223,20 @@ export default function BatchThumbnailPage() {
 
     if (cancelRequested) {
       updateRow(slug, { phase: "skipped" });
+      return;
+    }
+
+    // Re-encode raw Gemini PNG → optimized WebP before upload. This typically
+    // drops a ~1.5 MB PNG to ~80-150 KB, making the live pages much faster.
+    try {
+      const encoded = await encodeHeroToWebp(imageData, mime, 1200, 0.78);
+      imageData = encoded.base64;
+      mime = encoded.mime;
+    } catch (err) {
+      updateRow(slug, {
+        phase: "error",
+        error: err instanceof Error ? err.message : "WebP encode failed",
+      });
       return;
     }
 

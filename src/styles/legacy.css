@@ -6146,9 +6146,9 @@ img.insurance-logo-light { display: none; }
   .benefits-grid { grid-template-columns: 1fr; }
   .reviews-carousel-page { grid-template-columns: 1fr; }
 
-  /* Sticky bottom bar mobile — fully transparent wrapper so no border
-     or shadow line appears above the button. Book Now button is the
-     only visible thing and it spans the full row. */
+  /* Sticky bottom bar mobile — fully transparent wrapper. Button is a
+     compact centered rounded pill floating above the URL toolbar, with
+     no yellow bleed past it. */
   .sticky-bottom-bar {
     height: auto;
     background: transparent !important;
@@ -6156,36 +6156,36 @@ img.insurance-logo-light { display: none; }
     -webkit-backdrop-filter: none;
     border: none !important;
     box-shadow: none !important;
-    padding: 0;
+    padding: 0 20px 12px;
     bottom: calc(100lvh - 100dvh + env(safe-area-inset-bottom, 0px));
     pointer-events: none;
+    display: flex;
+    justify-content: center;
   }
   .sticky-bar-info { display: none; }
 
-  /* Full-row Book Now button — flush left/right, polished yellow,
-     single centered "Book Now" label. Extra bottom padding keeps the
-     text clear of Safari's URL toolbar when it's visible. */
+  /* Compact rounded Book Now pill — centered, breathing room around it. */
   .sticky-bar-btn {
-    flex: 1;
-    width: 100%;
+    flex: 0 0 auto;
+    width: auto;
     margin: 0;
-    border-radius: 0;
-    min-height: 72px;
-    padding: 18px 20px calc(18px + env(safe-area-inset-bottom, 0px));
-    display: flex;
+    border-radius: 999px;
+    min-height: 52px;
+    padding: 14px 40px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(180deg, #FFE45C 0%, #FFD60A 55%, #F2C500 100%) !important;
     color: #1a1a1a !important;
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 800;
     letter-spacing: -0.005em;
-    box-shadow: 0 -8px 24px rgba(20,12,0,0.18);
+    box-shadow: 0 8px 24px rgba(20,12,0,0.28), 0 2px 6px rgba(20,12,0,0.18);
     pointer-events: auto;
-    transition: filter 0.15s ease;
+    transition: filter 0.15s ease, transform 0.15s ease;
   }
-  .sticky-bar-btn:active { filter: brightness(0.95); }
+  .sticky-bar-btn:active { filter: brightness(0.95); transform: translateY(1px); }
   .sticky-bar-btn:hover {
     background: linear-gradient(180deg, #FFE45C 0%, #FFD60A 55%, #F2C500 100%) !important;
     color: #1a1a1a !important;

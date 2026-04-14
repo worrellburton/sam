@@ -1,4 +1,4 @@
-const CODE_DESCRIPTIONS: Record<string, string> = {
+export const CODE_DESCRIPTIONS: Record<string, string> = {
   // ICD-10 codes
   "M75.111": "Rotator cuff tear, right shoulder",
   "M75.112": "Rotator cuff tear, left shoulder",

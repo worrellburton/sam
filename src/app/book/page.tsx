@@ -1041,7 +1041,31 @@ export default function BookPage() {
                         </span>
                       </div>
                     </div>
-                    <button className="dz-btn dz-btn-book" onClick={() => setConfirmed(true)}>
+                    <button
+                      className="dz-btn dz-btn-book"
+                      onClick={async () => {
+                        const concern = enhanceDone ? enhancedText : concernText;
+                        const preferredDate = selectedDate
+                          ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
+                          : null;
+                        try {
+                          await fetch("/api/book", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              name: `${patientType} patient booking`,
+                              apptType: patientType === "new" ? "New Patient Consultation" : "Follow-up",
+                              preferredDate,
+                              preferredTime: selectedSlot,
+                              notes: concern,
+                            }),
+                          });
+                        } catch (err) {
+                          console.error("[book] submit failed", err);
+                        }
+                        setConfirmed(true);
+                      }}
+                    >
                       Book Appointment
                     </button>
                   </div>

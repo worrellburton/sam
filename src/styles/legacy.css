@@ -6146,9 +6146,9 @@ img.insurance-logo-light { display: none; }
   .benefits-grid { grid-template-columns: 1fr; }
   .reviews-carousel-page { grid-template-columns: 1fr; }
 
-  /* Sticky bottom bar mobile — fully transparent wrapper. Button is a
-     compact centered rounded pill floating above the URL toolbar, with
-     the theme toggle sitting on the same row to the right. */
+  /* Sticky bottom bar mobile — transparent wrapper anchored to visual
+     viewport bottom. Safari positions fixed elements above the URL bar
+     automatically, so we just need a small lift + safe-area padding. */
   .sticky-bottom-bar {
     height: auto;
     background: transparent !important;
@@ -6156,17 +6156,18 @@ img.insurance-logo-light { display: none; }
     -webkit-backdrop-filter: none;
     border: none !important;
     box-shadow: none !important;
-    padding: 0 20px 12px;
-    bottom: calc(100lvh - 100dvh + env(safe-area-inset-bottom, 0px));
+    bottom: 0;
+    padding: 14px 20px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
     pointer-events: none;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 12px;
   }
   .sticky-bar-info { display: none; }
 
-  /* Compact rounded Book Now pill — centered text via line-height: 1 and
-     symmetric padding so the label sits true-center vertically. */
+  /* Compact rounded Book Now pill — centered text. */
   .sticky-bar-btn {
     flex: 0 0 auto;
     width: auto;
@@ -6210,10 +6211,11 @@ img.insurance-logo-light { display: none; }
     pointer-events: auto;
   }
 
-  /* Theme toggle sits on the same row as the Book Now pill when the
-     sticky bar is visible — right-aligned, matching vertical center. */
+  /* Theme toggle sits on the same row as the Book Now pill — matched
+     to the sticky bar's bottom position so they share the row. */
+  .theme-toggle-fixed,
   .sticky-bottom-bar.visible ~ .theme-toggle-fixed {
-    bottom: calc(12px + (100lvh - 100dvh) + env(safe-area-inset-bottom, 0px));
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     right: 20px;
     width: 44px;
     height: 44px;

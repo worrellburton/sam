@@ -217,6 +217,14 @@ export default function DevBlogPage() {
     }
   }
 
+  // After a successful Save & Set, the "Saved thumbnail" strip needs to show
+  // the *new* URLs immediately. blogPosts is imported at module load and won't
+  // reflect the freshly committed blog.ts until the next Vercel deploy, so we
+  // mirror the post-save paths into local state and read from both.
+  const [savedOverrides, setSavedOverrides] = useState<
+    Record<string, { image?: string; image3x4?: string; image1x1?: string }>
+  >({});
+
   // Infinite-loop rotation (dev-triggered materialization)
   const [rotatePhase, setRotatePhase] = useState<"idle" | "rotating" | "error" | "done">("idle");
   const [rotateError, setRotateError] = useState<string>("");
@@ -762,6 +770,14 @@ export default function DevBlogPage() {
       const setData = await setThumb.json();
       if (!setThumb.ok) throw new Error(setData.error || "Failed to set thumbnail");
 
+      setSavedOverrides((prev) => ({
+        ...prev,
+        [slug]: {
+          image: imagePath,
+          image3x4: imagePath3x4,
+          image1x1: imagePath1x1,
+        },
+      }));
       updateGen(slug, { phase: "idle", savedPath: imagePath });
     } catch (err) {
       updateGen(slug, {
@@ -1767,12 +1783,13 @@ export default function DevBlogPage() {
                         session). Pulls directly from the persisted blog.ts
                         fields so the series is visible even before any new
                         renders have been generated. */}
-                    {!gen.images.find((im) => im.id === gen.selectedId) && post.image && (() => {
+                    {!gen.images.find((im) => im.id === gen.selectedId) && (post.image || savedOverrides[post.slug]?.image) && (() => {
                       const ratios: AspectRatio[] = ["16:9", "3:4", "1:1"];
+                      const override = savedOverrides[post.slug];
                       const savedByRatio: Record<AspectRatio, string | undefined> = {
-                        "16:9": post.image,
-                        "3:4": post.image3x4,
-                        "1:1": post.image1x1,
+                        "16:9": override?.image ?? post.image,
+                        "3:4": override?.image3x4 ?? post.image3x4,
+                        "1:1": override?.image1x1 ?? post.image1x1,
                       };
                       const tileHeight = 360;
                       return (

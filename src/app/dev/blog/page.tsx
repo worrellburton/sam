@@ -652,8 +652,8 @@ export default function DevBlogPage() {
     try {
       // 1. Optimize every variant to WebP (resized to a sane long-edge for the
       // thumbnail). This runs fully client-side so the payload we send to
-      // GitHub is already the production-ready asset — no server-side image
-      // library needed. Typical raw 2K Gemini PNG (~2-3 MB) → 100-300 KB WebP.
+      // Supabase Storage is already the production-ready asset — no server-
+      // side image library needed. Typical 2K Gemini PNG (~2-3 MB) → 100-300 KB.
       const extFromMime = (m: string) =>
         m.includes("webp") ? "webp" : m.includes("jpeg") ? "jpg" : "png";
 
@@ -665,8 +665,8 @@ export default function DevBlogPage() {
         ? await encodeToWebp(square.data, square.mime, "1:1")
         : null;
 
+      // Object keys inside the Supabase `blog-thumbnails` bucket.
       const primaryName = `${slug}.${extFromMime(optimizedPrimary.mime)}`;
-      const imagePath = `/images/blog/${primaryName}`;
       const portraitName = optimizedPortrait
         ? `${slug}-3x4.${extFromMime(optimizedPortrait.mime)}`
         : null;
@@ -674,40 +674,42 @@ export default function DevBlogPage() {
         ? `${slug}-1x1.${extFromMime(optimizedSquare.mime)}`
         : null;
 
-      // 2. Upload every aspect we have in parallel.
-      const uploads: Array<Promise<Response>> = [];
-      uploads.push(
-        fetch("/api/dev/upload", {
+      // 2. Upload every aspect to Supabase Storage in parallel. Each response
+      // includes the public CDN URL, which is what we persist in the DB /
+      // blog.ts so the site serves straight from the Supabase edge.
+      type UploadResp = { publicUrl: string; path: string; error?: string };
+      const uploadOne = async (
+        fileName: string,
+        base64: string,
+        mime: string
+      ): Promise<UploadResp> => {
+        const res = await fetch("/api/dev/storage-upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ fileName: primaryName, folder: "images/blog", content: optimizedPrimary.base64 }),
-        })
-      );
-      if (optimizedPortrait && portraitName) {
-        uploads.push(
-          fetch("/api/dev/upload", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fileName: portraitName, folder: "images/blog", content: optimizedPortrait.base64 }),
-          })
-        );
-      }
-      if (optimizedSquare && squareName) {
-        uploads.push(
-          fetch("/api/dev/upload", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fileName: squareName, folder: "images/blog", content: optimizedSquare.base64 }),
-          })
-        );
-      }
-      const responses = await Promise.all(uploads);
-      for (const res of responses) {
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body.error || "Failed to upload image");
-        }
-      }
+          body: JSON.stringify({ fileName, content: base64, mimeType: mime }),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.error || "Failed to upload image");
+        return body as UploadResp;
+      };
+
+      const primaryUpload = uploadOne(primaryName, optimizedPrimary.base64, optimizedPrimary.mime);
+      const portraitUpload = optimizedPortrait && portraitName
+        ? uploadOne(portraitName, optimizedPortrait.base64, optimizedPortrait.mime)
+        : Promise.resolve<UploadResp | null>(null);
+      const squareUpload = optimizedSquare && squareName
+        ? uploadOne(squareName, optimizedSquare.base64, optimizedSquare.mime)
+        : Promise.resolve<UploadResp | null>(null);
+
+      const [primaryRes, portraitRes, squareRes] = await Promise.all([
+        primaryUpload,
+        portraitUpload,
+        squareUpload,
+      ]);
+
+      const imagePath = primaryRes.publicUrl;
+      const imagePath3x4 = portraitRes?.publicUrl;
+      const imagePath1x1 = squareRes?.publicUrl;
 
       // 3. Auto-generate SEO + GEO-optimized alt text from the article meta and
       // the exact prompt that produced the selected image. Best-effort — if
@@ -751,8 +753,8 @@ export default function DevBlogPage() {
         body: JSON.stringify({
           slug,
           imagePath,
-          imagePath3x4: portraitName ? `/images/blog/${portraitName}` : undefined,
-          imagePath1x1: squareName ? `/images/blog/${squareName}` : undefined,
+          imagePath3x4,
+          imagePath1x1,
           imagePrompts: promptTexts.length > 0 ? promptTexts : undefined,
           imageAlt,
         }),

@@ -245,7 +245,7 @@ export const blogPosts: BlogPost[] = [
     episode: 14,
     seriesTitle: "Clinical Clarity",
     relatedService: "sports-medicine",
-    image: "/images/blog/hockey-orthopedic-injuries.jpg?v=1776085548061",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/hockey-orthopedic-injuries.jpg",
     imageAlt: "Ice hockey player at full speed on rink",
     content: "",
     contentHtml: `
@@ -717,7 +717,7 @@ export const blogPosts: BlogPost[] = [
     episode: 18,
     seriesTitle: "Clinical Clarity",
     relatedService: "sports-medicine",
-    image: "/images/blog/football-orthopedic-injuries.jpg?v=1776084859377",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/football-orthopedic-injuries.jpg",
     imageAlt: "Football player on the sideline being examined by a physician",
     content: "",
     contentHtml: `
@@ -2249,7 +2249,7 @@ export const blogPosts: BlogPost[] = [
     episode: 12,
     seriesTitle: "Clinical Clarity",
     relatedService: "cartilage-repair",
-    image: "/images/blog/cartilage-restoration-maci-allograft.jpg?v=1776038984672",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/cartilage-restoration-maci-allograft.jpg",
     imageAlt: "Orthopedic surgeon studying a knee joint model with cartilage highlighted",
     content: "",
     contentHtml: `
@@ -2525,7 +2525,7 @@ export const blogPosts: BlogPost[] = [
     episode: 11,
     seriesTitle: "Clinical Clarity",
     relatedService: "regenerative-medicine",
-    image: "/images/blog/prp-therapy-deep-dive.jpg?v=1776040793469",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/prp-therapy-deep-dive.jpg",
     imageAlt: "Centrifuge spinning a vial of blood to concentrate platelets for PRP therapy",
     content: "",
     contentHtml: `
@@ -3163,7 +3163,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "8 min read",
     episode: 1,
     seriesTitle: "Clinical Clarity",
-    image: "/images/blog/5-signs-orthopedic-surgeon.jpg?v=1776035773816",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/5-signs-orthopedic-surgeon.jpg",
     imageAlt: "Doctor examining a patient's knee",
     content: "",
     contentHtml: `
@@ -3446,7 +3446,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "9 min read",
     episode: 2,
     seriesTitle: "Clinical Clarity",
-    image: "/images/blog/acl-tear-recovery.jpg?v=1776037059504",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/acl-tear-recovery.jpg",
     imageAlt: "Athlete performing rehabilitation exercises",
     relatedService: "sports-medicine",
     content: "",
@@ -3707,7 +3707,7 @@ export const blogPosts: BlogPost[] = [
     seriesTitle: "Clinical Clarity",
     date: "January 28, 2026",
     readTime: "9 min read",
-    image: "/images/blog/prp-therapy-sports-medicine.jpg?v=1776036759084",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/prp-therapy-sports-medicine.jpg",
     imageAlt: "PRP therapy injection for sports injury",
     relatedService: "sports-medicine",
     content: "",
@@ -4002,7 +4002,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "9 min read",
     episode: 4,
     seriesTitle: "Clinical Clarity",
-    image: "/images/blog/arthroscopic-vs-open-surgery.jpg?v=1776039732482",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/arthroscopic-vs-open-surgery.jpg",
     imageAlt: "Surgical procedure in operating room",
     relatedService: "shoulder-knee-surgery",
     content: "",
@@ -4621,7 +4621,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 min read",
     episode: 6,
     seriesTitle: "Clinical Clarity",
-    image: "/images/blog/protecting-joints-active-adults.jpg?v=1776039735876",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/protecting-joints-active-adults.jpg",
     imageAlt: "Active adult stretching before exercise",
     content: `
 ## Keeping Your Joints Healthy

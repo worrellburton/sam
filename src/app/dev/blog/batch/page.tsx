@@ -183,19 +183,21 @@ export default function BatchThumbnailPage() {
       return;
     }
 
-    // 3. Upload
-    const ext = mime.includes("jpeg") ? "jpg" : "png";
+    // 3. Upload to Supabase Storage (blog-thumbnails bucket). The returned
+    // publicUrl is what we persist so the site serves from the Supabase edge.
+    const ext = mime.includes("webp") ? "webp" : mime.includes("jpeg") ? "jpg" : "png";
     const fileName = `${slug}.${ext}`;
-    const imagePath = `/images/blog/${fileName}`;
+    let imagePath = "";
     updateRow(slug, { phase: "uploading" });
     try {
-      const upload = await fetch("/api/dev/upload", {
+      const upload = await fetch("/api/dev/storage-upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName, folder: "images/blog", content: imageData }),
+        body: JSON.stringify({ fileName, content: imageData, mimeType: mime }),
       });
       const uploadData = await upload.json();
       if (!upload.ok) throw new Error(uploadData.error || "Upload failed");
+      imagePath = uploadData.publicUrl;
     } catch (err) {
       updateRow(slug, {
         phase: "error",
@@ -674,9 +676,9 @@ export default function BatchThumbnailPage() {
         </div>
 
         <p style={{ marginTop: 16, fontSize: "0.76rem", color: "#475569", lineHeight: 1.6 }}>
-          Prompts use the same Global Image Prompt you set on the main Blog page. Images are Gemini 3 Pro at 16:9 / 2K, uploaded to{" "}
-          <code style={{ background: "rgba(255,255,255,0.05)", padding: "1px 6px", borderRadius: 4 }}>public/images/blog/</code> and wired into{" "}
-          <code style={{ background: "rgba(255,255,255,0.05)", padding: "1px 6px", borderRadius: 4 }}>blog.ts</code> automatically.
+          Prompts use the same Global Image Prompt you set on the main Blog page. Images are Gemini 3 Pro at 16:9 / 2K, uploaded to the{" "}
+          <code style={{ background: "rgba(255,255,255,0.05)", padding: "1px 6px", borderRadius: 4 }}>blog-thumbnails</code> Supabase Storage bucket and wired into{" "}
+          <code style={{ background: "rgba(255,255,255,0.05)", padding: "1px 6px", borderRadius: 4 }}>blog.ts</code> + Supabase automatically.
         </p>
       </main>
     </div>

@@ -4,7 +4,7 @@ const cspDirectives = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://va.vercel-scripts.com https://accounts.google.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob: https://images.unsplash.com https://maps.googleapis.com https://maps.google.com https://www.google-analytics.com https://www.googletagmanager.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://maps.googleapis.com https://maps.google.com https://www.google-analytics.com https://www.googletagmanager.com https://wgznytmxwslupjhsdeha.supabase.co",
   "font-src 'self' https://fonts.gstatic.com",
   "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://maps.googleapis.com https://va.vercel-scripts.com https://vercel-insights.com https://accounts.google.com",
   "frame-src 'self' https://maps.google.com https://www.google.com https://accounts.google.com",
@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "a.espncdn.com" },
       { protocol: "https", hostname: "cdn.brandfetch.io" },
+      // Supabase Storage: blog thumbnails bucket (public read).
+      {
+        protocol: "https",
+        hostname: "wgznytmxwslupjhsdeha.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
     ],
     // Allow query strings on local paths so the dev panel can cache-bust
     // blog thumbnails by appending ?v=<timestamp> after re-uploading the

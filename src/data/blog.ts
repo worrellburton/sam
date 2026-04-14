@@ -4676,7 +4676,6 @@ If you're experiencing persistent joint pain, swelling, or limited mobility desp
     readTime: "10 min read",
     episode: 7,
     seriesTitle: "Clinical Clarity",
-    comingSoon: true,
     image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1200&h=600&fit=crop&q=80",
     imageAlt: "Laboratory microscope and stem cells",
     content: "",

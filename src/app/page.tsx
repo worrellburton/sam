@@ -375,22 +375,26 @@ export default function Home() {
               image?: string;
               description?: string;
             };
+            // Videos live in the Supabase `blog-videos` bucket (public read).
+            // A single base URL + filename keeps the list readable and makes
+            // it easy to swap in new clips uploaded via /dev/videos.
+            const V = "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-videos";
             const row1: SpecialtyCard[] = [
-              { title: "Sports Medicine", href: "/services/sports-medicine", video: "/videos/sports-medicine.mp4" },
-              { title: "Joint Preservation", href: "/services/joint-preservation", video: "/videos/joint-preservation.mp4" },
+              { title: "Sports Medicine", href: "/services/sports-medicine", video: `${V}/sports-medicine.mp4` },
+              { title: "Joint Preservation", href: "/services/joint-preservation", video: `${V}/joint-preservation.mp4` },
             ];
             const row2: SpecialtyCard[] = [
-              { title: "Arthroscopic Surgery", href: "/services/arthroscopic-surgery", video: "/videos/arthroscopic-surgery.mp4" },
-              { title: "Cartilage Repair", href: "/services/cartilage-repair", video: "/videos/cartilage-repair.mp4" },
-              { title: "Regenerative Medicine", href: "/services/regenerative-medicine", video: "/videos/regenerative-medicine.mp4" },
+              { title: "Arthroscopic Surgery", href: "/services/arthroscopic-surgery", video: `${V}/arthroscopic-surgery.mp4` },
+              { title: "Cartilage Repair", href: "/services/cartilage-repair", video: `${V}/cartilage-repair.mp4` },
+              { title: "Regenerative Medicine", href: "/services/regenerative-medicine", video: `${V}/regenerative-medicine.mp4` },
             ];
             const row3: SpecialtyCard[] = [
-              { title: "Shoulder & Knee Surgery", href: "/services/shoulder-knee-surgery", video: "/videos/shoulder-knee-surgery.mp4" },
-              { title: "Knee", href: "/conditions/knee-cartilage-injuries", video: "/videos/Knee Joint Model.mp4" },
-              { title: "Elbow", href: "/conditions/tennis-elbow", video: "/videos/sports-medicine.mp4" },
+              { title: "Shoulder & Knee Surgery", href: "/services/shoulder-knee-surgery", video: `${V}/shoulder-knee-surgery.mp4` },
+              { title: "Knee", href: "/conditions/knee-cartilage-injuries", video: `${V}/Knee_Joint_Model.mp4` },
+              { title: "Elbow", href: "/conditions/tennis-elbow", video: `${V}/sports-medicine.mp4` },
             ];
             const row4: SpecialtyCard[] = [
-              { title: "General Orthopedics", href: "/services/joint-preservation", video: "/videos/joint-preservation.mp4" },
+              { title: "General Orthopedics", href: "/services/joint-preservation", video: `${V}/joint-preservation.mp4` },
               {
                 title: "Book a Consultation",
                 href: "/book",

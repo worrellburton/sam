@@ -5910,6 +5910,31 @@ img.insurance-logo-light { display: none; }
   /* Hide desktop nav on mobile */
   .nav-links { display: none !important; }
 
+  /* Inner-page nav on mobile — always navy regardless of theme. */
+  .nav.nav-solid,
+  [data-theme="light"] .nav.nav-solid {
+    background: #0a1628 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .nav.nav-solid .logo-name,
+  [data-theme="light"] .nav.nav-solid .logo-name {
+    color: #f0f0f5 !important;
+  }
+  .nav.nav-solid .nav-btn-contact,
+  [data-theme="light"] .nav.nav-solid .nav-btn-contact {
+    color: #f0f0f5 !important;
+  }
+  .nav.nav-solid .nav-toggle span,
+  [data-theme="light"] .nav.nav-solid .nav-toggle span {
+    background: #f0f0f5 !important;
+  }
+  .nav.nav-solid .theme-toggle,
+  [data-theme="light"] .nav.nav-solid .theme-toggle {
+    color: #f0f0f5 !important;
+  }
+
   /* ===== MOBILE NAV — Fullscreen liquid glass ===== */
   /* New mobile nav */
   .mobile-nav {
@@ -6146,9 +6171,9 @@ img.insurance-logo-light { display: none; }
   .benefits-grid { grid-template-columns: 1fr; }
   .reviews-carousel-page { grid-template-columns: 1fr; }
 
-  /* Sticky bottom bar mobile — transparent wrapper anchored to visual
-     viewport bottom. Safari positions fixed elements above the URL bar
-     automatically, so we just need a small lift + safe-area padding. */
+  /* Sticky bottom bar mobile — full-width bar anchored to the visual
+     viewport bottom. iOS Safari positions fixed elements above the URL
+     bar automatically; safe-area padding handles the home indicator. */
   .sticky-bottom-bar {
     height: auto;
     background: transparent !important;
@@ -6156,26 +6181,25 @@ img.insurance-logo-light { display: none; }
     -webkit-backdrop-filter: none;
     border: none !important;
     box-shadow: none !important;
-    bottom: 0;
-    padding: 14px 20px;
-    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    right: 0;
+    /* Keep base `bottom: calc(100lvh - 100dvh + safe-area)` so the bar
+       lifts above iOS Safari's collapsing URL bar. */
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     pointer-events: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
+    display: block;
   }
   .sticky-bar-info { display: none; }
 
-  /* Compact rounded Book Now pill — centered text. */
+  /* Full-width Book Now button spanning the entire screen. */
   .sticky-bar-btn {
-    flex: 0 0 auto;
-    width: auto;
+    display: flex;
+    width: 100%;
     margin: 0;
-    border-radius: 999px;
-    min-height: 52px;
-    padding: 16px 40px;
-    display: inline-flex;
+    border-radius: 0;
+    min-height: 56px;
+    padding: 18px 20px;
     align-items: center;
     justify-content: center;
     line-height: 1;
@@ -6185,7 +6209,7 @@ img.insurance-logo-light { display: none; }
     font-size: 1.05rem;
     font-weight: 800;
     letter-spacing: -0.005em;
-    box-shadow: 0 8px 24px rgba(20,12,0,0.28), 0 2px 6px rgba(20,12,0,0.18);
+    box-shadow: 0 -4px 20px rgba(20,12,0,0.22);
     pointer-events: auto;
     transition: filter 0.15s ease, transform 0.15s ease;
   }
@@ -6211,14 +6235,16 @@ img.insurance-logo-light { display: none; }
     pointer-events: auto;
   }
 
-  /* Theme toggle sits on the same row as the Book Now pill — matched
-     to the sticky bar's bottom position so they share the row. */
-  .theme-toggle-fixed,
-  .sticky-bottom-bar.visible ~ .theme-toggle-fixed {
+  /* Theme toggle — sits above the full-width Book Now button when the
+     sticky bar is visible, otherwise anchors to the bottom-right. */
+  .theme-toggle-fixed {
     bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     right: 20px;
     width: 44px;
     height: 44px;
+  }
+  .sticky-bottom-bar.visible ~ .theme-toggle-fixed {
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
   }
 
   /* Mobile 768px — layout fixes */
@@ -12790,12 +12816,11 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 
   /* Sticky bar — taller touch target */
   .sticky-bottom-bar {
-    height: 54px;
+    height: auto;
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
   .sticky-bar-btn {
     font-size: 1.05rem;
-    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
   /* Blog article — tighter */

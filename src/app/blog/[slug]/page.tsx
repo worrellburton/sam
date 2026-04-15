@@ -267,7 +267,7 @@ export default function BlogPostPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }} />
       <section className="blog-post-hero" style={{ backgroundImage: `url('${post.image}')` }}>
-        <div className="container" style={{ maxWidth: 820 }}>
+        <div className="container" style={{ maxWidth: 1100 }}>
           <div className="blog-breadcrumb">
             <Link href="/blog">&larr; Back to Blog</Link>
           </div>
@@ -283,7 +283,7 @@ export default function BlogPostPage() {
       </section>
 
       <section className="section">
-        <div className="container" style={{ maxWidth: 820 }}>
+        <div className="container" style={{ maxWidth: 1100 }}>
           <BlogAudioPlayer post={post} />
           <div
             className={post.contentHtml ? "blog-article" : "blog-post-content"}

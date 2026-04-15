@@ -97,15 +97,19 @@ Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 
 ## Development Notes
 
-- Most page components currently use `"use client"`. New static/display pages should prefer Server Components — see _Deferred optimizations_ below.
+- Static and display pages (`/about`, `/faq`, `/contact`, `/reviews`, `/blog`, `/blog/[slug]`, `/services/[slug]`, `/conditions/[slug]`) are now Server Components with per-page `metadata`. Interactive bits are hydration islands under `src/components/` (e.g. `FaqAccordion`, `ContactForm`, `GoogleReviewsGrid`, `BlogAudioPlayer`, `BlogReveal`, `AnimatedStat`).
+- `/book` and all of `/doczoc/*` remain client components — migration deferred due to their interactivity.
 - Theme toggle saves to localStorage, default is light
 - Legacy CSS uses CSS variables for theming (`:root` and `[data-theme="light"]`)
 - DocZoc-specific CSS lives in `src/styles/doczoc.css` and is loaded only under `/doczoc/*` via `src/app/doczoc/layout.tsx`.
 - Navigation auto-closes on route change
-- Service, blog, and condition pages are data-driven from `src/data/` files
-- DocZoc pages share `Sidebar` and `useDzPrefs` exported from `doczoc/dashboard/page.tsx`
+- Service, blog, condition, FAQ content are data-driven from `src/data/` files (`services.ts`, `service-content.ts`, `conditions.ts`, `condition-content.ts`, `blog.ts`, `faq.ts`, `patient-reviews.ts`).
+- DocZoc pages currently mount `Sidebar` and `useDzPrefs` individually; a shared layout consolidation is deferred.
 - `BookingContext` exported from `src/components/ClientLayout.tsx`
 - Shared icon library: `src/components/icons.tsx` (use `<Icon.Star />` etc.). Shared review card: `src/components/ReviewCard.tsx`.
+- Structured logging: use `logError(scope, err, context?)` from `@/lib/log` instead of silent `.catch(() => {})`.
+- Persistent client cache: `@/lib/idb` wraps IndexedDB; hooks hydrate TTS blobs + Athena tokens across reloads.
+- Accessibility: a global skip-to-content link targets `<main id="main">`, and `prefers-reduced-motion` disables reveal animations and marquees.
 
 ## Scripts
 
@@ -115,14 +119,19 @@ Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 - `npm run typecheck` — `tsc --noEmit`
 - `npm run lint` / `npm run format`
 
+## CI
+
+`.github/workflows/ci.yml` runs on every PR against `main`:
+- Typecheck (`npm run typecheck`)
+- ESLint (`npm run lint`)
+- Production build (gated to same-repo PRs so env secrets aren't exposed to fork builds).
+
 ## Deferred optimizations
 
 Tracked here so future passes don't re-discover the same work:
 
-1. **Server Component migration** — most `src/app/**/page.tsx` files still carry `"use client"` even when they only render static data. The dynamic `[slug]` routes use `useParams()` and would need to be converted to accept `params` as a prop (plus `generateMetadata`). Big Core Web Vitals win when tackled.
-2. **`/doczoc/v2/page.tsx`** — no inbound references anywhere in the codebase; likely dead. Left in place pending confirmation; noindex via `/doczoc/layout.tsx`.
-3. **Shared DocZoc layout** — 24 DocZoc pages each mount `Sidebar` and `useDzPrefs` independently. The route-level `layout.tsx` currently only scopes the CSS; moving the Sidebar into the layout would DRY up ~24 files.
-4. **Oversized files** — `src/app/dev/blog/page.tsx` (2,385 lines), `src/app/doczoc/calendar/page.tsx` (1,324), `src/app/book/page.tsx` (1,302), `src/data/blog.ts` (2,326). Candidates for extraction.
-5. **Silent `.catch(() => {})`** — several hooks swallow errors; swap for logged fallbacks.
-6. **Persistent client cache** — `useElevenLabs` and `useAthena` token cache live in memory only. IndexedDB would survive reloads.
-7. **Metadata on DocZoc sub-pages** — the layout provides defaults; per-page `export const metadata` would sharpen titles.
+1. **Book page SC migration** — `/book` is 1,300+ lines of interactive state. Candidate for splitting into smaller islands.
+2. **DocZoc Sidebar consolidation** — 21 DocZoc pages still mount `<Sidebar />` and `useDzPrefs()` individually. Route-level `layout.tsx` only scopes CSS today.
+3. **Oversized files** — `src/app/dev/blog/page.tsx` (2,385 lines), `src/app/doczoc/calendar/page.tsx` (1,324), `src/app/book/page.tsx` (1,302), `src/data/blog.ts` (2,326). Candidates for extraction.
+4. **DocZoc per-page metadata** — unlocked once the DocZoc SC migration lands.
+5. **Lighthouse CI + bundle-size budget** — add to `.github/workflows/ci.yml` against a Vercel preview URL.

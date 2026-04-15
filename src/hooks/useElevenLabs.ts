@@ -1,5 +1,7 @@
 "use client";
 import { useState, useCallback, useRef } from "react";
+import { idbGet, idbSet } from "@/lib/idb";
+import { logError } from "@/lib/log";
 
 export interface AudioState {
   status: "idle" | "generating" | "ready" | "playing" | "paused" | "error";
@@ -8,6 +10,9 @@ export interface AudioState {
   progress: number;
 }
 
+// Cache generated speech in IndexedDB so regenerated audio survives
+// across sessions. We persist the Blob itself (structured-cloneable)
+// and mint a fresh object URL each time the caller needs one.
 export function useElevenLabs() {
   const [state, setState] = useState<AudioState>({
     status: "idle",
@@ -16,12 +21,14 @@ export function useElevenLabs() {
     progress: 0,
   });
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // In-memory mirror — avoids re-reading IndexedDB + re-creating the
+  // object URL for keys we've already hydrated this session.
   const cacheRef = useRef<Map<string, string>>(new Map());
 
   const generateAudio = useCallback(async (text: string, cacheKey?: string) => {
     const key = cacheKey || text.slice(0, 50);
 
-    // Check cache
+    // Memory hit.
     if (cacheRef.current.has(key)) {
       setState({
         status: "ready",
@@ -30,6 +37,19 @@ export function useElevenLabs() {
         progress: 100,
       });
       return;
+    }
+
+    // IndexedDB hit (across reloads).
+    try {
+      const cached = await idbGet<Blob>("tts-audio", key);
+      if (cached) {
+        const url = URL.createObjectURL(cached);
+        cacheRef.current.set(key, url);
+        setState({ status: "ready", audioUrl: url, error: null, progress: 100 });
+        return;
+      }
+    } catch (err) {
+      logError("useElevenLabs.idbGet", err, { key });
     }
 
     setState({ status: "generating", audioUrl: null, error: null, progress: 10 });
@@ -48,16 +68,18 @@ export function useElevenLabs() {
       if (!res.ok) {
         const errData = await res.json().catch(() => null);
         throw new Error(
-          errData?.error || errData?.message || `API error: ${res.status}`
+          errData?.error || errData?.message || `API error: ${res.status}`,
         );
       }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       cacheRef.current.set(key, url);
+      void idbSet("tts-audio", key, blob);
 
       setState({ status: "ready", audioUrl: url, error: null, progress: 100 });
     } catch (err) {
+      logError("useElevenLabs.generate", err, { key });
       setState({
         status: "error",
         audioUrl: null,
@@ -77,7 +99,7 @@ export function useElevenLabs() {
     } else {
       audioRef.current.src = state.audioUrl;
     }
-    audioRef.current.play();
+    void audioRef.current.play();
     setState((prev) => ({ ...prev, status: "playing" }));
   }, [state.audioUrl]);
 

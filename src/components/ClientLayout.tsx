@@ -196,9 +196,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
       {/* Site layer — fades out when booking opens */}
       <div className={`site-layer${bookingOpen ? " site-hidden" : ""}`}>
+        {/* Skip link — only visible when focused via keyboard.
+            Targets the <main id="main"> wrapper below. */}
+        <a href="#main" className="skip-to-content">
+          Skip to main content
+        </a>
         {showChrome && <Navigation />}
         {showChrome && <StickyBar />}
-        {children}
+        <main id="main">{children}</main>
         {showChrome && <Footer />}
         {showChrome && (
           <button className={`theme-toggle-fixed${showThemeToggle ? " visible" : ""}`} onClick={toggleTheme} aria-label="Toggle theme">

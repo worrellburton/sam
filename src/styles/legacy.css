@@ -7377,3 +7377,54 @@ img.insurance-logo-light { display: none; }
  * loaded only on /doczoc/* via src/app/doczoc/layout.tsx.
  */
 
+/* =====================================================================
+ * Accessibility polish
+ * ===================================================================== */
+
+/* Skip-to-content link — visually hidden until it receives focus. */
+.skip-to-content {
+  position: absolute;
+  top: -9999px;
+  left: 8px;
+  z-index: 10000;
+  padding: 10px 16px;
+  background: #0a1628;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.skip-to-content:focus {
+  top: 8px;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Respect prefers-reduced-motion — kill the big animations the site
+   uses for reveals, marquees, etc. Users who ask not to see motion
+   still get the content immediately. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal-left,
+  .blog-reveal,
+  .blog-reveal-left,
+  .blog-reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .ticker-track,
+  .reviews-marquee-track {
+    animation: none !important;
+  }
+}
+

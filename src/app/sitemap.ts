@@ -3,7 +3,7 @@ import { allBlogPosts, isPostReleased } from "@/data/blog";
 import { services } from "@/data/services";
 import { conditions } from "@/data/conditions";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

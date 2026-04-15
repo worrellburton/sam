@@ -4,7 +4,7 @@ import { GetStarted } from "@/components/GetStarted";
 import { ContactForm } from "@/components/ContactForm";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 export const metadata: Metadata = {
   title: "Contact | Dr. Sameh Elguizaoui, M.D.",

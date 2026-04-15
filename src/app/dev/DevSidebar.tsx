@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { AuthBanner } from "./AuthBanner";
 
 const links = [
   {
@@ -123,6 +124,7 @@ export function DevSidebar() {
 
   return (
     <>
+      <AuthBanner />
       <style>{`
         .dev-sidebar {
           width: 220px;

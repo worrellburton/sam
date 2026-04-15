@@ -12,7 +12,7 @@ import { BlogCard } from "@/components/BlogCard";
 import { logError } from "@/lib/log";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 export const metadata: Metadata = {
   title: "Clinical Clarity | Orthopedic Blog by Dr. Sameh Elguizaoui",

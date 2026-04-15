@@ -1,3 +1,5 @@
+import { PLACEHOLDER_IMAGE } from "./placeholder-image";
+
 export interface Condition {
   slug: string;
   title: string;
@@ -17,7 +19,7 @@ export const conditions: Condition[] = [
     slug: "rotator-cuff-tears",
     title: "Rotator Cuff Tears",
     tagline: "You don't have to live with shoulder pain",
-    heroImage: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1600&h=600&fit=crop&q=80",
+    heroImage: PLACEHOLDER_IMAGE,
     overview: "A rotator cuff tear happens when one or more of the tendons that stabilize your shoulder become damaged. It's one of the most common shoulder injuries, and the good news is that most people recover fully with the right care. Whether your tear happened from a fall, overuse, or simply over time, Dr. Elguizaoui will work with you to find the gentlest, most effective path to feeling better.",
     symptoms: [
       "Pain when lifting or reaching overhead",
@@ -40,7 +42,7 @@ export const conditions: Condition[] = [
     slug: "shoulder-instability-and-dislocations",
     title: "Shoulder Instability & Dislocations",
     tagline: "Stability and confidence in every movement",
-    heroImage: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1600&h=600&fit=crop&q=80",
+    heroImage: PLACEHOLDER_IMAGE,
     overview: "If your shoulder feels loose, slips out of place, or has dislocated before, you know how unsettling it can be. Shoulder instability means the ball of your shoulder joint doesn't stay properly centered. It's a very treatable condition, and Dr. Elguizaoui specializes in helping patients regain full stability and confidence.",
     symptoms: [
       "Feeling like your shoulder might 'pop out'",
@@ -63,7 +65,7 @@ export const conditions: Condition[] = [
     slug: "labral-tears-slap-tears",
     title: "Labral Tears (SLAP Tears)",
     tagline: "Precise diagnosis, gentle repair",
-    heroImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1600&h=600&fit=crop&q=80",
+    heroImage: PLACEHOLDER_IMAGE,
     overview: "The labrum is a ring of cartilage that deepens your shoulder socket and helps keep the joint stable. A tear here — sometimes called a SLAP tear — can cause pain, catching, and a feeling of instability. These injuries are common in athletes and active people, but they're very treatable with modern techniques.",
     symptoms: [
       "Deep, aching shoulder pain that's hard to pinpoint",
@@ -86,7 +88,7 @@ export const conditions: Condition[] = [
     slug: "acl-tears-and-reconstruction",
     title: "ACL Tears & Reconstruction",
     tagline: "Getting you back to what you love",
-    heroImage: "https://images.unsplash.com/photo-1461896836934-bd45ba9407d6?w=1600&h=600&fit=crop&q=80",
+    heroImage: PLACEHOLDER_IMAGE,
     overview: "An ACL tear can feel like a devastating setback — but it doesn't have to be. The anterior cruciate ligament (ACL) is one of the key stabilizers in your knee, and while tearing it is a significant injury, reconstruction surgery has come a long way. Dr. Elguizaoui has helped countless patients — from professional athletes to weekend warriors — return to the activities they love.",
     symptoms: [
       "A 'pop' sensation at the time of injury",
@@ -109,7 +111,7 @@ export const conditions: Condition[] = [
     slug: "meniscus-tears",
     title: "Meniscus Tears",
     tagline: "Protect your knee, preserve your mobility",
-    heroImage: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=1600&h=600&fit=crop&q=80",
+    heroImage: PLACEHOLDER_IMAGE,
     overview: "Your meniscus is a C-shaped cushion of cartilage in your knee that absorbs shock and helps the joint move smoothly. Tears can happen during sports, from a twist, or gradually with age. The great news is that many meniscus tears can be treated without surgery, and when surgery is needed, it's minimally invasive with a quick recovery.",
     symptoms: [
       "Pain along the inner or outer edge of the knee",
@@ -132,7 +134,7 @@ export const conditions: Condition[] = [
     slug: "patellar-instability",
     title: "Patellar Instability",
     tagline: "A kneecap that stays where it belongs",
-    heroImage: "https://images.unsplash.com/photo-1434596922112-19c563067271?w=1600&h=600&fit=crop&q=80",
+    heroImage: PLACEHOLDER_IMAGE,
     overview: "Patellar instability means your kneecap (patella) tends to slide out of its groove, partially or completely. It can happen after a sudden twist or impact, or it may be something you've dealt with repeatedly. It can feel scary, but this is a well-understood condition with very effective treatments.",
     symptoms: [
       "Kneecap sliding or 'popping' out of place",
@@ -155,7 +157,7 @@ export const conditions: Condition[] = [
     slug: "knee-cartilage-injuries",
     title: "Knee Cartilage Injuries",
     tagline: "Restoring the smooth surface your knee needs",
-    heroImage: "https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=1600&h=600&fit=crop&q=80",
+    heroImage: PLACEHOLDER_IMAGE,
     overview: "Cartilage is the smooth, slippery surface that lets your knee bend and move without friction. When it's damaged — from injury, wear, or a condition like osteochondritis dissecans — it can cause pain, swelling, and stiffness. Dr. Elguizaoui completed an international fellowship across Europe focused specifically on cartilage repair, bringing world-class techniques to your care.",
     symptoms: [
       "Pain with activity that improves with rest",
@@ -178,7 +180,7 @@ export const conditions: Condition[] = [
     slug: "biceps-tendon-injuries",
     title: "Biceps Tendon Injuries",
     tagline: "Relief is closer than you think",
-    heroImage: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1600&h=600&fit=crop&q=80",
+    heroImage: PLACEHOLDER_IMAGE,
     overview: "The biceps tendon connects your biceps muscle to the shoulder and elbow. Injuries can range from inflammation (tendinitis) to partial or complete tears. These injuries often cause pain in the front of the shoulder and can make everyday tasks uncomfortable. Most biceps tendon issues respond well to conservative treatment.",
     symptoms: [
       "Pain in the front of the shoulder or upper arm",

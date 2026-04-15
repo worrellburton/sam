@@ -2098,6 +2098,41 @@ section.specialties > .container {
   object-fit: cover;
   display: block;
 }
+
+/* GetStarted CTA — uses the same SpecialtyCanvas shader renderer as
+   the Areas-of-Expertise section, but fills the entire section and
+   sits behind the content grid. A navy gradient overlay on top keeps
+   the headline + list legible regardless of shader frame brightness. */
+.contact-bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+.contact-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 22, 40, 0.82) 0%,
+    rgba(10, 22, 40, 0.6) 45%,
+    rgba(10, 22, 40, 0.78) 100%
+  );
+}
+[data-theme="light"] .contact-bg-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(10, 22, 40, 0.86) 0%,
+    rgba(10, 22, 40, 0.7) 45%,
+    rgba(10, 22, 40, 0.82) 100%
+  );
+}
+
 .specialty-card .specialty-video {
   position: absolute;
   inset: 0;

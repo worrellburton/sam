@@ -1,3 +1,5 @@
+import { PLACEHOLDER_IMAGE } from "./placeholder-image";
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -118,7 +120,7 @@ export const blogPosts: BlogPost[] = [
     episode: 13,
     seriesTitle: "Clinical Clarity",
     relatedService: "arthroscopic-surgery",
-    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=1200&h=600&fit=crop&q=80",
+    image: PLACEHOLDER_IMAGE,
     imageAlt: "X-ray of elbow joint showing radial head",
     content: "",
     contentHtml: `
@@ -617,7 +619,7 @@ export const blogPosts: BlogPost[] = [
     episode: 21,
     seriesTitle: "Clinical Clarity",
     relatedService: "regenerative-medicine",
-    image: "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=1200&h=600&fit=crop&q=80",
+    image: PLACEHOLDER_IMAGE,
     imageAlt: "Knee injection preparation in an orthopedic clinic",
     content: "",
     contentHtml: `
@@ -744,7 +746,7 @@ export const blogPosts: BlogPost[] = [
     episode: 23,
     seriesTitle: "Clinical Clarity",
     relatedService: "joint-preservation",
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&h=600&fit=crop&q=80",
+    image: PLACEHOLDER_IMAGE,
     imageAlt: "Robotic-assisted total knee replacement in progress",
     content: "",
     contentHtml: `
@@ -946,7 +948,7 @@ export const blogPosts: BlogPost[] = [
     episode: 25,
     seriesTitle: "Clinical Clarity",
     relatedService: "shoulder-knee-surgery",
-    image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?w=1200&h=600&fit=crop&q=80",
+    image: PLACEHOLDER_IMAGE,
     imageAlt: "Surgeon examining a shoulder joint model with implants",
     content: "",
     contentHtml: `
@@ -1453,7 +1455,7 @@ export const blogPosts: BlogPost[] = [
     episode: 10,
     seriesTitle: "Clinical Clarity",
     relatedService: "sports-medicine",
-    image: "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=1200&h=600&fit=crop&q=80",
+    image: PLACEHOLDER_IMAGE,
     imageAlt: "Runner holding knee after a pivot on a Brooklyn court",
     content: "",
     contentHtml: `
@@ -1600,7 +1602,7 @@ export const blogPosts: BlogPost[] = [
     episode: 8,
     seriesTitle: "Clinical Clarity",
     relatedService: "arthroscopic-surgery",
-    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=600&fit=crop&q=80",
+    image: PLACEHOLDER_IMAGE,
     imageAlt: "MRI reading of a knee meniscus tear",
     content: "",
     contentHtml: `

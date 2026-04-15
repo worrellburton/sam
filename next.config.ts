@@ -12,7 +12,7 @@ const cspDirectives = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://va.vercel-scripts.com https://accounts.google.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob: https://images.unsplash.com https://maps.googleapis.com https://maps.google.com https://www.google-analytics.com https://www.googletagmanager.com https://wgznytmxwslupjhsdeha.supabase.co",
+  "img-src 'self' data: blob: https://images.unsplash.com https://placehold.co https://maps.googleapis.com https://maps.google.com https://www.google-analytics.com https://www.googletagmanager.com https://wgznytmxwslupjhsdeha.supabase.co",
   "media-src 'self' blob: https://wgznytmxwslupjhsdeha.supabase.co",
   "font-src 'self' https://fonts.gstatic.com",
   "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://maps.googleapis.com https://va.vercel-scripts.com https://vercel-insights.com https://accounts.google.com https://wgznytmxwslupjhsdeha.supabase.co",
@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "a.espncdn.com" },
       { protocol: "https", hostname: "cdn.brandfetch.io" },
+      // Branded thumbnail placeholder served by placehold.co. Every blog
+      // post that hasn't had a real thumbnail generated via /dev/blog yet
+      // points here so they're visually obvious + easy to grep for.
+      { protocol: "https", hostname: "placehold.co" },
       // Supabase Storage: blog thumbnails bucket (public read).
       {
         protocol: "https",

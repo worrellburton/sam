@@ -2098,6 +2098,42 @@ section.specialties > .container {
   object-fit: cover;
   display: block;
 }
+
+/* GetStarted section backdrop. Reuses the shader renderer but fills
+   the whole <section> and sits behind the content grid.
+   Overlay gradient ensures the hero copy stays legible even when the
+   animation drifts through lighter frames. */
+.contact-bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+.contact-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(10, 22, 40, 0.78) 0%,
+      rgba(10, 22, 40, 0.55) 45%,
+      rgba(10, 22, 40, 0.72) 100%
+    );
+}
+[data-theme="light"] .contact-bg-overlay {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(10, 22, 40, 0.82) 0%,
+      rgba(10, 22, 40, 0.65) 45%,
+      rgba(10, 22, 40, 0.78) 100%
+    );
+}
 .specialty-card .specialty-video {
   position: absolute;
   inset: 0;

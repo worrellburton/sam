@@ -202,7 +202,15 @@ const FRAGMENT_SHADERS: Record<string, string> = {
     }`,
 };
 
-export function SpecialtyCanvas({ slug }: { slug: string }) {
+export function SpecialtyCanvas({
+  slug,
+  className = "specialty-canvas",
+}: {
+  slug: string;
+  /** Override the default class so the same canvas can back other
+   *  sections (e.g. the "Get Started" CTA). Still fills its parent. */
+  className?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const runningRef = useRef(false);
 
@@ -294,5 +302,5 @@ export function SpecialtyCanvas({ slug }: { slug: string }) {
     };
   }, [slug]);
 
-  return <canvas ref={canvasRef} className="specialty-canvas" />;
+  return <canvas ref={canvasRef} className={className} />;
 }

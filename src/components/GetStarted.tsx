@@ -1,10 +1,19 @@
 import Link from "next/link";
-import { HeroGradient } from "@/components/HeroGradient";
+import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
 
 export function GetStarted() {
   return (
-    <section className="section contact reveal" id="contact" style={{ position: "relative", overflow: "hidden" }}>
-      <HeroGradient />
+    <section
+      className="section contact reveal"
+      id="contact"
+      style={{ position: "relative", overflow: "hidden" }}
+    >
+      {/* Reuse the "cartilage-repair" collagen-fiber shader from the
+          Areas of Expertise section as the CTA backdrop. Flowing fibers
+          pair well with the "Get Back to What You Love" hook. */}
+      <SpecialtyCanvas slug="cartilage-repair" className="contact-bg-canvas" />
+      <div className="contact-bg-overlay" />
+
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <div className="contact-content">
           <div className="contact-text">

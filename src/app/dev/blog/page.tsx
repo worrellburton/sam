@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { DevSidebar } from "../DevSidebar";
 import { blogPosts } from "@/data/blog";
+import { logError } from "@/lib/log";
 
 const GLOBAL_PROMPT_LS_KEY = "dev:blog:globalPrompt";
 
@@ -354,7 +355,7 @@ export default function DevBlogPage() {
           if (!stored) setGlobalPrompt(d.defaultGlobalPrompt);
         }
       })
-      .catch(() => {});
+      .catch((err) => logError("dev.blog.loadDefaultPrompt", err));
   }, []);
 
   function saveGlobalPrompt(value: string) {

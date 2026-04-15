@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useMemo, useCallback, useEffect, useRef, useContext } from "react";
 import { BookingContext } from "@/lib/BookingContext";
+import { logError } from "@/lib/log";
 
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -305,7 +306,7 @@ function useGoogleReviews() {
           .sort((a: GoogleReview, b: GoogleReview) => new Date(b.publishTime || 0).getTime() - new Date(a.publishTime || 0).getTime());
         setReviews(all);
       } catch (err) {
-        console.warn('Google Reviews fetch failed:', err);
+        logError('book.googleReviews', err);
       }
     }
     fetchAllReviews();

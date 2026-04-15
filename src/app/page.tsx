@@ -13,6 +13,7 @@ import { HeroOverlayGradient } from "@/components/HeroOverlayGradient";
 import { HeroTicker } from "@/components/HeroTicker";
 import { Icon } from "@/components/icons";
 import { ReviewCard } from "@/components/ReviewCard";
+import { logError } from "@/lib/log";
 
 interface GoogleReview {
   rating: number;
@@ -38,7 +39,7 @@ function useGoogleReviews() {
         setTotalCount(data.totalCount);
         setReviews(data.reviews);
       } catch (err) {
-        console.warn('Google Reviews fetch failed:', err);
+        logError('home.googleReviews', err);
       }
     }
     fetchAllReviews();

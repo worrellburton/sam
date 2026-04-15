@@ -1,5 +1,7 @@
 "use client";
 import { useState, useCallback, useRef } from "react";
+import { idbGet, idbSet } from "@/lib/idb";
+import { logError } from "@/lib/log";
 
 // ── Config ───────────────────────────────────────────────────────────
 const ATHENA_ENV = process.env.NEXT_PUBLIC_ATHENA_ENV || "preview";
@@ -107,10 +109,31 @@ export interface AthenaEligibility {
 }
 
 // ── Token cache ──────────────────────────────────────────────────────
+// In-memory cache seeded on first access from IndexedDB so tokens
+// survive page reloads within their validity window.
+interface TokenRecord {
+  token: string;
+  expiry: number; // ms since epoch
+}
+
 let cachedToken: string | null = null;
 let tokenExpiry = 0;
+let hydratePromise: Promise<void> | null = null;
+
+function hydrateFromIdb(): Promise<void> {
+  if (hydratePromise) return hydratePromise;
+  hydratePromise = (async () => {
+    const record = await idbGet<TokenRecord>("athena-token", "current");
+    if (record && Date.now() < record.expiry - 30_000) {
+      cachedToken = record.token;
+      tokenExpiry = record.expiry;
+    }
+  })().catch((err) => logError("useAthena.hydrate", err));
+  return hydratePromise;
+}
 
 async function getAccessToken(): Promise<string> {
+  if (!cachedToken) await hydrateFromIdb();
   if (cachedToken && Date.now() < tokenExpiry - 30_000) return cachedToken;
 
   const res = await fetch("/api/athena/token", { method: "POST" });
@@ -123,6 +146,7 @@ async function getAccessToken(): Promise<string> {
   const data = await res.json();
   cachedToken = data.access_token;
   tokenExpiry = Date.now() + (data.expires_in || 3600) * 1000;
+  void idbSet("athena-token", "current", { token: cachedToken, expiry: tokenExpiry });
   return cachedToken!;
 }
 

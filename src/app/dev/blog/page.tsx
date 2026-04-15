@@ -655,8 +655,74 @@ export default function DevBlogPage() {
       return best;
     };
     const primary = pickByRatio("16:9") || selected; // Landscape → `image`
-    const portrait = pickByRatio("3:4");
-    const square = pickByRatio("1:1");
+    let portrait = pickByRatio("3:4");
+    let square = pickByRatio("1:1");
+
+    // Auto-fill missing aspect ratios before saving so Save-Thumbnail
+    // always commits the full 16:9 / 3:4 / 1:1 set. Otherwise the
+    // blog.ts entry only picks up `image:` and the 3:4/1:1 slots stay
+    // blank — the user has to explicitly reshape before saving.
+    async function ensureVariant(
+      aspectRatio: AspectRatio,
+    ): Promise<GeneratedImage | undefined> {
+      try {
+        const res = await fetch("/api/dev/generate-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: selected!.prompt,
+            aspectRatio,
+            imageSize: "1K",
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || `Failed to generate ${aspectRatio}`);
+        }
+        const newImage: GeneratedImage = {
+          id: makeImageId(),
+          prompt: selected!.prompt,
+          promptIndex: selected!.promptIndex,
+          data: data.image,
+          mime: data.mimeType || "image/png",
+          aspectRatio,
+          ts: Date.now(),
+        };
+        // Mirror into the panel's state so the thumbnails appear without
+        // requiring a manual reshape click.
+        setGenStates((prev) => {
+          const cur = prev[slug] || defaultGen;
+          return {
+            ...prev,
+            [slug]: { ...cur, images: [...cur.images, newImage] },
+          };
+        });
+        return newImage;
+      } catch (err) {
+        updateGen(slug, {
+          phase: "error",
+          error:
+            err instanceof Error
+              ? `Could not auto-generate ${aspectRatio} before save: ${err.message}`
+              : `Could not auto-generate ${aspectRatio} before save`,
+        });
+        throw err;
+      }
+    }
+
+    const missing: AspectRatio[] = [];
+    if (!portrait) missing.push("3:4");
+    if (!square) missing.push("1:1");
+    if (missing.length > 0) {
+      updateGen(slug, { phase: "saving", error: `Generating missing ${missing.join(" + ")} variant${missing.length > 1 ? "s" : ""}…` });
+      const [newPortrait, newSquare] = await Promise.all([
+        portrait ? Promise.resolve(portrait) : ensureVariant("3:4"),
+        square ? Promise.resolve(square) : ensureVariant("1:1"),
+      ]);
+      portrait = newPortrait;
+      square = newSquare;
+      updateGen(slug, { phase: "saving", error: "" });
+    }
 
     try {
       // 1. Optimize every variant to WebP (resized to a sane long-edge for the

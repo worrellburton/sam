@@ -119,9 +119,10 @@ Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 
 - `npm run dev` — dev server (Turbopack)
 - `npm run build` — production build
-- `npm run analyze` — production build with the bundle analyzer enabled (opens treemaps)
 - `npm run typecheck` — `tsc --noEmit`
 - `npm run lint` / `npm run format`
+
+> To restore the bundle analyzer: `npm install --save-dev @next/bundle-analyzer` (commits the lockfile), then re-wrap `nextConfig` in `next.config.ts` and re-add `"analyze": "ANALYZE=true next build"` to `package.json`.
 
 ## CI
 

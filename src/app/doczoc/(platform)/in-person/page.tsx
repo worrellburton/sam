@@ -259,7 +259,7 @@ function OperativeReportBuilder() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -596,6 +596,6 @@ export default function InPersonPage() {
         {/* Reports */}
         {tab === "reports" && <OperativeReportBuilder />}
       </main>
-    </div>
+    </>
   );
 }

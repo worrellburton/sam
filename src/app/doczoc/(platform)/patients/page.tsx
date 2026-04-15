@@ -37,7 +37,7 @@ function InsuranceLogo({ name }: { name: string }) {
       ) : (
         <span style={{ display: "flex", width: 28, height: 28, borderRadius: 6, background: brand.bg, color: brand.color, alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: 800, flexShrink: 0 }}>{brand.initial}</span>
       )}
-    </>
+    </div>
   );
 }
 
@@ -326,6 +326,6 @@ function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { pa
           </tbody>
         </table>
       </div>
-    </div>
+    </>
   );
 }

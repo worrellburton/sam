@@ -285,7 +285,7 @@ function StepInfoModal({ stepId, onClose, onNavigate }: { stepId: Step; onClose:
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -482,6 +482,6 @@ export default function RcmPage() {
           />
         )}
       </main>
-    </div>
+    </>
   );
 }

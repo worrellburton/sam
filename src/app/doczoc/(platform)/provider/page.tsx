@@ -49,7 +49,7 @@ function InfoField({ label, value, mono }: { label: string; value: string; mono?
       }}>
         {value}
       </span>
-    </>
+    </div>
   );
 }
 
@@ -177,6 +177,6 @@ export default function ProviderInfoPage() {
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 }

@@ -61,7 +61,7 @@ function CalcSlider({ label, value, onChange, min, max, step, suffix, prefix, co
         <span>{prefix}{fmt(min)}{suffix}</span>
         <span>{prefix}{fmt(max)}{suffix}</span>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -247,6 +247,6 @@ export default function CalculatorPage() {
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 }

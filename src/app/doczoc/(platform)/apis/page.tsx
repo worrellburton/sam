@@ -107,7 +107,7 @@ function ApiCard({ api }: { api: ApiStatus }) {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -180,6 +180,6 @@ export default function ApisPage() {
           ))}
         </div>
       </main>
-    </div>
+    </>
   );
 }

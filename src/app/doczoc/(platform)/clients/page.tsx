@@ -160,7 +160,7 @@ function ViewToggle({ view, onChange }: { view: "grid" | "list"; onChange: (v: "
       <button className={`dz-view-btn${view === "list" ? " active" : ""}`} onClick={() => onChange("list")} title="List view">
         <ListIcon />
       </button>
-    </>
+    </div>
   );
 }
 
@@ -740,6 +740,6 @@ export default function ClientsPage() {
         {tab === "creative" && <CreativeTab view={view} />}
         {tab === "audience" && <AudienceTab view={view} />}
       </main>
-    </div>
+    </>
   );
 }

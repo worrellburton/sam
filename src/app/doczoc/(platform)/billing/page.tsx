@@ -281,7 +281,7 @@ function ApiStatusDot({ api }: { api: ApiStatus }) {
           {api.latency}ms
         </span>
       )}
-    </>
+    </div>
   );
 }
 
@@ -1143,6 +1143,6 @@ export default function BillingPage() {
         </div>
         )}
       </main>
-    </div>
+    </>
   );
 }

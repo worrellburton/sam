@@ -83,7 +83,7 @@ function BalanceChart() {
           <text key={l} x={toX(i * 7.25)} y={h + 18} fill="#64748b" fontSize="10" textAnchor="middle" fontFamily="Inter, sans-serif">{l}</text>
         ))}
       </svg>
-    </>
+    </div>
   );
 }
 
@@ -416,6 +416,6 @@ export default function HomePage() {
           </div>
         </div>
       </main>
-    </div>
+    </>
   );
 }

@@ -5,7 +5,7 @@ import { Locations } from "@/components/Locations";
 import { GoogleReviewsGrid } from "@/components/GoogleReviewsGrid";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 export const metadata: Metadata = {
   title: "Patient Reviews | Dr. Sameh Elguizaoui, M.D.",

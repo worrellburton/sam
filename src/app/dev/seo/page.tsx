@@ -20,7 +20,7 @@ import { blogPosts, isPostReleased } from "@/data/blog";
 // editing metadata.
 // ─────────────────────────────────────────────────────────────────────
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 type RouteRow = {
   path: string;

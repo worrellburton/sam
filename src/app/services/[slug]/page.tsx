@@ -15,7 +15,7 @@ import { serviceFaqs, serviceStats } from "@/data/service-content";
 import { logError } from "@/lib/log";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 // Pre-render every service at build time.
 export async function generateStaticParams() {

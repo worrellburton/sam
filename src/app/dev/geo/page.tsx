@@ -75,7 +75,7 @@ export default function DevGeoPage() {
       "@type": "MedicalBusiness",
       name: PRACTICE_NAME,
       telephone: PRACTICE_PHONE,
-      url: "https://sammd.vercel.app",
+      url: "https://samelguizaoui.vercel.app",
       medicalSpecialty: "Orthopedic Surgery",
       priceRange: "$$",
       address: locations.map((loc) => ({

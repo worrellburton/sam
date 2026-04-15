@@ -15,7 +15,7 @@ import { conditionFaqs } from "@/data/condition-content";
 import { logError } from "@/lib/log";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 export async function generateStaticParams() {
   return conditions.map((c) => ({ slug: c.slug }));

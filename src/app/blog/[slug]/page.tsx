@@ -16,7 +16,7 @@ import { markdownToHtml } from "@/lib/markdown";
 import { logError } from "@/lib/log";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 export async function generateStaticParams() {
   // Only pre-render posts that are actually released so unreleased drafts

@@ -2287,6 +2287,11 @@ body:has(.dz-platform), body:has(.dz-splash), body:has(.dz-page), body:has(.dz-s
 }
 .dz-main-expanded { margin-left: 68px; }
 
+/* When the shared DoczocPlatformShell reports a collapsed sidebar, apply
+   the same margin shift automatically so pages don't need to read the
+   collapsed state themselves. */
+.dz-platform[data-collapsed="true"] .dz-platform-main { margin-left: 68px; }
+
 /* Ambient atmosphere overlay — subtle, alive, restrained */
 .dz-platform-main::before {
   content: '';

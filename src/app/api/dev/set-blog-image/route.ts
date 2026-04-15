@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
 const REPO_OWNER = "worrellburton";
@@ -15,6 +16,9 @@ const FILE_PATH = "src/data/blog.ts";
 // already exist. If Supabase credentials are present, the matching
 // blog_posts row is also patched (so DB-backed posts get the new thumbs + alt).
 export async function POST(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   if (!GITHUB_TOKEN) {
     return NextResponse.json(
       { error: "GITHUB_TOKEN not configured. Add it to your Vercel environment variables." },

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
 
@@ -12,6 +13,9 @@ BRAND VISUAL STYLE: Nike x Equinox. Premium, aspirational, athletic editorial. C
 CONSISTENCY: All 4 prompts in a set must share the same lighting palette and color DNA so they read as one campaign.`;
 
 export async function POST(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   if (!ANTHROPIC_API_KEY) {
     return NextResponse.json(
       { error: "ANTHROPIC_API_KEY not configured. Add it to your environment variables." },

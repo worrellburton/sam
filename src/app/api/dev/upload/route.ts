@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
 const REPO_OWNER = "worrellburton";
@@ -9,6 +10,9 @@ const BRANCH = "main";
 // Client sends { fileName, folder, content (base64) }
 // This endpoint forwards to GitHub API, avoiding CORS issues.
 export async function POST(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   if (!GITHUB_TOKEN) {
     return NextResponse.json(
       { error: "GITHUB_TOKEN not configured. Add it to your Vercel environment variables." },
@@ -75,6 +79,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   if (!GITHUB_TOKEN) {
     return NextResponse.json(
       { error: "GITHUB_TOKEN not configured." },

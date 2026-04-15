@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 function walkDir(dir: string, base: string): { path: string; mtime: number; size: number }[] {
   const results: { path: string; mtime: number; size: number }[] = [];
@@ -18,6 +19,9 @@ function walkDir(dir: string, base: string): { path: string; mtime: number; size
 }
 
 export async function GET(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   const type = request.nextUrl.searchParams.get("type") || "images";
   const publicDir = path.join(process.cwd(), "public");
   const targetDir = type === "videos"

@@ -380,21 +380,21 @@ export default function Home() {
             // it easy to swap in new clips uploaded via /dev/videos.
             const V = "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-videos";
             const row1: SpecialtyCard[] = [
-              { title: "Sports Medicine", href: "/services/sports-medicine", video: `${V}/sports-medicine.mp4` },
-              { title: "Joint Preservation", href: "/services/joint-preservation", video: `${V}/joint-preservation.mp4` },
+              { title: "Sports Medicine", href: "/services/sports-medicine", video: `${V}/Sports_Medicine.mp4` },
+              { title: "Joint Preservation", href: "/services/joint-preservation", video: `${V}/Joint_Preservation.mp4` },
             ];
             const row2: SpecialtyCard[] = [
-              { title: "Arthroscopic Surgery", href: "/services/arthroscopic-surgery", video: `${V}/arthroscopic-surgery.mp4` },
-              { title: "Cartilage Repair", href: "/services/cartilage-repair", video: `${V}/cartilage-repair.mp4` },
-              { title: "Regenerative Medicine", href: "/services/regenerative-medicine", video: `${V}/regenerative-medicine.mp4` },
+              { title: "Arthroscopic Surgery", href: "/services/arthroscopic-surgery", video: `${V}/Arthroscopic_Surgery.mp4` },
+              { title: "Cartilage Repair", href: "/services/cartilage-repair", video: `${V}/Cartilage_Repair.mp4` },
+              { title: "Regenerative Medicine", href: "/services/regenerative-medicine", video: `${V}/Regenerative_Medicine.mp4` },
             ];
             const row3: SpecialtyCard[] = [
-              { title: "Shoulder", href: "/services/shoulder-knee-surgery", video: `${V}/shoulder-knee-surgery.mp4` },
-              { title: "Knee", href: "/services/sports-medicine", video: `${V}/sports-medicine.mp4` },
-              { title: "Elbow", href: "/services/sports-medicine", video: `${V}/sports-medicine.mp4` },
+              { title: "Shoulder", href: "/services/shoulder-knee-surgery", video: `${V}/Shoulder.mp4` },
+              { title: "Knee", href: "/services/sports-medicine", video: `${V}/Knee.mp4` },
+              { title: "Elbow", href: "/services/sports-medicine", video: `${V}/Elbow.mp4` },
             ];
             const row4: SpecialtyCard[] = [
-              { title: "General Orthopedics", href: "/services/sports-medicine", video: `${V}/joint-preservation.mp4` },
+              { title: "General Orthopedics", href: "/services/sports-medicine", video: `${V}/General_Orthopedics.mp4` },
               {
                 title: "Book a Consultation",
                 href: "/book",

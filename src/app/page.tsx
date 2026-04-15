@@ -389,7 +389,7 @@ export default function Home() {
               { title: "Regenerative Medicine", href: "/services/regenerative-medicine", video: `${V}/regenerative-medicine.mp4` },
             ];
             const row3: SpecialtyCard[] = [
-              { title: "Shoulder & Knee Surgery", href: "/services/shoulder-knee-surgery", video: `${V}/shoulder-knee-surgery.mp4` },
+              { title: "Shoulder", href: "/services/shoulder-knee-surgery", video: `${V}/shoulder-knee-surgery.mp4` },
               { title: "Knee", href: "/services/sports-medicine", video: `${V}/sports-medicine.mp4` },
               { title: "Elbow", href: "/services/sports-medicine", video: `${V}/sports-medicine.mp4` },
             ];

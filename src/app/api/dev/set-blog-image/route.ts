@@ -46,39 +46,55 @@ export async function POST(request: NextRequest) {
   const currentContent: string = Buffer.from(fileMeta.content, "base64").toString("utf-8");
 
   // 2. Find the entry by slug and rewrite its image fields.
+  //
+  // Note: ~half the posts the site renders live in Supabase only — they
+  // never got added to src/data/blog.ts. For those, slugIdx === -1 and
+  // there's simply nothing to rewrite in blog.ts. Rather than 404ing
+  // (which is what this route used to do, silently losing every save
+  // for DB-only posts), we flag `inBlogTs = false`, skip the GitHub
+  // commit below, and let step 4 persist the update to Supabase alone.
   const slugIdx = currentContent.indexOf(`slug: "${slug}"`);
-  if (slugIdx === -1) {
-    return NextResponse.json({ error: `Post with slug "${slug}" not found in blog.ts` }, { status: 404 });
-  }
-  const nextSlugIdx = currentContent.indexOf(`slug: "`, slugIdx + 1);
-  const entryEnd = nextSlugIdx === -1 ? currentContent.length : nextSlugIdx;
-  let entry = currentContent.slice(slugIdx, entryEnd);
+  const inBlogTs = slugIdx !== -1;
+  const nextSlugIdx = inBlogTs
+    ? currentContent.indexOf(`slug: "`, slugIdx + 1)
+    : -1;
+  const entryEnd =
+    inBlogTs && nextSlugIdx === -1
+      ? currentContent.length
+      : nextSlugIdx;
+  let entry = inBlogTs
+    ? currentContent.slice(slugIdx, entryEnd)
+    : "";
 
   function withBuster(path: string): string {
     const separator = path.includes("?") ? "&" : "?";
     return `${path}${separator}v=${Date.now()}`;
   }
 
-  // Replace `image: "..."` or `image: PLACEHOLDER_IMAGE` (bare identifier).
-  // Both forms exist in src/data/blog.ts — posts with real thumbnails use
-  // the quoted string, posts waiting on a real thumbnail use the
-  // PLACEHOLDER_IMAGE constant so they're grep-countable. Either way we
-  // rewrite to a fresh quoted string with a cache-buster.
-  if (imagePath) {
-    const busted = withBuster(imagePath);
-    const imageSingleLine = /image:\s*"[^"]*"/;
-    const imageMultiLine = /image:\s*\n\s*"[^"]*"/;
-    const imageIdentifier = /image:\s*PLACEHOLDER_IMAGE(?!_)/;
-    if (imageSingleLine.test(entry)) {
-      entry = entry.replace(imageSingleLine, `image: "${busted}"`);
-    } else if (imageMultiLine.test(entry)) {
-      entry = entry.replace(imageMultiLine, `image: "${busted}"`);
-    } else if (imageIdentifier.test(entry)) {
-      entry = entry.replace(imageIdentifier, `image: "${busted}"`);
-    } else {
-      return NextResponse.json({ error: `Could not locate image field for "${slug}"` }, { status: 500 });
+  // Rewrite the entry in blog.ts ONLY if the slug actually lives there.
+  // For Supabase-only posts (inBlogTs === false) we skip this whole
+  // block and fall straight through to the DB update below.
+  if (inBlogTs) {
+    // Replace `image: "..."` or `image: PLACEHOLDER_IMAGE` (bare identifier).
+    // Both forms exist in src/data/blog.ts — posts with real thumbnails use
+    // the quoted string, posts waiting on a real thumbnail use the
+    // PLACEHOLDER_IMAGE constant so they're grep-countable. Either way we
+    // rewrite to a fresh quoted string with a cache-buster.
+    if (imagePath) {
+      const busted = withBuster(imagePath);
+      const imageSingleLine = /image:\s*"[^"]*"/;
+      const imageMultiLine = /image:\s*\n\s*"[^"]*"/;
+      const imageIdentifier = /image:\s*PLACEHOLDER_IMAGE(?!_)/;
+      if (imageSingleLine.test(entry)) {
+        entry = entry.replace(imageSingleLine, `image: "${busted}"`);
+      } else if (imageMultiLine.test(entry)) {
+        entry = entry.replace(imageMultiLine, `image: "${busted}"`);
+      } else if (imageIdentifier.test(entry)) {
+        entry = entry.replace(imageIdentifier, `image: "${busted}"`);
+      } else {
+        return NextResponse.json({ error: `Could not locate image field for "${slug}"` }, { status: 500 });
+      }
     }
-  }
 
   // Upsert `image3x4` / `image1x1` variants. The source of truth for a
   // variant can be one of:
@@ -167,39 +183,44 @@ export async function POST(request: NextRequest) {
       }
     }
   }
+  } // end if (inBlogTs) — blog.ts mutations above
 
-  const updatedContent =
-    currentContent.slice(0, slugIdx) + entry + currentContent.slice(entryEnd);
+  // 3. Commit the blog.ts update back to GitHub — only meaningful when
+  // the slug was present in blog.ts. For DB-only posts we skip straight
+  // to the Supabase update below.
+  let githubCommitted = false;
+  if (inBlogTs) {
+    const updatedContent =
+      currentContent.slice(0, slugIdx) + entry + currentContent.slice(entryEnd);
 
-  if (updatedContent === currentContent) {
-    return NextResponse.json({ success: true, unchanged: true });
-  }
+    if (updatedContent !== currentContent) {
+      const putRes = await fetch(
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
+            Accept: "application/vnd.github.v3+json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: `Set blog image(s) for ${slug} via dev panel`,
+            content: Buffer.from(updatedContent, "utf-8").toString("base64"),
+            sha,
+            branch: BRANCH,
+          }),
+        },
+      );
 
-  // 3. Commit back to GitHub
-  const putRes = await fetch(
-    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-        Accept: "application/vnd.github.v3+json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: `Set blog image(s) for ${slug} via dev panel`,
-        content: Buffer.from(updatedContent, "utf-8").toString("base64"),
-        sha,
-        branch: BRANCH,
-      }),
+      if (!putRes.ok) {
+        const err = await putRes.json().catch(() => ({ message: putRes.statusText }));
+        return NextResponse.json(
+          { error: `GitHub API error: ${err.message || putRes.statusText}` },
+          { status: putRes.status },
+        );
+      }
+      githubCommitted = true;
     }
-  );
-
-  if (!putRes.ok) {
-    const err = await putRes.json().catch(() => ({ message: putRes.statusText }));
-    return NextResponse.json(
-      { error: `GitHub API error: ${err.message || putRes.statusText}` },
-      { status: putRes.status }
-    );
   }
 
   // 4. Mirror the update into Supabase so DB-backed posts pick up the new
@@ -229,8 +250,24 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // If the slug wasn't in blog.ts AND the Supabase update didn't happen,
+  // there's nowhere we could have persisted the change — surface that as
+  // an error so the dev UI can tell the user rather than silently succeed.
+  if (!inBlogTs && !dbPatched) {
+    return NextResponse.json(
+      {
+        error:
+          dbError ||
+          `Slug "${slug}" isn't in blog.ts and Supabase isn't configured — nothing was saved.`,
+      },
+      { status: 500 },
+    );
+  }
+
   return NextResponse.json({
     success: true,
+    inBlogTs,
+    githubCommitted,
     imagePath: imagePath || null,
     imagePath3x4: imagePath3x4 || null,
     imagePath1x1: imagePath1x1 || null,

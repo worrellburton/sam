@@ -1,11 +1,20 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { Insurance } from "@/components/Insurance";
-import { useEffect, useRef, useState } from "react";
+import { AnimatedStat } from "@/components/AnimatedStat";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+
+export const metadata: Metadata = {
+  title: "About Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
+  description:
+    "Board-certified orthopedic surgeon fellowship-trained at Lenox Hill. Former team physician for the NY Jets and Islanders. International fellowship in joint preservation across Switzerland, the Netherlands, and Italy.",
+  alternates: { canonical: `${SITE_URL}/about` },
+};
 
 // ── SVG Icons ──────────────────────────────────────────────────────
 const icons = {
@@ -76,41 +85,6 @@ const icons = {
     </svg>
   ),
 };
-
-// ── Animated Counter ───────────────────────────────────────────────
-function AnimatedStat({ value, suffix = "", label }: { value: number; suffix?: string; label: string }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !started.current) {
-        started.current = true;
-        const duration = 1200;
-        const start = performance.now();
-        const animate = (now: number) => {
-          const progress = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          setCount(Math.round(eased * value));
-          if (progress < 1) requestAnimationFrame(animate);
-        };
-        requestAnimationFrame(animate);
-      }
-    }, { threshold: 0.3 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [value]);
-
-  return (
-    <div ref={ref} className="abt-stat">
-      <div className="abt-stat-value">{count}{suffix}</div>
-      <div className="abt-stat-label">{label}</div>
-    </div>
-  );
-}
 
 // ── Data ───────────────────────────────────────────────────────────
 const timeline = [

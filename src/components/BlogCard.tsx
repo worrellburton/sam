@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { isPostReleased, type BlogPost } from "@/data/blog";
+import { PLACEHOLDER_IMAGE, PLACEHOLDER_IMAGE_1X1 } from "@/data/placeholder-image";
 import { BlogCardAudioBtn } from "./BlogCardAudioBtn";
 
 // Pure Server Component — all interactive bits live inside
@@ -13,6 +14,16 @@ export interface BlogCardProps {
   asComingSoon?: boolean;
   /** Optional custom "Coming …" label; falls back to post.date. */
   comingLabel?: string;
+}
+
+// Pick the best available 1:1 thumbnail. Posts that still reference the
+// landscape PLACEHOLDER_IMAGE (waiting on a real thumbnail) need the
+// square placeholder instead — otherwise the 1200×600 landscape gets
+// letterboxed into a 600×600 card slot and looks broken.
+function resolveSquareImage(post: BlogPost): string {
+  if (post.image1x1) return post.image1x1;
+  if (post.image === PLACEHOLDER_IMAGE) return PLACEHOLDER_IMAGE_1X1;
+  return post.image;
 }
 
 export function BlogCard({ post, showEpisode, asComingSoon, comingLabel }: BlogCardProps) {
@@ -29,7 +40,7 @@ export function BlogCard({ post, showEpisode, asComingSoon, comingLabel }: BlogC
         <div className="blog-card-img-wrap">
           <Image
             className="blog-card-img"
-            src={post.image1x1 || post.image}
+            src={resolveSquareImage(post)}
             alt={post.imageAlt}
             width={600}
             height={600}

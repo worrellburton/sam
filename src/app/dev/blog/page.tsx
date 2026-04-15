@@ -167,6 +167,31 @@ const styleLabels: Record<Style, { label: string; color: string }> = {
 };
 
 export default function DevBlogPage() {
+  // `posts` starts with the static blogPosts snapshot so the UI renders
+  // immediately, then hydrates with the merged DB+static list on mount
+  // — matches exactly what the public /blog page shows (so if the site
+  // has 26 episodes, /dev/blog lists all 26 too). Sorted newest-episode
+  // first, then guide posts at the bottom.
+  const sortPosts = (list: typeof blogPosts) =>
+    list.slice().sort((a, b) => {
+      const ae = a.episode;
+      const be = b.episode;
+      if (ae !== undefined && be !== undefined) return be - ae;
+      if (ae !== undefined) return -1;
+      if (be !== undefined) return 1;
+      return a.slug.localeCompare(b.slug);
+    });
+  const [posts, setPosts] = useState<typeof blogPosts>(() => sortPosts(blogPosts));
+  useEffect(() => {
+    fetch("/api/dev/blog-list", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d?.posts && Array.isArray(d.posts) && d.posts.length > 0) {
+          setPosts(sortPosts(d.posts));
+        }
+      })
+      .catch((err) => logError("dev.blog.loadList", err));
+  }, []);
   const [search, setSearch] = useState("");
   const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
   const [genStates, setGenStates] = useState<Record<string, GenState>>({});
@@ -262,11 +287,11 @@ export default function DevBlogPage() {
   // Drafts eligible for auto-schedule, ordered by episode number ascending.
   const schedulableDrafts = useMemo(
     () =>
-      blogPosts
+      posts
         .filter((p) => p.comingSoon)
         .slice()
         .sort((a, b) => (a.episode || 9999) - (b.episode || 9999)),
-    []
+    [posts],
   );
 
   function addDaysISO(iso: string, days: number): string {
@@ -370,7 +395,7 @@ export default function DevBlogPage() {
     saveGlobalPrompt(serverDefaultPrompt);
   }
 
-  const filtered = blogPosts.filter(
+  const filtered = posts.filter(
     (p) =>
       p.title.toLowerCase().includes(search.toLowerCase()) ||
       p.tag.toLowerCase().includes(search.toLowerCase()) ||
@@ -411,7 +436,7 @@ export default function DevBlogPage() {
   }
 
   async function handleGeneratePrompts(slug: string): Promise<string[] | null> {
-    const post = blogPosts.find((p) => p.slug === slug);
+    const post = posts.find((p) => p.slug === slug);
     if (!post) return null;
     const gen = getGen(slug);
 
@@ -790,7 +815,7 @@ export default function DevBlogPage() {
       // the exact prompt that produced the selected image. Best-effort — if
       // the alt generator fails we still patch the paths; the dev panel can
       // re-run manually later.
-      const post = blogPosts.find((p) => p.slug === slug);
+      const post = posts.find((p) => p.slug === slug);
       let imageAlt: string | undefined;
       if (post) {
         try {
@@ -895,8 +920,8 @@ export default function DevBlogPage() {
           <div>
             <h1 style={{ fontSize: "1.8rem", fontWeight: 700, color: "#f1f5f9", margin: 0 }}>Blog</h1>
             <p style={{ color: "#64748b", fontSize: "0.9rem", marginTop: 4 }}>
-              {blogPosts.length} posts &middot; {blogPosts.filter((p) => !p.comingSoon).length} published &middot;{" "}
-              {blogPosts.filter((p) => p.comingSoon).length} coming soon
+              {posts.length} posts &middot; {posts.filter((p) => !p.comingSoon).length} published &middot;{" "}
+              {posts.filter((p) => p.comingSoon).length} coming soon
             </p>
           </div>
           <Link
@@ -1157,7 +1182,7 @@ export default function DevBlogPage() {
                     Preview (ordered by episode)
                   </p>
                   {computeSchedule().map(({ slug, releaseDate }, i) => {
-                    const post = blogPosts.find((p) => p.slug === slug);
+                    const post = posts.find((p) => p.slug === slug);
                     return (
                       <div key={slug} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", fontSize: "0.8rem", color: "#cbd5e1", borderTop: i === 0 ? "none" : "1px solid #1e293b" }}>
                         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", paddingRight: 12 }}>
@@ -1186,7 +1211,7 @@ export default function DevBlogPage() {
         {(() => {
           // Compute a preview that mirrors the server-side rotation logic so
           // the user can see the outcome before clicking.
-          const withOverrides = blogPosts.map((p) => {
+          const withOverrides = posts.map((p) => {
             const ov = statusOverrides[p.slug];
             const release = releaseDrafts[p.slug] ?? p.releaseDate ?? undefined;
             return {

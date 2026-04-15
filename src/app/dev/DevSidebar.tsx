@@ -37,7 +37,7 @@ const links = [
     ),
   },
   {
-    to: "/dev#seo",
+    to: "/dev/seo",
     label: "SEO",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -47,7 +47,7 @@ const links = [
     ),
   },
   {
-    to: "/dev#geo",
+    to: "/dev/geo",
     label: "GEO",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

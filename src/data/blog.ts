@@ -831,7 +831,9 @@ export const blogPosts: BlogPost[] = [
     episode: 19,
     seriesTitle: "Clinical Clarity",
     relatedService: "regenerative-medicine",
-    image: "https://images.unsplash.com/photo-1542736667-069246bdbc6d?w=1200&h=600&fit=crop&q=80",
+    image: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/tennis-elbow-lateral-epicondylitis.jpg",
+    image3x4: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/tennis-elbow-lateral-epicondylitis-3x4.jpg",
+    image1x1: "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-thumbnails/tennis-elbow-lateral-epicondylitis-1x1.jpg",
     imageAlt: "Person holding their elbow in pain",
     content: "",
     contentHtml: `

@@ -144,11 +144,13 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* GA4 is analytics-only; defer until after load so it doesn't
+            compete with hero/LCP work on the main thread. */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="ga4-init" strategy="afterInteractive">
+        <Script id="ga4-init" strategy="lazyOnload">
           {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
         </Script>
         <ClientLayout>{children}</ClientLayout>

@@ -73,21 +73,56 @@ src/
 
 ## Environment Variables
 
-Set in Vercel dashboard or `.env.local`:
+Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 
-- `NEXT_PUBLIC_ATHENA_ENV` — athenahealth environment (preview/production)
-- `NEXT_PUBLIC_ATHENA_CLIENT_ID` — athenahealth OAuth client ID
-- `NEXT_PUBLIC_ATHENA_CLIENT_SECRET` — athenahealth OAuth client secret
-- `NEXT_PUBLIC_ATHENA_PRACTICE_ID` — athenahealth practice ID
-- `NEXT_PUBLIC_STEDI_API_KEY` — Stedi healthcare API key
-- `NEXT_PUBLIC_ELEVENLABS_API_KEY` — ElevenLabs TTS API key
+**Server-only secrets (never `NEXT_PUBLIC_`):**
+
+- `ATHENA_CLIENT_ID` — athenahealth OAuth client ID
+- `ATHENA_CLIENT_SECRET` — athenahealth OAuth client secret
+- `ATHENA_ENV` — athenahealth environment (preview/production) used server-side
+- `GOOGLE_PLACES_API_KEY` — used by `/api/places`
+- `GOOGLE_MAPS_SERVER_KEY` — used by `/api/maps`
+- `STEDI_API_KEY` — Stedi healthcare API key (server-side)
+- `ELEVENLABS_API_KEY` — ElevenLabs TTS API key (server-side, used by `/api/tts`)
+
+**Client-safe (`NEXT_PUBLIC_` prefix, shipped to the browser):**
+
+- `NEXT_PUBLIC_SITE_URL` — canonical site URL for SEO
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key (public by design; RLS protects data)
+- `NEXT_PUBLIC_ATHENA_ENV` — non-secret athena environment string
+- `NEXT_PUBLIC_ATHENA_PRACTICE_ID` — non-secret practice ID
+
+> Never prefix API secrets with `NEXT_PUBLIC_` — it embeds them in the client bundle.
 
 ## Development Notes
 
-- All page components use `"use client"` directive (client-side rendering)
+- Most page components currently use `"use client"`. New static/display pages should prefer Server Components — see _Deferred optimizations_ below.
 - Theme toggle saves to localStorage, default is light
 - Legacy CSS uses CSS variables for theming (`:root` and `[data-theme="light"]`)
+- DocZoc-specific CSS lives in `src/styles/doczoc.css` and is loaded only under `/doczoc/*` via `src/app/doczoc/layout.tsx`.
 - Navigation auto-closes on route change
 - Service, blog, and condition pages are data-driven from `src/data/` files
 - DocZoc pages share `Sidebar` and `useDzPrefs` exported from `doczoc/dashboard/page.tsx`
 - `BookingContext` exported from `src/components/ClientLayout.tsx`
+- Shared icon library: `src/components/icons.tsx` (use `<Icon.Star />` etc.). Shared review card: `src/components/ReviewCard.tsx`.
+
+## Scripts
+
+- `npm run dev` — dev server (Turbopack)
+- `npm run build` — production build
+- `npm run analyze` — production build with the bundle analyzer enabled (opens treemaps)
+- `npm run typecheck` — `tsc --noEmit`
+- `npm run lint` / `npm run format`
+
+## Deferred optimizations
+
+Tracked here so future passes don't re-discover the same work:
+
+1. **Server Component migration** — most `src/app/**/page.tsx` files still carry `"use client"` even when they only render static data. The dynamic `[slug]` routes use `useParams()` and would need to be converted to accept `params` as a prop (plus `generateMetadata`). Big Core Web Vitals win when tackled.
+2. **`/doczoc/v2/page.tsx`** — no inbound references anywhere in the codebase; likely dead. Left in place pending confirmation; noindex via `/doczoc/layout.tsx`.
+3. **Shared DocZoc layout** — 24 DocZoc pages each mount `Sidebar` and `useDzPrefs` independently. The route-level `layout.tsx` currently only scopes the CSS; moving the Sidebar into the layout would DRY up ~24 files.
+4. **Oversized files** — `src/app/dev/blog/page.tsx` (2,385 lines), `src/app/doczoc/calendar/page.tsx` (1,324), `src/app/book/page.tsx` (1,302), `src/data/blog.ts` (2,326). Candidates for extraction.
+5. **Silent `.catch(() => {})`** — several hooks swallow errors; swap for logged fallbacks.
+6. **Persistent client cache** — `useElevenLabs` and `useAthena` token cache live in memory only. IndexedDB would survive reloads.
+7. **Metadata on DocZoc sub-pages** — the layout provides defaults; per-page `export const metadata` would sharpen titles.

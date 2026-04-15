@@ -59,31 +59,50 @@ export async function POST(request: NextRequest) {
     return `${path}${separator}v=${Date.now()}`;
   }
 
-  // Replace `image: "..."` (landscape / default)
+  // Replace `image: "..."` or `image: PLACEHOLDER_IMAGE` (bare identifier).
+  // Both forms exist in src/data/blog.ts — posts with real thumbnails use
+  // the quoted string, posts waiting on a real thumbnail use the
+  // PLACEHOLDER_IMAGE constant so they're grep-countable. Either way we
+  // rewrite to a fresh quoted string with a cache-buster.
   if (imagePath) {
     const busted = withBuster(imagePath);
     const imageSingleLine = /image:\s*"[^"]*"/;
     const imageMultiLine = /image:\s*\n\s*"[^"]*"/;
+    const imageIdentifier = /image:\s*PLACEHOLDER_IMAGE(?!_)/;
     if (imageSingleLine.test(entry)) {
       entry = entry.replace(imageSingleLine, `image: "${busted}"`);
     } else if (imageMultiLine.test(entry)) {
       entry = entry.replace(imageMultiLine, `image: "${busted}"`);
+    } else if (imageIdentifier.test(entry)) {
+      entry = entry.replace(imageIdentifier, `image: "${busted}"`);
     } else {
       return NextResponse.json({ error: `Could not locate image field for "${slug}"` }, { status: 500 });
     }
   }
 
-  // Upsert `image3x4` / `image1x1` variants. If the field exists, replace it;
-  // otherwise insert it directly after the `image:` line.
+  // Upsert `image3x4` / `image1x1` variants. The source of truth for a
+  // variant can be one of:
+  //   - "https://..." quoted string (real Supabase URL)
+  //   - PLACEHOLDER_IMAGE_3X4 / PLACEHOLDER_IMAGE_1X1 identifier
+  //   - absent entirely (inserted after `image:` in that case)
   function upsertVariant(field: "image3x4" | "image1x1", path: string) {
     const busted = withBuster(path);
-    const re = new RegExp(`${field}:\\s*"[^"]*"`);
-    if (re.test(entry)) {
-      entry = entry.replace(re, `${field}: "${busted}"`);
+    const quotedRe = new RegExp(`${field}:\\s*"[^"]*"`);
+    const placeholderIdent =
+      field === "image3x4" ? "PLACEHOLDER_IMAGE_3X4" : "PLACEHOLDER_IMAGE_1X1";
+    const identRe = new RegExp(`${field}:\\s*${placeholderIdent}`);
+    if (quotedRe.test(entry)) {
+      entry = entry.replace(quotedRe, `${field}: "${busted}"`);
       return;
     }
-    // Insert after the first `image: "..."` line. Match the indentation.
-    const imageLine = entry.match(/(^|\n)(\s*)image:\s*"[^"]*",?/);
+    if (identRe.test(entry)) {
+      entry = entry.replace(identRe, `${field}: "${busted}"`);
+      return;
+    }
+    // Insert after the first `image:` line (match quoted OR identifier).
+    const imageLine = entry.match(
+      /(^|\n)(\s*)image:\s*(?:"[^"]*"|PLACEHOLDER_IMAGE(?!_)),?/,
+    );
     if (!imageLine) return;
     const indent = imageLine[2] || "    ";
     const insertAfter = imageLine.index! + imageLine[0].length;
@@ -107,7 +126,7 @@ export async function POST(request: NextRequest) {
     if (altRe.test(entry)) {
       entry = entry.replace(altRe, `imageAlt: "${escaped}"`);
     } else {
-      const imageLine = entry.match(/(^|\n)(\s*)image:\s*"[^"]*",?/);
+      const imageLine = entry.match(/(^|\n)(\s*)image:\s*(?:"[^"]*"|PLACEHOLDER_IMAGE(?!_)),?/);
       if (imageLine) {
         const indent = imageLine[2] || "    ";
         const insertAfter = imageLine.index! + imageLine[0].length;
@@ -137,7 +156,7 @@ export async function POST(request: NextRequest) {
     if (existingRe.test(entry)) {
       entry = entry.replace(existingRe, `imagePrompts: ${serialized}`);
     } else {
-      const imageLine = entry.match(/(^|\n)(\s*)image:\s*"[^"]*",?/);
+      const imageLine = entry.match(/(^|\n)(\s*)image:\s*(?:"[^"]*"|PLACEHOLDER_IMAGE(?!_)),?/);
       if (imageLine) {
         const indent = imageLine[2] || "    ";
         const insertAfter = imageLine.index! + imageLine[0].length;

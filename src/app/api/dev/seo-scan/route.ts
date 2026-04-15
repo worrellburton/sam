@@ -18,8 +18,19 @@ import { blogPosts, isPostReleased } from "@/data/blog";
 // For anything richer we'd pull in linkedom/cheerio; this is enough
 // to audit what's already being shipped.
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+// The base URL to scan is whatever origin served this request — that
+// way the scanner always targets its own deploy (preview, prod, local
+// dev) regardless of whether NEXT_PUBLIC_SITE_URL is configured. Falls
+// back to the env var only if the request URL can't be parsed.
+function resolveBaseUrl(request: Request): string {
+  try {
+    return new URL(request.url).origin;
+  } catch {
+    return (
+      process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app"
+    );
+  }
+}
 
 const TARGET_TITLE_MIN = 30;
 const TARGET_TITLE_MAX = 65;
@@ -77,8 +88,11 @@ function extractAll(re: RegExp, html: string): string[] {
   return out;
 }
 
-async function scanOne(route: { path: string; label: string }): Promise<PageScan> {
-  const url = `${SITE_URL}${route.path}`;
+async function scanOne(
+  route: { path: string; label: string },
+  baseUrl: string,
+): Promise<PageScan> {
+  const url = `${baseUrl}${route.path}`;
   try {
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 12000);
@@ -256,13 +270,14 @@ export async function POST(request: Request) {
   const auth = requireDevAuth(request);
   if (!auth.ok) return auth.response;
 
+  const baseUrl = resolveBaseUrl(request);
   const routes = allRoutes();
   // Parallel with a soft concurrency cap to avoid hammering our own origin.
   const batchSize = 8;
   const pages: PageScan[] = [];
   for (let i = 0; i < routes.length; i += batchSize) {
     const chunk = routes.slice(i, i + batchSize);
-    const results = await Promise.all(chunk.map((r) => scanOne(r)));
+    const results = await Promise.all(chunk.map((r) => scanOne(r, baseUrl)));
     pages.push(...results);
   }
 
@@ -272,7 +287,7 @@ export async function POST(request: Request) {
   const fixPrompt = buildFixPrompt(pages);
 
   return NextResponse.json(
-    { scannedAt: new Date().toISOString(), overall, pages, fixPrompt },
+    { scannedAt: new Date().toISOString(), baseUrl, overall, pages, fixPrompt },
     { headers: { "Cache-Control": "no-store" } },
   );
 }

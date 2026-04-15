@@ -14,8 +14,17 @@ import { locations } from "@/data/locations";
 //
 // Each check returns { ok, detail }. Overall score = passed / total.
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app";
+// Use the request's own origin so previews/prod/local dev all scan
+// themselves, regardless of whether NEXT_PUBLIC_SITE_URL is set.
+function resolveBaseUrl(request: Request): string {
+  try {
+    return new URL(request.url).origin;
+  } catch {
+    return (
+      process.env.NEXT_PUBLIC_SITE_URL || "https://sammd.vercel.app"
+    );
+  }
+}
 
 const CANONICAL_PHONE_TELLINK = "tel:+19179059370";
 const CANONICAL_PHONE_DISPLAY = "(917) 905-9370";
@@ -28,11 +37,11 @@ const PLACE_IDS: Record<string, string> = {
 
 const PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY || "";
 
-async function fetchText(path: string, timeoutMs = 10000) {
+async function fetchText(baseUrl: string, path: string, timeoutMs = 10000) {
   const controller = new AbortController();
   const tid = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const resp = await fetch(`${SITE_URL}${path}`, {
+    const resp = await fetch(`${baseUrl}${path}`, {
       headers: { "user-agent": "SamMD-GEO-Scanner/1.0" },
       signal: controller.signal,
       cache: "no-store",
@@ -94,10 +103,11 @@ export async function POST(request: Request) {
   const auth = requireDevAuth(request);
   if (!auth.ok) return auth.response;
 
+  const baseUrl = resolveBaseUrl(request);
   const checks: Check[] = [];
 
   // Homepage HTML probes.
-  const home = await fetchText("/");
+  const home = await fetchText(baseUrl, "/");
   const hasMedicalBusinessJsonLd =
     home.ok &&
     /"@type"\s*:\s*"MedicalBusiness"/.test(home.body);
@@ -138,14 +148,14 @@ export async function POST(request: Request) {
   }
 
   // robots.txt + sitemap reachable.
-  const robots = await fetchText("/robots.txt", 5000);
+  const robots = await fetchText(baseUrl, "/robots.txt", 5000);
   checks.push({
     id: "robots",
     label: "/robots.txt reachable",
     ok: robots.ok,
     detail: robots.ok ? "200 OK" : `HTTP ${robots.status}`,
   });
-  const sitemap = await fetchText("/sitemap.xml", 10000);
+  const sitemap = await fetchText(baseUrl, "/sitemap.xml", 10000);
   const urlCount = sitemap.ok
     ? (sitemap.body.match(/<url>/g) ?? []).length
     : 0;
@@ -207,6 +217,7 @@ export async function POST(request: Request) {
   return NextResponse.json(
     {
       scannedAt: new Date().toISOString(),
+      baseUrl,
       overall,
       checks,
       fixPrompt,

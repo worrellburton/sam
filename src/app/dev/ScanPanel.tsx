@@ -13,6 +13,8 @@ export interface ScanBaseResult {
   overall: number;
   scannedAt: string;
   fixPrompt: string;
+  /** Origin actually scanned (useful when debugging 404s). */
+  baseUrl?: string;
 }
 
 interface ScanPanelProps<T extends ScanBaseResult> {
@@ -130,6 +132,11 @@ export function ScanPanel<T extends ScanBaseResult>({
               ? `Scanned ${new Date(result.scannedAt).toLocaleTimeString()}`
               : "Not yet scanned"}
           </p>
+          {result?.baseUrl && (
+            <p style={{ fontSize: "0.72rem", color: "#64748b", margin: "2px 0 0" }}>
+              Host: <code style={{ color: "#c7d2fe" }}>{result.baseUrl}</code>
+            </p>
+          )}
           {error && (
             <p style={{ fontSize: "0.78rem", color: "#fca5a5", margin: "4px 0 0" }}>
               {error}

@@ -84,6 +84,10 @@ Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 - `GOOGLE_MAPS_SERVER_KEY` — used by `/api/maps`
 - `STEDI_API_KEY` — Stedi healthcare API key (server-side)
 - `ELEVENLABS_API_KEY` — ElevenLabs TTS API key (server-side, used by `/api/tts`)
+- `GITHUB_TOKEN` — PAT with `contents:write` on `worrellburton/sam`; powers `/api/dev/*` writes to `src/data/blog.ts`
+- `ANTHROPIC_API_KEY` — optional, used by `/api/dev/generate-prompt` + `/generate-alt`
+- `GEMINI_API_KEY` — optional, used by `/api/dev/generate-image`
+- `DEV_PANEL_SECRET` — **required in production** to unlock the `/dev` UI + `/api/dev/*` routes. Missing value → panel fails closed with 503. See `src/lib/dev-auth.ts`.
 
 **Client-safe (`NEXT_PUBLIC_` prefix, shipped to the browser):**
 

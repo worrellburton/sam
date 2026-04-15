@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
 
@@ -16,6 +17,9 @@ const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
 //     and the article's subject (tag / condition / service) for image SEO
 //   - Never includes the doctor's name or boilerplate ("photo of", "image of")
 export async function POST(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   if (!ANTHROPIC_API_KEY) {
     return NextResponse.json(
       { error: "ANTHROPIC_API_KEY not configured." },

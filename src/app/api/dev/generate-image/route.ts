@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 const MODEL = "gemini-3-pro-image-preview";
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 export async function POST(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   if (!GEMINI_API_KEY) {
     return NextResponse.json(
       { error: "GEMINI_API_KEY not configured. Add it to your environment variables." },

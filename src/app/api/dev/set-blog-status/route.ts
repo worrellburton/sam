@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
 const REPO_OWNER = "worrellburton";
@@ -12,6 +13,9 @@ const FILE_PATH = "src/data/blog.ts";
 // - If comingSoon === false: remove any `comingSoon: ...` line from the entry.
 //   Position is left alone.
 export async function POST(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   if (!GITHUB_TOKEN) {
     return NextResponse.json(
       { error: "GITHUB_TOKEN not configured." },

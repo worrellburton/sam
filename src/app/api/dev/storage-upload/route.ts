@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 const BUCKET = "blog-thumbnails";
 
@@ -11,6 +12,9 @@ const BUCKET = "blog-thumbnails";
 //
 // Returns: { publicUrl, path }
 export async function POST(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   const { fileName, content, mimeType } = await request.json();
   if (!fileName || !content) {
     return NextResponse.json({ error: "Missing fileName or content" }, { status: 400 });
@@ -58,6 +62,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   const { fileName } = await request.json();
   if (!fileName) {
     return NextResponse.json({ error: "Missing fileName" }, { status: 400 });

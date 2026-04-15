@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { requireDevAuth } from "@/lib/dev-auth";
 
 const BUCKET = "blog-videos";
 
@@ -32,6 +33,9 @@ export async function GET() {
 
 // DELETE — remove a video from the bucket. Body: { name }
 export async function DELETE(request: NextRequest) {
+  const auth = requireDevAuth(request);
+  if (!auth.ok) return auth.response;
+
   const { name } = await request.json();
   if (!name) {
     return NextResponse.json({ error: "Missing name" }, { status: 400 });

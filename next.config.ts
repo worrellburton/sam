@@ -1,4 +1,11 @@
 import type { NextConfig } from "next";
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+// Wrap the exported config so we can run `npm run analyze` (ANALYZE=true
+// next build) to inspect client/server bundle composition.
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const cspDirectives = [
   "default-src 'self'",
@@ -67,4 +74,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

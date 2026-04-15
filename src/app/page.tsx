@@ -15,14 +15,14 @@ import { HeroOverlayGradient } from "@/components/HeroOverlayGradient";
 const tickerItems = [
   {
     icon: (
-      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&h=40&w=40" alt="New York Jets" width={32} height={32} loading="eager" />
+      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&h=40&w=40" alt="New York Jets" width={32} height={32} />
     ),
     text: "New York Jets Team Physician",
     em: "NFL",
   },
   {
     icon: (
-      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/nyi.png&h=40&w=40" alt="New York Islanders" width={32} height={32} loading="eager" />
+      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/nyi.png&h=40&w=40" alt="New York Islanders" width={32} height={32} />
     ),
     text: "New York Islanders Team Physician",
     em: "NHL",
@@ -128,13 +128,6 @@ const patientReviews = [
 
 
 
-const PLACE_IDS = [
-  { id: 'ChIJmQNsqXpZwokRoKDGBL8w9LM', label: 'Upper East Side' },
-  { id: 'ChIJFTfVAb5ZwokRuFvoKEMtQag', label: 'West Village' },
-  { id: 'ChIJzeD6h0VawokRCfzPOz9Oi7E', label: 'Brooklyn' },
-];
-const FIELDS = 'id,rating,userRatingCount,reviews.rating,reviews.text,reviews.authorAttribution,reviews.relativePublishTimeDescription,reviews.publishTime';
-
 interface GoogleReview {
   rating: number;
   text?: { text?: string };
@@ -144,6 +137,8 @@ interface GoogleReview {
   locationLabel: string;
 }
 
+// Pulls aggregated Google Places reviews from the ISR-cached
+// `/api/places/all` endpoint (1 request instead of 3 per visitor).
 function useGoogleReviews() {
   const [reviews, setReviews] = useState<GoogleReview[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -151,25 +146,11 @@ function useGoogleReviews() {
   useEffect(() => {
     async function fetchAllReviews() {
       try {
-        const results = await Promise.all(PLACE_IDS.map(async (place) => {
-          const resp = await fetch(`/api/places?placeId=${place.id}&fields=${encodeURIComponent(FIELDS)}`);
-          if (!resp.ok) throw new Error(`API error: ${resp.status}`);
-          const data = await resp.json();
-          return {
-            rating: data.rating || 0,
-            count: data.userRatingCount || 0,
-            reviews: (data.reviews || []).map((r: GoogleReview) => ({ ...r, locationLabel: place.label })),
-          };
-        }));
-
-        const total = results.reduce((s, r) => s + r.count, 0);
-        setTotalCount(total);
-
-        const all = results.flatMap(r => r.reviews)
-          .filter((r: GoogleReview) => r.rating >= 5)
-          .sort((a: GoogleReview, b: GoogleReview) => new Date(b.publishTime || 0).getTime() - new Date(a.publishTime || 0).getTime());
-
-        setReviews(all);
+        const resp = await fetch('/api/places/all');
+        if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+        const data = await resp.json() as { totalCount: number; reviews: GoogleReview[] };
+        setTotalCount(data.totalCount);
+        setReviews(data.reviews);
       } catch (err) {
         console.warn('Google Reviews fetch failed:', err);
       }
@@ -256,7 +237,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
       <header className={`hero${heroReady ? " hero-loaded" : ""}`} id="hero">
-        <Image className={`hero-bg-img${heroReady ? " loaded" : ""}`} src="/images/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} priority onLoad={() => setHeroReady(true)} />
+        <Image className={`hero-bg-img${heroReady ? " loaded" : ""}`} src="/images/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} sizes="100vw" priority onLoad={() => setHeroReady(true)} />
         <HeroGradient />
         <div className="hero-overlay"></div>
         <HeroOverlayGradient />
@@ -310,7 +291,7 @@ export default function Home() {
         <div className="container">
           <div className="about-layout">
             <div className="about-photo">
-              <Image src="/images/Confident Doctor Headshot-1.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} style={{ objectPosition: "center 20%" }} />
+              <Image src="/images/Confident Doctor Headshot-1.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} sizes="(max-width: 768px) 100vw, 50vw" style={{ objectPosition: "center 20%" }} />
             </div>
             <div className="about-right">
               <div className="about-header">
@@ -560,7 +541,7 @@ export default function Home() {
             {recentPosts.map((post) => (
               <Link href={`/blog/${post.slug}`} className="blog-card blog-card-book" key={post.slug}>
                 <div className="blog-card-img-wrap">
-                  <Image className="blog-card-img" src={post.image} alt={post.imageAlt} width={600} height={800} />
+                  <Image className="blog-card-img" src={post.image} alt={post.imageAlt} width={600} height={800} sizes="(max-width: 768px) 100vw, 33vw" />
                   {post.episode && (
                     <span className="blog-card-ep">EP. {post.episode}</span>
                   )}

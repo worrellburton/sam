@@ -47,12 +47,12 @@ export function StickyBar() {
                 </span>
                 <span className="sticky-bar-dot">·</span>
                 <span className="sticky-highlight">
-                  <Image src="https://cdn.brandfetch.io/newyorkjets.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="NY Jets" width={32} height={32} className="sticky-team-logo" referrerPolicy="origin" loading="eager" />{" "}
+                  <Image src="https://cdn.brandfetch.io/newyorkjets.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="NY Jets" width={32} height={32} className="sticky-team-logo" referrerPolicy="origin" />{" "}
                   NY Jets Team Physician
                 </span>
                 <span className="sticky-bar-dot">·</span>
                 <span className="sticky-highlight">
-                  <Image src="https://cdn.brandfetch.io/newyorkislanders.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="NY Islanders" width={32} height={32} className="sticky-team-logo" referrerPolicy="origin" loading="eager" />{" "}
+                  <Image src="https://cdn.brandfetch.io/newyorkislanders.com/w/32/h/32/theme/dark/fallback/lettermark/type/icon?c=1id3n10pdBTarCHI0db" alt="NY Islanders" width={32} height={32} className="sticky-team-logo" referrerPolicy="origin" />{" "}
                   NY Islanders Team Physician
                 </span>
                 <span className="sticky-bar-dot">·</span>

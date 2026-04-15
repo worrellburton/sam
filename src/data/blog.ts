@@ -2002,15 +2002,6 @@ export const blogPosts: BlogPost[] = [
 <p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
   <strong>Related:</strong> <a href="/services/shoulder-knee-surgery">Shoulder & Knee Surgery</a> · <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/blog/acl-tear-recovery">ACL Tear Recovery</a>
 </p>
-
-<div class="blog-author">
-  <img class="blog-author-img" src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui, M.D." style="object-position: center 20%;" />
-  <div class="blog-author-info">
-    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
-    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
-    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui brings compassionate, world-class orthopedic care to patients throughout the NYC metropolitan area.</p>
-  </div>
-</div>
 `,
   },
   {
@@ -2312,15 +2303,6 @@ If you're experiencing persistent joint pain, swelling, or limited mobility desp
 <p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
   <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/services/shoulder-knee-surgery">Shoulder & Knee Surgery</a> · <a href="/blog/meniscus-tears-cartilage-injuries">Meniscus Tears & Cartilage Injuries</a>
 </p>
-
-<div class="blog-author">
-  <img class="blog-author-img" src="/images/Character Reference Sheet.jpg" alt="Dr. Sameh Elguizaoui, M.D." style="object-position: center 20%;" />
-  <div class="blog-author-info">
-    <h4>Dr. Sameh Elguizaoui, M.D.</h4>
-    <p class="author-title">Board-Certified Orthopedic Surgeon & Sports Medicine Specialist</p>
-    <p>Former team physician for the New York Jets (NFL) and New York Islanders (NHL). Fellowship-trained at Lenox Hill Hospital with international cartilage repair training across Europe. Dr. Elguizaoui brings compassionate, world-class orthopedic care to patients throughout the NYC metropolitan area.</p>
-  </div>
-</div>
 `,
     comingSoon: true,
   },

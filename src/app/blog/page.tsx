@@ -10,6 +10,7 @@ import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { BlogCard } from "@/components/BlogCard";
 import { logError } from "@/lib/log";
+import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
@@ -25,20 +26,45 @@ export const metadata: Metadata = {
 // a redeploy, but we still cache heavily.
 export const revalidate = 3600;
 
+// A DB-sourced string is "missing" when it's empty or still the bare
+// placeholder — in either case we'd rather fall back to the static
+// blog.ts value (which is where the /dev/blog save flow writes real
+// Supabase URLs via the GitHub Contents API).
+function hasRealValue(v: unknown): v is string {
+  if (typeof v !== "string" || v.trim() === "") return false;
+  if (v === PLACEHOLDER_IMAGE) return false;
+  return true;
+}
+
 async function resolvePosts(): Promise<BlogPost[]> {
   try {
     const rows = await listAllAsBlogPosts();
     if (rows.length > 0) {
       const byStaticSlug = new Map(staticAllBlogPosts.map((p) => [p.slug, p]));
-      return rows.map((r) => {
+      const merged = rows.map((r) => {
         const s = byStaticSlug.get(r.slug);
         if (!s) return r;
         return {
+          ...s,
           ...r,
+          image: hasRealValue(r.image) ? r.image : s.image,
+          image3x4: hasRealValue(r.image3x4) ? r.image3x4 : s.image3x4,
+          image1x1: hasRealValue(r.image1x1) ? r.image1x1 : s.image1x1,
+          imageAlt: hasRealValue(r.imageAlt) ? r.imageAlt : s.imageAlt,
+          imagePrompts:
+            Array.isArray(r.imagePrompts) && r.imagePrompts.length > 0
+              ? r.imagePrompts
+              : s.imagePrompts,
           content: r.content || s.content,
           contentHtml: r.contentHtml || s.contentHtml,
         };
       });
+      // Fold in any static posts the DB is missing entirely.
+      const dbSlugs = new Set(merged.map((p) => p.slug));
+      for (const s of staticAllBlogPosts) {
+        if (!dbSlugs.has(s.slug)) merged.push(s);
+      }
+      return merged;
     }
   } catch (err) {
     logError("blog.resolvePosts", err);

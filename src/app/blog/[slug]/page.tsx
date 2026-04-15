@@ -14,6 +14,7 @@ import { BlogAudioPlayer } from "@/components/BlogAudioPlayer";
 import { BlogReveal } from "@/components/BlogReveal";
 import { markdownToHtml } from "@/lib/markdown";
 import { logError } from "@/lib/log";
+import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
@@ -26,13 +27,31 @@ export async function generateStaticParams() {
     .map((p) => ({ slug: p.slug }));
 }
 
+// Matches the merge policy in /blog and /api/dev/blog-list: static
+// blog.ts is the source of truth for thumbnails + alt text when the
+// DB row leaves those fields empty or placeholder-ish.
+function hasRealValue(v: unknown): v is string {
+  if (typeof v !== "string" || v.trim() === "") return false;
+  if (v === PLACEHOLDER_IMAGE) return false;
+  return true;
+}
+
 async function resolvePost(slug: string): Promise<BlogPost | undefined> {
   const staticPost = getStaticPostBySlug(slug);
   try {
     const dbPost = await getDbPostBySlug(slug);
     if (dbPost) {
       return {
+        ...(staticPost ?? {}),
         ...dbPost,
+        image: hasRealValue(dbPost.image) ? dbPost.image : staticPost?.image ?? dbPost.image,
+        image3x4: hasRealValue(dbPost.image3x4) ? dbPost.image3x4 : staticPost?.image3x4,
+        image1x1: hasRealValue(dbPost.image1x1) ? dbPost.image1x1 : staticPost?.image1x1,
+        imageAlt: hasRealValue(dbPost.imageAlt) ? dbPost.imageAlt : staticPost?.imageAlt ?? dbPost.imageAlt,
+        imagePrompts:
+          Array.isArray(dbPost.imagePrompts) && dbPost.imagePrompts.length > 0
+            ? dbPost.imagePrompts
+            : staticPost?.imagePrompts,
         content: dbPost.content || staticPost?.content || "",
         contentHtml: dbPost.contentHtml || staticPost?.contentHtml,
       };

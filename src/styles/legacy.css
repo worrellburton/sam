@@ -7472,6 +7472,40 @@ html, body { overflow-x: hidden; max-width: 100vw; }
  */
 
 /* =====================================================================
+ * Mobile inner-page nav — navy bar on phones
+ *
+ * On desktop, inner pages use .nav-solid (dark translucent) until the
+ * user scrolls past the hero, at which point .scrolled kicks in with
+ * the fully-opaque navy #0a1628. On mobile there's no room for the
+ * translucent state to read cleanly against photography in the hero,
+ * so we just land at navy immediately — matches the .scrolled look.
+ * ===================================================================== */
+@media (max-width: 768px) {
+  .nav.nav-solid {
+    background: #0a1628 !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .nav.nav-solid .logo-name { color: #f0f0f5 !important; }
+  .nav.nav-solid .nav-links > li > a,
+  .nav.nav-solid .nav-mega-toggle { color: rgba(255, 255, 255, 0.85) !important; }
+  .nav.nav-solid .nav-btn-contact { color: #f0f0f5 !important; }
+  .nav.nav-solid .nav-toggle span { background: #f0f0f5 !important; }
+
+  /* Light-mode equivalents — still navy on mobile, still white text. */
+  [data-theme="light"] .nav.nav-solid {
+    background: #0a1628 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  [data-theme="light"] .nav.nav-solid .logo-name { color: #f0f0f5 !important; }
+  [data-theme="light"] .nav.nav-solid .nav-links > li > a,
+  [data-theme="light"] .nav.nav-solid .nav-mega-toggle { color: rgba(255, 255, 255, 0.85) !important; }
+  [data-theme="light"] .nav.nav-solid .nav-btn-contact { color: #f0f0f5 !important; }
+  [data-theme="light"] .nav.nav-solid .nav-toggle span { background: #f0f0f5 !important; }
+}
+
+/* =====================================================================
  * Accessibility polish
  * ===================================================================== */
 

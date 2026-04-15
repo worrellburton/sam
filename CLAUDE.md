@@ -73,14 +73,27 @@ src/
 
 ## Environment Variables
 
-Set in Vercel dashboard or `.env.local`:
+Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 
-- `NEXT_PUBLIC_ATHENA_ENV` — athenahealth environment (preview/production)
-- `NEXT_PUBLIC_ATHENA_CLIENT_ID` — athenahealth OAuth client ID
-- `NEXT_PUBLIC_ATHENA_CLIENT_SECRET` — athenahealth OAuth client secret
-- `NEXT_PUBLIC_ATHENA_PRACTICE_ID` — athenahealth practice ID
-- `NEXT_PUBLIC_STEDI_API_KEY` — Stedi healthcare API key
-- `NEXT_PUBLIC_ELEVENLABS_API_KEY` — ElevenLabs TTS API key
+**Server-only secrets (never `NEXT_PUBLIC_`):**
+
+- `ATHENA_CLIENT_ID` — athenahealth OAuth client ID
+- `ATHENA_CLIENT_SECRET` — athenahealth OAuth client secret
+- `ATHENA_ENV` — athenahealth environment (preview/production) used server-side
+- `GOOGLE_PLACES_API_KEY` — used by `/api/places`
+- `GOOGLE_MAPS_SERVER_KEY` — used by `/api/maps`
+- `STEDI_API_KEY` — Stedi healthcare API key (server-side)
+- `ELEVENLABS_API_KEY` — ElevenLabs TTS API key (server-side, used by `/api/tts`)
+
+**Client-safe (`NEXT_PUBLIC_` prefix, shipped to the browser):**
+
+- `NEXT_PUBLIC_SITE_URL` — canonical site URL for SEO
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key (public by design; RLS protects data)
+- `NEXT_PUBLIC_ATHENA_ENV` — non-secret athena environment string
+- `NEXT_PUBLIC_ATHENA_PRACTICE_ID` — non-secret practice ID
+
+> Never prefix API secrets with `NEXT_PUBLIC_` — it embeds them in the client bundle.
 
 ## Development Notes
 

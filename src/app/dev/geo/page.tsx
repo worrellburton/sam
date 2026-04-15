@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { DevSidebar } from "../DevSidebar";
+import { ScanPanel, type ScanBaseResult } from "../ScanPanel";
 import { locations } from "@/data/locations";
 
 // ─────────────────────────────────────────────────────────────────────
@@ -62,7 +63,12 @@ const labelStyle: React.CSSProperties = {
   margin: 0,
 };
 
+interface GeoScanResult extends ScanBaseResult {
+  checks: { id: string; label: string; ok: boolean; detail: string }[];
+}
+
 export default function DevGeoPage() {
+  const [scan, setScan] = useState<GeoScanResult | null>(null);
   const medicalBusinessJsonLd = useMemo(
     () => ({
       "@context": "https://schema.org",
@@ -112,6 +118,61 @@ export default function DevGeoPage() {
             Local SEO health. {locations.length} offices · {GEO_KEYWORDS.length} geo keywords tracked.
           </p>
         </div>
+
+        <ScanPanel<GeoScanResult>
+          endpoint="/api/dev/geo-scan"
+          label="GEO"
+          result={scan}
+          onResult={setScan}
+        />
+
+        {scan && (
+          <div style={{ ...cardStyle, marginBottom: 20 }}>
+            <p style={labelStyle}>Live scan results</p>
+            <ul
+              style={{
+                margin: "10px 0 0",
+                padding: 0,
+                listStyle: "none",
+                display: "grid",
+                gap: 8,
+              }}
+            >
+              {scan.checks.map((c) => (
+                <li
+                  key={c.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 10,
+                    padding: "10px 12px",
+                    background: c.ok ? "rgba(34,197,94,0.08)" : "rgba(239,68,68,0.08)",
+                    border: `1px solid ${c.ok ? "rgba(34,197,94,0.18)" : "rgba(239,68,68,0.18)"}`,
+                    borderRadius: 8,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: 700,
+                      color: c.ok ? "#4ade80" : "#f87171",
+                      minWidth: 20,
+                    }}
+                  >
+                    {c.ok ? "✓" : "✗"}
+                  </span>
+                  <div>
+                    <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#f1f5f9" }}>
+                      {c.label}
+                    </div>
+                    <div style={{ fontSize: "0.78rem", color: "#94a3b8", marginTop: 2 }}>
+                      {c.detail}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* NAP card */}
         <div style={{ ...cardStyle, marginBottom: 20 }}>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DevSidebar } from "../DevSidebar";
+import { ScanPanel, type ScanBaseResult } from "../ScanPanel";
 import { services } from "@/data/services";
 import { conditions } from "@/data/conditions";
 import { blogPosts, isPostReleased } from "@/data/blog";
@@ -136,8 +137,22 @@ const pillStyle = (ok: boolean): React.CSSProperties => ({
   color: ok ? "#4ade80" : "#f87171",
 });
 
+interface SeoScanResult extends ScanBaseResult {
+  pages: {
+    path: string;
+    label: string;
+    status: number;
+    score: number;
+    title?: string;
+    description?: string;
+    checks: { id: string; label: string; ok: boolean; note?: string }[];
+    error?: string;
+  }[];
+}
+
 export default function DevSeoPage() {
   const [filter, setFilter] = useState<"all" | "missing" | "ok">("all");
+  const [scan, setScan] = useState<SeoScanResult | null>(null);
 
   // Dynamic routes: auto-generated SEO titles/descriptions (the actual
   // pages call generateMetadata() so we preview the same formula here).
@@ -204,6 +219,75 @@ export default function DevSeoPage() {
             Site-wide metadata health. {allRoutes.length} routes · {missingCount} need attention.
           </p>
         </div>
+
+        <ScanPanel<SeoScanResult>
+          endpoint="/api/dev/seo-scan"
+          label="SEO"
+          result={scan}
+          onResult={setScan}
+        />
+
+        {scan && (
+          <div style={{ ...cardStyle, padding: 0, overflow: "hidden", marginBottom: 24 }}>
+            <div style={{ padding: "14px 18px", borderBottom: "1px solid #1e293b" }}>
+              <p style={{ fontSize: "0.72rem", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>
+                Live scan results
+              </p>
+              <p style={{ fontSize: "0.9rem", color: "#f1f5f9", margin: "2px 0 0" }}>
+                {scan.pages.filter((p) => p.score === 100).length} / {scan.pages.length} pages passing all checks.
+              </p>
+            </div>
+            <div className="dev-seo-table-wrap" style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+                <thead>
+                  <tr style={{ background: "rgba(255,255,255,0.02)", textAlign: "left" }}>
+                    <th style={{ padding: "12px 16px", color: "#64748b", fontSize: "0.72rem", textTransform: "uppercase" }}>Route</th>
+                    <th style={{ padding: "12px 16px", color: "#64748b", fontSize: "0.72rem", textTransform: "uppercase" }}>Score</th>
+                    <th style={{ padding: "12px 16px", color: "#64748b", fontSize: "0.72rem", textTransform: "uppercase" }}>Failing checks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scan.pages
+                    .slice()
+                    .sort((a, b) => a.score - b.score)
+                    .map((p) => {
+                      const fails = p.checks.filter((c) => !c.ok);
+                      const color = p.score >= 90 ? "#4ade80" : p.score >= 70 ? "#fbbf24" : "#f87171";
+                      return (
+                        <tr key={p.path} style={{ borderTop: "1px solid #1e293b" }}>
+                          <td style={{ padding: "12px 16px", verticalAlign: "top" }}>
+                            <Link href={p.path} target="_blank" rel="noopener" style={{ color: "#c7d2fe", fontWeight: 600, textDecoration: "none" }}>
+                              {p.path}
+                            </Link>
+                            <div style={{ fontSize: "0.74rem", color: "#64748b", marginTop: 2 }}>{p.label}</div>
+                          </td>
+                          <td style={{ padding: "12px 16px", verticalAlign: "top", color, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+                            {p.error ? "ERR" : p.score}
+                          </td>
+                          <td style={{ padding: "12px 16px", verticalAlign: "top", color: "#94a3b8" }}>
+                            {p.error ? (
+                              <span style={{ color: "#fca5a5" }}>{p.error}</span>
+                            ) : fails.length === 0 ? (
+                              <span style={{ color: "#4ade80" }}>All passing</span>
+                            ) : (
+                              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: 4 }}>
+                                {fails.map((f) => (
+                                  <li key={f.id} style={{ fontSize: "0.8rem" }}>
+                                    <span style={{ color: "#f87171", fontWeight: 600 }}>{f.label}:</span>{" "}
+                                    <span style={{ color: "#94a3b8" }}>{f.note}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {/* Summary strip */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 24 }} className="dev-seo-stats">

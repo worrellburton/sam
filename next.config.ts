@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
-import bundleAnalyzer from "@next/bundle-analyzer";
 
-// Wrap the exported config so we can run `npm run analyze` (ANALYZE=true
-// next build) to inspect client/server bundle composition.
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-});
+// Note: @next/bundle-analyzer was previously wired here so `npm run
+// analyze` could render a treemap. It was removed from the lockfile
+// sync, breaking Vercel's `npm ci` step — and the dep isn't used on
+// every build. To restore: `npm install --save-dev @next/bundle-analyzer`
+// locally (which commits the lockfile diff) and wrap `nextConfig`
+// again. Keeping the config plain avoids "lockfile out of sync"
+// failures for everyone.
 
 const cspDirectives = [
   "default-src 'self'",
@@ -74,4 +75,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default nextConfig;

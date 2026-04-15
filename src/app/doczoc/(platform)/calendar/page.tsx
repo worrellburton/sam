@@ -752,7 +752,7 @@ function DayView({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -1312,6 +1312,6 @@ export default function CalendarPage() {
           </div>
         )}
       </main>
-    </div>
+    </>
   );
 }

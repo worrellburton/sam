@@ -45,7 +45,7 @@ function BarChart({ data, labels, color }: { data: number[]; labels: string[]; c
           <span className="dz-insight-bar-value">{v}</span>
         </div>
       ))}
-    </>
+    </div>
   );
 }
 
@@ -617,6 +617,6 @@ export default function InsightsPage() {
         </section>
 
       </main>
-    </div>
+    </>
   );
 }

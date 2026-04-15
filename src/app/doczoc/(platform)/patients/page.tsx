@@ -218,7 +218,7 @@ export default function PatientsPage() {
           </div>
         )}
       </main>
-    </div>
+    </>
   );
 }
 
@@ -326,6 +326,6 @@ function DraggablePatientTable({ patients, onRowClick, externalFocusMode }: { pa
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

@@ -6,127 +6,12 @@ import { useState, useEffect } from "react";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { Insurance } from "@/components/Insurance";
-import { services } from "@/data/services";
 import { blogPosts, isPostReleased } from "@/data/blog";
-import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
+import { patientReviews } from "@/data/patient-reviews";
 import { HeroGradient } from "@/components/HeroGradient";
 import { HeroOverlayGradient } from "@/components/HeroOverlayGradient";
-
-const tickerItems = [
-  {
-    icon: (
-      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&h=40&w=40" alt="New York Jets" width={32} height={32} />
-    ),
-    text: "New York Jets Team Physician",
-    em: "NFL",
-  },
-  {
-    icon: (
-      <Image src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/nhl/500/nyi.png&h=40&w=40" alt="New York Islanders" width={32} height={32} />
-    ),
-    text: "New York Islanders Team Physician",
-    em: "NHL",
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" aria-hidden="true">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-        <polyline points="22 4 12 14.01 9 11.01" />
-      </svg>
-    ),
-    text: "Board Certified",
-    em: "Orthopedic Surgery",
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e8792b" strokeWidth="1.5" aria-hidden="true">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-      </svg>
-    ),
-    text: "4.8 \u2605 Rating",
-    em: "1,466+ Reviews",
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" aria-hidden="true">
-        <path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.87M19 21V10.87" />
-      </svg>
-    ),
-    text: "Lenox Hill Hospital",
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" aria-hidden="true">
-        <path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V10.87M19 21V10.87" />
-      </svg>
-    ),
-    text: "Cleveland Clinic Trained",
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" aria-hidden="true">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-      </svg>
-    ),
-    text: "International Fellowship",
-    em: "Switzerland \u2022 Netherlands \u2022 Italy",
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" aria-hidden="true">
-        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-        <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-        <path d="M9 14l2 2 4-4" />
-      </svg>
-    ),
-    text: "Magna Cum Laude",
-    em: "Ohio State University",
-  },
-];
-
-
-const patientReviews = [
-  {
-    name: "Sarah M.",
-    time: "2 weeks ago",
-    text: "Dr. Elguizaoui is an incredible surgeon. He repaired my torn rotator cuff and I'm back to playing tennis in record time. He took the time to explain every step of the process and made me feel completely at ease.",
-    location: "Upper East Side office",
-  },
-  {
-    name: "James K.",
-    time: "1 month ago",
-    text: "After tearing my ACL playing basketball, I was devastated. Dr. Elguizaoui reconstructed my knee arthroscopically and his rehab plan got me back on the court. Truly the best orthopedic surgeon in NYC.",
-    location: "Brooklyn Heights office",
-  },
-  {
-    name: "Maria L.",
-    time: "3 weeks ago",
-    text: "I saw several doctors before finding Dr. Elguizaoui. He was the only one who took the time to really understand my knee pain. Recommended PRP therapy instead of surgery and I'm pain-free for the first time in years.",
-    location: "Greenwich Village office",
-  },
-  {
-    name: "David R.",
-    time: "2 months ago",
-    text: "Outstanding care from start to finish. Dr. Elguizaoui performed my meniscus repair and I was walking the same day. His staff is professional, friendly, and the office is state-of-the-art.",
-    location: "Upper East Side office",
-  },
-  {
-    name: "Amanda T.",
-    time: "1 month ago",
-    text: "Dr. Elguizaoui fixed my shoulder labral tear with arthroscopic surgery. Minimal scarring, fast recovery, and he was available to answer all my questions throughout rehab. Highly recommend!",
-    location: "Brooklyn Heights office",
-  },
-  {
-    name: "Robert P.",
-    time: "3 months ago",
-    text: "I came to Dr. Elguizaoui for chronic knee pain that other doctors said needed a replacement. He used a joint preservation approach instead and saved my natural knee. Forever grateful.",
-    location: "Greenwich Village office",
-  },
-];
-
-
-
+import { HeroTicker } from "@/components/HeroTicker";
+import { Icon } from "@/components/icons";
 
 interface GoogleReview {
   rating: number;
@@ -264,26 +149,13 @@ export default function Home() {
                 <div className="avatar">A</div>
               </div>
               <span className="rating-patient-choice" aria-label="Zocdoc Patient Choice">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M7 4V2h10v2h4v4a4 4 0 0 1-4 4h-.35A5.002 5.002 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A5.002 5.002 0 0 1 7.35 12H7a4 4 0 0 1-4-4V4h4zm0 2H5v2a2 2 0 0 0 2 2V6zm10 0v4a2 2 0 0 0 2-2V6h-2z"/>
-                </svg>
+                <Icon.Trophy width={14} height={14} />
                 Patient Choice
               </span>
             </div>
           </a>
         </div>
-        <div className="ticker-bar">
-          <div className="ticker-track">
-            {[1, 2].map((set) =>
-              tickerItems.map((item, i) => (
-                <div className="ticker-item" key={`${set}-${i}`}>
-                  {item.icon}
-                  <span>{item.text} {item.em && <em>{item.em}</em>}</span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+        <HeroTicker />
       </header>
 
       {/* About */}
@@ -306,28 +178,28 @@ export default function Home() {
               <div className="about-highlights">
                 <div className="highlight-card reveal-left" style={{ transitionDelay: "0s", animationDelay: "0s" }}>
                   <div className="highlight-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                    <Icon.Shield strokeWidth={2} />
                   </div>
                   <h3>Board Certified</h3>
                   <p>American Board of Orthopaedic Surgery</p>
                 </div>
                 <div className="highlight-card reveal-left" style={{ transitionDelay: "0.12s" }}>
                   <div className="highlight-icon" style={{ transitionDelay: "0.27s" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                    <Icon.Globe strokeWidth={2} />
                   </div>
                   <h3>International Training</h3>
                   <p>Fellowship across Switzerland, Netherlands &amp; Italy</p>
                 </div>
                 <div className="highlight-card reveal-left" style={{ transitionDelay: "0.24s" }}>
                   <div className="highlight-icon" style={{ transitionDelay: "0.39s" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                    <Icon.Users strokeWidth={2} />
                   </div>
                   <h3>Pro Sports Experience</h3>
                   <p>NY Jets (NFL) &bull; NY Islanders (NHL)</p>
                 </div>
                 <div className="highlight-card reveal-left" style={{ transitionDelay: "0.36s" }}>
                   <div className="highlight-icon" style={{ transitionDelay: "0.51s" }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                    <Icon.Star strokeWidth={2} />
                   </div>
                   <h3>1,400+ Reviews</h3>
                   <p>4.8/5 stars across major platforms</p>
@@ -416,15 +288,12 @@ export default function Home() {
                   ) : null}
                   {!isBookCard && <div className="specialty-overlay"></div>}
                   <span className="specialty-arrow-btn" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="7" y1="17" x2="17" y2="7" />
-                      <polyline points="7 7 17 7 17 17" />
-                    </svg>
+                    <Icon.ArrowUpRight width={16} height={16} />
                   </span>
                   <div className="specialty-content">
                     {isBookCard && (
                       <div className="book-card-badge">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <Icon.Calendar width={20} height={20} />
                         <span>ZocDoc</span>
                       </div>
                     )}
@@ -439,17 +308,12 @@ export default function Home() {
                           </span>
                         </div>
                         <span className="book-card-patient-choice">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path d="M7 4V2h10v2h4v4a4 4 0 0 1-4 4h-.35A5.002 5.002 0 0 1 13 15.9V18h3v2H8v-2h3v-2.1A5.002 5.002 0 0 1 7.35 12H7a4 4 0 0 1-4-4V4h4zm0 2H5v2a2 2 0 0 0 2 2V6zm10 0v4a2 2 0 0 0 2-2V6h-2z" />
-                          </svg>
+                          <Icon.Trophy width={14} height={14} />
                           Patient Choice
                         </span>
                         <span className="book-card-cta">
                           Book on ZocDoc
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                            <polyline points="12 5 19 12 12 19" />
-                          </svg>
+                          <Icon.ArrowRight width={14} height={14} strokeWidth={2.5} />
                         </span>
                       </div>
                     )}

@@ -13,6 +13,7 @@ import { HeroOverlayGradient } from "@/components/HeroOverlayGradient";
 import { HeroTicker } from "@/components/HeroTicker";
 import { Icon } from "@/components/icons";
 import { ReviewCard } from "@/components/ReviewCard";
+import { MobileReviewsStack } from "@/components/MobileReviewsStack";
 import { logError } from "@/lib/log";
 
 interface GoogleReview {
@@ -344,31 +345,54 @@ export default function Home() {
             <h2>Trusted by <span className="text-accent">{googleTotal ? `${(1469 + googleTotal).toLocaleString()}+` : '1,400+'} Patients</span></h2>
             <p className="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
           </div>
-          <div className="reviews-marquee" aria-label="Recent patient reviews">
-            <div className="reviews-marquee-track">
-              {[0, 1].map((loopIdx) => (
-                <div className="reviews-marquee-group" key={loopIdx} aria-hidden={loopIdx === 1}>
-                  {allReviews.map((review, i) => {
-                    const isGoogle = 'authorAttribution' in review;
-                    const r = review as GoogleReview;
-                    const local = review as typeof patientReviews[0] & { rating: number };
-                    return (
-                      <ReviewCard
-                        key={`${loopIdx}-${i}`}
-                        name={isGoogle ? (r.authorAttribution?.displayName || 'Patient') : local.name}
-                        avatarUrl={isGoogle ? r.authorAttribution?.photoUri : undefined}
-                        time={isGoogle ? (r.relativePublishTimeDescription || '') : local.time}
-                        text={isGoogle ? (r.text?.text || '') : local.text}
-                        location={isGoogle ? r.locationLabel : local.location}
-                        rating={isGoogle ? r.rating : 5}
-                        showGoogleBadge={isGoogle}
-                      />
-                    );
-                  })}
+          {(() => {
+            // Normalize both review shapes into ReviewCardProps once,
+            // so the mobile stack + desktop marquee can share data.
+            const cards = allReviews.map((review) => {
+              const isGoogle = 'authorAttribution' in review;
+              const r = review as GoogleReview;
+              const local = review as typeof patientReviews[0] & { rating: number };
+              return {
+                name: isGoogle ? (r.authorAttribution?.displayName || 'Patient') : local.name,
+                avatarUrl: isGoogle ? r.authorAttribution?.photoUri : undefined,
+                time: isGoogle ? (r.relativePublishTimeDescription || '') : local.time,
+                text: isGoogle ? (r.text?.text || '') : local.text,
+                location: isGoogle ? r.locationLabel : local.location,
+                rating: isGoogle ? r.rating : 5,
+                showGoogleBadge: isGoogle,
+                publishTime: isGoogle ? r.publishTime : undefined,
+              };
+            });
+            // Mobile gets the most recent 5 five-star reviews, newest first.
+            const mobileCards = [...cards]
+              .filter((c) => c.rating >= 5)
+              .sort(
+                (a, b) =>
+                  new Date(b.publishTime ?? 0).getTime() -
+                  new Date(a.publishTime ?? 0).getTime(),
+              )
+              .slice(0, 5);
+
+            return (
+              <>
+                {/* Mobile: vertical fade-as-you-scroll stack of 5 reviews. */}
+                <MobileReviewsStack reviews={mobileCards} />
+
+                {/* Desktop: horizontal infinite marquee (hidden on mobile). */}
+                <div className="reviews-marquee" aria-label="Recent patient reviews">
+                  <div className="reviews-marquee-track">
+                    {[0, 1].map((loopIdx) => (
+                      <div className="reviews-marquee-group" key={loopIdx} aria-hidden={loopIdx === 1}>
+                        {cards.map((c, i) => (
+                          <ReviewCard key={`${loopIdx}-${i}`} {...c} />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </>
+            );
+          })()}
         </div>
       </section>
 

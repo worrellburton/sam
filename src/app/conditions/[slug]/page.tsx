@@ -13,6 +13,7 @@ import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { conditionFaqs } from "@/data/condition-content";
 import { logError } from "@/lib/log";
+import { conditionJsonLd } from "@/lib/seo/structured-data";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
@@ -64,26 +65,14 @@ export default async function ConditionPage(
     ? blogPosts.find((p) => p.slug === deepDiveSlug)
     : undefined;
 
-  const faqJsonLd = faqs.length > 0
-    ? {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: faqs.map((faq) => ({
-          "@type": "Question",
-          name: faq.question,
-          acceptedAnswer: { "@type": "Answer", text: faq.answer },
-        })),
-      }
-    : null;
+  const jsonLd = conditionJsonLd(condition, slug, faqs);
 
   return (
     <>
-      {faqJsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-        />
-      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="cond-hero has-bg" style={{ backgroundImage: `url('${condition.heroImage}')` }}>
         <div className="container">
           <Link href={`/services/${condition.relatedService}`} className="cond-breadcrumb">

@@ -1,0 +1,51 @@
+name: Lighthouse
+
+# Runs Lighthouse against the Vercel preview URL for every PR against
+# main. Non-blocking — budgets emit warnings in the PR summary rather
+# than failing the check, so design iterations aren't slowed down.
+# Gate as blocking once the site has stabilized past 90 in all four
+# categories.
+
+on:
+  pull_request:
+    branches: [main]
+    # Don't churn Lighthouse on PRs that only touch dev tooling.
+    paths-ignore:
+      - '.github/**'
+      - 'CLAUDE.md'
+      - '*.md'
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Skip fork PRs — they won't have a Vercel preview URL available.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+
+      # Vercel posts a preview-ready comment within ~60 seconds of push.
+      # The action below polls for it so Lighthouse runs against the
+      # real deployment, not localhost.
+      - name: Wait for Vercel preview
+        id: vercel
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ steps.vercel.outputs.url }}/
+            ${{ steps.vercel.outputs.url }}/about
+            ${{ steps.vercel.outputs.url }}/blog
+            ${{ steps.vercel.outputs.url }}/services/sports-medicine
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: .github/lighthouse/lighthouserc.json

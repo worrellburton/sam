@@ -1,0 +1,50 @@
+name: Bundle Size
+
+# Fails PRs that push the First-Load JS for any route past a budget.
+# Next.js writes a per-route summary to .next/build-manifest.json +
+# a pretty table to stdout; we parse the summary and compare against
+# the ceilings defined in scripts/check-bundle-size.mjs.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'next.config.ts'
+      - 'scripts/check-bundle-size.mjs'
+      - '.github/workflows/bundle-size.yml'
+
+concurrency:
+  group: bundle-size-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Fork PRs can't access build env secrets; skip them rather than
+    # failing the check with 'supabaseUrl is required'.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_ATHENA_ENV: ${{ secrets.NEXT_PUBLIC_ATHENA_ENV }}
+          NEXT_PUBLIC_ATHENA_PRACTICE_ID: ${{ secrets.NEXT_PUBLIC_ATHENA_PRACTICE_ID }}
+
+      - name: Check bundle size against budget
+        run: node scripts/check-bundle-size.mjs

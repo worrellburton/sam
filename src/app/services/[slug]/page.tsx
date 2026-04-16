@@ -13,6 +13,7 @@ import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { serviceFaqs, serviceStats } from "@/data/service-content";
 import { logError } from "@/lib/log";
+import { serviceJsonLd } from "@/lib/seo/structured-data";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
@@ -64,44 +65,13 @@ export default async function ServicePage(
   const stats = serviceStats[slug] ?? [];
   const faqs = serviceFaqs[slug] ?? [];
 
-  const serviceJsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "MedicalWebPage",
-      name: service.title,
-      description: service.description,
-      url: `${SITE_URL}/services/${slug}`,
-      author: {
-        "@type": "Physician",
-        name: "Dr. Sameh Elguizaoui, M.D.",
-        medicalSpecialty: "Orthopedic Surgery",
-        description:
-          "Board-certified orthopedic surgeon and sports medicine specialist with offices in Manhattan, Brooklyn, and Scarsdale, NY.",
-      },
-      provider: {
-        "@type": "Physician",
-        name: "Dr. Sameh Elguizaoui, M.D.",
-        medicalSpecialty: "Orthopedic Surgery",
-      },
-    },
-    faqs.length > 0
-      ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqs.map((faq) => ({
-            "@type": "Question",
-            name: faq.question,
-            acceptedAnswer: { "@type": "Answer", text: faq.answer },
-          })),
-        }
-      : null,
-  ].filter(Boolean);
+  const jsonLd = serviceJsonLd(service, slug, faqs);
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="svc-hero">
         <div className="svc-hero-visual">

@@ -206,7 +206,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <main id="main">{children}</main>
         {showChrome && <Footer />}
         {showChrome && (
-          <button className={`theme-toggle-fixed${showThemeToggle ? " visible" : ""}`} onClick={toggleTheme} aria-label="Toggle theme">
+          <button
+            className={`theme-toggle-fixed${showThemeToggle ? " visible" : ""}`}
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            aria-pressed={theme === "dark"}
+            title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+          >
             <svg className="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <circle cx="12" cy="12" r="5" />
               <line x1="12" y1="1" x2="12" y2="3" />

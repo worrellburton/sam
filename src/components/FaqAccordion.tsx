@@ -17,6 +17,7 @@ function FaqRow({ faq, index }: { faq: FaqItem; index: number }) {
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
+  const answerId = `faq-answer-${index}`;
 
   useEffect(() => {
     if (open && contentRef.current) {
@@ -35,6 +36,7 @@ function FaqRow({ faq, index }: { faq: FaqItem; index: number }) {
         className="faq-summary"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
+        aria-controls={answerId}
       >
         <div className="faq-icon-wrap" aria-hidden="true"><QuestionIcon /></div>
         <h3>{faq.q}</h3>
@@ -42,7 +44,13 @@ function FaqRow({ faq, index }: { faq: FaqItem; index: number }) {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </span>
       </button>
-      <div className="faq-answer" style={{ height: `${height}px` }}>
+      <div
+        id={answerId}
+        className="faq-answer"
+        role="region"
+        aria-hidden={!open}
+        style={{ height: `${height}px` }}
+      >
         <div ref={contentRef} className="faq-answer-inner">
           <p>{faq.a}</p>
         </div>

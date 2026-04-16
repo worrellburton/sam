@@ -144,9 +144,9 @@ export function BlogAudioPlayer({ slug }: BlogAudioPlayerProps) {
           aria-label={status === "playing" ? "Pause" : "Play"}
         >
           {status === "playing" ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
           ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 3 20 12 6 21"/></svg>
           )}
         </button>
 
@@ -163,25 +163,36 @@ export function BlogAudioPlayer({ slug }: BlogAudioPlayerProps) {
             </div>
           </div>
 
-          <div className="blog-audio-progress clickable" ref={progressBarRef} onClick={seekTo}>
+          <div
+            className="blog-audio-progress clickable"
+            ref={progressBarRef}
+            onClick={seekTo}
+            role="slider"
+            aria-label="Audio progress"
+            aria-valuemin={0}
+            aria-valuemax={Math.round(duration) || 0}
+            aria-valuenow={Math.round(currentTime)}
+            aria-valuetext={`${formatTime(currentTime)} of ${formatTime(duration)}`}
+            tabIndex={0}
+          >
             <div className="blog-audio-progress-fill" style={{ width: `${pct}%` }} />
           </div>
 
           <div className="blog-audio-bottom-row">
             <div className="blog-audio-sub">Clinical Clarity &middot; Audio Edition</div>
             <div className="blog-audio-controls">
-              <button className="blog-audio-ctrl" onClick={() => skip(-15)} title="Back 15s">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              <button className="blog-audio-ctrl" onClick={() => skip(-15)} aria-label="Skip back 15 seconds" title="Back 15s">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
               </button>
-              <button className="blog-audio-ctrl" onClick={() => skip(15)} title="Forward 15s">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              <button className="blog-audio-ctrl" onClick={() => skip(15)} aria-label="Skip forward 15 seconds" title="Forward 15s">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
               </button>
-              <button className="blog-audio-ctrl speed" onClick={cycleSpeed} title="Playback speed">
+              <button className="blog-audio-ctrl speed" onClick={cycleSpeed} aria-label={`Playback speed ${playbackRate}x, click to change`} title="Playback speed">
                 {playbackRate}x
               </button>
               {(status === "playing" || status === "paused") && (
-                <button className="blog-audio-ctrl" onClick={stop} title="Stop">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+                <button className="blog-audio-ctrl" onClick={stop} aria-label="Stop playback" title="Stop">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
                 </button>
               )}
             </div>

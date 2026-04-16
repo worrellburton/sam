@@ -37,7 +37,7 @@ export function StickyBar() {
         <div className="sticky-bar-marquee">
           <div className="sticky-bar-track">
             {[1, 2].map((i) => (
-              <span key={i}>
+              <span key={i} aria-hidden={i === 2 ? true : undefined}>
                 <span className="sticky-highlight">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />

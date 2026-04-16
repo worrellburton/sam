@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  callerKey,
+  checkRateLimit,
+  getIdempotentResponse,
+  rateLimitHeaders,
+  storeIdempotentResponse,
+} from "@/lib/api/rate-limit";
 
 const STEDI_API_KEY = process.env.STEDI_API_KEY || "";
 const STEDI_BASE_URL =
@@ -12,15 +19,42 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const rl = checkRateLimit(callerKey(request, "stedi"), {
+    limit: 30,
+    windowMs: 60_000,
+  });
+  const rlHeaders = rateLimitHeaders(rl);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Rate limit exceeded — retry after the window resets." },
+      { status: 429, headers: rlHeaders },
+    );
+  }
+
+  // Honor caller-supplied idempotency key; synthesize one otherwise so
+  // a retried POST doesn't re-submit the claim at Stedi. Synthesized
+  // keys are per-request timestamps, so they still allow distinct
+  // submissions through — they just deduplicate exact retries.
+  const idempotencyKey =
+    request.headers.get("Idempotency-Key") || `stedi-${Date.now()}`;
+
+  const cached = getIdempotentResponse("stedi", idempotencyKey);
+  if (cached) {
+    return NextResponse.json(cached.body, {
+      status: cached.status,
+      headers: { ...rlHeaders, "Idempotent-Replayed": "true" },
+    });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid JSON body" },
+      { status: 400, headers: rlHeaders },
+    );
   }
-
-  const idempotencyKey =
-    request.headers.get("Idempotency-Key") || `stedi-${Date.now()}`;
 
   const res = await fetch(`${STEDI_BASE_URL}/submission`, {
     method: "POST",
@@ -33,7 +67,12 @@ export async function POST(request: NextRequest) {
   });
 
   const data = await res.json().catch(() => ({}));
-  return NextResponse.json(data, { status: res.status });
+  // Only cache successful + deterministic replies; transient 5xx
+  // errors should be retryable.
+  if (res.status < 500) {
+    storeIdempotentResponse("stedi", idempotencyKey, res.status, data);
+  }
+  return NextResponse.json(data, { status: res.status, headers: rlHeaders });
 }
 
 /** Health-check: lightweight POST to see if Stedi responds. */

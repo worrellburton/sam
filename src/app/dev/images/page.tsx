@@ -5,6 +5,7 @@ import { DevSidebar } from "../DevSidebar";
 
 interface FileEntry {
   name?: string;
+  key?: string;
   path: string;
   mtime: number;
   size: number;
@@ -20,9 +21,28 @@ interface UploadState {
 
 type SortField = "name" | "date" | "size" | "seo";
 type SortDir = "asc" | "desc";
+type Section = "sam" | "blog" | "other";
+
+const SECTION_LABELS: Record<Section, string> = {
+  sam: "Sam Images",
+  blog: "Blog Images",
+  other: "Other",
+};
+
+const SECTION_DESCRIPTIONS: Record<Section, string> = {
+  sam: "Headshots and portraits of Dr. Elguizaoui",
+  blog: "Blog post thumbnails",
+  other: "Everything else",
+};
 
 export default function DevImagesPage() {
+  const [section, setSection] = useState<Section>("sam");
   const [files, setFiles] = useState<FileEntry[]>([]);
+  const [counts, setCounts] = useState<Record<Section, number | null>>({
+    sam: null,
+    blog: null,
+    other: null,
+  });
   const [loading, setLoading] = useState(true);
   const [dragOver, setDragOver] = useState(false);
   const [lightbox, setLightbox] = useState<string | null>(null);
@@ -35,17 +55,37 @@ export default function DevImagesPage() {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchFiles = useCallback(async () => {
+  const fetchFiles = useCallback(async (sec: Section) => {
+    setLoading(true);
     try {
-      const res = await fetch("/api/dev/storage-images");
+      const res = await fetch(`/api/dev/storage-images?section=${sec}`);
       const data = await res.json();
-      setFiles(data.files || []);
+      const list: FileEntry[] = data.files || [];
+      setFiles(list);
+      setCounts((prev) => ({ ...prev, [sec]: list.length }));
     } catch {
       setFiles([]);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  // Prime counts for the two inactive tabs so the tab badges show a
+  // number even before the user clicks into them.
+  const fetchCounts = useCallback(async () => {
+    const others: Section[] = (["sam", "blog", "other"] as Section[]).filter(
+      (s) => s !== section,
+    );
+    for (const s of others) {
+      try {
+        const res = await fetch(`/api/dev/storage-images?section=${s}`);
+        const data = await res.json();
+        setCounts((prev) => ({ ...prev, [s]: (data.files || []).length }));
+      } catch {
+        /* ignore; tab will say 0 until clicked */
+      }
+    }
+  }, [section]);
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) {
@@ -103,7 +143,8 @@ export default function DevImagesPage() {
     return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
   };
 
-  useEffect(() => { fetchFiles(); }, [fetchFiles]);
+  useEffect(() => { fetchFiles(section); }, [fetchFiles, section]);
+  useEffect(() => { fetchCounts(); }, [fetchCounts]);
 
   const compressImage = (file: File, maxWidth = 2400, quality = 0.82): Promise<{ base64: string; fileName: string; compressedSize: number }> => {
     return new Promise((resolve, reject) => {
@@ -164,13 +205,14 @@ export default function DevImagesPage() {
       const res = await fetch("/api/dev/storage-images", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName, content: base64, mimeType: "image/webp" }),
+        body: JSON.stringify({ fileName, content: base64, mimeType: "image/webp", section }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error || "Upload failed");
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${fileName} uploaded (${savings}% smaller)` } : u));
-      setFiles(prev => [{ path: data.path, mtime: Date.now(), size: compressedSize }, ...prev.filter(f => f.path !== data.path)]);
+      setFiles(prev => [{ name: fileName, key: data.key, path: data.path, mtime: Date.now(), size: compressedSize }, ...prev.filter(f => f.path !== data.path)]);
+      setCounts(prev => ({ ...prev, [section]: (prev[section] ?? 0) + 1 }));
     } catch (err) {
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: `${err}` } : u));
     }
@@ -204,16 +246,18 @@ export default function DevImagesPage() {
     }
     setDeleting(filePath);
     setConfirmDelete(null);
-    const fileName = filePath.includes("/") ? filePath.split("/").pop()! : filePath;
+    const target = files.find(f => f.path === filePath);
+    const key = target?.key || target?.name || filePath.split("/").pop() || "";
     try {
       const res = await fetch("/api/dev/storage-images", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName }),
+        body: JSON.stringify({ key, section }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
       setFiles(prev => prev.filter(f => f.path !== filePath));
+      setCounts(prev => ({ ...prev, [section]: Math.max(0, (prev[section] ?? 1) - 1) }));
     } catch (err) {
       alert(`Delete failed: ${err}`);
     } finally {
@@ -263,6 +307,12 @@ export default function DevImagesPage() {
         .view-toggle { display: flex; gap: 4px; background: #111827; border-radius: 8px; padding: 3px; border: 1px solid #1e293b; }
         .view-toggle button { background: none; border: none; color: #64748b; padding: 6px 10px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; }
         .view-toggle button.active { background: #1e293b; color: #e2e8f0; }
+        .section-tabs { display: flex; gap: 4px; background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 4px; margin-bottom: 24px; }
+        .section-tabs button { flex: 1; background: none; border: none; color: #64748b; font-size: 0.88rem; font-weight: 600; padding: 10px 16px; border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s, color 0.15s; }
+        .section-tabs button:hover { color: #cbd5e1; }
+        .section-tabs button.active { background: linear-gradient(180deg, #1e293b, #162034); color: #e2e8f0; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
+        .section-tabs .tab-count { background: #1e293b; color: #64748b; border-radius: 10px; padding: 2px 8px; font-size: 0.72rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+        .section-tabs button.active .tab-count { background: #334155; color: #cbd5e1; }
         .upload-progress-track { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
         .upload-progress-bar { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
         .upload-progress-bar.uploading { background: linear-gradient(90deg, #6366f1, #818cf8); }
@@ -280,7 +330,7 @@ export default function DevImagesPage() {
         <div style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
             <h1 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>Images</h1>
-            <p style={{ fontSize: "0.88rem", color: "#64748b", margin: "4px 0 0" }}>{files.length} images in Supabase Storage</p>
+            <p style={{ fontSize: "0.88rem", color: "#64748b", margin: "4px 0 0" }}>{SECTION_DESCRIPTIONS[section]} &middot; {files.length} images</p>
           </div>
           <div className="view-toggle">
             <button className={viewMode === "list" ? "active" : ""} onClick={() => setViewMode("list")} title="List view">
@@ -290,6 +340,20 @@ export default function DevImagesPage() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
             </button>
           </div>
+        </div>
+
+        {/* Section tabs */}
+        <div className="section-tabs">
+          {(["sam", "blog", "other"] as Section[]).map((s) => (
+            <button
+              key={s}
+              className={section === s ? "active" : ""}
+              onClick={() => setSection(s)}
+            >
+              {SECTION_LABELS[s]}
+              <span className="tab-count">{counts[s] ?? "…"}</span>
+            </button>
+          ))}
         </div>
 
         {/* Upload zone */}
@@ -309,7 +373,7 @@ export default function DevImagesPage() {
           <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: 0 }}>
             {dragOver ? "Drop images here" : "Drag & drop images or click to browse"}
           </p>
-          <p style={{ color: "#475569", fontSize: "0.78rem", margin: 0 }}>Uploads to Supabase Storage</p>
+          <p style={{ color: "#475569", fontSize: "0.78rem", margin: 0 }}>Uploads to {SECTION_LABELS[section]} &middot; Supabase Storage</p>
         </div>
 
         {/* Upload progress cards */}

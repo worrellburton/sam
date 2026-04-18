@@ -9,3 +9,4 @@ static-backup/
 *.gif
 .env
 .env.local
+.mcp.json

@@ -2,14 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { requireDevAuth } from "@/lib/dev-auth";
 
-const BUCKET = "site-images";
+// Three image sections, each backed by a bucket + optional prefix:
+//   sam   → site-images/sam/*
+//   other → site-images/other/*
+//   blog  → blog-thumbnails/* (flat; existing bucket)
+type Section = "sam" | "other" | "blog";
+
+function resolveSection(section: Section): { bucket: string; prefix: string } {
+  if (section === "blog") return { bucket: "blog-thumbnails", prefix: "" };
+  if (section === "sam") return { bucket: "site-images", prefix: "sam" };
+  return { bucket: "site-images", prefix: "other" };
+}
+
+function parseSection(raw: string | null): Section {
+  if (raw === "sam" || raw === "blog" || raw === "other") return raw;
+  return "other";
+}
 
 export async function GET(request: NextRequest) {
   const auth = requireDevAuth(request);
   if (!auth.ok) return auth.response;
 
-  const { data, error } = await supabase.storage.from(BUCKET).list("", {
-    limit: 500,
+  const section = parseSection(request.nextUrl.searchParams.get("section"));
+  const { bucket, prefix } = resolveSection(section);
+
+  const { data, error } = await supabase.storage.from(bucket).list(prefix, {
+    limit: 1000,
     sortBy: { column: "created_at", order: "desc" },
   });
 
@@ -21,33 +39,38 @@ export async function GET(request: NextRequest) {
   }
 
   const files = (data || [])
-    .filter((f) => !f.id?.endsWith("/"))
+    .filter((f) => f.name && !f.name.endsWith("/"))
     .map((f) => {
-      const { data: urlData } = supabase.storage
-        .from(BUCKET)
-        .getPublicUrl(f.name);
+      const key = prefix ? `${prefix}/${f.name}` : f.name;
+      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(key);
       return {
         name: f.name,
+        key,
         path: urlData.publicUrl,
         size: f.metadata?.size ?? 0,
         mtime: f.created_at ? new Date(f.created_at).getTime() : Date.now(),
       };
     });
 
-  return NextResponse.json({ files });
+  return NextResponse.json({ files, section });
 }
 
 export async function POST(request: NextRequest) {
   const auth = requireDevAuth(request);
   if (!auth.ok) return auth.response;
 
-  const { fileName, content, mimeType } = await request.json();
+  const { fileName, content, mimeType, section: rawSection } =
+    await request.json();
   if (!fileName || !content) {
     return NextResponse.json(
       { error: "Missing fileName or content" },
       { status: 400 },
     );
   }
+
+  const section = parseSection(rawSection || null);
+  const { bucket, prefix } = resolveSection(section);
+  const key = prefix ? `${prefix}/${fileName}` : fileName;
 
   let bytes: Uint8Array;
   try {
@@ -66,7 +89,7 @@ export async function POST(request: NextRequest) {
       ? mimeType
       : "image/webp";
 
-  const { error } = await supabase.storage.from(BUCKET).upload(fileName, bytes, {
+  const { error } = await supabase.storage.from(bucket).upload(key, bytes, {
     contentType,
     upsert: true,
     cacheControl: "31536000",
@@ -79,14 +102,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { data: publicUrlData } = supabase.storage
-    .from(BUCKET)
-    .getPublicUrl(fileName);
+  const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(key);
 
   return NextResponse.json({
     success: true,
     path: publicUrlData.publicUrl,
-    fileName,
+    key,
+    section,
   });
 }
 
@@ -94,12 +116,15 @@ export async function DELETE(request: NextRequest) {
   const auth = requireDevAuth(request);
   if (!auth.ok) return auth.response;
 
-  const { fileName } = await request.json();
-  if (!fileName) {
-    return NextResponse.json({ error: "Missing fileName" }, { status: 400 });
+  const { key, section: rawSection } = await request.json();
+  if (!key) {
+    return NextResponse.json({ error: "Missing key" }, { status: 400 });
   }
 
-  const { error } = await supabase.storage.from(BUCKET).remove([fileName]);
+  const section = parseSection(rawSection || null);
+  const { bucket } = resolveSection(section);
+
+  const { error } = await supabase.storage.from(bucket).remove([key]);
   if (error) {
     return NextResponse.json(
       { error: `Delete failed: ${error.message}` },

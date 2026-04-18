@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { DevSidebar } from "../DevSidebar";
 
 interface FileEntry {
+  name?: string;
   path: string;
   mtime: number;
   size: number;
@@ -36,7 +37,7 @@ export default function DevImagesPage() {
 
   const fetchFiles = useCallback(async () => {
     try {
-      const res = await fetch("/api/dev/files?type=images");
+      const res = await fetch("/api/dev/storage-images");
       const data = await res.json();
       setFiles(data.files || []);
     } catch {
@@ -55,9 +56,11 @@ export default function DevImagesPage() {
     }
   };
 
+  const getFileName = (f: FileEntry) => f.name || f.path.split("/").pop() || "";
+
   const getSeoScore = (f: FileEntry) => {
     let score = 0;
-    const name = f.path.split("/").pop() || "";
+    const name = getFileName(f);
     const ext = name.split(".").pop()?.toLowerCase() || "";
     // WebP format (+30)
     if (ext === "webp") score += 30;
@@ -156,19 +159,18 @@ export default function DevImagesPage() {
         message: `Compressed: ${originalSizeMB} MB → ${compressedMB} MB`,
       } : u));
 
-      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 45, message: "Pushing to GitHub..." } : u));
+      setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "processing", progress: 45, message: "Uploading to Supabase..." } : u));
 
-      const res = await fetch("/api/dev/upload", {
+      const res = await fetch("/api/dev/storage-images", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileName, folder: "images", content: base64 }),
+        body: JSON.stringify({ fileName, content: base64, mimeType: "image/webp" }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error || "Upload failed");
 
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "done", progress: 100, message: `${fileName} uploaded (${savings}% smaller)` } : u));
-      // Add to top of list immediately
-      setFiles(prev => [{ path: `/images/${fileName}`, mtime: Date.now(), size: compressedSize }, ...prev.filter(f => f.path !== `/images/${fileName}`)]);
+      setFiles(prev => [{ path: data.path, mtime: Date.now(), size: compressedSize }, ...prev.filter(f => f.path !== data.path)]);
     } catch (err) {
       setUploads(prev => prev.map((u, i) => i === idx ? { ...u, phase: "error", progress: 100, message: `${err}` } : u));
     }
@@ -202,11 +204,12 @@ export default function DevImagesPage() {
     }
     setDeleting(filePath);
     setConfirmDelete(null);
+    const fileName = filePath.includes("/") ? filePath.split("/").pop()! : filePath;
     try {
-      const res = await fetch("/api/dev/upload", {
+      const res = await fetch("/api/dev/storage-images", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filePath }),
+        body: JSON.stringify({ fileName }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
@@ -277,7 +280,7 @@ export default function DevImagesPage() {
         <div style={{ marginBottom: 32, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
             <h1 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>Images</h1>
-            <p style={{ fontSize: "0.88rem", color: "#64748b", margin: "4px 0 0" }}>{files.length} files in /public/images</p>
+            <p style={{ fontSize: "0.88rem", color: "#64748b", margin: "4px 0 0" }}>{files.length} images in Supabase Storage</p>
           </div>
           <div className="view-toggle">
             <button className={viewMode === "list" ? "active" : ""} onClick={() => setViewMode("list")} title="List view">
@@ -306,7 +309,7 @@ export default function DevImagesPage() {
           <p style={{ color: "#94a3b8", fontSize: "0.95rem", margin: 0 }}>
             {dragOver ? "Drop images here" : "Drag & drop images or click to browse"}
           </p>
-          <p style={{ color: "#475569", fontSize: "0.78rem", margin: 0 }}>Uploads to /public/images/</p>
+          <p style={{ color: "#475569", fontSize: "0.78rem", margin: 0 }}>Uploads to Supabase Storage</p>
         </div>
 
         {/* Upload progress cards */}
@@ -331,7 +334,7 @@ export default function DevImagesPage() {
                     </div>
                   </div>
                   <span style={{ fontSize: "0.78rem", fontWeight: 600, color: u.phase === "done" ? "#22c55e" : u.phase === "error" ? "#ef4444" : u.phase === "processing" ? "#f59e0b" : "#818cf8" }}>
-                    {u.phase === "done" ? "Complete" : u.phase === "error" ? "Failed" : u.phase === "processing" ? "Pushing to GitHub..." : `${u.progress}%`}
+                    {u.phase === "done" ? "Complete" : u.phase === "error" ? "Failed" : u.phase === "processing" ? "Uploading to Supabase..." : `${u.progress}%`}
                   </span>
                 </div>
                 <div className="upload-progress-track">

@@ -1763,6 +1763,9 @@ a.hero-rating-card:hover {
   align-items: center;
   justify-content: center;
 }
+.sticky-bar-btn-call {
+  display: none;
+}
 
 /* Mobile fixed theme toggle - hidden on desktop */
 .mobile-theme-toggle {
@@ -6368,6 +6371,7 @@ img.insurance-logo-light { display: none; }
   /* Call-now companion — dark translucent glass so it reads as
      secondary but still high-contrast against photography. */
   .sticky-bar-btn-call {
+    display: inline-flex;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 55%),
       linear-gradient(180deg, rgba(10, 22, 40, 0.82), rgba(10, 22, 40, 0.72)) !important;

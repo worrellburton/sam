@@ -62,6 +62,19 @@ async function resolvePost(slug: string): Promise<BlogPost | undefined> {
   return staticPost;
 }
 
+function seoTitle(title: string, max = 60): string {
+  const full = `${title} | Clinical Clarity`;
+  if (full.length <= max) return full;
+  const cut = title.lastIndexOf(" ", max - 18);
+  return `${title.slice(0, cut > 20 ? cut : max - 18)}… | Clinical Clarity`;
+}
+
+function seoDescription(text: string, max = 160): string {
+  if (text.length <= max) return text;
+  const cut = text.lastIndexOf(" ", max - 1);
+  return text.slice(0, cut > 80 ? cut : max - 1) + ".";
+}
+
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
@@ -69,13 +82,14 @@ export async function generateMetadata(
   const post = await resolvePost(slug);
   if (!post) return { title: "Post Not Found" };
   const url = `${SITE_URL}/blog/${slug}`;
+  const desc = seoDescription(post.excerpt);
   return {
-    title: `${post.title} | Clinical Clarity`,
-    description: post.excerpt,
+    title: seoTitle(post.title),
+    description: desc,
     alternates: { canonical: url },
     openGraph: {
       title: post.title,
-      description: post.excerpt,
+      description: desc,
       url,
       type: "article",
       images: post.image ? [{ url: post.image }] : undefined,
@@ -83,7 +97,7 @@ export async function generateMetadata(
     twitter: {
       card: "summary_large_image",
       title: post.title,
-      description: post.excerpt,
+      description: desc,
       images: post.image ? [post.image] : undefined,
     },
   };
@@ -149,7 +163,8 @@ export default async function BlogPostPage(
           <div
             className={post.contentHtml ? "blog-article" : "blog-post-content"}
             dangerouslySetInnerHTML={{
-              __html: post.contentHtml || markdownToHtml(post.content),
+              __html: (post.contentHtml || markdownToHtml(post.content))
+                .replace(/<h1[^>]*>[\s\S]*?<\/h1>/gi, ""),
             }}
           />
           <BlogReveal />

@@ -10,8 +10,21 @@ const SITE_URL =
 export const metadata: Metadata = {
   title: "FAQ | Dr. Sameh Elguizaoui, M.D.",
   description:
-    "Frequently asked questions about Dr. Elguizaoui's orthopedic practice, treatments, insurance, and appointments.",
+    "Frequently asked questions about Dr. Elguizaoui's orthopedic practice, treatments, insurance, locations, and appointment scheduling in NYC.",
   alternates: { canonical: `${SITE_URL}/faq` },
+  openGraph: {
+    title: "FAQ | Dr. Sameh Elguizaoui, M.D.",
+    description:
+      "Frequently asked questions about Dr. Elguizaoui's orthopedic practice, treatments, insurance, locations, and appointment scheduling in NYC.",
+    url: `${SITE_URL}/faq`,
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "FAQ | Dr. Sameh Elguizaoui, M.D.",
+    description:
+      "Frequently asked questions about Dr. Elguizaoui's orthopedic practice, treatments, insurance, locations, and appointment scheduling in NYC.",
+  },
 };
 
 const FAQ_JSONLD = {

@@ -9,10 +9,9 @@ import type { Metadata } from "next";
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
-const title =
-  "Book an Appointment | Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon";
+const title = "Book an Appointment | Dr. Sam Elguizaoui, M.D.";
 const description =
-  "Schedule a consultation with Dr. Sameh Elguizaoui, board-certified orthopedic surgeon and sports medicine specialist in NYC. Same-week appointments available at Upper East Side, Greenwich Village, and Brooklyn Heights offices.";
+  "Schedule a consultation with Dr. Sameh Elguizaoui, board-certified orthopedic surgeon in NYC. Same-week appointments at Manhattan, Brooklyn, and Scarsdale offices.";
 
 export const metadata: Metadata = {
   title,
@@ -24,6 +23,7 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/book`,
     type: "website",
     siteName: "Dr. Sameh Elguizaoui, M.D.",
+    images: [{ url: "/images/header.jpg", width: 1200, height: 630, alt: "Dr. Sameh Elguizaoui - Orthopedic Surgeon NYC" }],
   },
   twitter: {
     card: "summary_large_image",

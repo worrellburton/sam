@@ -16,9 +16,9 @@ export default function BlogLoading() {
       <section className="blog-hero">
         <div className="container">
           <span className="blog-hero-label">Investigative Medical Series</span>
-          <h1>
+          <div className="blog-hero-title" aria-hidden="true">
             Clinical <span className="text-accent">Clarity</span>
-          </h1>
+          </div>
           <p className="blog-hero-desc">
             No fluff. No fads. Deep-dive investigative reports from the
             surgeon who actually sees the inside of the joints.

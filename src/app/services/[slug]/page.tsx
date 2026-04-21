@@ -35,6 +35,12 @@ async function resolveService(slug: string): Promise<Service | undefined> {
   return getStaticServiceBySlug(slug);
 }
 
+function seoDescription(text: string, max = 160): string {
+  if (text.length <= max) return text;
+  const cut = text.lastIndexOf(" ", max - 1);
+  return text.slice(0, cut > 80 ? cut : max - 1) + ".";
+}
+
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
@@ -42,15 +48,22 @@ export async function generateMetadata(
   const svc = await resolveService(slug);
   if (!svc) return { title: "Service Not Found" };
   const url = `${SITE_URL}/services/${slug}`;
+  const desc = seoDescription(svc.description);
   return {
     title: `${svc.title} | Dr. Sameh Elguizaoui, M.D.`,
-    description: svc.description,
+    description: desc,
     alternates: { canonical: url },
     openGraph: {
       title: svc.title,
-      description: svc.description,
+      description: desc,
       url,
       type: "article",
+      images: [{ url: "/images/header.jpg", width: 1200, height: 630, alt: svc.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: svc.title,
+      description: desc,
     },
   };
 }

@@ -32,6 +32,18 @@ async function resolveCondition(slug: string): Promise<Condition | undefined> {
   return getStaticConditionBySlug(slug);
 }
 
+function seoDescription(text: string, max = 160): string {
+  if (text.length <= max) return text;
+  const cut = text.lastIndexOf(" ", max - 1);
+  return text.slice(0, cut > 80 ? cut : max - 1) + ".";
+}
+
+function seoTitle(title: string): string {
+  const full = `${title} | Dr. Sameh Elguizaoui, M.D.`;
+  if (full.length <= 65) return full;
+  return `${title} | Dr. Sam Elguizaoui`;
+}
+
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
 ): Promise<Metadata> {
@@ -39,15 +51,22 @@ export async function generateMetadata(
   const condition = await resolveCondition(slug);
   if (!condition) return { title: "Condition Not Found" };
   const url = `${SITE_URL}/conditions/${slug}`;
+  const desc = seoDescription(condition.overview ?? condition.tagline ?? condition.title);
   return {
-    title: `${condition.title} | Dr. Sameh Elguizaoui, M.D.`,
-    description: condition.overview ?? condition.tagline ?? condition.title,
+    title: seoTitle(condition.title),
+    description: desc,
     alternates: { canonical: url },
     openGraph: {
       title: condition.title,
-      description: condition.overview ?? condition.tagline ?? condition.title,
+      description: desc,
       url,
       type: "article",
+      images: [{ url: "/images/header.jpg", width: 1200, height: 630, alt: condition.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: condition.title,
+      description: desc,
     },
   };
 }

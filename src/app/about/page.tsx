@@ -10,10 +10,24 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
 export const metadata: Metadata = {
-  title: "About Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
+  title: "About Dr. Sameh Elguizaoui | NYC Orthopedic Surgeon",
   description:
-    "Board-certified orthopedic surgeon fellowship-trained at Lenox Hill. Former team physician for the NY Jets and Islanders. International fellowship in joint preservation across Switzerland, the Netherlands, and Italy.",
+    "Board-certified orthopedic surgeon fellowship-trained at Lenox Hill. Former team physician for the NY Jets and Islanders. International fellowship in joint preservation.",
   alternates: { canonical: `${SITE_URL}/about` },
+  openGraph: {
+    title: "About Dr. Sameh Elguizaoui | NYC Orthopedic Surgeon",
+    description:
+      "Board-certified orthopedic surgeon fellowship-trained at Lenox Hill. Former team physician for the NY Jets and Islanders.",
+    url: `${SITE_URL}/about`,
+    type: "profile",
+    images: [{ url: "/images/sam6.jpeg", width: 800, height: 1200, alt: "Dr. Sameh Elguizaoui" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Dr. Sameh Elguizaoui | NYC Orthopedic Surgeon",
+    description:
+      "Board-certified orthopedic surgeon fellowship-trained at Lenox Hill. Former team physician for the NY Jets and Islanders.",
+  },
 };
 
 // ── SVG Icons ──────────────────────────────────────────────────────

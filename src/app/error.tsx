@@ -6,9 +6,34 @@ import { logError } from "@/lib/log";
 
 // Top-level error boundary. Next.js renders this whenever any
 // server-rendered or client-rendered page in the app tree throws
-// during render. Keep the copy calm, actionable, and visually
-// consistent with the hero treatment so the error state still feels
-// like part of the site (not a scaffold page).
+// during render. Kept self-contained styling-wise (inline styles +
+// theme vars from theme.css) because it can render under any route,
+// including /doczoc or /dev where legacy.css isn't loaded.
+
+const btnPrimary: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "12px 24px",
+  borderRadius: 999,
+  background: "var(--primary)",
+  color: "#fff",
+  fontWeight: 600,
+  border: "none",
+  cursor: "pointer",
+  textDecoration: "none",
+};
+
+const btnOutline: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "12px 24px",
+  borderRadius: 999,
+  background: "transparent",
+  color: "var(--text)",
+  fontWeight: 600,
+  border: "1px solid var(--border)",
+  textDecoration: "none",
+};
 
 export default function RootError({
   error,
@@ -33,7 +58,16 @@ export default function RootError({
       }}
     >
       <div style={{ maxWidth: 560 }}>
-        <p className="section-label">Something went wrong</p>
+        <p
+          style={{
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
+            fontSize: "0.8rem",
+            color: "var(--text-muted)",
+          }}
+        >
+          Something went wrong
+        </p>
         <h1 style={{ fontSize: "clamp(1.6rem, 4vw, 2.4rem)", margin: "12px 0 18px" }}>
           We hit an unexpected error.
         </h1>
@@ -47,10 +81,10 @@ export default function RootError({
           .
         </p>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <button className="btn btn-primary" onClick={reset}>
+          <button style={btnPrimary} onClick={reset}>
             Try again
           </button>
-          <Link href="/" className="btn btn-outline">
+          <Link href="/" style={btnOutline}>
             Back to homepage
           </Link>
         </div>

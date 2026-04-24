@@ -1,60 +1,81 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { Insurance } from "@/components/Insurance";
-import { blogPosts, isPostReleased } from "@/data/blog";
-import { patientReviews } from "@/data/patient-reviews";
-import { HeroGradient } from "@/components/HeroGradient";
-import { HeroOverlayGradient } from "@/components/HeroOverlayGradient";
-import { HeroTicker } from "@/components/HeroTicker";
+import { HomeHero } from "@/components/HomeHero";
+import { HomeReviews } from "@/components/HomeReviews";
+import { HomeSpecialties } from "@/components/HomeSpecialties";
 import { Icon } from "@/components/icons";
-import { ReviewCard } from "@/components/ReviewCard";
-import { MobileReviewsStack } from "@/components/MobileReviewsStack";
-import { logError } from "@/lib/log";
+import { blogPosts, isPostReleased } from "@/data/blog";
 
-interface GoogleReview {
-  rating: number;
-  text?: { text?: string };
-  authorAttribution?: { displayName?: string; photoUri?: string };
-  relativePublishTimeDescription?: string;
-  publishTime?: string;
-  locationLabel: string;
-}
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
 
-// Pulls aggregated Google Places reviews from the ISR-cached
-// `/api/places/all` endpoint (1 request instead of 3 per visitor).
-function useGoogleReviews() {
-  const [reviews, setReviews] = useState<GoogleReview[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
+export const metadata: Metadata = {
+  title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
+  description:
+    "Board-certified orthopedic surgeon Dr. Sameh Elguizaoui specializes in sports medicine, joint preservation, and cartilage repair across Manhattan, Brooklyn, and the West Village.",
+  alternates: { canonical: `${SITE_URL}/` },
+  openGraph: {
+    title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
+    description:
+      "Board-certified orthopedic surgeon specializing in sports medicine, knee & shoulder surgery, and cartilage repair in Manhattan, Brooklyn & the West Village.",
+    url: `${SITE_URL}/`,
+    type: "website",
+    images: [
+      {
+        url: "/images/header.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Dr. Sameh Elguizaoui — NYC Orthopedic Surgeon",
+      },
+    ],
+  },
+};
 
-  useEffect(() => {
-    async function fetchAllReviews() {
-      try {
-        const resp = await fetch('/api/places/all');
-        if (!resp.ok) throw new Error(`API error: ${resp.status}`);
-        const data = await resp.json() as { totalCount: number; reviews: GoogleReview[] };
-        setTotalCount(data.totalCount);
-        setReviews(data.reviews);
-      } catch (err) {
-        logError('home.googleReviews', err);
-      }
-    }
-    fetchAllReviews();
-  }, []);
-
-  return { reviews, totalCount };
-}
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How do I choose the right orthopedic surgeon in NYC?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Look for a board-certified orthopedic surgeon with fellowship training in your specific area of concern. Dr. Sameh Elguizaoui, M.D. is board-certified by the American Board of Orthopaedic Surgery, fellowship-trained in sports medicine at Lenox Hill Hospital, and has additional international training in joint preservation across Switzerland, the Netherlands, and Italy.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What conditions does Dr. Elguizaoui treat?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Dr. Elguizaoui treats a wide range of orthopedic conditions including ACL tears, meniscus injuries, rotator cuff tears, shoulder instability, cartilage damage, arthritis, sports injuries, and fractures. He specializes in joint preservation, arthroscopic surgery, and regenerative medicine including PRP therapy.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does Dr. Elguizaoui accept insurance?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, Dr. Elguizaoui accepts most major insurance plans. His office staff can verify your coverage and benefits before your appointment. Contact the office at (917) 905-9370 for specific insurance inquiries.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where are Dr. Elguizaoui's office locations in NYC?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Dr. Elguizaoui has three convenient office locations across New York City: Upper East Side in Manhattan, Greenwich Village in Manhattan, and Brooklyn Heights in Brooklyn. All locations offer the same comprehensive orthopedic services.",
+      },
+    },
+  ],
+};
 
 export default function Home() {
-  // Treat drafts whose releaseDate has passed as published
   const releasedPosts = blogPosts.filter((p) => isPostReleased(p));
   const recentPosts = releasedPosts.slice(0, 3);
-  // Feature the next unreleased draft (by earliest releaseDate, falling back
-  // to first coming-soon if none have dates)
   const upcomingDrafts = blogPosts.filter((p) => p.comingSoon && !isPostReleased(p));
   const comingSoonPost = upcomingDrafts
     .slice()
@@ -63,116 +84,49 @@ export default function Home() {
       const db = b.releaseDate ? new Date(b.releaseDate).getTime() : Infinity;
       return da - db;
     })[0];
-  const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
-
-  const allReviews = (() => {
-    if (googleReviews.length > 0) {
-      return [...googleReviews].sort((a, b) => {
-        const ta = new Date(a.publishTime || 0).getTime();
-        const tb = new Date(b.publishTime || 0).getTime();
-        return tb - ta;
-      });
-    }
-    return patientReviews.map(r => ({ ...r, rating: 5, isLocal: true as const }));
-  })();
-  const [heroReady, setHeroReady] = useState(false);
-
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I choose the right orthopedic surgeon in NYC?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Look for a board-certified orthopedic surgeon with fellowship training in your specific area of concern. Dr. Sameh Elguizaoui, M.D. is board-certified by the American Board of Orthopaedic Surgery, fellowship-trained in sports medicine at Lenox Hill Hospital, and has additional international training in joint preservation across Switzerland, the Netherlands, and Italy."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What conditions does Dr. Elguizaoui treat?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Dr. Elguizaoui treats a wide range of orthopedic conditions including ACL tears, meniscus injuries, rotator cuff tears, shoulder instability, cartilage damage, arthritis, sports injuries, and fractures. He specializes in joint preservation, arthroscopic surgery, and regenerative medicine including PRP therapy."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does Dr. Elguizaoui accept insurance?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, Dr. Elguizaoui accepts most major insurance plans. His office staff can verify your coverage and benefits before your appointment. Contact the office at (917) 905-9370 for specific insurance inquiries."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Where are Dr. Elguizaoui's office locations in NYC?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Dr. Elguizaoui has three convenient office locations across New York City: Upper East Side in Manhattan, Greenwich Village in Manhattan, and Brooklyn Heights in Brooklyn. All locations offer the same comprehensive orthopedic services."
-        }
-      }
-    ]
-  };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      {/* Hero */}
-      <header className={`hero${heroReady ? " hero-loaded" : ""}`} id="hero">
-        <Image className={`hero-bg-img${heroReady ? " loaded" : ""}`} src="/images/header.jpg" alt="Dr. Sameh Elguizaoui performing orthopedic surgery" aria-hidden="true" width={1920} height={1080} sizes="100vw" priority onLoad={() => setHeroReady(true)} />
-        <HeroGradient />
-        <div className="hero-overlay"></div>
-        <HeroOverlayGradient />
-        <div className="container hero-content">
-          <div className="hero-text">
-            <p className="hero-label">Board-Certified Orthopedic Excellence</p>
-            <h1>NYC&rsquo;s Most Trusted <em>Orthopedic</em> Surgeon</h1>
-            <div className="hero-divider" />
-            <p className="hero-desc">Sports medicine and joint preservation specialist trained at Cleveland Clinic and Lenox Hill Hospital. Former team physician for the NY Jets and NY Islanders.</p>
-            <a href="#about" className="btn btn-hero">Learn More</a>
-          </div>
-          <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="hero-rating-card" aria-label="View Dr. Elguizaoui on Zocdoc">
-            <div className="rating-top">
-              <div className="rating-score">4.8<span className="rating-star">&#9733;</span></div>
-              <div className="rating-info">
-                <span className="rating-platform">Patient Rating</span>
-                <span className="rating-count"><strong>1,466</strong> Reviews</span>
-              </div>
-            </div>
-            <div className="rating-bottom">
-              <div className="rating-avatars">
-                <div className="avatar">S</div>
-                <div className="avatar">M</div>
-                <div className="avatar">A</div>
-              </div>
-              <span className="rating-patient-choice" aria-label="Zocdoc Patient Choice">
-                <Icon.Trophy width={14} height={14} />
-                Patient Choice
-              </span>
-            </div>
-          </a>
-        </div>
-        <HeroTicker />
-      </header>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <HomeHero />
 
       {/* About */}
       <section className="section about reveal" id="about">
         <div className="container">
           <div className="about-layout">
             <div className="about-photo">
-              <Image src="/images/Confident Doctor Headshot-1.jpg" alt="Dr. Sam Elguizaoui - Orthopedic Surgeon" className="about-portrait" width={800} height={1200} sizes="(max-width: 768px) 100vw, 50vw" style={{ objectPosition: "center 20%" }} />
+              <Image
+                src="/images/Confident Doctor Headshot-1.jpg"
+                alt="Dr. Sam Elguizaoui - Orthopedic Surgeon"
+                className="about-portrait"
+                width={800}
+                height={1200}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectPosition: "center 20%" }}
+              />
             </div>
             <div className="about-right">
               <div className="about-header">
                 <p className="section-label">About Dr. Elguizaoui</p>
-                <h2>Orthopedic Excellence,<br /><span className="text-accent">Patient-First Approach</span></h2>
+                <h2>
+                  Orthopedic Excellence,
+                  <br />
+                  <span className="text-accent">Patient-First Approach</span>
+                </h2>
               </div>
               <div className="about-content">
-                <p className="about-lead">Board-certified orthopedic surgeon and fellowship-trained sports medicine specialist in New York City, combining world-class surgical training with conservative, patient-centered care.</p>
-                <p>Trained at <strong>Cleveland Clinic</strong> and <strong>Lenox Hill Hospital</strong>, with an international fellowship across <strong>Switzerland, the Netherlands, and Italy</strong> in joint preservation and cartilage repair.</p>
-                <p>Former team physician for the <strong>New York Jets (NFL)</strong> and <strong>New York Islanders (NHL)</strong>.</p>
+                <p className="about-lead">
+                  Board-certified orthopedic surgeon and fellowship-trained sports medicine specialist in New York City, combining world-class surgical training with conservative, patient-centered care.
+                </p>
+                <p>
+                  Trained at <strong>Cleveland Clinic</strong> and <strong>Lenox Hill Hospital</strong>, with an international fellowship across <strong>Switzerland, the Netherlands, and Italy</strong> in joint preservation and cartilage repair.
+                </p>
+                <p>
+                  Former team physician for the <strong>New York Jets (NFL)</strong> and <strong>New York Islanders (NHL)</strong>.
+                </p>
               </div>
               <div className="about-highlights">
                 <div className="highlight-card reveal-left" style={{ transitionDelay: "0s", animationDelay: "0s" }}>
@@ -216,202 +170,44 @@ export default function Home() {
         <div className="container">
           <div className="section-header specialties-header">
             <p className="section-label">Areas of Expertise</p>
-            <h2>Specialized Orthopedic <span className="text-accent">Treatments</span></h2>
-            <p className="section-desc">From advanced arthroscopic surgery to cutting-edge regenerative therapies, Dr. Elguizaoui offers comprehensive orthopedic care tailored to your needs and goals.</p>
+            <h2>
+              Specialized Orthopedic <span className="text-accent">Treatments</span>
+            </h2>
+            <p className="section-desc">
+              From advanced arthroscopic surgery to cutting-edge regenerative therapies, Dr. Elguizaoui offers comprehensive orthopedic care tailored to your needs and goals.
+            </p>
           </div>
-          {(() => {
-            type SpecialtyCard = {
-              title: string;
-              href: string;
-              video?: string;
-              image?: string;
-              description?: string;
-            };
-            // Videos live in the Supabase `blog-videos` bucket (public read).
-            // A single base URL + filename keeps the list readable and makes
-            // it easy to swap in new clips uploaded via /dev/videos.
-            const V = "https://wgznytmxwslupjhsdeha.supabase.co/storage/v1/object/public/blog-videos";
-            const row1: SpecialtyCard[] = [
-              { title: "Sports Medicine", href: "/services/sports-medicine", video: `${V}/Sports_Medicine.mp4` },
-              { title: "Joint Preservation", href: "/services/joint-preservation", video: `${V}/Joint_Preservation.mp4` },
-            ];
-            const row2: SpecialtyCard[] = [
-              { title: "Arthroscopic Surgery", href: "/services/arthroscopic-surgery", video: `${V}/Arthroscopic_Surgery.mp4` },
-              { title: "Cartilage Repair", href: "/services/cartilage-repair", video: `${V}/Cartilage_Repair.mp4` },
-              { title: "Regenerative Medicine", href: "/services/regenerative-medicine", video: `${V}/Regenerative_Medicine.mp4` },
-            ];
-            const row3: SpecialtyCard[] = [
-              { title: "Shoulder", href: "/services/shoulder-knee-surgery", video: `${V}/Shoulder.mp4` },
-              { title: "Knee", href: "/services/sports-medicine", video: `${V}/Knee.mp4` },
-              { title: "Elbow", href: "/services/sports-medicine", video: `${V}/Elbow.mp4` },
-            ];
-            const row4: SpecialtyCard[] = [
-              { title: "General Orthopedics", href: "/services/sports-medicine", video: `${V}/General_Orthopedics.mp4` },
-              {
-                title: "Book a Consultation",
-                href: "/book",
-                description: "Schedule a visit at one of Dr. Elguizaoui's NYC offices — Manhattan, Brooklyn, or Scarsdale.",
-              },
-            ];
-            const renderCard = (card: SpecialtyCard) => {
-              const isBookCard = !card.video && !card.image;
-              return (
-                <Link
-                  href={card.href}
-                  className={`specialty-card specialty-link${isBookCard ? " book-card" : ""}`}
-                  key={card.title}
-                  onMouseEnter={(e) => {
-                    const v = e.currentTarget.querySelector("video");
-                    if (v) v.play().catch(() => {});
-                  }}
-                  onMouseLeave={(e) => {
-                    const v = e.currentTarget.querySelector("video");
-                    if (v) {
-                      v.pause();
-                      v.currentTime = 0;
-                    }
-                  }}
-                >
-                  {card.video ? (
-                    <video
-                      className="specialty-video"
-                      src={card.video}
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      onLoadedMetadata={(e) => {
-                        e.currentTarget.currentTime = 0.01;
-                      }}
-                    />
-                  ) : null}
-                  {!isBookCard && <div className="specialty-overlay"></div>}
-                  <span className="specialty-arrow-btn" aria-hidden="true">
-                    <Icon.ArrowUpRight width={16} height={16} />
-                  </span>
-                  <div className="specialty-content">
-                    {isBookCard && (
-                      <div className="book-card-badge">
-                        <Icon.Calendar width={20} height={20} />
-                        <span>ZocDoc</span>
-                      </div>
-                    )}
-                    <h3 className="specialty-title">{card.title}</h3>
-                    {card.description && <p className="specialty-description">{card.description}</p>}
-                    {isBookCard && (
-                      <div className="book-card-rating">
-                        <div className="book-card-rating-top">
-                          <span className="book-card-score">4.8<span className="book-card-star">&#9733;</span></span>
-                          <span className="book-card-rating-meta">
-                            <strong>{googleTotal ? `${(1466 + googleTotal).toLocaleString()}` : '1,466'}</strong> Patient Reviews
-                          </span>
-                        </div>
-                        <span className="book-card-patient-choice">
-                          <Icon.Trophy width={14} height={14} />
-                          Patient Choice
-                        </span>
-                        <span className="book-card-cta">
-                          Book on ZocDoc
-                          <Icon.ArrowRight width={14} height={14} strokeWidth={2.5} />
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              );
-            };
-            const renderRow = (cards: SpecialtyCard[], rowClass: string) => (
-              <div className={`specialties-row ${rowClass}`}>
-                {cards.map((c) => renderCard(c))}
-              </div>
-            );
-            return (
-              <>
-                {renderRow(row1, "specialties-row-1")}
-                {renderRow(row2, "specialties-row-2")}
-                {renderRow(row3, "specialties-row-3")}
-                {renderRow(row4, "specialties-row-4")}
-              </>
-            );
-          })()}
+          <HomeSpecialties />
         </div>
       </section>
 
-      {/* Reviews */}
-      <section className="section reviews reveal" id="reviews">
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">Patient Reviews</p>
-            <h2>Trusted by <span className="text-accent">{googleTotal ? `${(1469 + googleTotal).toLocaleString()}+` : '1,400+'} Patients</span></h2>
-            <p className="section-desc">Consistently rated among the top orthopedic surgeons in New York City.</p>
-          </div>
-          {(() => {
-            // Normalize both review shapes into ReviewCardProps once,
-            // so the mobile stack + desktop marquee can share data.
-            const cards = allReviews.map((review) => {
-              const isGoogle = 'authorAttribution' in review;
-              const r = review as GoogleReview;
-              const local = review as typeof patientReviews[0] & { rating: number };
-              return {
-                name: isGoogle ? (r.authorAttribution?.displayName || 'Patient') : local.name,
-                avatarUrl: isGoogle ? r.authorAttribution?.photoUri : undefined,
-                time: isGoogle ? (r.relativePublishTimeDescription || '') : local.time,
-                text: isGoogle ? (r.text?.text || '') : local.text,
-                location: isGoogle ? r.locationLabel : local.location,
-                rating: isGoogle ? r.rating : 5,
-                showGoogleBadge: isGoogle,
-                publishTime: isGoogle ? r.publishTime : undefined,
-              };
-            });
-            // Mobile gets the most recent 5 five-star reviews, newest first.
-            const mobileCards = [...cards]
-              .filter((c) => c.rating >= 5)
-              .sort(
-                (a, b) =>
-                  new Date(b.publishTime ?? 0).getTime() -
-                  new Date(a.publishTime ?? 0).getTime(),
-              )
-              .slice(0, 5);
-
-            return (
-              <>
-                {/* Mobile: vertical fade-as-you-scroll stack of 5 reviews. */}
-                <MobileReviewsStack reviews={mobileCards} />
-
-                {/* Desktop: horizontal infinite marquee (hidden on mobile). */}
-                <div className="reviews-marquee" aria-label="Recent patient reviews">
-                  <div className="reviews-marquee-track">
-                    {[0, 1].map((loopIdx) => (
-                      <div className="reviews-marquee-group" key={loopIdx} aria-hidden={loopIdx === 1}>
-                        {cards.map((c, i) => (
-                          <ReviewCard key={`${loopIdx}-${i}`} {...c} />
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </>
-            );
-          })()}
-        </div>
-      </section>
+      <HomeReviews />
 
       {/* Blog Preview */}
       <section className="section blog-home reveal" id="blog">
         <div className="container">
           <div className="section-header">
             <p className="section-label">Clinical Clarity</p>
-            <h2>Investigating Modern <span className="text-accent">Orthopedics</span></h2>
-            <p className="section-desc">No fluff. No fads. Deep-dive investigative reports from the surgeon who actually sees the inside of the joints.</p>
+            <h2>
+              Investigating Modern <span className="text-accent">Orthopedics</span>
+            </h2>
+            <p className="section-desc">
+              No fluff. No fads. Deep-dive investigative reports from the surgeon who actually sees the inside of the joints.
+            </p>
           </div>
           <div className="blog-home-grid">
             {recentPosts.map((post) => (
               <Link href={`/blog/${post.slug}`} className="blog-card blog-card-book" key={post.slug}>
                 <div className="blog-card-img-wrap">
-                  <Image className="blog-card-img" src={post.image} alt={post.imageAlt} width={600} height={800} sizes="(max-width: 768px) 100vw, 33vw" />
-                  {post.episode && (
-                    <span className="blog-card-ep">EP. {post.episode}</span>
-                  )}
+                  <Image
+                    className="blog-card-img"
+                    src={post.image}
+                    alt={post.imageAlt}
+                    width={600}
+                    height={800}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                  {post.episode && <span className="blog-card-ep">EP. {post.episode}</span>}
                 </div>
                 <div className="blog-card-body">
                   <span className="blog-card-tag">{post.tag}</span>
@@ -424,7 +220,13 @@ export default function Home() {
               <div className="blog-card blog-card-book blog-card-featured">
                 <span className="blog-card-feature-flag">Next Up</span>
                 <div className="blog-card-img-wrap">
-                  <Image className="blog-card-img" src={comingSoonPost.image} alt={comingSoonPost.imageAlt} width={600} height={800} />
+                  <Image
+                    className="blog-card-img"
+                    src={comingSoonPost.image}
+                    alt={comingSoonPost.imageAlt}
+                    width={600}
+                    height={800}
+                  />
                   <div className="blog-card-coming-overlay">
                     <span className="blog-card-coming-badge">Coming Soon</span>
                   </div>
@@ -438,7 +240,9 @@ export default function Home() {
             )}
           </div>
           <div style={{ textAlign: "center", marginTop: "40px" }}>
-            <Link href="/blog" className="btn btn-outline">View All Episodes &rarr;</Link>
+            <Link href="/blog" className="btn btn-outline">
+              View All Episodes &rarr;
+            </Link>
           </div>
         </div>
       </section>

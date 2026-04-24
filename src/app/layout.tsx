@@ -55,9 +55,14 @@ export const metadata: Metadata = {
   },
 };
 
+// Physician inherits from MedicalBusiness → LocalBusiness, so all the
+// business-level fields (address, hours, rating, priceRange) live on
+// the same entity. Using a stable `@id` lets service/condition pages
+// reference this same node instead of emitting a duplicate physician.
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "MedicalBusiness",
+  "@type": "Physician",
+  "@id": `${SITE_URL}/#physician`,
   name: "Dr. Sameh Elguizaoui, M.D.",
   description:
     "Board-certified orthopedic surgeon specializing in sports medicine, knee & shoulder surgery, cartilage repair, and joint preservation in NYC.",
@@ -65,7 +70,16 @@ const structuredData = {
   telephone: "+1-917-905-9370",
   image: `${SITE_URL}/images/header.jpg`,
   priceRange: "$$",
-  medicalSpecialty: "Orthopedic Surgery",
+  medicalSpecialty: ["OrthopedicSurgery", "SportsMedicine"],
+  memberOf: {
+    "@type": "MedicalOrganization",
+    name: "American Board of Orthopaedic Surgery",
+  },
+  alumniOf: [
+    { "@type": "EducationalOrganization", name: "Cleveland Clinic" },
+    { "@type": "EducationalOrganization", name: "Lenox Hill Hospital" },
+    { "@type": "EducationalOrganization", name: "Ohio State University" },
+  ],
   address: [
     {
       "@type": "PostalAddress",
@@ -97,17 +111,6 @@ const structuredData = {
     ratingValue: "4.8",
     reviewCount: "1400",
     bestRating: "5",
-  },
-  physician: {
-    "@type": "Physician",
-    name: "Dr. Sameh Elguizaoui",
-    medicalSpecialty: ["Orthopedic Surgery", "Sports Medicine"],
-    alumniOf: [
-      {
-        "@type": "CollegeOrUniversity",
-        name: "The Ohio State University College of Medicine",
-      },
-    ],
   },
   openingHoursSpecification: [
     {

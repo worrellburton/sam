@@ -141,6 +141,12 @@ export default function RootLayout({
             status bar in standalone PWA mode. */}
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
+        {/* Preconnect to external origins we know the visitor will hit
+            soon — shaves ~50-100ms off the first Maps tile fetch and
+            the first specialty-video request on marketing pages. */}
+        <link rel="preconnect" href="https://maps.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://wgznytmxwslupjhsdeha.supabase.co" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

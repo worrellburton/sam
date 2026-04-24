@@ -23,6 +23,10 @@ const cspDirectives = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  experimental: {
+    optimizePackageImports: ["@supabase/supabase-js"],
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },

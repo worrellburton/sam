@@ -25,11 +25,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Sam Elguizaoui, M.D. | NYC Orthopedic Surgeon",
+  title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
   description:
     "Board-certified orthopedic surgeon Dr. Sameh Elguizaoui specializes in sports medicine, knee & shoulder surgery, and cartilage repair in NYC.",
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: "/" },
+  alternates: { canonical: `${SITE_URL}/` },
+  robots: { index: true, follow: true },
   openGraph: {
     title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
     description:

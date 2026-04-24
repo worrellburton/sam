@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, lazy, Suspense } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -53,8 +53,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => document.removeEventListener("click", handleClick, true);
   }, [openBooking]);
 
-  // IntersectionObserver for .reveal animations
+  const isDocZocRoute = pathname.startsWith("/doczoc");
+  const isDevRoute = pathname.startsWith("/dev");
+  const isMarketingRoute = !isDocZocRoute && !isDevRoute;
+
+  // IntersectionObserver for .reveal animations. Only marketing routes
+  // use these classes, so skip the whole setup on /doczoc and /dev.
+  // Previously we ran a MutationObserver on document.body to catch
+  // dynamically-injected reveal targets, but the only real source of
+  // new targets is route changes — which the pathname dep already
+  // handles. Dropping the body-wide observer removes a persistent cost
+  // that fired on every DOM mutation (lazy images, hydration, etc.).
   useEffect(() => {
+    if (!isMarketingRoute) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -64,51 +76,25 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
-    function observeRevealElements() {
-      document
-        .querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-stagger")
-        .forEach((el) => {
-          if (!el.classList.contains("visible")) {
-            observer.observe(el);
-          }
-        });
-    }
+    document
+      .querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-stagger")
+      .forEach((el) => {
+        if (!el.classList.contains("visible")) {
+          observer.observe(el);
+        }
+      });
 
-    observeRevealElements();
+    return () => observer.disconnect();
+  }, [pathname, isMarketingRoute]);
 
-    const mutationObserver = new MutationObserver(() => {
-      observeRevealElements();
-    });
-    mutationObserver.observe(document.body, { childList: true, subtree: true });
-
-    const bgElements = document.querySelectorAll(".move-easier-bg");
-    if (bgElements.length > 1) {
-      let currentSlide = 0;
-      const interval = setInterval(() => {
-        bgElements[currentSlide]?.classList.remove("active");
-        currentSlide = (currentSlide + 1) % bgElements.length;
-        bgElements[currentSlide]?.classList.add("active");
-      }, 4000);
-      return () => {
-        clearInterval(interval);
-        observer.disconnect();
-        mutationObserver.disconnect();
-      };
-    }
-
-    return () => {
-      observer.disconnect();
-      mutationObserver.disconnect();
-    };
-  }, []);
-
-  // Specialty video playback:
+  // Specialty video playback (homepage only):
   //  - Desktop (fine pointer): play only while the card is hovered
   //  - Mobile / touch: play when the video is ~centered in the viewport
   useEffect(() => {
+    if (!isMarketingRoute) return;
     const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
     const hoverHandlers = new WeakMap<HTMLElement, { enter: () => void; leave: () => void }>();
@@ -181,11 +167,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         }
       });
     };
-  }, [pathname]);
+  }, [pathname, isMarketingRoute]);
 
-  const isDocZocPage = pathname.startsWith("/doczoc");
-  const isDevPage = pathname.startsWith("/dev");
-  const showChrome = !isDocZocPage && !isDevPage;
+  const showChrome = isMarketingRoute;
 
   return (
     <BookingContext.Provider value={{ openBooking, closeBooking, isBookingOpen: bookingOpen }}>

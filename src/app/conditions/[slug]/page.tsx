@@ -14,6 +14,7 @@ import { Locations } from "@/components/Locations";
 import { conditionFaqs } from "@/data/condition-content";
 import { logError } from "@/lib/log";
 import { conditionJsonLd } from "@/lib/seo/structured-data";
+import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
@@ -52,6 +53,9 @@ export async function generateMetadata(
   if (!condition) return { title: "Condition Not Found" };
   const url = `${SITE_URL}/conditions/${slug}`;
   const desc = seoDescription(condition.overview ?? condition.tagline ?? condition.title);
+  const hasRealHero =
+    condition.heroImage && condition.heroImage !== PLACEHOLDER_IMAGE;
+  const ogImage = hasRealHero ? condition.heroImage : "/images/header.jpg";
   return {
     title: seoTitle(condition.title),
     description: desc,
@@ -61,12 +65,13 @@ export async function generateMetadata(
       description: desc,
       url,
       type: "article",
-      images: [{ url: "/images/header.jpg", width: 1200, height: 630, alt: condition.title }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: condition.title }],
     },
     twitter: {
       card: "summary_large_image",
       title: condition.title,
       description: desc,
+      images: [ogImage],
     },
   };
 }

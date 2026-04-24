@@ -20,6 +20,28 @@ export const metadata: Metadata = {
   description:
     "Deep-dive investigative reports on orthopedic surgery, sports medicine, and joint preservation — written by a board-certified surgeon.",
   alternates: { canonical: `${SITE_URL}/blog` },
+  openGraph: {
+    title: "Clinical Clarity | Orthopedic Surgery Blog",
+    description:
+      "Deep-dive investigative reports on orthopedic surgery, sports medicine, and joint preservation — written by a board-certified surgeon.",
+    url: `${SITE_URL}/blog`,
+    type: "website",
+    images: [
+      {
+        url: "/images/header.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Clinical Clarity — Orthopedic Blog by Dr. Sameh Elguizaoui",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Clinical Clarity | Orthopedic Surgery Blog",
+    description:
+      "Deep-dive investigative reports on orthopedic surgery, sports medicine, and joint preservation.",
+    images: ["/images/header.jpg"],
+  },
 };
 
 // Re-validate the blog index hourly; DB-backed overrides pick up without

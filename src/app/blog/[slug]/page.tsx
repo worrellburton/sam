@@ -83,6 +83,7 @@ export async function generateMetadata(
   if (!post) return { title: "Post Not Found" };
   const url = `${SITE_URL}/blog/${slug}`;
   const desc = seoDescription(post.excerpt);
+  const ogImage = post.image || "/images/header.jpg";
   return {
     title: seoTitle(post.title),
     description: desc,
@@ -92,13 +93,13 @@ export async function generateMetadata(
       description: desc,
       url,
       type: "article",
-      images: post.image ? [{ url: post.image }] : undefined,
+      images: [{ url: ogImage, alt: post.imageAlt || post.title }],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: desc,
-      images: post.image ? [post.image] : undefined,
+      images: [ogImage],
     },
   };
 }

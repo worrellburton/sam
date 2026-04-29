@@ -17,12 +17,12 @@ export const conditionToBlogSlug: Record<string, string> = {
   "Knee cartilage injuries": "cartilage-restoration-maci-allograft",
   "Meniscus tears and cartilage injuries": "cartilage-restoration-maci-allograft",
 
-  // Regenerative / PRP → PRP deep dive
-  "Mild to moderate osteoarthritis": "prp-therapy-deep-dive",
-  "Tendinitis and tendon injuries": "prp-therapy-deep-dive",
-  "Ligament sprains": "prp-therapy-deep-dive",
-  "Chronic joint pain": "prp-therapy-deep-dive",
-  "Cartilage degeneration": "prp-therapy-deep-dive",
+  // Regenerative / PRP → HA vs PRP comparison
+  "Mild to moderate osteoarthritis": "hyaluronic-acid-vs-prp-knee",
+  "Tendinitis and tendon injuries": "hyaluronic-acid-vs-prp-knee",
+  "Ligament sprains": "hyaluronic-acid-vs-prp-knee",
+  "Chronic joint pain": "hyaluronic-acid-vs-prp-knee",
+  "Cartilage degeneration": "hyaluronic-acid-vs-prp-knee",
 
   // ACL → ACL warning signs
   "ACL, MCL, and PCL tears": "acl-tear-warning-signs",
@@ -35,21 +35,21 @@ export const conditionToBlogSlug: Record<string, string> = {
   "Meniscus tears": "meniscus-tear-athlete-guide",
   "Meniscal tears": "meniscus-tear-athlete-guide",
 
-  // Sports-medicine catch-alls → Basketball report
-  "Ankle sprains and instability": "basketball-injuries-nyc-courts",
-  "Stress fractures": "basketball-injuries-nyc-courts",
-  "Muscle strains and tendon injuries": "basketball-injuries-nyc-courts",
+  // Sports-medicine catch-alls → Active-adult prevention article
+  "Ankle sprains and instability": "protecting-joints-active-adults",
+  "Stress fractures": "protecting-joints-active-adults",
+  "Muscle strains and tendon injuries": "protecting-joints-active-adults",
 
-  // Rotator cuff → Rotator cuff repair deep dive
-  "Rotator cuff tears": "rotator-cuff-repair-options",
-  "Rotator cuff repair": "rotator-cuff-repair-options",
-  "Rotator cuff tears and shoulder instability": "rotator-cuff-repair-options",
+  // Rotator cuff → Arthroscopic vs open surgery (rotator cuff repair is arthroscopic)
+  "Rotator cuff tears": "arthroscopic-vs-open-surgery",
+  "Rotator cuff repair": "arthroscopic-vs-open-surgery",
+  "Rotator cuff tears and shoulder instability": "arthroscopic-vs-open-surgery",
 
   // Shoulder arthritis → Shoulder replacement deep dive
   "Shoulder instability and dislocations": "shoulder-replacement-anatomic-reverse",
 
-  // Patellar instability → Patellar dislocation deep dive
-  "Patellar instability": "patellar-dislocation-treatment-guide",
+  // Patellar instability → Patellar/quad tendon deep dive
+  "Patellar instability": "patellar-quad-tendon-tears",
 
   // Elbow tendinopathy → Tennis elbow deep dive
   "Tennis and golfer's elbow": "tennis-elbow-lateral-epicondylitis",
@@ -61,8 +61,8 @@ export const conditionSlugToBlogSlug: Record<string, string> = {
   "acl-tears-and-reconstruction": "acl-tear-warning-signs",
   "meniscus-tears": "meniscus-tear-athlete-guide",
   "knee-cartilage-injuries": "cartilage-restoration-maci-allograft",
-  "rotator-cuff-tears": "rotator-cuff-repair-options",
-  "patellar-instability": "patellar-dislocation-treatment-guide",
+  "rotator-cuff-tears": "arthroscopic-vs-open-surgery",
+  "patellar-instability": "patellar-quad-tendon-tears",
   "shoulder-instability-and-dislocations": "shoulder-replacement-anatomic-reverse",
 };
 

@@ -468,7 +468,7 @@ export const blogPosts: BlogPost[] = [
   <p>FDA-cleared smart knee replacements that transmit step counts, range, and step asymmetry to the surgeon now exist. Early data suggest they accelerate identification of stiffness — useful, not yet routine.</p>
 
   <h3>Are stem cells in this list?</h3>
-  <p>No. The marketing is loud, the evidence remains thin. Read our <a href="/blog/stem-cell-therapy-investigation">stem cell investigation</a> for the unfiltered status.</p>
+  <p>No. The marketing is loud, the evidence remains thin. See our <a href="/blog/emerging-orthopedic-technologies">2026 orthopedic tech roundup</a> for what is actually earning its place.</p>
 
   <h3>Will robotic surgery replace surgeons?</h3>
   <p>No more than power tools replaced carpenters. Robotics raises the precision floor; surgeons still make every clinical decision and handle every complication.</p>
@@ -677,7 +677,7 @@ export const blogPosts: BlogPost[] = [
   <cite>Dr. Sameh Elguizaoui, M.D. — Board-Certified Orthopedic Surgeon</cite>
 </div>
 
-<p>We wrote a full deep dive on PRP earlier in this series — see the <a href="/blog/prp-therapy-deep-dive">PRP decoded article</a> for the preparation details. The short version: leukocyte-poor, double-spin PRP with &gt; 5× platelet concentration has the best evidence.</p>
+<p>For the preparation details and how PRP stacks up against hyaluronic acid, see our <a href="/blog/hyaluronic-acid-vs-prp-knee">PRP vs hyaluronic acid breakdown</a>. The short version: leukocyte-poor, double-spin PRP with &gt; 5× platelet concentration has the best evidence.</p>
 
 <h2 id="evidence">What the Head-to-Head Evidence Shows</h2>
 
@@ -744,7 +744,7 @@ export const blogPosts: BlogPost[] = [
   <p>For orthopedic use, almost never. HA is covered by most insurers for knee OA. PRP is typically out-of-pocket, which is part of why we advise it only when the evidence says it will help.</p>
 
   <h3>Is stem cell injection better?</h3>
-  <p>The data remain mixed and the regulatory landscape is a concern. Read our <a href="/blog/stem-cell-therapy-investigation">stem cell investigation</a> before paying five figures for an unregulated injection.</p>
+  <p>The data remain mixed and the regulatory landscape is a concern. Read our <a href="/blog/emerging-orthopedic-technologies">2026 orthopedic tech roundup</a> before paying five figures for an unregulated injection.</p>
 
   <h3>How often can I repeat either?</h3>
   <p>HA can be repeated every 6 months. PRP typically holds for 9–12 months and can be repeated annually if it helped.</p>
@@ -1469,7 +1469,7 @@ export const blogPosts: BlogPost[] = [
   <p>We fix them at the same time. Cartilage does not live in isolation — instability and meniscus deficiency accelerate cartilage failure. Expect a combined surgical plan. See also our <a href="/blog/acl-tear-warning-signs">ACL symptom guide</a> and <a href="/blog/meniscus-tear-athlete-guide">meniscus guide</a>.</p>
 
   <h3>Can I avoid surgery entirely with PRP or stem cells?</h3>
-  <p>For very early cartilage damage, biologics can quiet symptoms. They do not rebuild a full-thickness defect. Read the full breakdown in our <a href="/blog/prp-therapy-deep-dive">PRP deep dive</a>.</p>
+  <p>For very early cartilage damage, biologics can quiet symptoms. They do not rebuild a full-thickness defect. Read the full comparison in our <a href="/blog/hyaluronic-acid-vs-prp-knee">PRP vs hyaluronic acid breakdown</a>.</p>
 
   <h3>How do I know if I am a candidate?</h3>
   <p>A 30-minute consultation plus a weight-bearing X-ray and a high-resolution MRI will answer it. If you are in NYC, book a visit with Dr. Elguizaoui and bring your imaging.</p>
@@ -1621,7 +1621,7 @@ export const blogPosts: BlogPost[] = [
   <p>A complete tear (Grade 3) will not reconnect. Partial tears sometimes stabilize with rehab. An MRI plus an exam under anesthesia is how we tell.</p>
 
   <h3>Will PRP fix an ACL tear?</h3>
-  <p>Not a complete tear. For partial tears and post-op healing acceleration it has a role — see the <a href="/blog/prp-therapy-deep-dive">PRP deep dive</a>.</p>
+  <p>Not a complete tear. For partial tears and post-op healing acceleration it has a role — see our <a href="/blog/hyaluronic-acid-vs-prp-knee">PRP vs hyaluronic acid article</a>.</p>
 
   <h3>What's the right graft — patellar tendon, hamstring, quad?</h3>
   <p>Depends on sport, prior surgeries, and age. Cutting athletes under 25 often do best with BTB (patellar) or quad tendon. We walk through trade-offs in person.</p>
@@ -2391,7 +2391,7 @@ If you're experiencing persistent joint pain, swelling, or limited mobility desp
 </div>
 
 <p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-light);">
-  <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/services/shoulder-knee-surgery">Shoulder & Knee Surgery</a> · <a href="/blog/meniscus-tears-cartilage-injuries">Meniscus Tears & Cartilage Injuries</a>
+  <strong>Related:</strong> <a href="/services/sports-medicine">Sports Medicine Services</a> · <a href="/services/shoulder-knee-surgery">Shoulder & Knee Surgery</a> · <a href="/blog/meniscus-tear-athlete-guide">Meniscus Tears, Without the Mystery</a>
 </p>
 `,
     comingSoon: true,

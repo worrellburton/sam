@@ -163,8 +163,6 @@ export default function Home() {
         </div>
       </section>
 
-      <Insurance />
-
       {/* Specialties */}
       <section className="section specialties reveal" id="specialties">
         <div className="container">
@@ -247,6 +245,7 @@ export default function Home() {
         </div>
       </section>
 
+      <Insurance />
       <GetStarted />
       <Locations />
     </>

@@ -62,8 +62,7 @@ export default function ContactPage() {
       <section
         className="service-hero has-bg"
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&h=600&fit=crop&q=80')",
+          backgroundImage: "url('/images/header.jpg')",
         }}
       >
         <div className="container">

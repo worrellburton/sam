@@ -53,7 +53,7 @@ function DashGoogleReviews() {
   return (
     <div className="dz-card" style={{ height: "100%", display: "flex", flexDirection: "column", padding: 0, overflow: "hidden" }}>
       {/* Header */}
-      <Link href="/doczoc/google-reviews" style={{ textDecoration: "none", color: "inherit", padding: "16px 18px 12px", borderBottom: "1px solid rgba(148,163,184,0.06)", flexShrink: 0 }}>
+      <Link href="/doczoc/reviews" style={{ textDecoration: "none", color: "inherit", padding: "16px 18px 12px", borderBottom: "1px solid rgba(148,163,184,0.06)", flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">

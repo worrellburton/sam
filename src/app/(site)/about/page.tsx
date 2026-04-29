@@ -199,7 +199,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Philosophy ─────────────────────────────────────────── */}
-      <section className="section" id="philosophy">
+      <section className="section" id="philosophy" style={{ background: "var(--bg)" }}>
         <div className="container">
           <div className="abt-split reveal">
             <div className="abt-split-img">
@@ -253,7 +253,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Clinical Expertise ─────────────────────────────────── */}
-      <section className="section">
+      <section className="section" style={{ background: "var(--bg)" }}>
         <div className="container">
           <div className="section-header reveal">
             <p className="section-label">Clinical Specialization</p>
@@ -350,7 +350,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── Research ───────────────────────────────────────────── */}
-      <section className="section">
+      <section className="section" style={{ background: "var(--bg)" }}>
         <div className="container">
           <div className="section-header reveal">
             <p className="section-label">Research &amp; Publications</p>

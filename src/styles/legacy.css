@@ -6146,13 +6146,22 @@ img.insurance-logo-light { display: none; }
   .google-reviews-nav { margin-bottom: 24px; }
 
   /* Hero mobile */
-  .hero { height: 100vh; }
+  /* Use dvh so the hero ends at the visual viewport (above iOS Safari's
+     URL bar) — keeps layout predictable now that the sticky CTA bar is
+     always visible. */
+  .hero { height: 100vh; height: 100dvh; min-height: 560px; }
+  /* The desktop scrolling credentials ticker would otherwise sit at the
+     hero's bottom edge, directly under the sticky CTA bar. Hide it on
+     mobile so the rating card + Book/Call buttons own the bottom area
+     without anything hiding behind them. */
+  .ticker-bar { display: none; }
   /* Bottom padding clears the always-visible sticky bar (Book + Call CTAs)
-     plus iOS Safari's URL bar / home-indicator. */
+     plus iOS Safari's home-indicator safe area. ~110px = button height
+     (56px) + bar padding (12px) + breathing room. */
   .hero-content {
     padding: 0 20px;
-    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
-    gap: 24px;
+    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px));
+    gap: 20px;
   }
   .hero-text h1 { font-size: 2rem; line-height: 1.15; }
   .hero-desc { font-size: 0.88rem; }
@@ -6440,7 +6449,7 @@ img.insurance-logo-light { display: none; }
   .hero-text h1 { font-size: 1.6rem; }
   .hero-content {
     padding: 0 16px;
-    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px));
   }
   .hero-rating-card { padding: 12px 14px; }
   .rating-score { font-size: 1.8rem; }

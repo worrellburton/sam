@@ -2,10 +2,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 export function StickyBar() {
-  const { scrollY } = useScrollPosition();
   const [nearBottom, setNearBottom] = useState(false);
 
   useEffect(() => {
@@ -19,7 +17,7 @@ export function StickyBar() {
     return () => window.removeEventListener("scroll", checkBottom);
   }, []);
 
-  const visible = scrollY > 300 && !nearBottom;
+  const visible = !nearBottom;
 
   return (
     <div className={`sticky-bottom-bar${visible ? " visible" : ""}`} role="complementary" aria-label="Quick info bar">

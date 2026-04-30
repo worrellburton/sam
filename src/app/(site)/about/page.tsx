@@ -262,6 +262,28 @@ export default function AboutPage() {
           </div>
 
           <div className="abt-expertise-grid">
+            <div className="abt-expertise-card abt-expertise-full reveal">
+              <div className="abt-expertise-header">
+                <div className="abt-expertise-icon abt-expertise-icon-accent">{icons.droplet}</div>
+                <h3>Regenerative Medicine &amp; Biologics</h3>
+              </div>
+              <p className="abt-bio-desc">A bridge between conservative management and invasive surgery — using the body&rsquo;s own biology to heal.</p>
+              <div className="abt-bio-grid">
+                <div className="abt-bio-item">
+                  <strong>Platelet-Rich Plasma (PRP)</strong>
+                  <span>Concentrated growth factors for tendonitis and mild arthritis</span>
+                </div>
+                <div className="abt-bio-item">
+                  <strong>Viscosupplementation</strong>
+                  <span>Hyaluronic acid to lubricate and cushion joints</span>
+                </div>
+                <div className="abt-bio-item">
+                  <strong>Bone Marrow Aspirate &amp; Stem Cell Treatments</strong>
+                  <span>Mesenchymal stem cells to augment healing in cuff and cartilage repairs</span>
+                </div>
+              </div>
+            </div>
+
             <div className="abt-expertise-card reveal">
               <div className="abt-expertise-header">
                 <div className="abt-expertise-icon">
@@ -293,28 +315,6 @@ export default function AboutPage() {
                     <div className="abt-proc-desc">{p.desc}</div>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            <div className="abt-expertise-card abt-expertise-full reveal">
-              <div className="abt-expertise-header">
-                <div className="abt-expertise-icon abt-expertise-icon-accent">{icons.droplet}</div>
-                <h3>Regenerative Medicine &amp; Biologics</h3>
-              </div>
-              <p className="abt-bio-desc">A bridge between conservative management and invasive surgery — using the body&rsquo;s own biology to heal.</p>
-              <div className="abt-bio-grid">
-                <div className="abt-bio-item">
-                  <strong>Platelet-Rich Plasma (PRP)</strong>
-                  <span>Concentrated growth factors for tendonitis and mild arthritis</span>
-                </div>
-                <div className="abt-bio-item">
-                  <strong>Viscosupplementation</strong>
-                  <span>Hyaluronic acid to lubricate and cushion joints</span>
-                </div>
-                <div className="abt-bio-item">
-                  <strong>Bone Marrow Aspirate</strong>
-                  <span>Mesenchymal stem cells to augment healing in cuff and cartilage repairs</span>
-                </div>
               </div>
             </div>
           </div>

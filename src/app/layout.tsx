@@ -31,6 +31,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: `${SITE_URL}/` },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
     description:
@@ -140,8 +147,6 @@ export default function RootLayout({
         {/* `black-translucent` lets the navy nav bleed under the iOS
             status bar in standalone PWA mode. */}
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicon.svg" />
         {/* Preconnect to external origins we know the visitor will hit
             soon — shaves ~50-100ms off the first Maps tile fetch and
             the first specialty-video request on marketing pages. */}

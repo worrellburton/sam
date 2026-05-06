@@ -17,7 +17,7 @@ import { conditionJsonLd } from "@/lib/seo/structured-data";
 import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 export async function generateStaticParams() {
   return conditions.map((c) => ({ slug: c.slug }));

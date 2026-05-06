@@ -16,7 +16,7 @@ import { logError } from "@/lib/log";
 import { serviceJsonLd } from "@/lib/seo/structured-data";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 // Pre-render every service at build time.
 export async function generateStaticParams() {

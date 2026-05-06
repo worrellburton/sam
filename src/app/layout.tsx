@@ -13,7 +13,8 @@ const inter = localFont({
 
 const GA_ID = "G-HP23C836XM";
 
-const SITE_URL = "https://samelguizaoui.vercel.app";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 // `viewport-fit=cover` so env(safe-area-inset-*) values are populated
 // on notched iOS devices — required for the StickyBar to clear Safari's

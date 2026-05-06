@@ -7,7 +7,7 @@ import { Insurance } from "@/components/Insurance";
 import { AnimatedStat } from "@/components/AnimatedStat";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 export const metadata: Metadata = {
   title: "About Dr. Sameh Elguizaoui | NYC Orthopedic Surgeon",

@@ -24,6 +24,8 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const GOOGLE_SITE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION;
+
 export const metadata: Metadata = {
   title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
   description:
@@ -31,6 +33,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: `${SITE_URL}/` },
   robots: { index: true, follow: true },
+  ...(GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: GOOGLE_SITE_VERIFICATION } }
+    : {}),
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },

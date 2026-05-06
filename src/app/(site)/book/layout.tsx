@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 // page at SSR time even though page.tsx itself is "use client".
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 const title = "Book an Appointment | Dr. Sam Elguizaoui, M.D.";
 const description =

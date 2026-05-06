@@ -13,7 +13,8 @@ const inter = localFont({
 
 const GA_ID = "G-HP23C836XM";
 
-const SITE_URL = "https://samelguizaoui.vercel.app";
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 // `viewport-fit=cover` so env(safe-area-inset-*) values are populated
 // on notched iOS devices — required for the StickyBar to clear Safari's
@@ -24,6 +25,8 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const GOOGLE_SITE_VERIFICATION = process.env.GOOGLE_SITE_VERIFICATION;
+
 export const metadata: Metadata = {
   title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",
   description:
@@ -31,6 +34,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: `${SITE_URL}/` },
   robots: { index: true, follow: true },
+  ...(GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: GOOGLE_SITE_VERIFICATION } }
+    : {}),
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },

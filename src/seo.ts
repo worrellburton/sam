@@ -1,4 +1,4 @@
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200&h=630&fit=crop&q=80";
 const SITE_NAME = "Dr. Sameh Elguizaoui, M.D. — Orthopedic Surgeon NYC";
 

@@ -17,7 +17,7 @@ import { logError } from "@/lib/log";
 import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 export async function generateStaticParams() {
   // Only pre-render posts that are actually released so unreleased drafts

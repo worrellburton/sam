@@ -11,7 +11,7 @@ import type { Service } from "@/data/services";
 import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 // Single shared physician identity — re-referenced across pages via
 // `@id` so search engines treat them as the same entity.

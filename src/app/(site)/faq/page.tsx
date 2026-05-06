@@ -5,7 +5,7 @@ import { FaqAccordion } from "@/components/FaqAccordion";
 import { siteFaqs } from "@/data/faq";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://samelguizaoui.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 export const metadata: Metadata = {
   title: "FAQ | Dr. Sameh Elguizaoui, M.D.",

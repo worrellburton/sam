@@ -88,6 +88,7 @@ Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 - `ANTHROPIC_API_KEY` — optional, used by `/api/dev/generate-prompt` + `/generate-alt`
 - `GEMINI_API_KEY` — optional, used by `/api/dev/generate-image`
 - `DEV_PANEL_SECRET` — **required in production** to unlock the `/dev` UI + `/api/dev/*` routes. Missing value → panel fails closed with 503. See `src/lib/dev-auth.ts`.
+- `GOOGLE_SITE_VERIFICATION` — Google Search Console HTML-tag verification token. When set, Next renders `<meta name="google-site-verification" content="…">` in `<head>` via `metadata.verification.google` in `src/app/layout.tsx`.
 
 **Client-safe (`NEXT_PUBLIC_` prefix, shipped to the browser):**
 

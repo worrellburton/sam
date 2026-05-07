@@ -210,11 +210,11 @@ export function Navigation() {
                     <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-zocdoc btn-block">
                       Book on Zocdoc
                     </a>
-                    <a href="tel:+19179059370" className="mega-phone">
+                    <a href="tel:+12125402265" className="mega-phone">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                       </svg>{" "}
-                      (917) 905-9370
+                      (212) 540-2265
                     </a>
                   </div>
                 </div>
@@ -234,11 +234,11 @@ export function Navigation() {
             <Link href="/contact" className="nav-btn-contact">
               Contact Us
             </Link>
-            <a href="tel:+19179059370" className="nav-btn-book" aria-label="Call Dr. Elguizaoui">
+            <a href="tel:+12125402265" className="nav-btn-book" aria-label="Call Dr. Elguizaoui">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ marginRight: 6, verticalAlign: "-2px" }}>
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
               </svg>
-              (917) 905-9370
+              (212) 540-2265
             </a>
           </li>
         </ul>
@@ -317,11 +317,11 @@ export function Navigation() {
           <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="mnav-book-btn" onClick={closeMobile}>
             Book Appointment
           </a>
-          <a href="tel:+19179059370" className="mnav-phone">
+          <a href="tel:+12125402265" className="mnav-phone">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
-            (917) 905-9370
+            (212) 540-2265
           </a>
           <div className="mnav-locations">
             <span>Manhattan</span>

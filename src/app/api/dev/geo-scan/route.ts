@@ -26,8 +26,8 @@ function resolveBaseUrl(request: Request): string {
   }
 }
 
-const CANONICAL_PHONE_TELLINK = "tel:+19179059370";
-const CANONICAL_PHONE_DISPLAY = "(917) 905-9370";
+const CANONICAL_PHONE_TELLINK = "tel:+12125402265";
+const CANONICAL_PHONE_DISPLAY = "(212) 540-2265";
 
 const PLACE_IDS: Record<string, string> = {
   "Upper East Side": "ChIJmQNsqXpZwokRoKDGBL8w9LM",

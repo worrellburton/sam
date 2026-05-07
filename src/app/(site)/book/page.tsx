@@ -327,21 +327,21 @@ const locations = [
   {
     name: "NY Orthopedics – Greenwich Village",
     address: "200 W 13th St, 6th Fl, New York, NY 10011",
-    phone: "(917) 905-9370",
+    phone: "(212) 540-2265",
     hours: "Mon, Wed, Thu: 8AM–5PM",
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=200+West+13th+Street+New+York+NY",
   },
   {
     name: "NY Orthopedics – Upper East Side",
     address: "159 East 74th St, New York, NY 10021",
-    phone: "(917) 905-9370",
+    phone: "(212) 540-2265",
     hours: "Mon, Wed, Thu: 8AM–5PM",
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=159+East+74th+Street+New+York+NY",
   },
   {
     name: "NY Orthopedics – Brooklyn Heights",
     address: "161 Atlantic Ave, Brooklyn, NY 11201",
-    phone: "(917) 905-9370",
+    phone: "(212) 540-2265",
     hours: "Mon, Wed, Thu: 8AM–5PM",
     mapsUrl: "https://www.google.com/maps/search/?api=1&query=161+Atlantic+Avenue+Brooklyn+NY",
   },
@@ -576,7 +576,7 @@ export default function BookPage() {
         "name": "How do I schedule an appointment with Dr. Elguizaoui?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "You can book an appointment online through our scheduling page, call our office at (917) 905-9370, or use platforms like Zocdoc. We offer appointments at our Upper East Side, Greenwich Village, and Brooklyn Heights locations Monday through Friday."
+          "text": "You can book an appointment online through our scheduling page, call our office at (212) 540-2265, or use platforms like Zocdoc. We offer appointments at our Upper East Side, Greenwich Village, and Brooklyn Heights locations Monday through Friday."
         }
       },
       {
@@ -650,9 +650,9 @@ export default function BookPage() {
             )}
           </div>
           <div className="dz-nav-links">
-            <a href="tel:+19179059370" className="dz-nav-phone">
+            <a href="tel:+12125402265" className="dz-nav-phone">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              (917) 905-9370
+              (212) 540-2265
             </a>
           </div>
         </div>

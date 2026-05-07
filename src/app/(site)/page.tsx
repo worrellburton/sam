@@ -59,7 +59,7 @@ const faqSchema = {
       name: "Does Dr. Elguizaoui accept insurance?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes, Dr. Elguizaoui accepts most major insurance plans. His office staff can verify your coverage and benefits before your appointment. Contact the office at (917) 905-9370 for specific insurance inquiries.",
+        text: "Yes, Dr. Elguizaoui accepts most major insurance plans. His office staff can verify your coverage and benefits before your appointment. Contact the office at (212) 540-2265 for specific insurance inquiries.",
       },
     },
     {

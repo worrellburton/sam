@@ -75,8 +75,8 @@ export default function RootError({
           The issue has been logged and we&rsquo;re looking into it. You can
           try reloading this page, or head back to the homepage. If you need
           to reach Dr. Elguizaoui right now, call{" "}
-          <a href="tel:+19179059370" style={{ color: "var(--primary)" }}>
-            (917) 905-9370
+          <a href="tel:+12125402265" style={{ color: "var(--primary)" }}>
+            (212) 540-2265
           </a>
           .
         </p>

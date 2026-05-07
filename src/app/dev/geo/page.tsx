@@ -22,7 +22,7 @@ import { locations } from "@/data/locations";
 // and update every occurrence — inconsistency hurts ranking.
 const PRACTICE_NAME = "Dr. Sameh Elguizaoui, M.D.";
 const PRACTICE_PHONE = "+1-212-828-3838";
-const PRACTICE_PHONE_DISPLAY = "(917) 905-9370";
+const PRACTICE_PHONE_DISPLAY = "(212) 540-2265";
 
 // The three Google Place IDs the homepage/reviews hit via /api/places/all.
 // Keep in sync with src/app/api/places/all/route.ts.

@@ -30,7 +30,7 @@ const faqSchema = {
       name: "How do I schedule an appointment with Dr. Elguizaoui?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "You can schedule an appointment by calling (917) 905-9370, booking online through our website, or using the contact form on this page. Our team typically responds within one business day. Same-week appointments are often available.",
+        text: "You can schedule an appointment by calling (212) 540-2265, booking online through our website, or using the contact form on this page. Our team typically responds within one business day. Same-week appointments are often available.",
       },
     },
     {
@@ -38,7 +38,7 @@ const faqSchema = {
       name: "What insurance plans does Dr. Elguizaoui accept?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Dr. Elguizaoui accepts most major insurance plans. Our office staff can verify your specific coverage and benefits before your visit. Please call (917) 905-9370 or submit an inquiry through our contact form for insurance verification.",
+        text: "Dr. Elguizaoui accepts most major insurance plans. Our office staff can verify your specific coverage and benefits before your visit. Please call (212) 540-2265 or submit an inquiry through our contact form for insurance verification.",
       },
     },
     {
@@ -89,7 +89,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h4>Phone</h4>
-                    <p><a href="tel:+19179059370">(917) 905-9370</a></p>
+                    <p><a href="tel:+12125402265">(212) 540-2265</a></p>
                   </div>
                 </div>
 

@@ -111,7 +111,7 @@ export default async function ServicePage(
           </div>
           <div className="svc-hero-actions">
             <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener" className="btn btn-zocdoc">Book Consultation</a>
-            <a href="tel:+19179059370" className="btn btn-outline">(917) 905-9370</a>
+            <a href="tel:+12125402265" className="btn btn-outline">(212) 540-2265</a>
           </div>
         </div>
       </section>

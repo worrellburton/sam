@@ -79,8 +79,8 @@ export default function NotFound() {
         </div>
         <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: 32 }}>
           Or call{" "}
-          <a href="tel:+19179059370" style={{ color: "var(--primary)" }}>
-            (917) 905-9370
+          <a href="tel:+12125402265" style={{ color: "var(--primary)" }}>
+            (212) 540-2265
           </a>{" "}
           to reach Dr. Elguizaoui&rsquo;s team.
         </p>

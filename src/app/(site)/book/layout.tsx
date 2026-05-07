@@ -44,7 +44,7 @@ const bookingJsonLd = {
   name: "Dr. Sameh Elguizaoui, M.D.",
   url: `${SITE_URL}/book`,
   medicalSpecialty: "Orthopedic Surgery",
-  telephone: "+1-917-905-9370",
+  telephone: "+1-212-540-2265",
   potentialAction: {
     "@type": "ReserveAction",
     target: {

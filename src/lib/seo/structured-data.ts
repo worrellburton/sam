@@ -32,7 +32,7 @@ export const physicianSchema = {
     { "@type": "EducationalOrganization", name: "Lenox Hill Hospital" },
     { "@type": "EducationalOrganization", name: "Ohio State University" },
   ],
-  telephone: "+1-917-905-9370",
+  telephone: "+1-212-540-2265",
 };
 
 export const physicianRef = { "@type": "Physician", "@id": PHYSICIAN_ID };

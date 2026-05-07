@@ -81,7 +81,7 @@ const structuredData = {
   description:
     "Board-certified orthopedic surgeon specializing in sports medicine, knee & shoulder surgery, cartilage repair, and joint preservation in NYC.",
   url: SITE_URL,
-  telephone: "+1-917-905-9370",
+  telephone: "+1-212-540-2265",
   image: `${SITE_URL}/images/header.jpg`,
   priceRange: "$$",
   medicalSpecialty: ["OrthopedicSurgery", "SportsMedicine"],
@@ -164,12 +164,6 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {/* CallRail dynamic number insertion — load early so tracked
-            numbers swap in before users see the unswapped ones. */}
-        <Script
-          src="https://cdn.callrail.com/companies/387717874/be81c0ad365f8b7bdc56/12/swap.js"
-          strategy="afterInteractive"
-        />
         {/* GA4 is analytics-only; defer until after load so it doesn't
             compete with hero/LCP work on the main thread. */}
         <Script

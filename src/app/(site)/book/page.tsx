@@ -618,9 +618,9 @@ export default function BookPage() {
             <Link href="/" className="dz-logo">
               <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
                 <rect width="32" height="32" rx="8" fill="#6366f1"/>
-                <text x="16" y="22" textAnchor="middle" fontWeight="700" fontSize="16" fill="#fff" fontFamily="Inter, sans-serif">D</text>
+                <text x="16" y="22" textAnchor="middle" fontWeight="700" fontSize="16" fill="#fff" fontFamily="Inter, sans-serif">E</text>
               </svg>
-              <span>DocZoc</span>
+              <span>Elguizaoui MD</span>
             </Link>
             {confirmed ? (
               <button className="dz-back-site" onClick={() => { setConfirmed(false); resetIntake(); setSelectedDate(null); setSelectedSlot(null); }}>

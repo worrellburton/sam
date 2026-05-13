@@ -255,7 +255,7 @@ function buildFixPrompt(pages: PageScan[]): string {
     "image, at least one JSON-LD block, and exactly one <h1>.",
     "",
     "Server Component routes set metadata via `export const metadata` or",
-    "`generateMetadata()`. Client-component pages (/book, /doczoc/*) need",
+    "`generateMetadata()`. Client-component pages (/book) need",
     "metadata added to a sibling `layout.tsx` or page-specific `head.tsx`.",
     "",
     "Issues found:",

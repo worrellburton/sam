@@ -1,7 +1,7 @@
 /* Marketing-only styles. Loaded by src/app/(site)/layout.tsx so the
- * DocZoc SaaS surface and /dev admin panel don't pay for ~7.5k lines
- * they don't use. Theme variables + reset live in src/styles/theme.css
- * which is imported globally from globals.css. */
+ * /dev admin panel doesn't pay for ~7.5k lines it doesn't use. Theme
+ * variables + reset live in src/styles/theme.css which is imported
+ * globally from globals.css. */
 
 /* Theme toggle button */
 .theme-toggle {
@@ -7566,11 +7566,6 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   /* Blog cards on the index — single column, not cramped. */
   .blog-home-grid { grid-template-columns: 1fr; gap: 20px; }
 }
-
-/*
- * DocZoc SaaS rules (~6500 lines) moved to src/styles/doczoc.css and
- * loaded only on /doczoc/* via src/app/doczoc/layout.tsx.
- */
 
 /* =====================================================================
  * Mobile inner-page nav — navy bar on phones

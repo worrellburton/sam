@@ -17,7 +17,7 @@ const DB_VERSION = 2;
 // Known stores upfront so we can create them in the one-shot upgrade.
 // New stores can be added here as we grow; bumping DB_VERSION triggers
 // the upgrade path for existing clients.
-const KNOWN_STORES = ["tts-audio", "athena-token", "places-reviews"] as const;
+const KNOWN_STORES = ["tts-audio", "places-reviews"] as const;
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 

@@ -6,11 +6,6 @@
  * (no Supabase response envelopes) and log errors server-side.
  */
 export * as blog from "./blog";
-export * as patients from "./patients";
-export * as appointments from "./appointments";
 export * as booking from "./booking";
-export * as providers from "./providers";
-export * as locations from "./locations";
-export * as reviews from "./reviews";
 export * as services from "./services";
 export * as conditions from "./conditions";

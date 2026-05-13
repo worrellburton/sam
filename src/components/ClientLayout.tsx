@@ -53,12 +53,11 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     return () => document.removeEventListener("click", handleClick, true);
   }, [openBooking]);
 
-  const isDocZocRoute = pathname.startsWith("/doczoc");
   const isDevRoute = pathname.startsWith("/dev");
-  const isMarketingRoute = !isDocZocRoute && !isDevRoute;
+  const isMarketingRoute = !isDevRoute;
 
   // IntersectionObserver for .reveal animations. Only marketing routes
-  // use these classes, so skip the whole setup on /doczoc and /dev.
+  // use these classes, so skip the whole setup on /dev.
   // Previously we ran a MutationObserver on document.body to catch
   // dynamically-injected reveal targets, but the only real source of
   // new targets is route changes — which the pathname dep already

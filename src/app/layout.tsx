@@ -162,6 +162,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        {/* Reveal sections start at opacity:0 and are faded in by an
+            IntersectionObserver in ClientLayout. Without JS that observer
+            never runs, so make the content fully visible up front when
+            scripting is unavailable. */}
+        <noscript>
+          <style>{`.reveal,.reveal-left,.reveal-right,.reveal-stagger>*{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
       </head>
       <body>
         {/* GA4 is analytics-only; defer until after load so it doesn't

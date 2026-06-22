@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ReviewCard, type ReviewCardProps } from "./ReviewCard";
+import { useFadeInOnScroll } from "@/hooks/useFadeInOnScroll";
 
 // Mobile-first reviews stack. Shows up to 5 of the most recent 5-star
 // reviews as a vertical scroll — each card fades in as it enters the
@@ -23,53 +24,13 @@ export function MobileReviewsStack({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const trimmed = reviews.slice(0, limit);
-  // Re-run the observer setup whenever the *set* of rendered cards changes,
-  // not just the count. The homepage first paints local placeholder reviews,
-  // then swaps in live Google reviews once they load — both lists clamp to
-  // `limit`, so a length-only dependency would miss the swap and leave the
-  // freshly-mounted cards observed by a stale observer (watching removed
-  // nodes), stuck at their inline opacity:0 forever.
+  // The homepage first paints local placeholder reviews, then swaps in
+  // live Google reviews once they load — both lists clamp to `limit`, so
+  // this content key (not the count) is what tells the observer to
+  // re-attach to the freshly mounted cards.
   const itemsKey = trimmed.map((r) => r.name).join("|");
 
-  useEffect(() => {
-    const root = containerRef.current;
-    if (!root) return;
-
-    // Respect prefers-reduced-motion — just show all cards at full
-    // opacity, no animation.
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
-    ) {
-      root.querySelectorAll<HTMLElement>(".mobile-review-item").forEach(
-        (el) => (el.style.opacity = "1"),
-      );
-      return;
-    }
-
-    const items = root.querySelectorAll<HTMLElement>(".mobile-review-item");
-    // IntersectionObserver with threshold buckets — map intersection
-    // ratio to opacity + translateY so cards softly fade/float as the
-    // reader scrolls past them.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          const el = e.target as HTMLElement;
-          const ratio = e.intersectionRatio;
-          const opacity = Math.max(0.15, Math.min(1, ratio * 1.6));
-          const translate = (1 - ratio) * 16;
-          el.style.opacity = String(opacity);
-          el.style.transform = `translateY(${translate}px)`;
-        }
-      },
-      {
-        threshold: Array.from({ length: 21 }, (_, i) => i / 20),
-        rootMargin: "-10% 0px -25% 0px",
-      },
-    );
-    items.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [itemsKey]);
+  useFadeInOnScroll(containerRef, ".mobile-review-item", itemsKey);
 
   if (trimmed.length === 0) return null;
 

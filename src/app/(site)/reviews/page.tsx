@@ -124,6 +124,7 @@ export default function ReviewsPage() {
           <div className="platform-cards-grid">
             {platforms.map((p) => (
               <a key={p.name} href={p.url} target="_blank" rel="noopener" className="platform-card">
+                <span className="sr-only"> (opens in a new tab)</span>
                 <div className="platform-icon" style={{ background: "transparent" }}>
                   {platformIcons[p.name]}
                 </div>

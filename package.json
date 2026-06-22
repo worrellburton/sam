@@ -9,6 +9,7 @@
     "generate:audio": "node scripts/generate-audio.mjs",
     "lint": "eslint src/",
     "format": "prettier --write src/",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "prettier": "^3.8.1",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "typescript-eslint": "^8.58.0"
+    "typescript-eslint": "^8.58.0",
+    "vitest": "^3.2.6"
   }
 }

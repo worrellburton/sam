@@ -100,6 +100,7 @@ Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 - `npm run dev` — dev server (Turbopack)
 - `npm run build` — production build
 - `npm run typecheck` — `tsc --noEmit`
+- `npm test` — Vitest unit tests (`src/**/*.test.ts`, node env)
 - `npm run lint` / `npm run format`
 
 > To restore the bundle analyzer: `npm install --save-dev @next/bundle-analyzer` (commits the lockfile), then re-wrap `nextConfig` in `next.config.ts` and re-add `"analyze": "ANALYZE=true next build"` to `package.json`.
@@ -109,6 +110,7 @@ Set in Vercel dashboard or `.env.local`. See `.env.example` for the full list.
 `.github/workflows/ci.yml` runs on every PR against `main`:
 - Typecheck (`npm run typecheck`)
 - ESLint (`npm run lint`)
+- Unit tests (`npm test`)
 - Production build (gated to same-repo PRs so env secrets aren't exposed to fork builds).
 
 ## Deferred optimizations

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { initials } from "@/lib/format";
 
 // Shared review card used by the homepage marquee and the /reviews grid.
 // Accepts either a Google Places review or a local testimonial; callers
@@ -19,14 +20,6 @@ export interface ReviewCardProps {
 function starsHTML(rating: number) {
   const rounded = Math.round(rating);
   return "\u2605".repeat(rounded) + "\u2606".repeat(Math.max(0, 5 - rounded));
-}
-
-// Initials for the local avatar fallback, e.g. "Sarah M." \u2192 "SM".
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
 function GoogleGlyph() {

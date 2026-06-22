@@ -19,12 +19,11 @@ const sitePages = [
   { name: "Reviews", path: "/reviews", desc: "Patient testimonials & Google reviews" },
   { name: "Contact", path: "/contact", desc: "Contact form & office info" },
   { name: "FAQ", path: "/faq", desc: "Frequently asked questions" },
-  { name: "Book", path: "/book", desc: "Zocdoc booking integration" },
   { name: "Blog", path: "/blog", desc: `${blogPosts.length} posts (${blogPosts.filter(p => !p.comingSoon).length} published)` },
 ];
 
 const stats = [
-  { label: "Pages", value: 7 + services.length + conditions.length + blogPosts.length, icon: "📄" },
+  { label: "Pages", value: 6 + services.length + conditions.length + blogPosts.length, icon: "📄" },
   { label: "Services", value: services.length, icon: "🔬" },
   { label: "Conditions", value: conditions.length, icon: "🩺" },
   { label: "Blog Posts", value: blogPosts.length, icon: "✍️" },

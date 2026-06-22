@@ -62,7 +62,6 @@ function allRoutes(): { path: string; label: string }[] {
     { path: "/reviews", label: "Reviews" },
     { path: "/faq", label: "FAQ" },
     { path: "/blog", label: "Blog index" },
-    { path: "/book", label: "Booking" },
     ...services.map((s) => ({ path: `/services/${s.slug}`, label: s.title })),
     ...conditions.map((c) => ({ path: `/conditions/${c.slug}`, label: c.title })),
     ...blogPosts
@@ -255,8 +254,8 @@ function buildFixPrompt(pages: PageScan[]): string {
     "image, at least one JSON-LD block, and exactly one <h1>.",
     "",
     "Server Component routes set metadata via `export const metadata` or",
-    "`generateMetadata()`. Client-component pages (/book, /doczoc/*) need",
-    "metadata added to a sibling `layout.tsx` or page-specific `head.tsx`.",
+    "`generateMetadata()`. Client-component pages need metadata added to a",
+    "sibling `layout.tsx` or page-specific `head.tsx`.",
     "",
     "Issues found:",
     ...failures,

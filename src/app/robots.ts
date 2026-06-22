@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         // Keep internal tooling and APIs out of search indexes.
-        disallow: ["/dev/", "/api/", "/doczoc/"],
+        disallow: ["/dev/", "/api/"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

@@ -8,7 +8,7 @@ import { logError } from "@/lib/log";
 // server-rendered or client-rendered page in the app tree throws
 // during render. Kept self-contained styling-wise (inline styles +
 // theme vars from theme.css) because it can render under any route,
-// including /doczoc or /dev where legacy.css isn't loaded.
+// including /dev where legacy.css isn't loaded.
 
 const btnPrimary: React.CSSProperties = {
   display: "inline-flex",

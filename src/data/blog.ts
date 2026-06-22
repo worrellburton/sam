@@ -232,7 +232,7 @@ export const blogPosts: BlogPost[] = [
 <div class="blog-inline-cta">
   <h3>Elbow not straightening after a fall?</h3>
   <p>Expert elbow evaluation — x-ray, ultrasound, and MRI as needed — across our NYC offices.</p>
-  <a href="/book">Book a Consultation →</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Book a Consultation →</a>
 </div>
 
 <h2 id="faq">Frequently Asked Questions</h2>
@@ -370,7 +370,7 @@ export const blogPosts: BlogPost[] = [
 <div class="blog-inline-cta">
   <h3>Suspected Tendon Rupture?</h3>
   <p>Same-week evaluation for acute knee injuries across our Manhattan, Brooklyn, and Scarsdale offices.</p>
-  <a href="/book">Book an Urgent Consult →</a>
+  <a href="https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423" target="_blank" rel="noopener">Book an Urgent Consult →</a>
 </div>
 
 <h2 id="faq">Frequently Asked Questions</h2>

@@ -95,13 +95,6 @@ const staticRoutes: RouteRow[] = [
     hasCanonical: true,
     source: "server",
   },
-  {
-    path: "/book",
-    label: "Booking",
-    hasJsonLd: false,
-    hasCanonical: false,
-    source: "client",
-  },
 ];
 
 function scoreTitle(t?: string): { ok: boolean; note: string } {

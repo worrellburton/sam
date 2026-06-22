@@ -34,7 +34,7 @@ const ROW_4: SpecialtyCard[] = [
   { title: "General Orthopedics", href: "/services/sports-medicine", video: `${V}/General_Orthopedics.mp4` },
   {
     title: "Book a Consultation",
-    href: "/book",
+    href: "https://www.zocdoc.com/doctor/sam-elguizaoui-md-236423",
     description: "Schedule a visit at one of Dr. Elguizaoui's NYC offices — Manhattan, Brooklyn, or Scarsdale.",
   },
 ];
@@ -47,6 +47,7 @@ export function HomeSpecialties({ reviewTotalDelta = 0 }: { reviewTotalDelta?: n
     return (
       <Link
         href={card.href}
+        {...(isBookCard ? { target: "_blank", rel: "noopener" } : {})}
         className={`specialty-card specialty-link${isBookCard ? " book-card" : ""}`}
         key={card.title}
         onMouseEnter={(e) => {

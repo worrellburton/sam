@@ -1,8 +1,8 @@
 /* Theme variables + CSS reset.
  * Imported from globals.css so the custom properties are available to
- * every route (marketing, DocZoc, /dev admin, error boundaries). The
- * rest of legacy.css is scoped to the (site) route group — this file
- * stays global because doczoc.css and error.tsx depend on these vars. */
+ * every route (marketing, /dev admin, error boundaries). The rest of
+ * legacy.css is scoped to the (site) route group — this file stays
+ * global because error.tsx and not-found.tsx depend on these vars. */
 
 *, *::before, *::after {
   margin: 0;

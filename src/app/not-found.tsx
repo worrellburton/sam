@@ -3,8 +3,8 @@ import Link from "next/link";
 // Top-level 404. Next.js renders this whenever a route is hit that
 // doesn't match any page or when a Server Component calls notFound().
 // Kept self-contained styling-wise (inline styles + theme vars) because
-// it can render under any route, including /doczoc or /dev where
-// legacy.css isn't loaded.
+// it can render under any route, including /dev where legacy.css isn't
+// loaded.
 
 const btnPrimary: React.CSSProperties = {
   display: "inline-flex",

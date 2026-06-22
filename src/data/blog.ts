@@ -1,4 +1,3 @@
-import { PLACEHOLDER_IMAGE } from "./placeholder-image";
 
 export interface BlogPost {
   slug: string;

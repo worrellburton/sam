@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 // /dev/signin — tiny form that exchanges DEV_PANEL_SECRET for the
 // dev-panel-session cookie. The middleware redirects every other /dev/*
 // route here until the cookie is set.
 function DevSigninInner() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/dev";
 

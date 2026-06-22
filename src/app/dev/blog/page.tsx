@@ -1466,7 +1466,6 @@ export default function DevBlogPage() {
                     }}
                   >
                     {rowThumbSrc ? (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={rowThumbSrc}
                         alt=""
@@ -1949,7 +1948,6 @@ export default function DevBlogPage() {
                                   }}
                                 >
                                   {src ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img
                                       src={src}
                                       alt={`${r} saved render`}
@@ -2159,7 +2157,6 @@ export default function DevBlogPage() {
                                   }}
                                 >
                                   {im ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img
                                       src={`data:${im.mime};base64,${im.data}`}
                                       alt={`${r} render`}
@@ -2328,7 +2325,6 @@ export default function DevBlogPage() {
                                     transition: "border-color 0.1s, box-shadow 0.1s",
                                   }}
                                 >
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
                                   <img
                                     src={`data:${img.mime};base64,${img.data}`}
                                     alt={`Generated ${img.promptIndex + 1}`}

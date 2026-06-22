@@ -20,11 +20,11 @@ function format(scope: string, err: unknown, context?: Context) {
 
 export function logError(scope: string, err: unknown, context?: Context) {
   // Always include the raw error so stack traces survive in DevTools.
-  // eslint-disable-next-line no-console
+   
   console.error(format(scope, err, context), err);
 }
 
 export function logWarn(scope: string, message: string, context?: Context) {
-  // eslint-disable-next-line no-console
+   
   console.warn(format(scope, message, context));
 }

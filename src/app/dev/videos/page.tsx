@@ -132,7 +132,6 @@ export default function DevVideosPage() {
     e.preventDefault();
     setDragOver(false);
     if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const copyPath = (e: React.MouseEvent, url: string) => {

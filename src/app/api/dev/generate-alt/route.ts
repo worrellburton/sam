@@ -123,7 +123,7 @@ Return the alt text only, no quotes, no prefix.`;
   // Strip anything the model wrapped around the alt text (quotes, markdown).
   alt = alt
     .replace(/^["'`\s]+|["'`\s]+$/g, "")
-    .replace(/^alt(\s*text)?\s*[:\-]\s*/i, "")
+    .replace(/^alt(\s*text)?\s*[:-]\s*/i, "")
     .trim();
 
   // Hard cap at 140 chars as a safety net if the model overruns.

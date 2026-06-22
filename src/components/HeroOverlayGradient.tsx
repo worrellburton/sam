@@ -122,7 +122,7 @@ export function HeroOverlayGradient() {
       gl!.shaderSource(s, src);
       gl!.compileShader(s);
       if (!gl!.getShaderParameter(s, gl!.COMPILE_STATUS)) {
-        // eslint-disable-next-line no-console
+         
         console.warn("HeroOverlayGradient shader compile failed:", gl!.getShaderInfoLog(s));
         gl!.deleteShader(s);
         return null;
@@ -140,7 +140,7 @@ export function HeroOverlayGradient() {
     gl.attachShader(prog, fs);
     gl.linkProgram(prog);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      // eslint-disable-next-line no-console
+       
       console.warn("HeroOverlayGradient program link failed:", gl.getProgramInfoLog(prog));
       return;
     }

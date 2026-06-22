@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";

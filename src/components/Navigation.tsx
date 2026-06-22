@@ -3,7 +3,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useScrollPosition } from "@/hooks/useScrollPosition";
-import { useTheme } from "@/hooks/useTheme";
 
 const serviceIcons: Record<string, React.ReactNode> = {
   "sports-medicine": <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="16" cy="3" r="2"/><path d="M9 13l-2 8"/><path d="M17 7l-4 2-3 3 2 3"/><path d="M12 12l-4 1"/><path d="M15 17l2 5"/><path d="M12 12l3 5"/></svg>,
@@ -26,7 +25,6 @@ const services = [
 export function Navigation() {
   const pathname = usePathname();
   const { scrollY, direction } = useScrollPosition();
-  const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);

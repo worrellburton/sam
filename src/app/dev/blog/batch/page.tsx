@@ -160,7 +160,7 @@ export default function BatchThumbnailPage() {
 
     // 1. Prompt
     updateRow(slug, { phase: "prompting", error: "" });
-    let prompt = "";
+    let prompt: string;
     try {
       const res = await fetch("/api/dev/generate-prompt", {
         method: "POST",
@@ -200,8 +200,8 @@ export default function BatchThumbnailPage() {
 
     // 2. Image
     updateRow(slug, { phase: "generating" });
-    let imageData = "";
-    let mime = "image/png";
+    let imageData: string;
+    let mime: string;
     try {
       const res = await fetch("/api/dev/generate-image", {
         method: "POST",
@@ -244,7 +244,7 @@ export default function BatchThumbnailPage() {
     // publicUrl is what we persist so the site serves from the Supabase edge.
     const ext = mime.includes("webp") ? "webp" : mime.includes("jpeg") ? "jpg" : "png";
     const fileName = `${slug}.${ext}`;
-    let imagePath = "";
+    let imagePath: string;
     updateRow(slug, { phase: "uploading" });
     try {
       const upload = await fetch("/api/dev/storage-upload", {
@@ -333,16 +333,6 @@ export default function BatchThumbnailPage() {
     }
     return c;
   }, [rows]);
-
-  const input: React.CSSProperties = {
-    padding: "8px 12px",
-    background: "#111827",
-    border: "1px solid #1e293b",
-    borderRadius: 8,
-    color: "#e2e8f0",
-    fontSize: "0.82rem",
-    outline: "none",
-  };
 
   const btnPrimary: React.CSSProperties = {
     padding: "9px 18px",
@@ -608,7 +598,6 @@ export default function BatchThumbnailPage() {
                   }}
                 >
                   {preview ? (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={preview} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : null}
                   {row.imageData && (

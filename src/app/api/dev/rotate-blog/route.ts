@@ -49,7 +49,7 @@ export async function POST(_request: NextRequest) {
   }
   const fileMeta = await getRes.json();
   const sha: string = fileMeta.sha;
-  let content: string = Buffer.from(fileMeta.content, "base64").toString(
+  const content: string = Buffer.from(fileMeta.content, "base64").toString(
     "utf-8"
   );
 
@@ -182,11 +182,11 @@ export async function POST(_request: NextRequest) {
     let t = newTeaserEntry.text;
     // Normalize trailing to `,\n` so moving is safe.
     if (!newTeaserEntry.trailingIsComma) {
-      t = t.replace(/\n  \}\n$/, "\n  },\n");
+      t = t.replace(/\n {2}\}\n$/, "\n  },\n");
       newTeaserEntry.trailingIsComma = true;
     }
     if (!/[ \t]*comingSoon:\s*true/.test(t)) {
-      t = t.replace(/\n  \},\n$/, "\n    comingSoon: true,\n  },\n");
+      t = t.replace(/\n {2}\},\n$/, "\n    comingSoon: true,\n  },\n");
     }
     newTeaserEntry.text = t;
     newTeaserSlug = newTeaserEntry.slug;
@@ -209,7 +209,7 @@ export async function POST(_request: NextRequest) {
     .map((e) => {
       if (e.trailingIsComma) return e.text;
       // Force a comma terminator.
-      return e.text.replace(/\n  \}\n$/, "\n  },\n");
+      return e.text.replace(/\n {2}\}\n$/, "\n  },\n");
     })
     .join("");
 

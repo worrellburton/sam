@@ -507,7 +507,6 @@ export const PATIENTS: Patient[] = [
       const m2 = months[(i * 3 + 4) % 12];
       const d1 = 1 + (i % 28);
       const d2 = 1 + ((i + 14) % 28);
-      const initials = name.split(" ").map(n => n[0]).join("");
       return {
         id, name, age, dob: `${String((i % 12) + 1).padStart(2, "0")}/${String(d1).padStart(2, "0")}/${birthYear}`, sex,
         phone: `(${917 + (i % 3)}) 555-${String(1000 + id).padStart(4, "0")}`,

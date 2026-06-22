@@ -228,7 +228,6 @@ export default function DevImagesPage() {
     e.preventDefault();
     setDragOver(false);
     if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const copyPath = (e: React.MouseEvent, src: string) => {
@@ -427,7 +426,6 @@ export default function DevImagesPage() {
                     {confirmDelete === f.path ? "Confirm?" : "Delete"}
                   </button>
                 </div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={f.path} alt="" style={{ width: "100%", height: 160, objectFit: "cover", display: "block" }} loading="lazy" />
                 <p style={{ padding: "8px 10px", fontSize: "0.72rem", color: "#64748b", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.path.split("/").pop()}</p>
               </div>
@@ -453,7 +451,6 @@ export default function DevImagesPage() {
             </div>
             {sortedFiles.map((f) => (
               <div key={f.path} className="dev-img-list-item" onClick={() => setLightbox(f.path)} style={deleting === f.path ? { opacity: 0.4, pointerEvents: "none" } : {}}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={f.path} alt="" loading="lazy" />
                 <span className="list-name">{f.path.split("/").pop()}</span>
                 <span className="list-path">{f.path}</span>
@@ -474,7 +471,6 @@ export default function DevImagesPage() {
         {/* Lightbox */}
         {lightbox && (
           <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 9999, cursor: "pointer", padding: 40 }} onClick={() => setLightbox(null)}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={lightbox} alt="" style={{ maxWidth: "90vw", maxHeight: "80vh", objectFit: "contain", borderRadius: 8 }} />
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 16 }}>
               <p style={{ color: "#94a3b8", fontSize: "0.85rem", margin: 0 }}>{lightbox}</p>

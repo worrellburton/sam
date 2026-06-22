@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
         const insertAfter = imageLine.index! + imageLine[0].length;
         entry =
           entry.slice(0, insertAfter) +
-          `\n${indent}imagePrompts: ${serialized.replace(/\n      /g, `\n${indent}  `).replace(/\n    \]/g, `\n${indent}]`)},` +
+          `\n${indent}imagePrompts: ${serialized.replace(/\n {6}/g, `\n${indent}  `).replace(/\n {4}\]/g, `\n${indent}]`)},` +
           entry.slice(insertAfter);
       }
     }

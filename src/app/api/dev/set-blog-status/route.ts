@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
   }
   const fileMeta = await getRes.json();
   const sha: string = fileMeta.sha;
-  let content: string = Buffer.from(fileMeta.content, "base64").toString("utf-8");
+  const content: string = Buffer.from(fileMeta.content, "base64").toString("utf-8");
 
   // Find the entry block bounded by top-level `  {` and `  },` (or `  }` for last entry).
   const slugMarker = `slug: "${slug}"`;
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
   // Normalize to trailing `,\n` form so we can freely move / reinsert it.
   if (!trailingIsComma) {
-    entry = entry.replace(/\n  \}\n$/, "\n  },\n");
+    entry = entry.replace(/\n {2}\}\n$/, "\n  },\n");
   }
 
   // Edit the comingSoon field inside the entry.
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
   if (comingSoon) {
     if (!hasExisting) {
       // Insert `    comingSoon: true,\n` just before the closing `  },\n`.
-      entry = entry.replace(/\n  \},\n$/, "\n    comingSoon: true,\n  },\n");
+      entry = entry.replace(/\n {2}\},\n$/, "\n    comingSoon: true,\n  },\n");
     } else {
       entry = entry.replace(comingSoonLine, "    comingSoon: true,\n");
     }

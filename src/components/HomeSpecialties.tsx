@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Icon } from "./icons";
+import { BASE_REVIEW_COUNT } from "@/lib/reviews";
 
 type SpecialtyCard = {
   title: string;
@@ -40,7 +41,7 @@ const ROW_4: SpecialtyCard[] = [
 ];
 
 export function HomeSpecialties({ reviewTotalDelta = 0 }: { reviewTotalDelta?: number }) {
-  const totalReviews = (1466 + reviewTotalDelta).toLocaleString();
+  const totalReviews = (BASE_REVIEW_COUNT + reviewTotalDelta).toLocaleString();
 
   const renderCard = (card: SpecialtyCard) => {
     const isBookCard = !card.video && !card.image;

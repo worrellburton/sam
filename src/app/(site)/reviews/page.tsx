@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { GoogleReviewsGrid } from "@/components/GoogleReviewsGrid";
+import { formatReviewTotal } from "@/lib/reviews";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
@@ -167,7 +168,7 @@ export default function ReviewsPage() {
               rel="noopener"
               className="btn btn-primary btn-lg"
             >
-              View All 1,400+ Reviews
+              View All {formatReviewTotal()} Reviews
             </a>
           </div>
         </div>

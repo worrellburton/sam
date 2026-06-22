@@ -1,70 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { MobileReviewsStack } from "./MobileReviewsStack";
 import { ReviewCard } from "./ReviewCard";
 import { patientReviews } from "@/data/patient-reviews";
-import { idbGet, idbSet } from "@/lib/idb";
-import { logError } from "@/lib/log";
-
-interface GoogleReview {
-  rating: number;
-  text?: { text?: string };
-  authorAttribution?: { displayName?: string; photoUri?: string };
-  relativePublishTimeDescription?: string;
-  publishTime?: string;
-  locationLabel: string;
-}
-
-interface ReviewsPayload {
-  totalCount: number;
-  reviews: GoogleReview[];
-}
-
-// Stale-while-revalidate cache of the aggregated Google Places payload.
-// The hook first paints from IndexedDB (no network), then refreshes from
-// /api/places/all in the background and updates state if the data
-// changed. The API route is already ISR-cached server-side, but the
-// client-side cache means repeat visitors skip the ~100-200ms fetch on
-// initial render.
-const CACHE_KEY = "all";
-
-function useGoogleReviews() {
-  const [reviews, setReviews] = useState<GoogleReview[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function hydrate() {
-      const cached = await idbGet<ReviewsPayload>("places-reviews", CACHE_KEY);
-      if (cancelled) return;
-      if (cached) {
-        setReviews(cached.reviews);
-        setTotalCount(cached.totalCount);
-      }
-
-      try {
-        const resp = await fetch("/api/places/all");
-        if (!resp.ok) throw new Error(`API error: ${resp.status}`);
-        const data = (await resp.json()) as ReviewsPayload;
-        if (cancelled) return;
-        setReviews(data.reviews);
-        setTotalCount(data.totalCount);
-        await idbSet("places-reviews", CACHE_KEY, data);
-      } catch (err) {
-        logError("home.googleReviews", err);
-      }
-    }
-
-    hydrate();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  return { reviews, totalCount };
-}
+import { useGoogleReviews } from "@/hooks/useGoogleReviews";
+import { formatReviewTotal, type GoogleReview } from "@/lib/reviews";
 
 export function HomeReviews() {
   const { reviews: googleReviews, totalCount: googleTotal } = useGoogleReviews();
@@ -105,7 +45,7 @@ export function HomeReviews() {
     )
     .slice(0, 5);
 
-  const displayTotal = googleTotal ? `${(1469 + googleTotal).toLocaleString()}+` : "1,400+";
+  const displayTotal = formatReviewTotal(googleTotal);
 
   return (
     <section className="section reviews reveal" id="reviews">

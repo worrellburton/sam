@@ -21,6 +21,14 @@ function starsHTML(rating: number) {
   return "\u2605".repeat(rounded) + "\u2606".repeat(Math.max(0, 5 - rounded));
 }
 
+// Initials for the local avatar fallback, e.g. "Sarah M." \u2192 "SM".
+function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 function GoogleGlyph() {
   return (
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -42,21 +50,25 @@ export function ReviewCard({
   showGoogleBadge,
 }: ReviewCardProps) {
   const [imgFailed, setImgFailed] = useState(false);
-  const src =
-    avatarUrl ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1a3a5c&color=fff&size=36`;
+  const showImg = Boolean(avatarUrl) && !imgFailed;
 
   return (
     <div className="google-review-card">
       <div className="google-review-header">
-        {!imgFailed && (
+        {showImg ? (
           <img
             className="google-review-avatar"
-            src={src}
+            src={avatarUrl}
             alt={name}
             loading="lazy"
             onError={() => setImgFailed(true)}
           />
+        ) : (
+          // Local initials avatar — no external request (ui-avatars.com)
+          // and no layout shift while it loads.
+          <div className="google-review-avatar google-review-avatar-fallback" aria-hidden="true">
+            {initials(name)}
+          </div>
         )}
         <div>
           <div className="google-review-author">{name}</div>

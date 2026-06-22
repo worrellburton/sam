@@ -1,50 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ReviewCard } from "./ReviewCard";
-import { logError } from "@/lib/log";
+import { useGoogleReviews } from "@/hooks/useGoogleReviews";
 
-interface GoogleReview {
-  rating: number;
-  text?: { text?: string };
-  authorAttribution?: { displayName?: string; photoUri?: string };
-  relativePublishTimeDescription?: string;
-  locationLabel: string;
+// Placeholder cards shown on first load (before the cache/network
+// resolves) so the grid reserves its space instead of collapsing to a
+// "Loading…" line — avoids layout shift when the real reviews land.
+function ReviewSkeleton() {
+  return (
+    <div className="reviews-grid" aria-hidden="true">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div className="review-skeleton" key={i}>
+          <div className="review-skeleton-head">
+            <div className="review-skeleton-avatar" />
+            <div className="review-skeleton-lines">
+              <div className="review-skeleton-line" style={{ width: "60%" }} />
+              <div className="review-skeleton-line" style={{ width: "40%" }} />
+            </div>
+          </div>
+          <div className="review-skeleton-line" style={{ width: "90%" }} />
+          <div className="review-skeleton-line" style={{ width: "100%" }} />
+          <div className="review-skeleton-line" style={{ width: "75%" }} />
+        </div>
+      ))}
+    </div>
+  );
 }
 
-// Client-side fetch of the ISR-cached /api/places/all endpoint.
-// Rendered inside the server-component /reviews shell so everything
-// above the grid ships as static HTML.
+// Client-side fetch of the ISR-cached /api/places/all endpoint, rendered
+// inside the server-component /reviews shell so everything above the grid
+// ships as static HTML.
 export function GoogleReviewsGrid() {
-  const [reviews, setReviews] = useState<GoogleReview[] | null>(null);
+  const { reviews, status } = useGoogleReviews();
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const resp = await fetch("/api/places/all");
-        if (!resp.ok) throw new Error(`Places API: ${resp.status}`);
-        const data = (await resp.json()) as { reviews: GoogleReview[] };
-        if (!cancelled) setReviews(data.reviews);
-      } catch (err) {
-        logError("reviews.googleGrid", err);
-        if (!cancelled) setReviews([]);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  if (reviews === null) {
+  if (status === "loading") {
     return (
-      <div
-        style={{ textAlign: "center", padding: "60px 0", color: "var(--text-muted)" }}
-        aria-live="polite"
-        role="status"
-      >
-        Loading reviews...
-      </div>
+      <>
+        <span className="sr-only" role="status" aria-live="polite">
+          Loading reviews…
+        </span>
+        <ReviewSkeleton />
+      </>
     );
   }
 
@@ -57,19 +53,22 @@ export function GoogleReviewsGrid() {
   }
 
   return (
-    <div className="reviews-grid">
-      {reviews.map((review, i) => (
-        <ReviewCard
-          key={i}
-          name={review.authorAttribution?.displayName || "Patient"}
-          avatarUrl={review.authorAttribution?.photoUri}
-          time={review.relativePublishTimeDescription || ""}
-          text={review.text?.text || ""}
-          location={review.locationLabel}
-          rating={review.rating}
-          showGoogleBadge
-        />
-      ))}
-    </div>
+    <>
+      <div className="reviews-grid">
+        {reviews.map((review, i) => (
+          <ReviewCard
+            key={i}
+            name={review.authorAttribution?.displayName || "Patient"}
+            avatarUrl={review.authorAttribution?.photoUri}
+            time={review.relativePublishTimeDescription || ""}
+            text={review.text?.text || ""}
+            location={review.locationLabel}
+            rating={review.rating}
+            showGoogleBadge
+          />
+        ))}
+      </div>
+      <p className="reviews-grid-meta">Verified Google reviews, refreshed hourly.</p>
+    </>
   );
 }

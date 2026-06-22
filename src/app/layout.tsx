@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import ClientLayout from "@/components/ClientLayout";
 import "./globals.css";
+import { SITE_URL } from "@/lib/env";
 
 const inter = localFont({
   src: "./fonts/Inter.woff2",
@@ -12,9 +13,6 @@ const inter = localFont({
 });
 
 const GA_ID = "G-HP23C836XM";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 // `viewport-fit=cover` so env(safe-area-inset-*) values are populated
 // on notched iOS devices — required for the StickyBar to clear Safari's

@@ -7,6 +7,7 @@ import {
   isPostReleased,
   type BlogPost,
 } from "@/data/blog";
+import { SITE_URL } from "@/lib/env";
 import { getBlogPostBySlug as getDbPostBySlug } from "@/lib/db/blog";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
@@ -15,9 +16,6 @@ import { BlogReveal } from "@/components/BlogReveal";
 import { markdownToHtml } from "@/lib/markdown";
 import { logError } from "@/lib/log";
 import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 export async function generateStaticParams() {
   // Only pre-render posts that are actually released so unreleased drafts

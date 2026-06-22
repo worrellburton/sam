@@ -5,9 +5,7 @@ import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { Insurance } from "@/components/Insurance";
 import { AnimatedStat } from "@/components/AnimatedStat";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
+import { SITE_URL } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "About Dr. Sameh Elguizaoui | NYC Orthopedic Surgeon",

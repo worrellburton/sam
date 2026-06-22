@@ -6,6 +6,7 @@ import {
   conditions,
   type Condition,
 } from "@/data/conditions";
+import { SITE_URL } from "@/lib/env";
 import { getConditionBySlug as getDbConditionBySlug } from "@/lib/db/conditions";
 import { conditionSlugToBlogSlug } from "@/data/condition-blogs";
 import { blogPosts } from "@/data/blog";
@@ -15,9 +16,6 @@ import { conditionFaqs } from "@/data/condition-content";
 import { logError } from "@/lib/log";
 import { conditionJsonLd } from "@/lib/seo/structured-data";
 import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 export async function generateStaticParams() {
   return conditions.map((c) => ({ slug: c.slug }));

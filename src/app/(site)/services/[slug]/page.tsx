@@ -6,6 +6,7 @@ import {
   services,
   type Service,
 } from "@/data/services";
+import { SITE_URL } from "@/lib/env";
 import { getServiceBySlug as getDbServiceBySlug } from "@/lib/db/services";
 import { conditionToBlogSlug } from "@/data/condition-blogs";
 import { SpecialtyCanvas } from "@/components/SpecialtyCanvas";
@@ -14,9 +15,6 @@ import { Locations } from "@/components/Locations";
 import { serviceFaqs, serviceStats } from "@/data/service-content";
 import { logError } from "@/lib/log";
 import { serviceJsonLd } from "@/lib/seo/structured-data";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 // Pre-render every service at build time.
 export async function generateStaticParams() {

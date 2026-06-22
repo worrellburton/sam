@@ -2,8 +2,7 @@ import type { MetadataRoute } from "next";
 import { allBlogPosts, isPostReleased } from "@/data/blog";
 import { services } from "@/data/services";
 import { conditions } from "@/data/conditions";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
+import { SITE_URL } from "@/lib/env";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

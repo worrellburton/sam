@@ -4,9 +4,7 @@ import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { GoogleReviewsGrid } from "@/components/GoogleReviewsGrid";
 import { formatReviewTotal } from "@/lib/reviews";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
+import { SITE_URL } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "Patient Reviews | Dr. Sameh Elguizaoui, M.D.",

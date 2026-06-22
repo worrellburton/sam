@@ -5,15 +5,13 @@ import {
   getSeriesRotationView,
   type BlogPost,
 } from "@/data/blog";
+import { SITE_URL } from "@/lib/env";
 import { listAllAsBlogPosts } from "@/lib/db/blog";
 import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { BlogCard } from "@/components/BlogCard";
 import { logError } from "@/lib/log";
 import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 export const metadata: Metadata = {
   title: "Clinical Clarity | Orthopedic Blog by Dr. Sameh Elguizaoui",

@@ -9,8 +9,7 @@ import { HomeReviews } from "@/components/HomeReviews";
 import { HomeSpecialties } from "@/components/HomeSpecialties";
 import { Icon } from "@/components/icons";
 import { blogPosts, isPostReleased } from "@/data/blog";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
+import { SITE_URL } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "Dr. Sameh Elguizaoui, M.D. | NYC Orthopedic Surgeon",

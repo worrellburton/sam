@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { Locations } from "@/components/Locations";
 import { GetStarted } from "@/components/GetStarted";
 import { ContactForm } from "@/components/ContactForm";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
+import { SITE_URL } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "Contact | Dr. Sameh Elguizaoui, M.D.",

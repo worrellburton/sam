@@ -9,9 +9,7 @@
 import type { Condition } from "@/data/conditions";
 import type { Service } from "@/data/services";
 import { PLACEHOLDER_IMAGE } from "@/data/placeholder-image";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
+import { SITE_URL } from "@/lib/env";
 
 // Single shared physician identity — re-referenced across pages via
 // `@id` so search engines treat them as the same entity.

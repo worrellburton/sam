@@ -3,6 +3,7 @@ import { requireDevAuth } from "@/lib/dev-auth";
 import { services } from "@/data/services";
 import { conditions } from "@/data/conditions";
 import { blogPosts, isPostReleased } from "@/data/blog";
+import { SITE_URL } from "@/lib/env";
 
 // Live SEO scan.
 //
@@ -26,9 +27,7 @@ function resolveBaseUrl(request: Request): string {
   try {
     return new URL(request.url).origin;
   } catch {
-    return (
-      process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com"
-    );
+    return SITE_URL;
   }
 }
 

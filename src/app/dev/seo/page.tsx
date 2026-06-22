@@ -7,6 +7,7 @@ import { ScanPanel, type ScanBaseResult } from "../ScanPanel";
 import { services } from "@/data/services";
 import { conditions } from "@/data/conditions";
 import { blogPosts, isPostReleased } from "@/data/blog";
+import { SITE_URL } from "@/lib/env";
 
 // ─────────────────────────────────────────────────────────────────────
 // Dev-only SEO dashboard. Walks every route we know about and reports:
@@ -19,8 +20,6 @@ import { blogPosts, isPostReleased } from "@/data/blog";
 // the page is intended as a quick "what's shipping" reference before
 // editing metadata.
 // ─────────────────────────────────────────────────────────────────────
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
 
 type RouteRow = {
   path: string;

@@ -3,9 +3,7 @@ import { GetStarted } from "@/components/GetStarted";
 import { Locations } from "@/components/Locations";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { siteFaqs } from "@/data/faq";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com";
+import { SITE_URL } from "@/lib/env";
 
 export const metadata: Metadata = {
   title: "FAQ | Dr. Sameh Elguizaoui, M.D.",

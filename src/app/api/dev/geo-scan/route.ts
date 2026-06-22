@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireDevAuth } from "@/lib/dev-auth";
 import { locations } from "@/data/locations";
+import { SITE_URL } from "@/lib/env";
 
 // Live GEO / local-SEO scan.
 //
@@ -21,7 +22,7 @@ function resolveBaseUrl(request: Request): string {
     return new URL(request.url).origin;
   } catch {
     return (
-      process.env.NEXT_PUBLIC_SITE_URL || "https://www.sportsorthomd.com"
+      SITE_URL
     );
   }
 }

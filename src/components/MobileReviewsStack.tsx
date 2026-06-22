@@ -22,6 +22,15 @@ export function MobileReviewsStack({
 }: MobileReviewsStackProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const trimmed = reviews.slice(0, limit);
+  // Re-run the observer setup whenever the *set* of rendered cards changes,
+  // not just the count. The homepage first paints local placeholder reviews,
+  // then swaps in live Google reviews once they load — both lists clamp to
+  // `limit`, so a length-only dependency would miss the swap and leave the
+  // freshly-mounted cards observed by a stale observer (watching removed
+  // nodes), stuck at their inline opacity:0 forever.
+  const itemsKey = trimmed.map((r) => r.name).join("|");
+
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
@@ -60,9 +69,8 @@ export function MobileReviewsStack({
     );
     items.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [reviews.length]);
+  }, [itemsKey]);
 
-  const trimmed = reviews.slice(0, limit);
   if (trimmed.length === 0) return null;
 
   return (
